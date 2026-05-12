@@ -1088,6 +1088,22 @@
       letter-spacing: 0.06em; line-height: 1.5;
       margin-top: 14px; text-align: center;
     }
+
+    /* Streaming cursor — R.O.B. typt voor je ogen */
+    .chat-streaming-cursor {
+      display: inline-block;
+      width: 7px; height: 1.05em;
+      vertical-align: text-bottom;
+      background: rgba(15,168,203,0.85);
+      margin-left: 2px;
+      animation: cursorBlink 0.85s steps(2) infinite;
+    }
+    @keyframes cursorBlink {
+      50% { opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chat-streaming-cursor { animation: none; }
+    }
     .chat-mail-link {
       color: rgba(15,168,203,0.92);
       text-decoration: underline;
@@ -1976,14 +1992,49 @@ function addErrorMsg() {
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
 }
 
+// Maakt een lege R.O.B.-message-bubble met streaming-cursor; returns text-container voor incrementele updates
+function createStreamingMsg() {
+  const div = document.createElement('div');
+  div.className = 'chat-msg';
+
+  const whoSpan = document.createElement('span');
+  whoSpan.className = 'chat-msg-who';
+  whoSpan.textContent = 'R.O.B.';
+
+  const textDiv = document.createElement('div');
+  textDiv.className = 'chat-msg-text';
+
+  const cursor = document.createElement('span');
+  cursor.className = 'chat-streaming-cursor';
+  textDiv.appendChild(cursor);
+
+  div.appendChild(whoSpan);
+  div.appendChild(textDiv);
+  chatMsgs.appendChild(div);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  return textDiv;
+}
+
+// Update streaming-bubble: tijdens streaming = plain text + cursor; bij final = met email-linkification, geen cursor
+function renderStreamingMsg(textDiv, text, isFinal) {
+  while (textDiv.firstChild) textDiv.removeChild(textDiv.firstChild);
+  if (isFinal) {
+    appendTextWithEmailLinks(textDiv, text);
+  } else {
+    textDiv.appendChild(document.createTextNode(text));
+    const cursor = document.createElement('span');
+    cursor.className = 'chat-streaming-cursor';
+    textDiv.appendChild(cursor);
+  }
+}
+
 async function sendMsg() {
-  if (chatBtn.disabled) return; // voorkom dubbele submits tijdens fetch
+  if (chatBtn.disabled) return;
   const val = chatIn.value.trim().slice(0, MAX_INPUT_CHARS);
   if (!val) return;
 
   addMsg(val, 'user');
   msgHistory.push({ role: 'user', content: val });
-  // Cap history: hou alleen de laatste N berichten, beginnend met een user-bericht
   if (msgHistory.length > MAX_HISTORY) {
     msgHistory.splice(0, msgHistory.length - MAX_HISTORY);
     while (msgHistory.length && msgHistory[0].role !== 'user') msgHistory.shift();
@@ -1994,8 +2045,9 @@ async function sendMsg() {
   chatBtn.disabled = true;
   chatIn.disabled  = true;
 
-  // Notificatie naar Rob bij eerste keer dat we de drempel passeren
   const shouldNotify = !sessionNotified && msgHistory.length >= NOTIFY_THRESHOLD;
+  let streamingEl = null;
+  let accumulated = '';
 
   try {
     const res = await fetch('/.netlify/functions/chat', {
@@ -2010,12 +2062,46 @@ async function sendMsg() {
       throw new Error(err.error || `HTTP ${res.status}`);
     }
 
-    const data = await res.json();
-    msgHistory.push({ role: 'assistant', content: data.reply });
+    // Stream is SSE — parse content_block_delta events naar accumulated text
     chatTyping.classList.remove('visible');
-    addMsg(data.reply, 'rob');
+    streamingEl = createStreamingMsg();
+
+    const reader  = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const events = buffer.split('\n\n');
+      buffer = events.pop() || '';
+      for (const event of events) {
+        const dataLine = event.split('\n').find(l => l.startsWith('data: '));
+        if (!dataLine) continue;
+        try {
+          const data = JSON.parse(dataLine.slice(6));
+          if (data.type === 'content_block_delta' && data.delta?.text) {
+            accumulated += data.delta.text;
+            renderStreamingMsg(streamingEl, accumulated, false);
+            chatMsgs.scrollTop = chatMsgs.scrollHeight;
+          }
+        } catch (_) { /* heartbeat of niet-JSON event, negeer */ }
+      }
+    }
+
+    if (!accumulated) throw new Error('Leeg antwoord');
+
+    // Finaliseer: linkify emails, weg met cursor
+    renderStreamingMsg(streamingEl, accumulated, true);
+    msgHistory.push({ role: 'assistant', content: accumulated });
+
   } catch (err) {
     chatTyping.classList.remove('visible');
+    if (streamingEl) {
+      // Stream brak halverwege — verwijder de gedeeltelijke bubble
+      streamingEl.parentElement?.remove();
+    }
     addErrorMsg();
   } finally {
     chatBtn.disabled = false;

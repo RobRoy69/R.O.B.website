@@ -1,5 +1,6 @@
-// R.O.B. Concepting — chat proxy
+// R.O.B. Concepting — chat proxy (v2, streaming)
 // Vereiste env var in Netlify: ANTHROPIC_API_KEY
+// Optioneel: RESEND_API_KEY, NOTIFY_EMAIL, NOTIFY_FROM
 
 const ROB_SYSTEM = `Je bent R.O.B. — R.O.B. Concepting. Expert in structuur, systeem en merk voor MKB-ondernemers en founders.
 
@@ -41,21 +42,19 @@ const ALLOWED_ORIGINS = new Set([
   'https://rob-concepting.netlify.app'
 ]);
 
-function buildHeaders(origin) {
+function corsFor(origin) {
   const allowOrigin = ALLOWED_ORIGINS.has(origin) ? origin : 'https://rob-concepting.com';
   return {
-    'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': allowOrigin,
     'Access-Control-Allow-Headers': 'Content-Type',
     'Vary': 'Origin'
   };
 }
 
-// In-memory rate-limiter — best-effort, per Function-instance.
-// Cold starts resetten de teller; Netlify draait soms meerdere instances. Niet waterdicht maar stopt simpele abuse.
-const RATE_LIMIT_WINDOW_MS = 60_000;  // 60 sec
-const RATE_LIMIT_MAX       = 12;       // max calls per IP per window
-const rateBuckets = new Map();          // ip -> { count, resetAt }
+// In-memory rate-limiter — per Function-instance, best-effort
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 12;
+const rateBuckets = new Map();
 
 function rateLimitCheck(ip) {
   if (!ip) return { ok: true };
@@ -69,7 +68,6 @@ function rateLimitCheck(ip) {
   if (bucket.count > RATE_LIMIT_MAX) {
     return { ok: false, retryAfter: Math.ceil((bucket.resetAt - now) / 1000) };
   }
-  // Garbage-collect verlopen buckets — maximaal 1000 IPs onthouden
   if (rateBuckets.size > 1000) {
     for (const [k, v] of rateBuckets) {
       if (v.resetAt < now) rateBuckets.delete(k);
@@ -79,8 +77,7 @@ function rateLimitCheck(ip) {
   return { ok: true };
 }
 
-// Stuurt een samenvatting van het gesprek naar Rob's mailbox via Resend.
-// Faalt stil als Resend niet is geconfigureerd of de mail mislukt — chat blijft werken.
+// Stuurt samenvatting naar Rob via Resend. Faalt stil.
 async function notifyRob(conversation) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
@@ -123,61 +120,63 @@ async function notifyRob(conversation) {
   }
 }
 
-exports.handler = async (event) => {
-  const origin  = event.headers?.origin || event.headers?.Origin || '';
-  const HEADERS = buildHeaders(origin);
+// JSON response shortcut
+function json(body, status, origin) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json', ...corsFor(origin) }
+  });
+}
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: HEADERS, body: '' };
+export default async (req) => {
+  const origin = req.headers.get('origin') || '';
+
+  if (req.method === 'OPTIONS') {
+    return new Response('', { status: 200, headers: corsFor(origin) });
+  }
+  if (req.method !== 'POST') {
+    return json({ error: 'Method not allowed' }, 405, origin);
   }
 
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) };
-  }
-
-  // Rate-limit per IP
-  const ip = event.headers?.['x-nf-client-connection-ip']
-          || event.headers?.['x-forwarded-for']?.split(',')[0]?.trim()
-          || '';
+  // Rate-limit
+  const ip = req.headers.get('x-nf-client-connection-ip')
+          || (req.headers.get('x-forwarded-for') || '').split(',')[0].trim();
   const rl = rateLimitCheck(ip);
   if (!rl.ok) {
-    return {
-      statusCode: 429,
-      headers: { ...HEADERS, 'Retry-After': String(rl.retryAfter || 60) },
-      body: JSON.stringify({ error: `Even rustig aan. Probeer over ${rl.retryAfter || 60} seconden opnieuw.` })
-    };
+    return new Response(
+      JSON.stringify({ error: `Even rustig aan. Probeer over ${rl.retryAfter || 60} seconden opnieuw.` }),
+      { status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': String(rl.retryAfter || 60), ...corsFor(origin) }}
+    );
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: 'API key niet geconfigureerd' }) };
-  }
+  if (!apiKey) return json({ error: 'API key niet geconfigureerd' }, 500, origin);
 
-  const MAX_HISTORY = 20;        // max user+assistant berichten naar Anthropic
-  const MAX_INPUT_CHARS = 1500;  // per individueel bericht
+  const MAX_HISTORY = 20;
+  const MAX_INPUT_CHARS = 1500;
 
   let messages, notify = false;
   try {
-    const parsed = JSON.parse(event.body);
+    const parsed = await req.json();
     messages = parsed.messages;
     notify = parsed.notify === true;
     if (!Array.isArray(messages) || messages.length === 0) throw new Error('Geen berichten');
-    // Trim invoer-lengte als vangnet
     messages = messages.map(m => ({
       ...m,
       content: typeof m.content === 'string' ? m.content.slice(0, MAX_INPUT_CHARS) : m.content
     }));
-    // Cap history-lengte (laatste N berichten, eerste moet user zijn voor Anthropic)
     if (messages.length > MAX_HISTORY) {
       messages = messages.slice(-MAX_HISTORY);
       while (messages.length && messages[0].role !== 'user') messages.shift();
     }
   } catch {
-    return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: 'Ongeldig verzoek' }) };
+    return json({ error: 'Ongeldig verzoek' }, 400, origin);
   }
 
+  // Streamen vanuit Anthropic
+  let anthropicRes;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -188,29 +187,72 @@ exports.handler = async (event) => {
         model: 'claude-haiku-4-5',
         max_tokens: 400,
         system: ROB_SYSTEM,
-        messages
+        messages,
+        stream: true
       })
     });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `Anthropic HTTP ${res.status}`);
-    }
-
-    const data = await res.json();
-    const reply = data.content?.[0]?.text;
-    if (!reply) throw new Error('Leeg antwoord van model');
-
-    // Stuur samenvatting per mail als de frontend daarom vraagt (één keer per sessie, drempel = 3 turns)
-    if (notify) {
-      const fullConvo = [...messages, { role: 'assistant', content: reply }];
-      await notifyRob(fullConvo);
-    }
-
-    return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ reply }) };
-
   } catch (err) {
-    console.error('chat function error:', err.message);
-    return { statusCode: 502, headers: HEADERS, body: JSON.stringify({ error: err.message }) };
+    return json({ error: 'Verbindingsfout met Anthropic' }, 502, origin);
   }
+
+  if (!anthropicRes.ok) {
+    const err = await anthropicRes.json().catch(() => ({}));
+    return json({ error: err.error?.message || `Anthropic HTTP ${anthropicRes.status}` }, 502, origin);
+  }
+
+  // Pipe Anthropic SSE door naar client; tegelijkertijd fullReply bouwen voor notificatie
+  const decoder = new TextDecoder();
+  let fullReply = '';
+  let parseBuffer = '';
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      const reader = anthropicRes.body.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          // Parse de chunk om delta-tekst te bewaren (parallel, niet blocking)
+          parseBuffer += decoder.decode(value, { stream: true });
+          const events = parseBuffer.split('\n\n');
+          parseBuffer = events.pop() || '';
+          for (const event of events) {
+            const dataLine = event.split('\n').find(l => l.startsWith('data: '));
+            if (!dataLine) continue;
+            try {
+              const data = JSON.parse(dataLine.slice(6));
+              if (data.type === 'content_block_delta' && data.delta?.text) {
+                fullReply += data.delta.text;
+              }
+            } catch (_) { /* niet-JSON event, negeer */ }
+          }
+
+          // Pass-through naar client
+          controller.enqueue(value);
+        }
+
+        // Notificatie na voltooid stream — fire and forget
+        if (notify && fullReply) {
+          const fullConvo = [...messages, { role: 'assistant', content: fullReply }];
+          notifyRob(fullConvo).catch(e => console.error('notify error:', e.message));
+        }
+
+        controller.close();
+      } catch (e) {
+        console.error('Stream error:', e.message);
+        try { controller.error(e); } catch (_) {}
+      }
+    }
+  });
+
+  return new Response(stream, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      'X-Accel-Buffering': 'no',
+      ...corsFor(origin)
+    }
+  });
 };
