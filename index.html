@@ -1113,12 +1113,19 @@
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 8px;
       font-family: inherit; font-size: 13px;
-      color: rgba(238,242,247,0.85); outline: none;
+      color: rgba(238,242,247,0.92); outline: none;
       transition: border-color 0.2s;
-      font-weight: 300;
+      font-weight: 400;
     }
-    .chat-input::placeholder { color: rgba(238,242,247,0.25); }
+    .chat-input::placeholder { color: rgba(238,242,247,0.46); }
     .chat-input:focus { border-color: rgba(15,168,203,0.4); }
+
+    .chat-privacy {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; color: rgba(238,242,247,0.45);
+      letter-spacing: 0.06em; line-height: 1.5;
+      margin-top: 14px; text-align: center;
+    }
     .chat-mail-link {
       color: rgba(15,168,203,0.92);
       text-decoration: underline;
@@ -1534,7 +1541,7 @@
               <div style="margin: 18px 0 22px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--cyan); letter-spacing:0.12em; opacity:0.7;">
                 FRICTIE &nbsp;&rarr;&nbsp; VISIE &nbsp;&rarr;&nbsp; SYSTEEM &nbsp;&rarr;&nbsp; MERK
               </div>
-              <button class="cta-rob" data-cta="rob">Begin het gesprek <span class="cta-rob-arrow">&rarr;</span></button>
+              <button class="cta-rob" data-cta="rob">Spreek R.O.B. <span class="cta-rob-arrow">&rarr;</span></button>
             </div>
 
             <!-- Credentials card -->
@@ -1628,7 +1635,7 @@
             Concepting is geen fase &mdash; het is de volledige beweging van idee naar werkend systeem.
             Hoe sneller de wereld verandert, hoe meer het geheel telt.
           </p>
-          <button class="cta-rob" data-cta="rob">Begin het gesprek <span class="cta-rob-arrow">→</span></button>
+          <button class="cta-rob" data-cta="rob">Toets je situatie <span class="cta-rob-arrow">&rarr;</span></button>
         </div>
 
         <!-- WERK -->
@@ -1691,7 +1698,7 @@
             </div>
           </div>
           <div class="systems-total">12 modules live &middot; 3 in pipeline &middot; 4 systemen in productie</div>
-          <button class="cta-rob" data-cta="rob">Begin het gesprek <span class="cta-rob-arrow">→</span></button>
+          <button class="cta-rob" data-cta="rob">Vraag een verkenning <span class="cta-rob-arrow">&rarr;</span></button>
         </div>
 
         <!-- MIDDEL -->
@@ -1737,7 +1744,7 @@
               </div>
             </div>
           </div>
-          <button class="cta-rob" data-cta="rob">Begin het gesprek <span class="cta-rob-arrow">→</span></button>
+          <button class="cta-rob" data-cta="rob">Bespreek wat past <span class="cta-rob-arrow">&rarr;</span></button>
         </div>
 
         <!-- R.O.B. — chat -->
@@ -1746,7 +1753,7 @@
           <h1 class="pane-title">Begin het<br><strong>gesprek</strong></h1>
           <div class="pane-bar"></div>
           <div class="chat-wrap">
-            <div class="chat-messages" id="chat-msgs">
+            <div class="chat-messages" id="chat-msgs" role="log" aria-live="polite" aria-atomic="false" aria-label="Gesprek met R.O.B.">
               <div class="chat-msg">
                 <span class="chat-msg-who">R.O.B.</span>
                 <div class="chat-msg-text">
@@ -1768,9 +1775,10 @@
               </button>
             </div>
             <div class="chat-input-row">
-              <input class="chat-input" id="chat-in" type="text" placeholder="Stel een vraag of beschrijf je situatie…" autocomplete="off" maxlength="1500">
+              <input class="chat-input" id="chat-in" type="text" placeholder="Stel een vraag of beschrijf je situatie…" autocomplete="off" maxlength="1500" aria-label="Bericht aan R.O.B.">
               <button class="chat-send" id="chat-btn">Stuur &rarr;</button>
             </div>
+            <p class="chat-privacy">R.O.B. gebruikt AI. Tekst wordt geanonimiseerd verwerkt.</p>
           </div>
         </div>
 
@@ -1821,6 +1829,32 @@ function startTransition() {
 document.getElementById('hdr-logo').addEventListener('click', e => {
   e.preventDefault();
   show('landing');
+  // Wis hash zodat refresh weer op landing start
+  if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+});
+
+// ── Hash-routing: deep-links #over, #visie, #werk, #middel, #rob ──
+const VALID_HASH_PANES = new Set(['over', 'visie', 'werk', 'middel', 'rob']);
+
+function getHashPane() {
+  const h = (window.location.hash || '').replace(/^#/, '').toLowerCase();
+  return VALID_HASH_PANES.has(h) ? h : null;
+}
+
+function setHashPane(pane) {
+  if (!pane || !VALID_HASH_PANES.has(pane)) return;
+  if (('#' + pane) !== window.location.hash) {
+    history.replaceState(null, '', '#' + pane);
+  }
+}
+
+// Reageer op browser back/forward
+window.addEventListener('hashchange', () => {
+  const pane = getHashPane();
+  if (pane) {
+    if (!document.getElementById('s-interface').classList.contains('active')) show('interface');
+    activatePane(pane);
+  }
 });
 
 // ── Reduced-motion helper ──
@@ -1861,6 +1895,9 @@ function activatePane(target) {
     previewVid.play().catch(() => {}); // fail silent — geen autoplay-rechten
     werkPreviewLoaded = true;
   }
+
+  // Reflecteer pane in URL hash voor deep-linking
+  setHashPane(target);
 }
 
 // Line map: which line highlights when a button is active
@@ -2051,6 +2088,15 @@ vidEndBtn.addEventListener('click', closeVideo);
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && vidOverlay.classList.contains('active')) closeVideo();
 });
+
+// ── Initial deep-link: bij page-load met geldige hash → direct interface tonen ──
+(function handleInitialDeepLink() {
+  const pane = getHashPane();
+  if (pane) {
+    show('interface');
+    activatePane(pane);
+  }
+})();
 </script>
 </body>
 </html>
