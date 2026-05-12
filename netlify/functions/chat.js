@@ -33,11 +33,50 @@ Hoe je communiceert:
 - Geen AI-buzzwords. "Versnelling" en "druk" mag, "AI-transformatie" niet.
 - Geen markdown-opmaak. Geen asterisken voor nadruk (geen **vet** of *cursief*), geen koppen, geen lijsten met streepjes. Pure leesbare tekst — de chat rendert het letterlijk.`;
 
-const HEADERS = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type'
-};
+// Toegestane origins — voorkomt dat externe sites jouw Anthropic-budget aftappen.
+const ALLOWED_ORIGINS = new Set([
+  'https://rob-concepting.com',
+  'https://www.rob-concepting.com',
+  'https://rob-concepting.netlify.app'
+]);
+
+function buildHeaders(origin) {
+  const allowOrigin = ALLOWED_ORIGINS.has(origin) ? origin : 'https://rob-concepting.com';
+  return {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin'
+  };
+}
+
+// In-memory rate-limiter — best-effort, per Function-instance.
+// Cold starts resetten de teller; Netlify draait soms meerdere instances. Niet waterdicht maar stopt simpele abuse.
+const RATE_LIMIT_WINDOW_MS = 60_000;  // 60 sec
+const RATE_LIMIT_MAX       = 12;       // max calls per IP per window
+const rateBuckets = new Map();          // ip -> { count, resetAt }
+
+function rateLimitCheck(ip) {
+  if (!ip) return { ok: true };
+  const now = Date.now();
+  let bucket = rateBuckets.get(ip);
+  if (!bucket || bucket.resetAt < now) {
+    bucket = { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
+    rateBuckets.set(ip, bucket);
+  }
+  bucket.count++;
+  if (bucket.count > RATE_LIMIT_MAX) {
+    return { ok: false, retryAfter: Math.ceil((bucket.resetAt - now) / 1000) };
+  }
+  // Garbage-collect verlopen buckets — maximaal 1000 IPs onthouden
+  if (rateBuckets.size > 1000) {
+    for (const [k, v] of rateBuckets) {
+      if (v.resetAt < now) rateBuckets.delete(k);
+      if (rateBuckets.size <= 800) break;
+    }
+  }
+  return { ok: true };
+}
 
 // Stuurt een samenvatting van het gesprek naar Rob's mailbox via Resend.
 // Faalt stil als Resend niet is geconfigureerd of de mail mislukt — chat blijft werken.
@@ -84,12 +123,28 @@ async function notifyRob(conversation) {
 }
 
 exports.handler = async (event) => {
+  const origin  = event.headers?.origin || event.headers?.Origin || '';
+  const HEADERS = buildHeaders(origin);
+
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers: HEADERS, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers: HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) };
+  }
+
+  // Rate-limit per IP
+  const ip = event.headers?.['x-nf-client-connection-ip']
+          || event.headers?.['x-forwarded-for']?.split(',')[0]?.trim()
+          || '';
+  const rl = rateLimitCheck(ip);
+  if (!rl.ok) {
+    return {
+      statusCode: 429,
+      headers: { ...HEADERS, 'Retry-After': String(rl.retryAfter || 60) },
+      body: JSON.stringify({ error: `Even rustig aan. Probeer over ${rl.retryAfter || 60} seconden opnieuw.` })
+    };
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;

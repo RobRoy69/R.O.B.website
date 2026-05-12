@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" font-family="DM Sans, Helvetica, Arial, sans-serif">
+  <defs>
+    <radialGradient id="bgA" cx="80%" cy="18%" r="40%">
+      <stop offset="0%" stop-color="#0fa8cb" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#e8e4dc" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgB" cx="14%" cy="84%" r="30%">
+      <stop offset="0%" stop-color="#e8391e" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#e8e4dc" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#e8e4dc"/>
+  <rect width="1200" height="630" fill="url(#bgA)"/>
+  <rect width="1200" height="630" fill="url(#bgB)"/>
+
+  <!-- Ghost circle cluster bottom-left -->
+  <g opacity="0.5">
+    <circle cx="60" cy="560" r="540" fill="none" stroke="#001a4d" stroke-width="1" opacity="0.10"/>
+    <circle cx="60" cy="560" r="420" fill="none" stroke="#001a4d" stroke-width="1" opacity="0.07"/>
+    <circle cx="60" cy="560" r="300" fill="none" stroke="#001a4d" stroke-width="1" opacity="0.05"/>
+    <circle cx="60" cy="560" r="180" fill="none" stroke="#001a4d" stroke-width="1" opacity="0.04"/>
+  </g>
+
+  <!-- Top bar -->
+  <text x="60" y="58" font-family="IBM Plex Mono, monospace" font-size="14" fill="#001a4d" fill-opacity="0.55" letter-spacing="3" font-weight="500">R.O.B. CONCEPTING · LAUNCH</text>
+
+  <g transform="translate(1140,58)">
+    <circle cx="-180" cy="-4" r="6" fill="#2ecc71"/>
+    <circle cx="-180" cy="-4" r="10" fill="#2ecc71" fill-opacity="0.22"/>
+    <text x="-160" y="0" font-family="IBM Plex Mono, monospace" font-size="14" fill="#0fa8cb" letter-spacing="3" font-weight="500" text-anchor="end">NU ONLINE</text>
+  </g>
+
+  <!-- Brand lockup -->
+  <g transform="translate(64, 160)">
+    <!-- R.O.B. CONCEPTING text -->
+    <text x="0" y="0" font-size="34" font-weight="800" fill="#001a4d" letter-spacing="3.5">R.O.B.</text>
+    <text x="118" y="0" font-size="16" font-weight="500" fill="#0fa8cb" letter-spacing="5.5">CONCEPTING</text>
+
+    <!-- Three-circle icon -->
+    <g transform="translate(0, 24)">
+      <line x1="22" y1="22" x2="170" y2="22" stroke="#9ba5b5" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="22"  cy="22" r="18"  fill="none" stroke="#9ba5b5" stroke-width="1.4" opacity="0.55"/>
+      <circle cx="22"  cy="22" r="10"  fill="none" stroke="#9ba5b5" stroke-width="1.1" opacity="0.45"/>
+      <circle cx="22"  cy="22" r="4"   fill="#0fa8cb"/>
+      <circle cx="96"  cy="22" r="18"  fill="none" stroke="#0fa8cb" stroke-width="1.8"/>
+      <circle cx="96"  cy="22" r="10"  fill="none" stroke="#0fa8cb" stroke-width="1.2" opacity="0.7"/>
+      <circle cx="96"  cy="22" r="4"   fill="#e8391e"/>
+      <circle cx="170" cy="22" r="18"  fill="none" stroke="#9ba5b5" stroke-width="1.4" opacity="0.55"/>
+      <circle cx="170" cy="22" r="10"  fill="none" stroke="#9ba5b5" stroke-width="1.1" opacity="0.45"/>
+      <circle cx="170" cy="22" r="4"   fill="#001a4d"/>
+    </g>
+  </g>
+
+  <!-- Headline -->
+  <g transform="translate(64, 290)" fill="#001a4d">
+    <text x="0" y="0" font-size="72" font-weight="800" letter-spacing="-1">Visie, systeem</text>
+    <text x="0" y="76" font-size="72" font-weight="800" letter-spacing="-1">en merk als <tspan fill="#0fa8cb">geheel.</tspan></text>
+  </g>
+
+  <!-- Sub line -->
+  <text x="64" y="470" font-size="20" fill="#001a4d" fill-opacity="0.7" font-weight="400">AI versnelt, beslissingen stapelen, structuur loopt achter.</text>
+  <text x="64" y="498" font-size="20" fill="#001a4d" fill-opacity="0.7" font-weight="400">Ik bouw &#233;&#233;n geheel dat de druk aankan.</text>
+
+  <!-- Formula -->
+  <g transform="translate(64, 552)" font-family="IBM Plex Mono, monospace" font-size="13" letter-spacing="3" font-weight="500" fill="#0fa8cb" fill-opacity="0.75">
+    <text x="0" y="0">FRICTIE</text>
+    <text x="92" y="0" fill="#0fa8cb" fill-opacity="0.45">&#8594;</text>
+    <text x="118" y="0">VISIE</text>
+    <text x="184" y="0" fill="#0fa8cb" fill-opacity="0.45">&#8594;</text>
+    <text x="210" y="0">SYSTEEM</text>
+    <text x="310" y="0" fill="#0fa8cb" fill-opacity="0.45">&#8594;</text>
+    <text x="336" y="0">MERK</text>
+  </g>
+
+  <!-- Mini diamond + LIVE stamp right side -->
+  <g transform="translate(900, 290)">
+    <!-- Diamond connectors -->
+    <line x1="0" y1="-90" x2="0" y2="0" stroke="#001a4d" stroke-opacity="0.22" stroke-width="1.4"/>
+    <line x1="-90" y1="0" x2="0" y2="0" stroke="#001a4d" stroke-opacity="0.22" stroke-width="1.4"/>
+    <line x1="0" y1="0" x2="90" y2="0" stroke="#001a4d" stroke-opacity="0.22" stroke-width="1.4"/>
+    <line x1="0" y1="0" x2="0" y2="90" stroke="#001a4d" stroke-opacity="0.22" stroke-width="1.4"/>
+
+    <!-- Outer nodes -->
+    <g font-family="IBM Plex Mono, monospace" font-size="11" font-weight="700" letter-spacing="2.5" fill="#001a4d">
+      <circle cx="0" cy="-90" r="34" fill="white" stroke="#001a4d" stroke-opacity="0.14" stroke-width="1.6"/>
+      <text x="0" y="-86" text-anchor="middle">OVER</text>
+      <circle cx="-90" cy="0" r="34" fill="white" stroke="#001a4d" stroke-opacity="0.14" stroke-width="1.6"/>
+      <text x="-90" y="4" text-anchor="middle">VISIE</text>
+      <circle cx="90" cy="0" r="34" fill="white" stroke="#001a4d" stroke-opacity="0.14" stroke-width="1.6"/>
+      <text x="90" y="4" text-anchor="middle">WERK</text>
+      <circle cx="0" cy="90" r="34" fill="white" stroke="#001a4d" stroke-opacity="0.14" stroke-width="1.6"/>
+      <text x="0" y="94" text-anchor="middle">MIDDEL</text>
+    </g>
+
+    <!-- Center R.O.B. button -->
+    <circle cx="0" cy="0" r="46" fill="#001a4d"/>
+    <text x="0" y="0" font-size="13" font-weight="700" letter-spacing="2.5" fill="white" text-anchor="middle">R.O.B.</text>
+    <circle cx="0" cy="14" r="4" fill="#0fa8cb"/>
+
+    <!-- LIVE stamp -->
+    <g transform="translate(70, -120) rotate(8)">
+      <rect x="-50" y="-22" width="100" height="44" rx="4" fill="#e8391e"/>
+      <rect x="-44" y="-16" width="88" height="32" rx="2" fill="none" stroke="white" stroke-opacity="0.45" stroke-width="1"/>
+      <text x="0" y="6" font-family="IBM Plex Mono, monospace" font-size="22" font-weight="800" letter-spacing="3" fill="white" text-anchor="middle">LIVE!</text>
+    </g>
+  </g>
+
+  <!-- URL bottom-right -->
+  <g transform="translate(1136, 596)" font-family="IBM Plex Mono, monospace" text-anchor="end">
+    <text font-size="22" font-weight="500" fill="#001a4d" letter-spacing="0.5">
+      <tspan fill="#001a4d" fill-opacity="0.4">https://</tspan>rob-concepting.com
+    </text>
+  </g>
+
+  <!-- Right-side credit -->
+  <g transform="translate(1136, 130)" font-family="IBM Plex Mono, monospace" font-size="13" letter-spacing="3" fill="#001a4d" fill-opacity="0.45" text-anchor="end">
+    <text y="0">CONCEPTING EXPERT</text>
+    <text y="22">ROB DE ROOIJ</text>
+  </g>
+</svg>
