@@ -2011,7 +2011,33 @@ const MAX_INPUT_CHARS = 1500;  // per ingeven bericht
 const NOTIFY_THRESHOLD = 5;    // notify Rob na deze msgHistory-lengte (3 user-turns)
 let sessionNotified = false;   // één mail per browsersessie
 
-// XSS-safe message renderer
+// Mail-adressen → klikbare mailto's, met juiste redirect voor onze publieke alias
+const EMAIL_RE = /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g;
+const EMAIL_REDIRECTS = {
+  'contact@rob-concepting.com': 'mailto:robderooijbreda@gmail.com?subject=Contact%20via%20rob-concepting.com'
+};
+
+// Veilig text-met-emails renderen: createElement + textContent per fragment, geen innerHTML
+function appendTextWithEmailLinks(parent, text) {
+  EMAIL_RE.lastIndex = 0;
+  let lastIndex = 0, match;
+  while ((match = EMAIL_RE.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parent.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+    }
+    const a = document.createElement('a');
+    a.href = EMAIL_REDIRECTS[match[0]] || ('mailto:' + match[0]);
+    a.textContent = match[0];
+    a.className = 'chat-mail-link';
+    parent.appendChild(a);
+    lastIndex = EMAIL_RE.lastIndex;
+  }
+  if (lastIndex < text.length) {
+    parent.appendChild(document.createTextNode(text.slice(lastIndex)));
+  }
+}
+
+// XSS-safe message renderer met automatische email-linkificatie
 function addMsg(text, who) {
   const div = document.createElement('div');
   div.className = 'chat-msg' + (who === 'user' ? ' user' : '');
@@ -2022,7 +2048,11 @@ function addMsg(text, who) {
 
   const textDiv = document.createElement('div');
   textDiv.className = 'chat-msg-text';
-  textDiv.textContent = text;
+  if (who === 'user') {
+    textDiv.textContent = text; // gebruikersinvoer puur als tekst — geen linkification, geen XSS-risico
+  } else {
+    appendTextWithEmailLinks(textDiv, text);
+  }
 
   div.appendChild(whoSpan);
   div.appendChild(textDiv);
