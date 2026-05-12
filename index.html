@@ -934,6 +934,80 @@
       .sd-panel { padding: 28px 22px; max-height: 88vh; }
       .sd-close { top: 12px; right: 12px; }
     }
+
+    /* ── R.O.B.-betekenissen overlay ── */
+    #rob-meanings-overlay {
+      position: fixed; inset: 0; z-index: 998;
+      background: rgba(8,10,22,0.93);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+      padding: clamp(20px, 4vh, 50px);
+      overflow-y: auto;
+    }
+    #rob-meanings-overlay.active { opacity: 1; pointer-events: all; }
+    .rm-panel {
+      background: var(--screen);
+      border: 1px solid rgba(15,168,203,0.18);
+      border-radius: 12px;
+      max-width: 1100px; width: 100%;
+      padding: clamp(28px, 4vw, 56px);
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      max-height: 92vh; overflow-y: auto;
+    }
+    .rm-intro {
+      font-size: 14px; color: rgba(238,242,247,0.78);
+      line-height: 1.7; font-weight: 400;
+      margin-bottom: 32px; max-width: 720px;
+    }
+    .rm-category {
+      margin-bottom: 28px;
+    }
+    .rm-category-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: var(--cyan);
+      letter-spacing: 0.22em; text-transform: uppercase;
+      margin-bottom: 12px; font-weight: 500;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(15,168,203,0.18);
+    }
+    .rm-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .rm-item {
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      font-size: 12.5px; line-height: 1.4;
+      color: rgba(238,242,247,0.85);
+      transition: background 0.22s, border-color 0.22s, transform 0.22s;
+    }
+    .rm-item:hover {
+      background: rgba(15,168,203,0.08);
+      border-color: rgba(15,168,203,0.32);
+      transform: translateY(-1px);
+    }
+    .rm-item strong {
+      color: var(--cyan); font-weight: 600;
+    }
+    .rm-footer {
+      margin-top: 20px; padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: rgba(238,242,247,0.5);
+      letter-spacing: 0.1em; text-align: center;
+    }
+    @media (max-width: 920px) {
+      .rm-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .rm-grid { grid-template-columns: 1fr; }
+      .rm-panel { padding: 24px 18px; max-height: 90vh; }
+    }
     @media (max-width: 720px) {
       .systems-grid { grid-template-columns: 1fr; }
     }
@@ -1654,6 +1728,10 @@
                 FRICTIE &nbsp;&rarr;&nbsp; VISIE &nbsp;&rarr;&nbsp; SYSTEEM &nbsp;&rarr;&nbsp; MERK
               </div>
               <button class="cta-rob" data-cta="rob">Spreek R.O.B. <span class="cta-rob-arrow">&rarr;</span></button>
+              <button class="meta-link" id="btn-rob-meanings" type="button" aria-haspopup="dialog" style="margin-top: 24px;">
+                <span class="meta-link-arrow">&#8599;</span>
+                <span>Weten waar R.O.B. voor staat?</span>
+              </button>
             </div>
 
             <!-- Credentials card -->
@@ -1982,6 +2060,28 @@
       <br>
       Wil je iets soortgelijks voor je eigen onderneming? <a href="#rob" id="sd-go-rob">Open R.O.B.</a>
     </p>
+  </div>
+</div>
+
+
+<!-- ══════ R.O.B.-BETEKENISSEN OVERLAY ══════ -->
+<div id="rob-meanings-overlay" role="dialog" aria-modal="true" aria-labelledby="rm-title-id">
+  <div class="rm-panel">
+    <button class="sd-close" id="rm-close" aria-label="Sluit">&times;</button>
+
+    <div class="sd-tag">meta &mdash; 100 lezingen van R.O.B.</div>
+    <h2 class="sd-title" id="rm-title-id">Waar staat R.O.B. <strong>nog meer</strong> voor?</h2>
+    <div class="sd-bar"></div>
+
+    <p class="rm-intro">
+      Het officiële antwoord: R.O.B. staat voor Rob de Rooij &mdash; Concepting Expert.
+      Maar als je naar drie letters kijkt en concepting toepast, kan er nogal wat doorklinken.
+      Van strak zakelijk tot losse pols, van wetenschappelijk tot welbewust nergens op slaande.
+    </p>
+
+    <div id="rm-content"></div>
+
+    <p class="rm-footer">Honderd lezingen &middot; Slechts &eacute;&eacute;n in het officieel handelsregister.</p>
   </div>
 </div>
 
@@ -2509,6 +2609,168 @@ sdGoRob.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && sdOverlay.classList.contains('active')) closeSystemDemo();
+});
+
+// ── R.O.B.-betekenissen overlay (100 lezingen) ──
+const ROB_MEANINGS = {
+  'Business & Strategie': [
+    'Richting Op Bouwen',
+    'Resultaat Op Bestelling',
+    'Roadmap Ondernemend Bezielen',
+    'Risico Onder Beheer',
+    'Reset Of Bust',
+    'Rendement Op Beweging',
+    'Routines Ontwerpen Bewust',
+    'Realiteit Ondernemend Bouwen',
+    'Recht Op Beslissen',
+    'Resources Op Behoefte',
+    'Resultaat Ontstaat Bij Doen',
+    'Roer Om in Beweging'
+  ],
+  'Marketing & Communicatie': [
+    'Reach Op Boodschap',
+    'Resonantie Ontwerpen Bewust',
+    'Reputatie Opbouwend Bewaken',
+    'Relaties Onderhouden Bouwen',
+    'Retorica Ontledend Brengen',
+    'Ritme Op Bandbreedte',
+    'Repositionering Onmiddellijk Beginnen',
+    'Rauwe Originele Branding',
+    'Refererend Onderscheidend Beleven',
+    'Reden Ondersteunend Beweren',
+    'Reactie Op Boodschap'
+  ],
+  'Humoristisch': [
+    'Roostervrije Ongekende Bezigheden',
+    'Roze Olifanten Bestaan',
+    'Rare Onhandige Bekentenissen',
+    'Rondom Ongegeneerd Babbelen',
+    'Random Ongepland Bedacht',
+    'Robotisch Ongepolijste Bromtonen',
+    'Ridiculiserend Onverbeterlijk Brutalisme',
+    'Rommelig Onverzorgd Briljant',
+    'Reuzelig Onverteerbaar Beleven',
+    'Rondzwervend Ondergeschikt Bohème',
+    'Rebels Ongepast Babbelen',
+    'Roze Onverzettelijk Brilglas'
+  ],
+  'Filosofisch': [
+    'Ruimte Om te Bestaan',
+    'Rust Om Beweging',
+    'Reflectie Op Bedoeling',
+    'Recht Op Bestaan',
+    'Roeping Ontmoet Beroep',
+    'Realisatie Ontstaat Binnenuit',
+    'Resoneren Om Begrijpen',
+    'Reizen Om Beklijven',
+    'Realiteit Onderzoekt Bevinding',
+    'Richting Ontstaat Buiten Plannen',
+    'Recht Op Bewustzijn',
+    'Reizen Op Bezinning'
+  ],
+  'Wetenschappelijk': [
+    'Rationeel Onderbouwd Bouwen',
+    'Replicatie Onafhankelijk Bevestigt',
+    'Reproduceerbaar Onderzoek Bewijst',
+    'Re&euml;el Onderzocht Beredeneerd',
+    'Recursief Optimaliseren Beredeneren',
+    'Risico Op Berekening',
+    'Robuust Op Bewijslast',
+    'Refererend Onderbouwd Bewijzen',
+    'Ruwe Observatie Beoordelen',
+    'Rangschikking Op Bijdrage'
+  ],
+  'Technisch & AI': [
+    'Real-time Operational Bridge',
+    'Recursive Output Builder',
+    'Repository Of Brains',
+    'Render Optimized Bundle',
+    'Reactive Object Behaviour',
+    'Reasoning Over Bytes',
+    'Robust Operational Brain',
+    'REST Of Backends',
+    'Refactor Optimize Build',
+    'Rapid Output Bouwwerk'
+  ],
+  'Literair & Artistiek': [
+    'Ritme Of Beelden',
+    'Refrein Onderbreekt Bewustzijn',
+    'Roman Ontstaat Brokjesgewijs',
+    'Reisverslag Onderweg Bedacht',
+    'Rauw Op Beeld',
+    'Ruwe Onaffe Bouwstenen',
+    'Rede Ontmoet Beeldspraak',
+    'Rumoer Om Begrip',
+    'Romantiek Op Beleven',
+    'Refrein Ontstaat Bij Refrein'
+  ],
+  'Persoonlijk &mdash; van Rob zelf': [
+    'Rob Ontwerpt Bedrijven',
+    "Rob's Originele Bouwsels",
+    'Rob Ondernemer Bij u',
+    "Rob's Onafhankelijke Bouwwerk",
+    'Rob Onverstoord Bouwen',
+    'Rob Op Bezoek',
+    "Rob's Open Brein",
+    'Rob Ontmoet Beslissers',
+    "Rob's Onverbloemde Blik",
+    'Rob Ondersteunt Bouwers'
+  ],
+  'Provocerend': [
+    'Reset Op Bevel',
+    'Roeptoeter Onmiddellijk Bezwerend',
+    'Rondom Ontkracht Bezwaarlijk',
+    'Rebelse Ondoorgrondelijke Beweegredenen',
+    'Rauw Onverteerbaar Bedacht',
+    'Recht Op Bezwaar',
+    'Revolutie Onontkoombaar Bezegelt',
+    'Ronkende Onbewezen Beweringen'
+  ]
+};
+
+function renderRobMeanings() {
+  const container = document.getElementById('rm-content');
+  let html = '';
+  for (const [category, items] of Object.entries(ROB_MEANINGS)) {
+    html += `<div class="rm-category"><div class="rm-category-label">${category}</div><div class="rm-grid">`;
+    for (const item of items) {
+      // Highlight de R O B letters lichtjes — pak eerste 3 woordbegin-letters
+      const words = item.split(' ');
+      const highlighted = words.map((w, i) => {
+        if (i < 3 && /^[RrOoBb]/.test(w)) {
+          return '<strong>' + w[0] + '</strong>' + w.slice(1);
+        }
+        return w;
+      }).join(' ');
+      html += `<div class="rm-item">${highlighted}</div>`;
+    }
+    html += `</div></div>`;
+  }
+  container.innerHTML = html;
+}
+
+const rmOverlay = document.getElementById('rob-meanings-overlay');
+const rmClose   = document.getElementById('rm-close');
+const rmOpenBtn = document.getElementById('btn-rob-meanings');
+let rmRendered = false;
+
+function openRobMeanings() {
+  if (!rmRendered) { renderRobMeanings(); rmRendered = true; }
+  rmOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  rmClose.focus();
+}
+function closeRobMeanings() {
+  rmOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+  rmOpenBtn?.focus();
+}
+
+rmOpenBtn.addEventListener('click', openRobMeanings);
+rmClose.addEventListener('click', closeRobMeanings);
+rmOverlay.addEventListener('click', e => { if (e.target === rmOverlay) closeRobMeanings(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && rmOverlay.classList.contains('active')) closeRobMeanings();
 });
 
 // ── Video overlay ──
