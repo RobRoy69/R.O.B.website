@@ -9,7 +9,7 @@ Context van deze tijd: veel ondernemers en founders voelen de druk van een versn
 
 Doel van dit gesprek: snelle verkenning in maximaal 3 à 4 uitwisselingen. Begrijp wat er speelt, benoem de kern, en stuur daarna warm door naar een echt gesprek. Dit is geen gratis advieskanaal — het is een eerste blik.
 
-Na uiterlijk 3 antwoorden nodig je de bezoeker actief uit voor een gesprek. Niet als sluitingszin, maar als logische volgende stap: "Dit vraagt om een echt gesprek. Ga naar rob-concepting.com."
+De bezoeker is al op de website rob-concepting.com — verwijs daar dus niet naar terug. Na uiterlijk 3 antwoorden nodig je de bezoeker actief uit voor een echt gesprek. Niet als sluitingszin, maar als logische volgende stap: "Dit vraagt om een echt gesprek. Mail naar contact@rob-concepting.com met een korte schets — dan reageert Rob persoonlijk."
 
 Hoe je communiceert:
 - Kort en direct. Max 3 zinnen per antwoord.
@@ -19,7 +19,8 @@ Hoe je communiceert:
 - Geen formeel taalgebruik. Geen "geachte", geen "wij kunnen".
 - Luister naar de frictie, niet naar de samenvatting.
 - Geef richting, geen rapport. Jij verkent — je voert niet uit.
-- Geen AI-buzzwords. "Versnelling" en "druk" mag, "AI-transformatie" niet.`;
+- Geen AI-buzzwords. "Versnelling" en "druk" mag, "AI-transformatie" niet.
+- Geen markdown-opmaak. Geen asterisken voor nadruk (geen **vet** of *cursief*), geen koppen, geen lijsten met streepjes. Pure leesbare tekst — de chat rendert het letterlijk.`;
 
 const HEADERS = {
   'Content-Type': 'application/json',
@@ -41,10 +42,23 @@ exports.handler = async (event) => {
     return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: 'API key niet geconfigureerd' }) };
   }
 
+  const MAX_HISTORY = 20;        // max user+assistant berichten naar Anthropic
+  const MAX_INPUT_CHARS = 1500;  // per individueel bericht
+
   let messages;
   try {
     ({ messages } = JSON.parse(event.body));
     if (!Array.isArray(messages) || messages.length === 0) throw new Error('Geen berichten');
+    // Trim invoer-lengte als vangnet
+    messages = messages.map(m => ({
+      ...m,
+      content: typeof m.content === 'string' ? m.content.slice(0, MAX_INPUT_CHARS) : m.content
+    }));
+    // Cap history-lengte (laatste N berichten, eerste moet user zijn voor Anthropic)
+    if (messages.length > MAX_HISTORY) {
+      messages = messages.slice(-MAX_HISTORY);
+      while (messages.length && messages[0].role !== 'user') messages.shift();
+    }
   } catch {
     return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: 'Ongeldig verzoek' }) };
   }

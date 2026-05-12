@@ -1712,7 +1712,7 @@
               <span style="margin-left:4px">R.O.B. denkt na</span>
             </div>
             <div class="chat-input-row">
-              <input class="chat-input" id="chat-in" type="text" placeholder="Stel een vraag of beschrijf je situatie…" autocomplete="off">
+              <input class="chat-input" id="chat-in" type="text" placeholder="Stel een vraag of beschrijf je situatie…" autocomplete="off" maxlength="1500">
               <button class="chat-send" id="chat-btn">Stuur →</button>
             </div>
           </div>
@@ -1837,6 +1837,8 @@ const chatBtn    = document.getElementById('chat-btn');
 const chatTyping = document.getElementById('chat-typing');
 
 const msgHistory = [];
+const MAX_HISTORY = 12;       // cap context: laatste 12 berichten naar de Function
+const MAX_INPUT_CHARS = 1500; // per ingeven bericht
 
 // XSS-safe message renderer
 function addMsg(text, who) {
@@ -1880,11 +1882,17 @@ function addErrorMsg() {
 }
 
 async function sendMsg() {
-  const val = chatIn.value.trim();
+  if (chatBtn.disabled) return; // voorkom dubbele submits tijdens fetch
+  const val = chatIn.value.trim().slice(0, MAX_INPUT_CHARS);
   if (!val) return;
 
   addMsg(val, 'user');
   msgHistory.push({ role: 'user', content: val });
+  // Cap history: hou alleen de laatste N berichten, beginnend met een user-bericht
+  if (msgHistory.length > MAX_HISTORY) {
+    msgHistory.splice(0, msgHistory.length - MAX_HISTORY);
+    while (msgHistory.length && msgHistory[0].role !== 'user') msgHistory.shift();
+  }
   chatIn.value = '';
   chatTyping.classList.add('visible');
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
