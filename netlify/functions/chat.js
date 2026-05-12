@@ -28,6 +28,50 @@ const HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type'
 };
 
+// Stuurt een samenvatting van het gesprek naar Rob's mailbox via Resend.
+// Faalt stil als Resend niet is geconfigureerd of de mail mislukt — chat blijft werken.
+async function notifyRob(conversation) {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) return;
+
+  const toEmail   = process.env.NOTIFY_EMAIL || 'robderooijbreda@gmail.com';
+  const fromEmail = process.env.NOTIFY_FROM  || 'R.O.B. Concepting <onboarding@resend.dev>';
+
+  const turns = conversation.filter(m => m.role === 'user').length;
+  const timestamp = new Date().toLocaleString('nl-NL', {
+    timeZone: 'Europe/Amsterdam', dateStyle: 'short', timeStyle: 'short'
+  });
+
+  const body = conversation.map(m => {
+    const who = m.role === 'user' ? 'BEZOEKER' : 'R.O.B.';
+    return `${who}:\n${m.content}\n`;
+  }).join('\n');
+
+  const text = `Een bezoeker had een verkenning met R.O.B.\n\nTijd: ${timestamp}\nUitwisselingen: ${turns}\n\n— GESPREK —\n\n${body}\n— EINDE —\n\nBron: rob-concepting.com`;
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: [toEmail],
+        subject: `R.O.B. — verkenning ingekomen (${turns} turns)`,
+        text
+      })
+    });
+    if (!res.ok) {
+      const err = await res.text().catch(() => '');
+      console.error('Resend non-OK:', res.status, err.slice(0, 200));
+    }
+  } catch (e) {
+    console.error('Notify failed:', e.message);
+  }
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers: HEADERS, body: '' };
@@ -45,9 +89,11 @@ exports.handler = async (event) => {
   const MAX_HISTORY = 20;        // max user+assistant berichten naar Anthropic
   const MAX_INPUT_CHARS = 1500;  // per individueel bericht
 
-  let messages;
+  let messages, notify = false;
   try {
-    ({ messages } = JSON.parse(event.body));
+    const parsed = JSON.parse(event.body);
+    messages = parsed.messages;
+    notify = parsed.notify === true;
     if (!Array.isArray(messages) || messages.length === 0) throw new Error('Geen berichten');
     // Trim invoer-lengte als vangnet
     messages = messages.map(m => ({
@@ -87,6 +133,12 @@ exports.handler = async (event) => {
     const data = await res.json();
     const reply = data.content?.[0]?.text;
     if (!reply) throw new Error('Leeg antwoord van model');
+
+    // Stuur samenvatting per mail als de frontend daarom vraagt (één keer per sessie, drempel = 3 turns)
+    if (notify) {
+      const fullConvo = [...messages, { role: 'assistant', content: reply }];
+      await notifyRob(fullConvo);
+    }
 
     return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ reply }) };
 

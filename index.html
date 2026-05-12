@@ -1862,8 +1862,10 @@ const chatBtn    = document.getElementById('chat-btn');
 const chatTyping = document.getElementById('chat-typing');
 
 const msgHistory = [];
-const MAX_HISTORY = 12;       // cap context: laatste 12 berichten naar de Function
-const MAX_INPUT_CHARS = 1500; // per ingeven bericht
+const MAX_HISTORY = 12;        // cap context: laatste 12 berichten naar de Function
+const MAX_INPUT_CHARS = 1500;  // per ingeven bericht
+const NOTIFY_THRESHOLD = 5;    // notify Rob na deze msgHistory-lengte (3 user-turns)
+let sessionNotified = false;   // één mail per browsersessie
 
 // XSS-safe message renderer
 function addMsg(text, who) {
@@ -1924,12 +1926,16 @@ async function sendMsg() {
   chatBtn.disabled = true;
   chatIn.disabled  = true;
 
+  // Notificatie naar Rob bij eerste keer dat we de drempel passeren
+  const shouldNotify = !sessionNotified && msgHistory.length >= NOTIFY_THRESHOLD;
+
   try {
     const res = await fetch('/.netlify/functions/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: msgHistory })
+      body: JSON.stringify({ messages: msgHistory, notify: shouldNotify })
     });
+    if (shouldNotify) sessionNotified = true;
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
