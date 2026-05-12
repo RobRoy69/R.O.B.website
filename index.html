@@ -236,11 +236,6 @@
       pointer-events: none;
     }
 
-    .landing-tagline {
-      font-size: 12px; color: var(--muted); letter-spacing: 0.14em;
-      font-weight: 300;
-    }
-    .landing-tagline em { font-style: normal; opacity: 0.45; margin: 0 5px; }
     .landing-subtitle {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
@@ -682,70 +677,7 @@
       transform: translateY(-2px);
     }
 
-    /* VISIE — info diagram */
-    .visie-diagram {
-      display: flex; flex-direction: column; gap: 0;
-      max-width: clamp(480px, 50vw, 760px); margin-bottom: 36px;
-    }
-    .vd-row {
-      display: flex; align-items: stretch;
-    }
-    .vd-node {
-      flex: 1; padding: 16px 20px;
-      border: 1px solid rgba(255,255,255,0.07);
-      position: relative;
-    }
-    .vd-node + .vd-node { border-left: none; }
-    .vd-row + .vd-row .vd-node { border-top: none; }
-    .vd-node-title {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 9px; color: var(--cyan); letter-spacing: 0.18em;
-      text-transform: uppercase; margin-bottom: 8px; font-weight: 400;
-    }
-    .vd-node-items {
-      display: flex; flex-direction: column; gap: 4px;
-    }
-    .vd-node-item {
-      font-size: 11.5px; color: rgba(238,242,247,0.5);
-      line-height: 1.4; font-weight: 300;
-    }
-    .vd-connector {
-      width: 100%; height: 28px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .vd-arrow {
-      width: 1px; height: 100%;
-      background: linear-gradient(to bottom, rgba(15,168,203,0.3), rgba(15,168,203,0.1));
-      position: relative;
-    }
-    .vd-arrow::after {
-      content: '';
-      position: absolute; bottom: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 0; height: 0;
-      border-top: 5px solid rgba(15,168,203,0.4);
-      border-left: 4px solid transparent;
-      border-right: 4px solid transparent;
-    }
-    .vd-phase-wrap {
-      display: flex; flex-direction: column; gap: 0;
-    }
-    .vd-phase-header {
-      padding: 10px 20px;
-      border: 1px solid rgba(255,255,255,0.09);
-      border-bottom: none;
-    }
-    .vd-phase-title {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; color: rgba(238,242,247,0.7);
-      letter-spacing: 0.1em; font-weight: 400;
-    }
-    .vd-phase-arrow {
-      display: flex; align-items: center; justify-content: center;
-      padding: 8px 0; font-size: 11px; color: rgba(15,168,203,0.4);
-    }
-
-    /* VISIE — flow diagram (redesign) */
+    /* VISIE — flow diagram */
     .visie-formula {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 9.5px; color: rgba(15,168,203,0.55);
@@ -1002,51 +934,6 @@
       .over-layout { flex-direction: column; gap: 28px; }
       .cred-card { width: 100%; max-width: 360px; position: static; }
     }
-
-    /* CHAT — API key bar */
-    .chat-api-bar {
-      display: flex; gap: 8px; align-items: center;
-      margin-bottom: 14px;
-      padding: 10px 12px;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 6px;
-      background: rgba(255,255,255,0.02);
-    }
-    .chat-api-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 9px; color: rgba(15,168,203,0.5);
-      letter-spacing: 0.14em; text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .chat-api-input {
-      flex: 1; background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 4px; padding: 5px 10px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px; color: rgba(238,242,247,0.6);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .chat-api-input:focus { border-color: rgba(15,168,203,0.35); }
-    .chat-api-input::placeholder { color: rgba(238,242,247,0.2); }
-    .chat-api-btn {
-      padding: 5px 12px; border-radius: 4px;
-      background: rgba(15,168,203,0.1);
-      border: 1px solid rgba(15,168,203,0.25);
-      color: rgba(15,168,203,0.8);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 9px; letter-spacing: 0.1em;
-      cursor: pointer; white-space: nowrap;
-      transition: background 0.2s;
-    }
-    .chat-api-btn:hover { background: rgba(15,168,203,0.18); }
-    .chat-api-status {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 9px; letter-spacing: 0.08em;
-      white-space: nowrap;
-    }
-    .chat-api-status.ok  { color: rgba(15,168,203,0.6); }
-    .chat-api-status.err { color: rgba(232,57,30,0.6); }
 
     /* MIDDEL — tools grid */
     .tools-grid {
@@ -1938,11 +1825,24 @@ window.addEventListener('hashchange', () => {
 // ── Reduced-motion helper ──
 const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// ── Scroll-helper voor mobiel: panel-r in beeld na pane-wissel ──
+function scrollPanelIntoViewMobile() {
+  if (window.innerWidth > 700) return;
+  const panel = document.querySelector('.panel-r');
+  if (panel) panel.scrollIntoView({
+    behavior: motionOK ? 'smooth' : 'auto',
+    block: 'start'
+  });
+}
+
 // ── Diamond nav ──
 const dnBtns   = document.querySelectorAll('.dn-btn');
 const panes    = document.querySelectorAll('.pane');
 const hdrState = document.getElementById('hdr-state');
 let werkPreviewLoaded = false;
+
+// Welke verbindingslijn highlight bij welke actieve pane (rob = center, geen lijn)
+const lineMap = { over:'l-over', visie:'l-visie', werk:'l-werk', middel:'l-middel', rob:null };
 
 function activatePane(target) {
   // Buttons
@@ -1978,17 +1878,10 @@ function activatePane(target) {
   setHashPane(target);
 }
 
-// Line map: which line highlights when a button is active
-const lineMap = { over:'l-over', visie:'l-visie', werk:'l-werk', middel:'l-middel', rob:null };
-
 dnBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     activatePane(btn.dataset.p);
-    if (window.innerWidth <= 700) {
-      document.querySelector('.panel-r').scrollIntoView({
-        behavior: motionOK ? 'smooth' : 'auto', block: 'start'
-      });
-    }
+    scrollPanelIntoViewMobile();
   });
 });
 
@@ -1996,11 +1889,7 @@ dnBtns.forEach(btn => {
 document.querySelectorAll('.cta-rob').forEach(btn => {
   btn.addEventListener('click', () => {
     activatePane('rob');
-    if (window.innerWidth <= 700) {
-      document.querySelector('.panel-r').scrollIntoView({
-        behavior: motionOK ? 'smooth' : 'auto', block: 'start'
-      });
-    }
+    scrollPanelIntoViewMobile();
   });
 });
 
@@ -2141,11 +2030,7 @@ chatIn.addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
 // Action-knop in de chat naar Over-pane
 document.getElementById('chat-action-over').addEventListener('click', () => {
   activatePane('over');
-  if (window.innerWidth <= 700) {
-    document.querySelector('.panel-r').scrollIntoView({
-      behavior: motionOK ? 'smooth' : 'auto', block: 'start'
-    });
-  }
+  scrollPanelIntoViewMobile();
 });
 
 // ── Video overlay ──
