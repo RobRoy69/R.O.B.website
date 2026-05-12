@@ -769,11 +769,16 @@
       flex: 1; padding: 20px 18px;
       border: 1px solid rgba(255,255,255,0.07);
       display: flex; flex-direction: column;
-      transition: border-color 0.25s, background 0.25s;
+      transition: border-color 0.28s, background 0.28s, transform 0.28s ease, box-shadow 0.28s ease;
+      position: relative;
+      transform-origin: center center;
     }
     .vf-phase:hover {
-      border-color: rgba(15,168,203,0.2);
-      background: rgba(15,168,203,0.025);
+      border-color: rgba(15,168,203,0.4);
+      background: rgba(15,168,203,0.05);
+      transform: scale(1.05);
+      box-shadow: 0 12px 36px rgba(15,168,203,0.18);
+      z-index: 2;
     }
     .vf-phase + .vf-phase { border-left: none; }
     .vf-num {
