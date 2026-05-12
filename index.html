@@ -1253,6 +1253,22 @@
       outline-offset: 2px;
     }
     .chat-action-arrow { font-size: 12px; opacity: 0.85; }
+
+    /* Bewaar-verkenning knop — verschijnt na 3+ turns */
+    .chat-action-btn.save-btn { display: none; }
+    .chat-action-btn.save-btn.visible {
+      display: inline-flex;
+      background: rgba(232,57,30,0.08);
+      border-color: rgba(232,57,30,0.32);
+      color: rgba(232,57,30,0.92);
+    }
+    .chat-action-btn.save-btn.visible:hover {
+      background: rgba(232,57,30,0.16);
+      border-color: rgba(232,57,30,0.52);
+    }
+    .chat-action-btn.save-btn.visible:focus-visible {
+      outline: 2px solid rgba(232,57,30,0.6);
+    }
     .chat-send {
       padding: 12px 20px;
       background: var(--cyan); border: none; border-radius: 8px;
@@ -1873,6 +1889,10 @@
                 <span class="chat-action-arrow">&#8599;</span>
                 <span>Over R.O.B.</span>
               </button>
+              <button class="chat-action-btn save-btn" id="chat-action-save" type="button" aria-label="Download je verkenning als afbeelding">
+                <span class="chat-action-arrow">&#8595;</span>
+                <span>Bewaar je verkenning</span>
+              </button>
             </div>
             <div class="chat-input-row">
               <input class="chat-input" id="chat-in" type="text" placeholder="Stel een vraag of beschrijf je situatie…" autocomplete="off" maxlength="1500" aria-label="Bericht aan R.O.B.">
@@ -2291,6 +2311,7 @@ async function sendMsg() {
     // Finaliseer: linkify emails, weg met cursor
     renderStreamingMsg(streamingEl, accumulated, true);
     msgHistory.push({ role: 'assistant', content: accumulated });
+    refreshSaveBtnVisibility();
 
   } catch (err) {
     chatTyping.classList.remove('visible');
@@ -2314,6 +2335,151 @@ document.getElementById('chat-action-over').addEventListener('click', () => {
   activatePane('over');
   scrollPanelIntoViewMobile();
 });
+
+// ── Bewaar-verkenning knop: verschijnt zodra er substantie is ──
+const saveBtn = document.getElementById('chat-action-save');
+
+function refreshSaveBtnVisibility() {
+  const userTurns = msgHistory.filter(m => m.role === 'user').length;
+  if (userTurns >= 3) saveBtn.classList.add('visible');
+}
+
+// XML-veilig escapen voor SVG-inbedding
+function svgEscape(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'
+  }[c]));
+}
+
+// Naive word-wrap voor SVG-tekstregels
+function wrapTextLines(text, maxCharsPerLine) {
+  const words = String(text).replace(/\s+/g, ' ').trim().split(' ');
+  const lines = [];
+  let current = '';
+  for (const w of words) {
+    if ((current + ' ' + w).trim().length > maxCharsPerLine) {
+      if (current) lines.push(current);
+      current = w;
+    } else {
+      current = (current ? current + ' ' : '') + w;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+// Bouwt een staand SVG-document van de conversatie + branding
+function buildVerkenningSVG() {
+  const W = 800;
+  const PAD_X = 64;
+  const dateNL = new Date().toLocaleDateString('nl-NL', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+  const sessionId = Math.random().toString(36).slice(2, 8).toUpperCase();
+
+  // Build conversation blocks
+  let y = 280;
+  const blocks = [];
+
+  msgHistory.forEach(m => {
+    const isUser = m.role === 'user';
+    const label = isUser ? 'JIJ' : 'R.O.B.';
+    const labelColor = isUser ? '#e8391e' : '#0fa8cb';
+    const lines = wrapTextLines(m.content, 64);
+    const blockH = 26 + lines.length * 22 + 20;
+    blocks.push({ y, label, labelColor, lines, isUser, blockH });
+    y += blockH;
+  });
+
+  const totalH = y + 200;
+
+  const blocksSvg = blocks.map(b => {
+    const lineSvg = b.lines.map((line, i) =>
+      `<text x="${PAD_X + 14}" y="${b.y + 22 + i * 22}" font-size="13" font-weight="400" fill="${b.isUser ? '#001a4d' : '#001a4d'}" fill-opacity="0.88">${svgEscape(line)}</text>`
+    ).join('\n      ');
+    const bgColor = b.isUser ? 'rgba(232,57,30,0.05)' : 'rgba(15,168,203,0.05)';
+    const borderColor = b.isUser ? 'rgba(232,57,30,0.18)' : 'rgba(15,168,203,0.18)';
+    return `
+    <g>
+      <rect x="${PAD_X}" y="${b.y - 18}" width="${W - PAD_X * 2}" height="${b.blockH - 6}" fill="${bgColor}" stroke="${borderColor}" stroke-width="1" rx="6"/>
+      <text x="${PAD_X + 14}" y="${b.y - 2}" font-family="IBM Plex Mono, monospace" font-size="9" font-weight="500" fill="${b.labelColor}" letter-spacing="2">${b.label}</text>
+      ${lineSvg}
+    </g>`;
+  }).join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${totalH}" width="${W}" height="${totalH}" font-family="DM Sans, Helvetica, Arial, sans-serif">
+  <rect width="${W}" height="${totalH}" fill="#e8e4dc"/>
+
+  <!-- Background geometry -->
+  <radialGradient id="bgA" cx="80%" cy="6%" r="35%">
+    <stop offset="0%" stop-color="#0fa8cb" stop-opacity="0.08"/>
+    <stop offset="100%" stop-color="#e8e4dc" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="${W}" height="${totalH}" fill="url(#bgA)"/>
+
+  <!-- Header -->
+  <g transform="translate(${PAD_X}, 64)">
+    <text x="0" y="0" font-size="28" font-weight="800" fill="#001a4d" letter-spacing="3">R.O.B.</text>
+    <text x="138" y="0" font-size="13" font-weight="500" fill="#0fa8cb" letter-spacing="4.5">CONCEPTING</text>
+    <!-- 3-circle icon -->
+    <g transform="translate(0, 22)">
+      <line x1="18" y1="18" x2="142" y2="18" stroke="#9ba5b5" stroke-width="1" opacity="0.5"/>
+      <circle cx="18"  cy="18" r="15"  fill="none" stroke="#9ba5b5" stroke-width="1.2" opacity="0.55"/>
+      <circle cx="18"  cy="18" r="8.5" fill="none" stroke="#9ba5b5" stroke-width="1" opacity="0.45"/>
+      <circle cx="18"  cy="18" r="3"   fill="#0fa8cb"/>
+      <circle cx="80"  cy="18" r="15"  fill="none" stroke="#0fa8cb" stroke-width="1.5"/>
+      <circle cx="80"  cy="18" r="8.5" fill="none" stroke="#0fa8cb" stroke-width="1" opacity="0.7"/>
+      <circle cx="80"  cy="18" r="3"   fill="#e8391e"/>
+      <circle cx="142" cy="18" r="15"  fill="none" stroke="#9ba5b5" stroke-width="1.2" opacity="0.55"/>
+      <circle cx="142" cy="18" r="8.5" fill="none" stroke="#9ba5b5" stroke-width="1" opacity="0.45"/>
+      <circle cx="142" cy="18" r="3"   fill="#001a4d"/>
+    </g>
+  </g>
+
+  <!-- Right top -->
+  <g transform="translate(${W - PAD_X}, 64)" text-anchor="end" font-family="IBM Plex Mono, monospace">
+    <text y="0" font-size="11" font-weight="500" fill="#001a4d" fill-opacity="0.55" letter-spacing="3">JE VERKENNING</text>
+    <text y="20" font-size="11" font-weight="400" fill="#001a4d" fill-opacity="0.4" letter-spacing="2">${svgEscape(dateNL)} &middot; #${sessionId}</text>
+  </g>
+
+  <!-- Title -->
+  <text x="${PAD_X}" y="190" font-size="36" font-weight="700" fill="#001a4d" letter-spacing="-0.5">Wat we besproken hebben</text>
+  <line x1="${PAD_X}" y1="218" x2="${PAD_X + 36}" y2="218" stroke="#0fa8cb" stroke-width="2"/>
+
+  <!-- Subtitle -->
+  <text x="${PAD_X}" y="252" font-size="13" font-weight="400" fill="#001a4d" fill-opacity="0.65">Een momentopname van de verkenning met R.O.B.</text>
+
+  <!-- Conversation blocks -->
+${blocksSvg}
+
+  <!-- Footer -->
+  <g transform="translate(${PAD_X}, ${totalH - 100})">
+    <line x1="0" y1="0" x2="${W - PAD_X * 2}" y2="0" stroke="#001a4d" stroke-opacity="0.12" stroke-width="1"/>
+    <text x="0" y="32" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="500" fill="#001a4d" fill-opacity="0.65" letter-spacing="2.5">VOLGENDE STAP</text>
+    <text x="0" y="58" font-size="14" font-weight="500" fill="#001a4d" fill-opacity="0.88">Mail naar contact@rob-concepting.com met deze schets &mdash; dan reageert Rob persoonlijk.</text>
+  </g>
+
+  <!-- Bottom URL -->
+  <text x="${W / 2}" y="${totalH - 24}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="500" fill="#001a4d" fill-opacity="0.5" letter-spacing="2">rob-concepting.com</text>
+</svg>`;
+}
+
+function downloadVerkenning() {
+  const svg = buildVerkenningSVG();
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const ts = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `R.O.B.-verkenning-${ts}.svg`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+saveBtn.addEventListener('click', downloadVerkenning);
 
 // ── Systeem-demo overlay ──
 const sdOverlay = document.getElementById('system-demo-overlay');
