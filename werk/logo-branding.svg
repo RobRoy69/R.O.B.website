@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#0e1525"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="150" x2="400" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <line x1="200" y1="0" x2="200" y2="300" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+  <!-- Horizontal axis connecting circles -->
+  <line x1="86" y1="115" x2="314" y2="115" stroke="rgba(155,165,181,0.35)" stroke-width="1"/>
+
+  <!-- Left circle group -->
+  <circle cx="118" cy="115" r="44" fill="none" stroke="rgba(155,165,181,0.45)" stroke-width="1.4"/>
+  <circle cx="118" cy="115" r="26" fill="none" stroke="rgba(155,165,181,0.28)" stroke-width="1"/>
+  <circle cx="118" cy="115" r="7"  fill="#0fa8cb" opacity="0.8"/>
+
+  <!-- Center circle group (primary) -->
+  <circle cx="200" cy="115" r="44" fill="none" stroke="#0fa8cb" stroke-width="2"/>
+  <circle cx="200" cy="115" r="26" fill="none" stroke="rgba(15,168,203,0.5)" stroke-width="1.5"/>
+  <circle cx="200" cy="115" r="7"  fill="#e8391e"/>
+
+  <!-- Right circle group -->
+  <circle cx="282" cy="115" r="44" fill="none" stroke="rgba(155,165,181,0.45)" stroke-width="1.4"/>
+  <circle cx="282" cy="115" r="26" fill="none" stroke="rgba(155,165,181,0.28)" stroke-width="1"/>
+  <circle cx="282" cy="115" r="7"  fill="rgba(0,26,77,0.8)"/>
+
+  <!-- Brand name -->
+  <text x="200" y="192" text-anchor="middle" font-family="monospace" font-size="20" fill="#e8e4dc" font-weight="700" letter-spacing="10">R.O.B.</text>
+  <text x="200" y="210" text-anchor="middle" font-family="monospace" font-size="8" fill="#0fa8cb" letter-spacing="7">CONCEPTING</text>
+
+  <!-- Divider -->
+  <line x1="140" y1="228" x2="260" y2="228" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+  <!-- Color palette swatches -->
+  <rect x="123" y="240" width="16" height="8" rx="2" fill="#0fa8cb"/>
+  <rect x="144" y="240" width="16" height="8" rx="2" fill="#e8391e"/>
+  <rect x="165" y="240" width="16" height="8" rx="2" fill="#001a4d"/>
+  <rect x="186" y="240" width="16" height="8" rx="2" fill="#e8e4dc" opacity="0.75"/>
+  <rect x="207" y="240" width="16" height="8" rx="2" fill="#7a6e85" opacity="0.6"/>
+  <rect x="228" y="240" width="16" height="8" rx="2" fill="#0e1525" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
+
+  <!-- Type specimen hint -->
+  <rect x="130" y="255" width="80" height="4" rx="1" fill="rgba(232,228,220,0.35)"/>
+  <rect x="130" y="263" width="52" height="3" rx="1" fill="rgba(232,228,220,0.18)"/>
+  <rect x="226" y="255" width="44" height="4" rx="1" fill="rgba(15,168,203,0.5)"/>
+  <rect x="226" y="263" width="60" height="3" rx="1" fill="rgba(15,168,203,0.25)"/>
+</svg>

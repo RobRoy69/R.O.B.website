@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R.O.B. Concepting — Systeem ontwerp voor MKB</title>
+  <meta name="description" content="R.O.B. Concepting bouwt visie, systeem en merk als één geheel. Structuur, identiteit en digitale uitvoering voor MKB-ondernemers.">
+  <meta property="og:title" content="R.O.B. Concepting">
+  <meta property="og:description" content="Visie, systeem en merk als geheel. Systeem ontwerp voor MKB.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://robconcepting.nl">
+  <meta property="og:image" content="https://robconcepting.nl/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="R.O.B. Concepting">
+  <meta name="twitter:description" content="Visie, systeem en merk als geheel.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230e1525'/><circle cx='16' cy='16' r='12' fill='none' stroke='%230fa8cb' stroke-width='1.5'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230fa8cb' stroke-width='1' opacity='.5'/><circle cx='16' cy='16' r='3' fill='%23e8391e'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* ── Variables ── */
+    :root {
+      --cream:   #e8e4dc;
+      --purple:  #001a4d;
+      --cyan:    #0fa8cb;
+      --red:     #e8391e;
+      --dark:    #0d0d1a;
+      --screen:  #0e1525;
+      --muted:   #7a6e85;
+      --border:  rgba(0,26,77,0.1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; background: var(--cream); }
+
+    /* ── Screen system ── */
+    .screen {
+      position: fixed; inset: 0;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.6s ease;
+      will-change: opacity;
+    }
+    .screen.active { opacity: 1; pointer-events: all; }
+
+    /* ── Landing background geometry ── */
+    #s-landing::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(circle at 72% 22%, rgba(15,168,203,0.07) 0%, transparent 38%),
+        radial-gradient(circle at 18% 78%, rgba(232,57,30,0.05) 0%, transparent 32%),
+        radial-gradient(circle at 50% 50%, rgba(0,26,77,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    #s-landing::after {
+      content: '';
+      position: absolute;
+      /* Left ghost circle cluster */
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,26,77,0.07);
+      top: 50%; left: 14%;
+      transform: translate(-50%, -50%);
+      box-shadow:
+        0 0 0 52px rgba(0,26,77,0.03),
+        0 0 0 104px rgba(0,26,77,0.018),
+        0 0 0 196px rgba(0,26,77,0.01);
+      pointer-events: none; z-index: 0;
+    }
+    .landing-wrap { position: relative; z-index: 1; }
+
+
+    /* ════════════════════════════════
+       SCREEN 1 — LANDING
+    ════════════════════════════════ */
+    #s-landing {
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .landing-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0; user-select: none;
+    }
+
+    /* Logo (geen tagline op landing) */
+    .landing-logo {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      margin-bottom: 52px;
+    }
+    .landing-logo-text {
+      display: flex; align-items: baseline; gap: 7px;
+    }
+    .landing-logo-rob {
+      font-size: 22px; font-weight: 700; letter-spacing: 0.12em;
+      color: var(--purple); line-height: 1;
+    }
+    .landing-logo-con {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.32em;
+      color: var(--cyan); text-transform: uppercase; line-height: 1;
+    }
+
+    /* PLAY button */
+    .play-btn {
+      width: 130px; height: 130px; border-radius: 50%;
+      background: var(--red);
+      border: none; cursor: pointer;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 6px;
+      box-shadow: 0 10px 40px rgba(232,57,30,0.28);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+      position: relative;
+    }
+    .play-btn::before {
+      content: '';
+      position: absolute; inset: -8px; border-radius: 50%;
+      border: 1px solid rgba(232,57,30,0.2);
+      animation: pulse-ring 2.4s ease-out infinite;
+      pointer-events: none;
+    }
+    .play-btn::after {
+      content: '';
+      position: absolute; inset: -18px; border-radius: 50%;
+      border: 1px solid rgba(232,57,30,0.1);
+      animation: pulse-ring 2.4s ease-out 0.6s infinite;
+      pointer-events: none;
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);   opacity: 1; }
+      100% { transform: scale(1.18); opacity: 0; }
+    }
+    .play-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 16px 48px rgba(232,57,30,0.36);
+    }
+    .play-btn:active { transform: scale(0.96); }
+    .play-triangle {
+      width: 0; height: 0;
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      border-left: 18px solid white;
+      margin-left: 4px;
+    }
+    .play-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.28em;
+      text-transform: uppercase; color: rgba(255,255,255,0.75);
+    }
+
+    /* Outer ring around button */
+    .play-outer-ring {
+      position: relative; width: 220px; height: 220px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 44px;
+    }
+    .play-outer-ring::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 1px solid rgba(33,0,55,0.1);
+      pointer-events: none;
+    }
+    .play-outer-ring::after {
+      content: '';
+      position: absolute; inset: 16px; border-radius: 50%;
+      border: 1px solid rgba(33,0,55,0.06);
+      pointer-events: none;
+    }
+
+    .landing-tagline {
+      font-size: 12px; color: var(--muted); letter-spacing: 0.14em;
+      font-weight: 300;
+    }
+    .landing-tagline em { font-style: normal; opacity: 0.45; margin: 0 5px; }
+    .landing-subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(0,26,77,0.52);
+      margin-bottom: 52px; margin-top: -12px;
+    }
+
+
+    /* ════════════════════════════════
+       SCREEN 2 — MICRO-TRANSITIE
+    ════════════════════════════════ */
+    #s-transition {
+      background: var(--screen);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 36px;
+    }
+
+    .gears-svg-wrap {
+      width: min(420px, 80vw);
+      height: min(320px, 61vw);
+      position: relative;
+    }
+    .gears-svg-wrap svg { width: 100%; height: 100%; }
+
+    /* Per-gear rotation via transform-origin */
+    .g-a { transform-origin: 44.3% 42.1%; animation: gcw  3.4s linear infinite; }
+    .g-b { transform-origin: 59.6% 48.6%; animation: gccw 2.5s linear infinite; }
+    .g-c { transform-origin: 51.4% 74.3%; animation: gcw  4.2s linear infinite; }
+    @keyframes gcw  { to { transform: rotate(360deg);  } }
+    @keyframes gccw { to { transform: rotate(-360deg); } }
+
+    .trans-seq {
+      display: flex; align-items: center; gap: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px; font-weight: 300;
+      color: rgba(238,242,247,0.85);
+      letter-spacing: 0.12em;
+    }
+    .tw {
+      opacity: 0;
+      filter: blur(6px);
+      transition: opacity 0.42s ease, filter 0.42s ease;
+    }
+    .tw.on { opacity: 1; filter: blur(0); }
+    .tdot { opacity: 0.25; font-size: 10px; }
+
+
+    /* ════════════════════════════════
+       SCREEN 3 — HOOFDINTERFACE
+    ════════════════════════════════ */
+    #s-interface {
+      background: #f6f3ee;
+      display: flex; flex-direction: column;
+    }
+
+    /* Header */
+    .hdr {
+      height: 54px; flex-shrink: 0;
+      background: rgba(246,243,238,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 28px; justify-content: space-between;
+      position: relative; z-index: 10;
+    }
+    .hdr-brand {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; text-decoration: none;
+    }
+    .hdr-name {
+      display: flex; flex-direction: column; gap: 1px;
+    }
+    .hdr-name-main {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--purple); line-height: 1;
+    }
+    .hdr-name-tag {
+      font-size: 8.5px; color: var(--muted); letter-spacing: 0.1em;
+      font-weight: 400; font-style: italic;
+    }
+    .hdr-right {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: rgba(33,0,55,0.3);
+      letter-spacing: 0.06em;
+    }
+
+    /* Body: left + right */
+    .interface-body {
+      flex: 1; display: flex; overflow: hidden; min-height: 0;
+    }
+
+    /* ── Left panel ── */
+    .panel-l {
+      width: clamp(280px, 22vw, 420px); flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--cream);
+    }
+
+    /* Diamond nav */
+    .diamond-nav {
+      position: relative;
+      width: clamp(220px, 16vw, 300px);
+      height: clamp(280px, 20vw, 380px);
+    }
+    .dn-svg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      overflow: visible; pointer-events: none;
+    }
+    .dn-svg line {
+      stroke: rgba(33,0,55,0.22); stroke-width: 1.2;
+      transition: stroke 0.3s, opacity 0.3s;
+    }
+    .dn-svg line.hl { stroke: var(--cyan); opacity: 0.8; stroke-width: 2; }
+
+    /* Nav buttons */
+    .dn-btn {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: white;
+      border: 1.5px solid rgba(33,0,55,0.14);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 3px;
+      transition: background 0.25s, border-color 0.25s,
+                  box-shadow 0.25s, transform 0.22s;
+      box-shadow: 0 2px 14px rgba(33,0,55,0.07);
+      font-family: inherit;
+    }
+    /* surrounding buttons */
+    .dn-btn.outer {
+      width: clamp(64px, 5vw, 86px);
+      height: clamp(64px, 5vw, 86px);
+    }
+    /* center R.O.B. */
+    .dn-btn.center {
+      width: clamp(80px, 6.2vw, 106px);
+      height: clamp(80px, 6.2vw, 106px);
+      background: var(--purple);
+      border-color: var(--purple);
+      box-shadow: 0 6px 28px rgba(33,0,55,0.22);
+      z-index: 2;
+    }
+    .dn-btn.center .dn-label { color: white; }
+    .dn-btn.center .dn-dot { background: var(--cyan); opacity: 1; }
+
+    .dn-btn.outer:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 4px 22px rgba(15,168,203,0.2);
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+    .dn-btn.center:hover {
+      background: #3a0060;
+      transform: translate(-50%, -50%) scale(1.05);
+      box-shadow: 0 10px 36px rgba(33,0,55,0.3);
+    }
+    .dn-btn.center.rob-active {
+      box-shadow: 0 6px 28px rgba(15,168,203,0.4), 0 0 0 2px rgba(15,168,203,0.2);
+    }
+    .dn-btn.center.rob-active::after {
+      content: '';
+      position: absolute; inset: -10px; border-radius: 50%;
+      border: 1.5px solid rgba(15,168,203,0.35);
+      animation: rob-pulse 2.2s ease-out infinite;
+      pointer-events: none;
+    }
+    @keyframes rob-pulse {
+      0%   { transform: scale(1);    opacity: 1; }
+      100% { transform: scale(1.45); opacity: 0; }
+    }
+    .dn-btn.outer.active {
+      background: var(--purple); border-color: var(--purple);
+      box-shadow: 0 5px 22px rgba(33,0,55,0.25);
+    }
+    .dn-btn.outer.active .dn-label { color: white; }
+    .dn-btn.outer.active .dn-dot { opacity: 1; }
+
+    .dn-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--purple);
+      transition: color 0.25s; line-height: 1;
+      padding-left: 0.1em; /* compensate letter-spacing visual shift */
+    }
+    .dn-dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--cyan); opacity: 0;
+      transition: opacity 0.25s;
+      margin-top: -1px;
+    }
+
+    /* ── Right panel (beeldscherm) ── */
+    .panel-r {
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column;
+    }
+
+    /* The "screen" — dark display area */
+    .beeldscherm {
+      flex: 1;
+      background: var(--screen);
+      position: relative;
+      display: flex; flex-direction: column;
+      overflow-y: auto;
+    }
+
+    /* Three-circle background motif */
+    .screen-circles {
+      position: absolute; inset: 0;
+      z-index: 0; pointer-events: none;
+      overflow: hidden;
+    }
+    .screen-circles svg {
+      width: 100%; height: 100%;
+      position: absolute; inset: 0;
+    }
+    /* Styled scrollbar — dark terminal feel */
+    .beeldscherm::-webkit-scrollbar { width: 4px; }
+    .beeldscherm::-webkit-scrollbar-track { background: transparent; }
+    .beeldscherm::-webkit-scrollbar-thumb {
+      background: rgba(15,168,203,0.25); border-radius: 2px;
+    }
+    .beeldscherm::-webkit-scrollbar-thumb:hover {
+      background: rgba(15,168,203,0.5);
+    }
+
+    /* Scanline overlay */
+    .beeldscherm::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(255,255,255,0.012) 3px,
+        rgba(255,255,255,0.012) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* Ambient glow */
+    .beeldscherm::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(15,168,203,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 85% 75%, rgba(232,57,30,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Content panes */
+    .pane {
+      display: none; flex-direction: column;
+      padding: clamp(40px, 5vh, 72px) clamp(44px, 5vw, 88px);
+      position: relative; z-index: 1;
+      flex: 1;
+      animation: paneIn 0.35s ease;
+    }
+    .pane.active { display: flex; }
+    @keyframes paneIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Default state (nothing selected yet) */
+    #pane-default .mono-block {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 15px; font-weight: 400; line-height: 2.2;
+      color: rgba(238,242,247,0.75);
+    }
+    #pane-default .mono-block .key {
+      color: #0fa8cb; font-weight: 500;
+    }
+    #pane-default .mono-block .val {
+      color: rgba(238,242,247,0.95);
+    }
+    #pane-default .mono-footer {
+      margin-top: 40px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; color: rgba(238,242,247,0.62);
+      letter-spacing: 0.06em; border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 20px;
+    }
+    #pane-default .mono-footer strong {
+      color: rgba(238,242,247,0.75); font-weight: 500;
+    }
+
+    /* Shared pane typography */
+    .pane-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: #0fa8cb; letter-spacing: 0.2em;
+      text-transform: uppercase; margin-bottom: 20px; font-weight: 500;
+    }
+    .pane-title {
+      font-size: clamp(30px, 3.2vw, 52px); font-weight: 300;
+      color: #ffffff; line-height: 1.15;
+      margin-bottom: 28px; letter-spacing: -0.01em;
+    }
+    .pane-title strong { font-weight: 600; }
+    .pane-bar {
+      width: 36px; height: 2px; background: var(--cyan);
+      margin-bottom: 32px;
+    }
+    .pane-body {
+      font-size: clamp(14px, 1.1vw, 17px); color: rgba(238,242,247,0.9);
+      line-height: 1.85; max-width: clamp(480px, 52vw, 820px); margin-bottom: 36px;
+      font-weight: 400;
+    }
+    .pane-list {
+      display: flex; flex-direction: column; gap: 16px;
+      max-width: clamp(480px, 52vw, 820px);
+    }
+    .pane-list-item {
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .pli-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--cyan); margin-top: 10px; flex-shrink: 0;
+    }
+    .pli-text {
+      font-size: 15px; color: rgba(238,242,247,0.9);
+      line-height: 1.7; font-weight: 300;
+    }
+
+    /* CTA naar R.O.B. */
+    .cta-rob {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-top: 36px;
+      padding: 13px 22px;
+      border: 1px solid rgba(15,168,203,0.35);
+      border-radius: 6px;
+      background: rgba(15,168,203,0.07);
+      cursor: pointer; font-family: inherit;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--cyan);
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      align-self: flex-start;
+    }
+    .cta-rob:hover {
+      background: rgba(15,168,203,0.14);
+      border-color: rgba(15,168,203,0.6);
+      transform: translateX(3px);
+    }
+    .cta-rob-arrow {
+      font-size: 14px; line-height: 1; opacity: 0.7;
+    }
+
+    /* Video placeholder */
+    .vid-wrap {
+      width: 100%; max-width: clamp(480px, 50vw, 760px); aspect-ratio: 16/9;
+      background: var(--screen);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      position: relative; overflow: hidden; margin-bottom: 32px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .vid-wrap:hover { border-color: rgba(15,168,203,0.4); }
+
+    /* Live preview iframe — scaled-down video playing silently */
+    .vid-preview-frame {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: none; pointer-events: none;
+    }
+
+    /* Overlay on top of preview — transparent by default, hint on hover */
+    .vid-preview-overlay {
+      position: absolute; inset: 0;
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.25s;
+    }
+    .vid-wrap:hover .vid-preview-overlay { background: rgba(14,21,37,0.22); }
+
+    .vid-play-btn {
+      width: 60px; height: 60px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s, background 0.2s, transform 0.18s;
+      backdrop-filter: blur(4px);
+    }
+    .vid-wrap:hover .vid-play-btn {
+      opacity: 1;
+      background: rgba(15,168,203,0.2);
+      border-color: rgba(15,168,203,0.6);
+      transform: scale(1.1);
+    }
+    .vid-play-btn .tri {
+      width: 0; height: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-left: 15px solid rgba(255,255,255,0.85);
+      margin-left: 3px;
+    }
+    .vid-lbl {
+      position: absolute; bottom: 14px; left: 18px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; color: rgba(255,255,255,0.45);
+      letter-spacing: 0.14em; text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    /* End bar — appears after one full playthrough */
+    #vid-end-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 32px;
+      background: linear-gradient(to top, rgba(8,9,26,0.96) 0%, transparent 100%);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      z-index: 100;
+    }
+    #vid-end-bar.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+    .vid-end-close-btn {
+      padding: 12px 28px;
+      border: 1px solid rgba(15,168,203,0.5);
+      border-radius: 6px;
+      background: rgba(15,168,203,0.12);
+      color: rgba(255,255,255,0.85);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 400;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .vid-end-close-btn:hover {
+      background: rgba(15,168,203,0.22);
+      border-color: rgba(15,168,203,0.8);
+      transform: translateY(-2px);
+    }
+
+    /* VISIE — info diagram */
+    .visie-diagram {
+      display: flex; flex-direction: column; gap: 0;
+      max-width: clamp(480px, 50vw, 760px); margin-bottom: 36px;
+    }
+    .vd-row {
+      display: flex; align-items: stretch;
+    }
+    .vd-node {
+      flex: 1; padding: 16px 20px;
+      border: 1px solid rgba(255,255,255,0.07);
+      position: relative;
+    }
+    .vd-node + .vd-node { border-left: none; }
+    .vd-row + .vd-row .vd-node { border-top: none; }
+    .vd-node-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; color: var(--cyan); letter-spacing: 0.18em;
+      text-transform: uppercase; margin-bottom: 8px; font-weight: 400;
+    }
+    .vd-node-items {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .vd-node-item {
+      font-size: 11.5px; color: rgba(238,242,247,0.5);
+      line-height: 1.4; font-weight: 300;
+    }
+    .vd-connector {
+      width: 100%; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .vd-arrow {
+      width: 1px; height: 100%;
+      background: linear-gradient(to bottom, rgba(15,168,203,0.3), rgba(15,168,203,0.1));
+      position: relative;
+    }
+    .vd-arrow::after {
+      content: '';
+      position: absolute; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-top: 5px solid rgba(15,168,203,0.4);
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+    }
+    .vd-phase-wrap {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .vd-phase-header {
+      padding: 10px 20px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-bottom: none;
+    }
+    .vd-phase-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: rgba(238,242,247,0.7);
+      letter-spacing: 0.1em; font-weight: 400;
+    }
+    .vd-phase-arrow {
+      display: flex; align-items: center; justify-content: center;
+      padding: 8px 0; font-size: 11px; color: rgba(15,168,203,0.4);
+    }
+
+    /* VISIE — flow diagram (redesign) */
+    .visie-formula {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px; color: rgba(15,168,203,0.55);
+      letter-spacing: 0.18em; text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    }
+    .vf-formula-step { color: rgba(232,228,220,0.5); }
+    .vf-formula-arrow { color: rgba(15,168,203,0.35); }
+    .vf-formula-eq {
+      color: var(--cyan); font-weight: 500;
+      border: 1px solid rgba(15,168,203,0.25);
+      padding: 2px 8px; border-radius: 3px;
+    }
+    .visie-flow {
+      display: flex; align-items: stretch;
+      max-width: clamp(480px, 54vw, 860px);
+      margin-bottom: 32px;
+    }
+    .vf-phase {
+      flex: 1; padding: 20px 18px;
+      border: 1px solid rgba(255,255,255,0.07);
+      display: flex; flex-direction: column;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .vf-phase:hover {
+      border-color: rgba(15,168,203,0.2);
+      background: rgba(15,168,203,0.025);
+    }
+    .vf-phase + .vf-phase { border-left: none; }
+    .vf-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1px solid rgba(15,168,203,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8.5px; color: var(--cyan);
+      letter-spacing: 0; margin-bottom: 14px; flex-shrink: 0;
+    }
+    .vf-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; font-weight: 500;
+      color: rgba(232,242,247,0.7);
+      letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 16px; line-height: 1.5;
+    }
+    .vf-items { display: flex; flex-direction: column; gap: 9px; }
+    .vf-item { display: flex; gap: 9px; align-items: flex-start; }
+    .vf-dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: rgba(15,168,203,0.45);
+      margin-top: 6px; flex-shrink: 0;
+    }
+    .vf-text {
+      font-size: 11.5px; color: rgba(238,242,247,0.72);
+      line-height: 1.5; font-weight: 400;
+    }
+    .vf-connector {
+      display: flex; align-items: center; justify-content: center;
+      width: 28px; flex-shrink: 0;
+      color: rgba(15,168,203,0.3); font-size: 14px;
+    }
+
+    /* WERK — systems portfolio */
+    .sys-section-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(15,168,203,0.55);
+      margin-top: 28px; margin-bottom: 14px;
+      display: flex; justify-content: space-between; align-items: baseline;
+      max-width: clamp(480px, 50vw, 760px); gap: 14px;
+    }
+    .sys-section-tag-count {
+      font-size: 9px; color: rgba(238,242,247,0.58);
+      letter-spacing: 0.14em;
+    }
+    .systems-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 10px; max-width: clamp(480px, 50vw, 760px);
+      margin-bottom: 14px;
+    }
+    .system-card {
+      padding: 16px 18px 14px;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.02);
+      display: flex; flex-direction: column; gap: 8px;
+      transition: border-color 0.22s, background 0.22s;
+    }
+    .system-card:hover {
+      border-color: rgba(15,168,203,0.22);
+      background: rgba(15,168,203,0.03);
+    }
+    .sys-modules {
+      display: flex; gap: 4px;
+      margin-bottom: 2px;
+    }
+    .mod {
+      width: 9px; height: 9px;
+      border-radius: 1.5px;
+    }
+    .mod.live  { background: rgba(15,168,203,0.7); }
+    .mod.build {
+      background: transparent;
+      border: 1px solid rgba(15,168,203,0.4);
+    }
+    .sys-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px; color: var(--cyan);
+      letter-spacing: 0.22em; text-transform: uppercase;
+      opacity: 0.72;
+    }
+    .sys-title {
+      font-size: 13px; font-weight: 600;
+      color: rgba(238,242,247,0.82); line-height: 1.35;
+    }
+    .sys-ctx {
+      font-size: 11px; color: rgba(238,242,247,0.62);
+      line-height: 1.5; font-weight: 400;
+      flex: 1;
+    }
+    .sys-status {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; color: rgba(232,228,220,0.6);
+      letter-spacing: 0.1em; margin-top: 2px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .systems-total {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.18em;
+      color: rgba(238,242,247,0.62);
+      max-width: clamp(480px, 50vw, 760px);
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 26px;
+    }
+    @media (max-width: 720px) {
+      .systems-grid { grid-template-columns: 1fr; }
+    }
+
+    /* OVER — layout + credentials card */
+    .over-layout {
+      display: flex; gap: 40px;
+      align-items: flex-start;
+    }
+    .over-main { flex: 1; min-width: 0; }
+    .cred-card {
+      flex-shrink: 0;
+      width: clamp(220px, 28%, 300px);
+      padding: 22px 22px 20px;
+      background: rgba(15,168,203,0.025);
+      border: 1px solid rgba(15,168,203,0.14);
+      border-radius: 8px;
+      display: flex; flex-direction: column;
+      gap: 18px;
+      position: sticky; top: 0;
+    }
+    .cred-brand { display: flex; flex-direction: column; gap: 6px; }
+    .cred-rob {
+      font-size: 26px; font-weight: 700;
+      letter-spacing: 0.12em;
+      color: rgba(238,242,247,0.92);
+      line-height: 1;
+    }
+    .cred-name {
+      font-size: 13px; font-weight: 500;
+      color: rgba(238,242,247,0.74);
+      margin-top: 8px;
+    }
+    .cred-role {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px; color: var(--cyan);
+      letter-spacing: 0.2em; text-transform: uppercase;
+      opacity: 0.78; margin-top: 2px;
+    }
+    .cred-divider {
+      height: 1px; background: rgba(255,255,255,0.07);
+    }
+    .cred-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; color: rgba(15,168,203,0.55);
+      letter-spacing: 0.22em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .cred-focus { display: flex; flex-direction: column; gap: 2px; }
+    .cred-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; color: rgba(238,242,247,0.68);
+      line-height: 1.5; font-weight: 300;
+      padding: 3px 0;
+    }
+    .cred-bullet {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(15,168,203,0.55);
+      flex-shrink: 0;
+    }
+    .cred-linkedin {
+      display: flex; align-items: center; gap: 9px;
+      padding: 11px 14px;
+      background: rgba(15,168,203,0.08);
+      border: 1px solid rgba(15,168,203,0.24);
+      border-radius: 5px;
+      color: rgba(15,168,203,0.92);
+      text-decoration: none;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: background 0.22s, border-color 0.22s, transform 0.22s;
+    }
+    .cred-linkedin:hover {
+      background: rgba(15,168,203,0.14);
+      border-color: rgba(15,168,203,0.42);
+      transform: translateY(-1px);
+    }
+    .cred-linkedin svg { flex-shrink: 0; opacity: 0.85; }
+    .cred-arrow { margin-left: auto; opacity: 0.6; font-size: 13px; }
+
+    @media (max-width: 920px) {
+      .over-layout { flex-direction: column; gap: 28px; }
+      .cred-card { width: 100%; max-width: 360px; position: static; }
+    }
+
+    /* CHAT — API key bar */
+    .chat-api-bar {
+      display: flex; gap: 8px; align-items: center;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.02);
+    }
+    .chat-api-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; color: rgba(15,168,203,0.5);
+      letter-spacing: 0.14em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .chat-api-input {
+      flex: 1; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px; padding: 5px 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: rgba(238,242,247,0.6);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chat-api-input:focus { border-color: rgba(15,168,203,0.35); }
+    .chat-api-input::placeholder { color: rgba(238,242,247,0.2); }
+    .chat-api-btn {
+      padding: 5px 12px; border-radius: 4px;
+      background: rgba(15,168,203,0.1);
+      border: 1px solid rgba(15,168,203,0.25);
+      color: rgba(15,168,203,0.8);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; letter-spacing: 0.1em;
+      cursor: pointer; white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .chat-api-btn:hover { background: rgba(15,168,203,0.18); }
+    .chat-api-status {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    .chat-api-status.ok  { color: rgba(15,168,203,0.6); }
+    .chat-api-status.err { color: rgba(232,57,30,0.6); }
+
+    /* MIDDEL — tools grid */
+    .tools-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 12px; max-width: clamp(480px, 50vw, 760px); margin-bottom: 32px;
+    }
+    .tool-card {
+      position: relative; overflow: hidden;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      cursor: pointer;
+      aspect-ratio: 4/3;
+      transition: border-color 0.32s ease, box-shadow 0.32s ease;
+    }
+    .tool-card:hover {
+      border-color: rgba(15,168,203,0.4);
+      box-shadow: 0 4px 24px rgba(15,168,203,0.1);
+    }
+
+    /* Background image layer — swap url() per card when real images arrive */
+    .tool-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transform: scale(1.06);
+      transition: transform 0.5s ease;
+    }
+    .tool-card:hover::before { transform: scale(1); }
+
+    /* SVG background examples — swap url() for real screenshots later */
+    .tool-card:nth-child(1)::before {
+      background-image: url('werk/logo-branding.svg');
+      background-size: cover; background-position: center;
+    }
+    .tool-card:nth-child(2)::before {
+      background-image: url('werk/websites.svg');
+      background-size: cover; background-position: center;
+    }
+    .tool-card:nth-child(3)::before {
+      background-image: url('werk/apps.svg');
+      background-size: cover; background-position: center;
+    }
+    .tool-card:nth-child(4)::before {
+      background-image: url('werk/dashboards.svg');
+      background-size: cover; background-position: center;
+    }
+    .tool-card:nth-child(5)::before {
+      background-image: url('werk/portals.svg');
+      background-size: cover; background-position: center;
+    }
+    .tool-card:nth-child(6)::before {
+      background-image: url('werk/os.svg');
+      background-size: cover; background-position: center;
+    }
+
+    /* Dark overlay — fades on hover to reveal background */
+    .tool-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(14,21,37,0.97) 0%,
+        rgba(14,21,37,0.82) 45%,
+        rgba(14,21,37,0.62) 100%
+      );
+      transition: background 0.38s ease;
+    }
+    .tool-card:hover::after {
+      background: linear-gradient(
+        to top,
+        rgba(14,21,37,0.92) 0%,
+        rgba(14,21,37,0.38) 45%,
+        rgba(14,21,37,0.08) 100%
+      );
+    }
+
+    /* Text sits above both layers */
+    .tool-card-content {
+      position: relative; z-index: 1;
+      padding: 14px 16px;
+      height: 100%;
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .tool-card-name {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(238,242,247,0.85);
+      margin-bottom: 5px;
+      transition: color 0.25s;
+    }
+    .tool-card:hover .tool-card-name { color: #ffffff; }
+    .tool-card-desc {
+      font-size: 10.5px; color: rgba(238,242,247,0.68);
+      line-height: 1.5; font-weight: 400;
+      transition: color 0.25s;
+    }
+    .tool-card:hover .tool-card-desc { color: rgba(238,242,247,0.88); }
+
+    /* R.O.B. — chat */
+    .chat-wrap {
+      display: flex; flex-direction: column;
+      flex: 1; max-width: clamp(520px, 52vw, 820px); min-height: 320px;
+    }
+    .chat-messages {
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 16px;
+      margin-bottom: 20px;
+      padding-right: 4px;
+      min-height: 180px;
+    }
+    .chat-msg {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .chat-msg-who {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; color: rgba(15,168,203,0.6);
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .chat-msg-text {
+      font-size: 13.5px; color: rgba(238,242,247,0.8);
+      line-height: 1.65; font-weight: 300;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px; padding: 12px 16px;
+      max-width: 90%;
+    }
+    .chat-msg.user .chat-msg-who { color: rgba(232,57,30,0.6); }
+    .chat-msg.user { align-items: flex-end; }
+    .chat-msg.user .chat-msg-text {
+      background: rgba(33,0,55,0.4);
+      border-color: rgba(33,0,55,0.3);
+    }
+    .chat-input-row {
+      display: flex; gap: 10px;
+    }
+    .chat-input {
+      flex: 1; padding: 12px 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-family: inherit; font-size: 13px;
+      color: rgba(238,242,247,0.85); outline: none;
+      transition: border-color 0.2s;
+      font-weight: 300;
+    }
+    .chat-input::placeholder { color: rgba(238,242,247,0.25); }
+    .chat-input:focus { border-color: rgba(15,168,203,0.4); }
+    .chat-send {
+      padding: 12px 20px;
+      background: var(--cyan); border: none; border-radius: 8px;
+      font-family: inherit; font-size: 12px; font-weight: 600;
+      color: white; cursor: pointer; letter-spacing: 0.05em;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .chat-send:hover { background: #0d92b0; transform: translateY(-1px); }
+    .chat-typing {
+      display: none; align-items: center; gap: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: rgba(15,168,203,0.5);
+      letter-spacing: 0.1em; margin-bottom: 8px;
+    }
+    .chat-typing.visible { display: flex; }
+    .typing-dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--cyan); opacity: 0.6;
+      animation: tdot 1.2s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes tdot {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50%       { transform: translateY(-3px); opacity: 1; }
+    }
+
+    /* ── Video overlay ── */
+    #video-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: var(--screen);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+    #video-overlay.active { opacity: 1; pointer-events: all; }
+
+    #video-overlay iframe {
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    .vid-overlay-close {
+      position: absolute; top: 20px; right: 24px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.75);
+      font-size: 18px; line-height: 1;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+      z-index: 1000;
+      font-family: inherit;
+    }
+    .vid-overlay-close:hover {
+      background: rgba(232,57,30,0.25);
+      border-color: rgba(232,57,30,0.4);
+      transform: scale(1.1);
+    }
+
+    /* ── Focus styles ── */
+    :focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    .play-btn:focus-visible { outline-offset: 8px; border-radius: 50%; }
+    .dn-btn:focus-visible   { outline-offset: 5px; border-radius: 50%; }
+    .vid-overlay-close:focus-visible { outline-offset: 4px; border-radius: 50%; }
+    .vid-wrap:focus-visible { outline-offset: 2px; border-radius: 10px; }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .play-btn::before, .play-btn::after,
+      .dn-btn.center.rob-active::after,
+      .g-a, .g-b, .g-c,
+      .typing-dot { animation: none; }
+      .screen, .pane, .tw, .tool-card::before,
+      .vid-preview-overlay, .vid-overlay-close,
+      #video-overlay { transition: none; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .interface-body { flex-direction: column; overflow: hidden; }
+      #s-interface { overflow: hidden; }
+      .panel-l {
+        width: 100%; flex-shrink: 0;
+        padding: 10px 0 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        min-height: auto;
+      }
+      .diamond-nav {
+        transform: scale(0.72);
+        transform-origin: center top;
+        width: 220px; height: 202px;
+        margin: 0 auto;
+      }
+      .panel-r { flex: 1; min-height: 0; overflow-y: auto; }
+      .beeldscherm { min-height: 0; }
+      .pane { padding: 28px 20px; }
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════ SCREEN 1: LANDING ══════ -->
+<div id="s-landing" class="screen active">
+  <div class="landing-wrap">
+
+    <!-- Logo: origineel horizontaal drie-cirkel systeem -->
+    <div class="landing-logo">
+      <!-- Logo text: R.O.B. navy bold + CONCEPTING cyan spaced -->
+      <div class="landing-logo-text">
+        <span class="landing-logo-rob">R.O.B.</span>
+        <span class="landing-logo-con">Concepting</span>
+      </div>
+      <!-- Horizontal logo icon -->
+      <svg width="192" height="46" viewBox="0 0 160 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Horizontal connecting axis -->
+        <line x1="19" y1="19" x2="141" y2="19" stroke="#9ba5b5" stroke-width="1" opacity="0.5"/>
+        <!-- Vertical axis: center -->
+        <line x1="80" y1="0" x2="80" y2="38" stroke="#9ba5b5" stroke-width="1" opacity="0.35"/>
+        <!-- Vertical axis: right -->
+        <line x1="141" y1="0" x2="141" y2="38" stroke="#9ba5b5" stroke-width="1" opacity="0.25"/>
+
+        <!-- Left group: gray rings + cyan dot -->
+        <circle cx="19" cy="19" r="15" fill="none" stroke="#9ba5b5" stroke-width="1.2" opacity="0.55"/>
+        <circle cx="19" cy="19" r="8.5" fill="none" stroke="#9ba5b5" stroke-width="1" opacity="0.45"/>
+        <circle cx="19" cy="19" r="3" fill="#0fa8cb"/>
+
+        <!-- Center group: cyan rings + red dot -->
+        <circle cx="80" cy="19" r="15" fill="none" stroke="#0fa8cb" stroke-width="1.5"/>
+        <circle cx="80" cy="19" r="8.5" fill="none" stroke="#0fa8cb" stroke-width="1" opacity="0.7"/>
+        <circle cx="80" cy="19" r="3" fill="#e8391e"/>
+
+        <!-- Right group: gray rings + navy dot -->
+        <circle cx="141" cy="19" r="15" fill="none" stroke="#9ba5b5" stroke-width="1.2" opacity="0.55"/>
+        <circle cx="141" cy="19" r="8.5" fill="none" stroke="#9ba5b5" stroke-width="1" opacity="0.45"/>
+        <circle cx="141" cy="19" r="3" fill="#001a4d"/>
+      </svg>
+    </div>
+
+    <!-- Vaste ondertitel -->
+    <div class="landing-subtitle">Systeem ontwerp voor MKB</div>
+
+    <!-- PLAY button met concentrische ringen -->
+    <div class="play-outer-ring">
+      <button class="play-btn" id="btn-play" aria-label="Play">
+        <div class="play-triangle"></div>
+        <span class="play-label">Play</span>
+      </button>
+    </div>
+
+
+  </div>
+</div>
+
+
+<!-- ══════ SCREEN 2: MICRO-TRANSITIE ══════ -->
+<div id="s-transition" class="screen">
+
+  <div class="gears-svg-wrap">
+    <svg viewBox="0 0 1400 700" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sg" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="gearGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2.5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <style>
+          .go { fill:none; stroke:#EEF2F7; stroke-width:2.8; opacity:1; }
+          .gh { fill:none; stroke:#6a89b8; stroke-width:1.2; opacity:.35; }
+          .ga { fill:none; stroke:#EEF2F7; stroke-width:2.2; stroke-linecap:round; opacity:.75; }
+        </style>
+        <marker id="ar" markerWidth="7" markerHeight="7" refX="4.5" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L7,3.5 L0,7 z" fill="#EEF2F7" opacity=".65"/>
+        </marker>
+      </defs>
+
+      <!-- Gear A -->
+      <g class="g-a" filter="url(#gearGlow)">
+        <path d="M620,193 L636,213 L659,201 L667,225 L692,223 L690,248 L714,256 L702,279 L722,295 L702,311 L714,334 L690,342 L692,367 L667,365 L659,389 L636,377 L620,397 L604,377 L581,389 L573,365 L548,367 L550,342 L526,334 L538,311 L518,295 L538,279 L526,256 L550,248 L548,223 L573,225 L581,201 L604,213 Z" class="go"/>
+        <circle cx="620" cy="295" r="52" class="go"/>
+      </g>
+      <!-- Gear B -->
+      <g class="g-b" filter="url(#gearGlow)">
+        <path d="M835,274 L848,290 L868,283 L872,303 L892,307 L885,327 L901,340 L885,353 L892,373 L872,377 L868,397 L848,390 L835,406 L822,390 L802,397 L798,377 L778,373 L785,353 L769,340 L785,327 L778,307 L798,303 L802,283 L822,290 Z" class="go"/>
+        <circle cx="835" cy="340" r="28" class="go"/>
+      </g>
+      <!-- Gear C -->
+      <g class="g-c" filter="url(#gearGlow)">
+        <path d="M720,390 L739,414 L764,398 L774,426 L804,420 L803,451 L833,455 L821,483 L848,497 L828,520 L848,543 L821,557 L833,585 L803,589 L804,620 L774,614 L764,642 L739,626 L720,650 L701,626 L676,642 L666,614 L636,620 L637,589 L607,585 L619,557 L592,543 L612,520 L592,497 L619,483 L607,455 L637,451 L636,420 L666,426 L676,398 L701,414 Z" class="go"/>
+        <circle cx="720" cy="520" r="66" class="go"/>
+      </g>
+      <!-- Ghost rings -->
+      <circle cx="620" cy="295" r="130" class="gh"/>
+      <circle cx="835" cy="340" r="103" class="gh"/>
+      <circle cx="720" cy="520" r="168" class="gh"/>
+      <!-- Arcs -->
+      <path d="M488,272 A145,145 0 0,1 647,154" class="ga" marker-end="url(#ar)"/>
+      <circle cx="490" cy="274" r="4" fill="#EEF2F7" filter="url(#sg)"/>
+      <path d="M930,372 A112,112 0 0,1 822,235" class="ga" marker-end="url(#ar)"/>
+      <circle cx="930" cy="372" r="4" fill="#EEF2F7" filter="url(#sg)"/>
+    </svg>
+  </div>
+
+  <div class="trans-seq">
+    <span class="tw" id="tw1">thinking</span>
+    <span class="tdot">·</span>
+    <span class="tw" id="tw2">building</span>
+    <span class="tdot">·</span>
+    <span class="tw" id="tw3">working</span>
+  </div>
+
+</div>
+
+
+<!-- ══════ SCREEN 3: HOOFDINTERFACE ══════ -->
+<div id="s-interface" class="screen">
+
+  <!-- Header — logo klikbaar → terug naar landing -->
+  <header class="hdr">
+    <a class="hdr-brand" id="hdr-logo" href="#" aria-label="Terug naar start">
+      <!-- Compact horizontal logo icon -->
+      <svg width="56" height="16" viewBox="0 0 56 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="6" y1="8" x2="50" y2="8" stroke="#9ba5b5" stroke-width="0.8" opacity="0.45"/>
+        <line x1="28" y1="0" x2="28" y2="16" stroke="#9ba5b5" stroke-width="0.8" opacity="0.3"/>
+        <line x1="50" y1="0" x2="50" y2="16" stroke="#9ba5b5" stroke-width="0.8" opacity="0.22"/>
+        <circle cx="6"  cy="8" r="5.5" fill="none" stroke="#9ba5b5" stroke-width="0.9" opacity="0.5"/>
+        <circle cx="6"  cy="8" r="3"   fill="none" stroke="#9ba5b5" stroke-width="0.7" opacity="0.38"/>
+        <circle cx="6"  cy="8" r="1.2" fill="#0fa8cb"/>
+        <circle cx="28" cy="8" r="5.5" fill="none" stroke="#0fa8cb" stroke-width="1" opacity="0.9"/>
+        <circle cx="28" cy="8" r="3"   fill="none" stroke="#0fa8cb" stroke-width="0.7" opacity="0.6"/>
+        <circle cx="28" cy="8" r="1.2" fill="#e8391e"/>
+        <circle cx="50" cy="8" r="5.5" fill="none" stroke="#9ba5b5" stroke-width="0.9" opacity="0.5"/>
+        <circle cx="50" cy="8" r="3"   fill="none" stroke="#9ba5b5" stroke-width="0.7" opacity="0.38"/>
+        <circle cx="50" cy="8" r="1.2" fill="#001a4d"/>
+      </svg>
+      <div class="hdr-name">
+        <div style="display:flex;align-items:baseline;gap:5px;line-height:1">
+          <span class="hdr-name-main">R.O.B.</span>
+          <span style="font-size:8px;font-weight:500;letter-spacing:0.28em;color:#0fa8cb;text-transform:uppercase">Concepting</span>
+        </div>
+        <span class="hdr-name-tag">Visie, systeem en merk als geheel</span>
+      </div>
+    </a>
+    <div class="hdr-right" id="hdr-state">— selecteer een module —</div>
+  </header>
+
+  <div class="interface-body">
+
+    <!-- Left: diamond navigation -->
+    <div class="panel-l">
+      <div class="diamond-nav" id="dn">
+
+        <!-- Connection lines (SVG) -->
+        <svg class="dn-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+          <!-- center ROB to all 4 — percentages matching button positions -->
+          <line id="l-over"   x1="50" y1="22"  x2="50"  y2="50"/>
+          <line id="l-visie"  x1="50" y1="50"  x2="15"  y2="50"/>
+          <line id="l-werk"   x1="50" y1="50"  x2="85"  y2="50"/>
+          <line id="l-middel" x1="50" y1="50"  x2="50"  y2="78"/>
+        </svg>
+
+        <!-- OVER (top) -->
+        <button class="dn-btn outer" data-p="over" style="left:50%; top:22%">
+          <span class="dn-label">Over</span>
+          <span class="dn-dot"></span>
+        </button>
+        <!-- VISIE (left) -->
+        <button class="dn-btn outer" data-p="visie" style="left:15%; top:50%">
+          <span class="dn-label">Visie</span>
+          <span class="dn-dot"></span>
+        </button>
+        <!-- R.O.B. center -->
+        <button class="dn-btn center" data-p="rob" style="left:50%; top:50%">
+          <span class="dn-label">R.O.B.</span>
+          <span class="dn-dot"></span>
+        </button>
+        <!-- WERK (right) -->
+        <button class="dn-btn outer" data-p="werk" style="left:85%; top:50%">
+          <span class="dn-label">Werk</span>
+          <span class="dn-dot"></span>
+        </button>
+        <!-- MIDDEL (bottom) -->
+        <button class="dn-btn outer" data-p="middel" style="left:50%; top:78%">
+          <span class="dn-label">Middel</span>
+          <span class="dn-dot"></span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Right: beeldscherm -->
+    <div class="panel-r">
+      <div class="beeldscherm">
+
+        <!-- Three-circle background motif -->
+        <div class="screen-circles" aria-hidden="true">
+          <svg viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" fill="none">
+
+            <!-- Horizontal axis line -->
+            <line x1="60" y1="380" x2="940" y2="380" stroke="rgba(15,168,203,0.07)" stroke-width="1"/>
+
+            <!-- Left circle group (muted) -->
+            <circle cx="130" cy="380" r="210" stroke="rgba(15,168,203,0.045)" stroke-width="1"/>
+            <circle cx="130" cy="380" r="130" stroke="rgba(15,168,203,0.03)"  stroke-width="1"/>
+            <circle cx="130" cy="380" r="66"  stroke="rgba(15,168,203,0.025)" stroke-width="1"/>
+            <circle cx="130" cy="380" r="11"  fill="rgba(15,168,203,0.18)"/>
+
+            <!-- Center circle group (focal — slightly brighter) -->
+            <circle cx="500" cy="380" r="210" stroke="rgba(15,168,203,0.1)"   stroke-width="1.2"/>
+            <circle cx="500" cy="380" r="130" stroke="rgba(15,168,203,0.07)"  stroke-width="1"/>
+            <circle cx="500" cy="380" r="66"  stroke="rgba(15,168,203,0.045)" stroke-width="1"/>
+            <circle cx="500" cy="380" r="11"  fill="rgba(232,57,30,0.28)"/>
+
+            <!-- Right circle group (muted) -->
+            <circle cx="870" cy="380" r="210" stroke="rgba(15,168,203,0.045)" stroke-width="1"/>
+            <circle cx="870" cy="380" r="130" stroke="rgba(15,168,203,0.03)"  stroke-width="1"/>
+            <circle cx="870" cy="380" r="66"  stroke="rgba(15,168,203,0.025)" stroke-width="1"/>
+            <circle cx="870" cy="380" r="11"  fill="rgba(232,228,220,0.15)"/>
+
+          </svg>
+        </div>
+
+        <!-- Default state -->
+        <div class="pane active" id="pane-default">
+          <div class="mono-block">
+            <div><span class="key">over</span><span class="tdot"> — </span><span class="val">wie en wat is R.O.B.</span></div>
+            <div><span class="key">visie</span><span class="tdot"> — </span><span class="val">visie en systeem van R.O.B.</span></div>
+            <div><span class="key">werk</span><span class="tdot"> — </span><span class="val">werk van R.O.B.</span></div>
+            <div><span class="key">middel</span><span class="tdot"> — </span><span class="val">systeemtools van R.O.B.</span></div>
+            <div style="margin-top:8px"><span class="key">r.o.b.</span><span class="tdot"> — </span><span class="val">het expert contactpunt</span></div>
+          </div>
+          <div class="mono-footer">
+            <strong>Alles leidt naar R.O.B.</strong><br>
+            selecteer een module links om te beginnen_
+          </div>
+        </div>
+
+        <!-- OVER -->
+        <div class="pane" id="pane-over">
+          <div class="over-layout">
+            <div class="over-main">
+              <div class="pane-tag">over &mdash; identiteit</div>
+              <h1 class="pane-title">Ik zie waar<br>het niet <strong>klopt.</strong></h1>
+              <div class="pane-bar"></div>
+              <p class="pane-body">
+                Ik maak complexe dingen simpel en bouw systemen die werken.
+                Geen slides, maar structuren. Geen adviesstapeling,
+                maar doelgerichte bouw.
+              </p>
+              <div class="pane-list">
+                <div class="pane-list-item"><div class="pli-dot"></div><div class="pli-text">Denken &mdash; ik zie snel wat niet klopt en maak het simpel</div></div>
+                <div class="pane-list-item"><div class="pli-dot"></div><div class="pli-text">Bouwen &mdash; van idee naar werkend geheel</div></div>
+                <div class="pane-list-item"><div class="pli-dot"></div><div class="pli-text">Structureren &mdash; chaos wordt systeem</div></div>
+                <div class="pane-list-item"><div class="pli-dot"></div><div class="pli-text">Doorzetten &mdash; tot het klopt en werkt</div></div>
+              </div>
+              <div style="margin: 18px 0 22px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--cyan); letter-spacing:0.12em; opacity:0.7;">
+                INPUT &nbsp;&rarr;&nbsp; CHAOS &nbsp;&rarr;&nbsp; STRUCTUUR &nbsp;&rarr;&nbsp; WERKEND SYSTEEM
+              </div>
+              <button class="cta-rob" data-cta="rob">Begin het gesprek <span class="cta-rob-arrow">&rarr;</span></button>
+            </div>
+
+            <!-- Credentials card -->
+            <aside class="cred-card">
+              <div class="cred-brand">
+                <div class="cred-rob">R.O.B.</div>
+                <div class="cred-name">Rob de Rooij</div>
+                <div class="cred-role">Concepting Expert</div>
+              </div>
+              <div class="cred-divider"></div>
+              <div class="cred-focus">
+                <div class="cred-label">Focus</div>
+                <div class="cred-item"><span class="cred-bullet"></span>Structuur ontwerpen</div>
+                <div class="cred-item"><span class="cred-bullet"></span>Merk als systeem</div>
+                <div class="cred-item"><span class="cred-bullet"></span>Digitale uitvoering</div>
+              </div>
+              <div class="cred-divider"></div>
+              <a class="cred-linkedin" href="https://www.linkedin.com/in/rob-concepting/" target="_blank" rel="noopener noreferrer" aria-label="Connect met Rob de Rooij op LinkedIn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3v9zM6.5 8.25A1.75 1.75 0 118.25 6.5 1.75 1.75 0 016.5 8.25zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+                <span>Connect op LinkedIn</span>
+                <span class="cred-arrow">&rarr;</span>
+              </a>
+            </aside>
+          </div>
+        </div>
+
+        <!-- VISIE -->
+        <div class="pane" id="pane-visie">
+          <div class="pane-tag">visie — systeem</div>
+          <h1 class="pane-title">Visie, systeem<br>en merk als <strong>geheel</strong></h1>
+          <div class="pane-bar"></div>
+
+          <!-- Formula -->
+          <div class="visie-formula">
+            <span class="vf-formula-step">Idee</span>
+            <span class="vf-formula-arrow">→</span>
+            <span class="vf-formula-step">Concept</span>
+            <span class="vf-formula-arrow">→</span>
+            <span class="vf-formula-step">Ontwikkeling</span>
+            <span class="vf-formula-arrow">→</span>
+            <span class="vf-formula-step">Implementatie</span>
+            <span class="vf-formula-arrow">=</span>
+            <span class="vf-formula-eq">Concepting</span>
+          </div>
+
+          <!-- Three-phase flow -->
+          <div class="visie-flow">
+
+            <div class="vf-phase">
+              <div class="vf-num">01</div>
+              <div class="vf-title">Visie&shy;document</div>
+              <div class="vf-items">
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Richting ontwerp</div></div>
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Conceptopzet</div></div>
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Projectplan</div></div>
+              </div>
+            </div>
+
+            <div class="vf-connector">→</div>
+
+            <div class="vf-phase">
+              <div class="vf-num">02</div>
+              <div class="vf-title">Systeem&shy;ontwerp</div>
+              <div class="vf-items">
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Merkontwerp</div></div>
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Stijlkaders</div></div>
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Systeemstructuur</div></div>
+              </div>
+            </div>
+
+            <div class="vf-connector">→</div>
+
+            <div class="vf-phase">
+              <div class="vf-num">03</div>
+              <div class="vf-title">Merk&shy;bouw</div>
+              <div class="vf-items">
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Merkuitvoering</div></div>
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Formatconstructie</div></div>
+                <div class="vf-item"><div class="vf-dot"></div><div class="vf-text">Systeemtoepassing</div></div>
+              </div>
+            </div>
+
+          </div>
+
+          <p class="pane-body">
+            Concepting is geen fase — het is de volledige beweging van idee naar werkend systeem.
+            Elk onderdeel versterkt het geheel.
+          </p>
+          <button class="cta-rob" data-cta="rob">Begin het gesprek <span class="cta-rob-arrow">→</span></button>
+        </div>
+
+        <!-- WERK -->
+        <div class="pane" id="pane-werk">
+          <div class="pane-tag">werk — portfolio</div>
+          <h1 class="pane-title">Werk van<br><strong>R.O.B.</strong></h1>
+          <div class="pane-bar"></div>
+          <div class="vid-wrap">
+            <!-- Live animated preview — src set lazily on first Werk activation -->
+            <iframe class="vid-preview-frame" src="" tabindex="-1" aria-hidden="true"></iframe>
+            <!-- Overlay: play button + label -->
+            <div class="vid-preview-overlay">
+              <div class="vid-play-btn"><div class="tri"></div></div>
+              <span class="vid-lbl">Portfolio — concept video · klik om af te spelen</span>
+            </div>
+          </div>
+          <!-- Systems portfolio -->
+          <div class="sys-section-tag">
+            <span>Systemen die R.O.B. bouwde</span>
+            <span class="sys-section-tag-count">4 systemen · 15 modules</span>
+          </div>
+          <div class="systems-grid">
+            <div class="system-card">
+              <div class="sys-modules">
+                <span class="mod live"></span><span class="mod live"></span><span class="mod live"></span>
+              </div>
+              <div class="sys-tag">Publiek systeem</div>
+              <div class="sys-title">Website + dashboard + tool</div>
+              <div class="sys-ctx">Financi&euml;le sector &middot; MKB</div>
+              <div class="sys-status">3 modules &middot; live</div>
+            </div>
+            <div class="system-card">
+              <div class="sys-modules">
+                <span class="mod live"></span><span class="mod live"></span><span class="mod build"></span><span class="mod build"></span><span class="mod build"></span>
+              </div>
+              <div class="sys-tag">Expert-OS</div>
+              <div class="sys-title">Diagnose-tool met modules</div>
+              <div class="sys-ctx">MKB in zwaar weer</div>
+              <div class="sys-status">2 live &middot; 3 in bouw</div>
+            </div>
+            <div class="system-card">
+              <div class="sys-modules">
+                <span class="mod live"></span><span class="mod live"></span><span class="mod live"></span><span class="mod live"></span>
+              </div>
+              <div class="sys-tag">Platform</div>
+              <div class="sys-title">Vier surfaces, &eacute;&eacute;n geheel</div>
+              <div class="sys-ctx">Transitie MKB</div>
+              <div class="sys-status">4 surfaces &middot; live</div>
+            </div>
+            <div class="system-card">
+              <div class="sys-modules">
+                <span class="mod live"></span><span class="mod live"></span><span class="mod live"></span>
+              </div>
+              <div class="sys-tag">Concepting-systeem</div>
+              <div class="sys-title">Eigen site + AI + tools</div>
+              <div class="sys-ctx">Eigen merk</div>
+              <div class="sys-status">3 modules &middot; live</div>
+            </div>
+          </div>
+          <div class="systems-total">12 modules live &middot; 3 in pipeline &middot; 4 systemen in productie</div>
+          <button class="cta-rob" data-cta="rob">Begin het gesprek <span class="cta-rob-arrow">→</span></button>
+        </div>
+
+        <!-- MIDDEL -->
+        <div class="pane" id="pane-middel">
+          <div class="pane-tag">middel — systeemtools</div>
+          <h1 class="pane-title">Wat maakt<br>R.O.B. <strong>concreet</strong></h1>
+          <div class="pane-bar"></div>
+          <div class="tools-grid">
+            <div class="tool-card"><!-- bg: url('werk/logo-branding.jpg') -->
+              <div class="tool-card-content">
+                <div class="tool-card-name">Logo &amp; Branding</div>
+                <div class="tool-card-desc">Visuele identiteit als systeem</div>
+              </div>
+            </div>
+            <div class="tool-card"><!-- bg: url('werk/websites.jpg') -->
+              <div class="tool-card-content">
+                <div class="tool-card-name">Websites</div>
+                <div class="tool-card-desc">Van concept tot live omgeving</div>
+              </div>
+            </div>
+            <div class="tool-card"><!-- bg: url('werk/apps.jpg') -->
+              <div class="tool-card-content">
+                <div class="tool-card-name">Apps</div>
+                <div class="tool-card-desc">Interactieve productoplossingen</div>
+              </div>
+            </div>
+            <div class="tool-card"><!-- bg: url('werk/dashboards.jpg') -->
+              <div class="tool-card-content">
+                <div class="tool-card-name">Dashboards</div>
+                <div class="tool-card-desc">Data en overzicht als interface</div>
+              </div>
+            </div>
+            <div class="tool-card"><!-- bg: url('werk/portals.jpg') -->
+              <div class="tool-card-content">
+                <div class="tool-card-name">Portals</div>
+                <div class="tool-card-desc">Gestructureerde toegangslagen</div>
+              </div>
+            </div>
+            <div class="tool-card"><!-- bg: url('werk/os.jpg') -->
+              <div class="tool-card-content">
+                <div class="tool-card-name">OS</div>
+                <div class="tool-card-desc">Eigen besturingssystemen</div>
+              </div>
+            </div>
+          </div>
+          <button class="cta-rob" data-cta="rob">Begin het gesprek <span class="cta-rob-arrow">→</span></button>
+        </div>
+
+        <!-- R.O.B. — chat -->
+        <div class="pane" id="pane-rob">
+          <div class="pane-tag">r.o.b. — expert contactpunt</div>
+          <h1 class="pane-title">Begin het<br><strong>gesprek</strong></h1>
+          <div class="pane-bar"></div>
+          <div class="chat-wrap">
+            <div class="chat-messages" id="chat-msgs">
+              <div class="chat-msg">
+                <span class="chat-msg-who">R.O.B.</span>
+                <div class="chat-msg-text">
+                  Hallo. Vertel me waar je staat — en wat er nog niet klopt.
+                  Ik luister liever naar de frictie dan naar de samenvatting.
+                </div>
+              </div>
+            </div>
+            <div class="chat-typing" id="chat-typing">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <span style="margin-left:4px">R.O.B. denkt na</span>
+            </div>
+            <div class="chat-input-row">
+              <input class="chat-input" id="chat-in" type="text" placeholder="Stel een vraag of beschrijf je situatie…" autocomplete="off">
+              <button class="chat-send" id="chat-btn">Stuur →</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /beeldscherm -->
+    </div><!-- /panel-r -->
+
+  </div><!-- /interface-body -->
+</div><!-- /s-interface -->
+
+
+<!-- ══════ VIDEO OVERLAY ══════ -->
+<div id="video-overlay">
+  <button class="vid-overlay-close" id="vid-close" aria-label="Sluit video">✕</button>
+  <iframe id="vid-iframe" src="" allow="autoplay" allowfullscreen></iframe>
+  <!-- End bar: appears after one full playthrough (~75s) -->
+  <div id="vid-end-bar">
+    <button class="vid-end-close-btn" id="vid-end-btn">← Terug naar website</button>
+  </div>
+</div>
+
+
+<script>
+// ── Screen transitions ──
+const screens = { landing: 's-landing', transition: 's-transition', interface: 's-interface' };
+
+function show(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screens[name]).classList.add('active');
+}
+
+// ── Landing → Transition → Interface ──
+document.getElementById('btn-play').addEventListener('click', () => {
+  show('transition');
+  startTransition();
+});
+
+function startTransition() {
+  const words = ['tw1','tw2','tw3'];
+  words.forEach(id => document.getElementById(id).classList.remove('on'));
+  words.forEach((id, i) => setTimeout(() => document.getElementById(id).classList.add('on'), 180 + i * 360));
+  setTimeout(() => { show('interface'); activatePane('rob'); }, 1650);
+}
+
+// ── Header logo → back to landing ──
+document.getElementById('hdr-logo').addEventListener('click', e => {
+  e.preventDefault();
+  show('landing');
+});
+
+// ── Reduced-motion helper ──
+const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ── Diamond nav ──
+const dnBtns   = document.querySelectorAll('.dn-btn');
+const panes    = document.querySelectorAll('.pane');
+const hdrState = document.getElementById('hdr-state');
+let werkPreviewLoaded = false;
+
+function activatePane(target) {
+  // Buttons
+  dnBtns.forEach(b => { if (!b.classList.contains('center')) b.classList.remove('active'); });
+  const btn = document.querySelector(`[data-p="${target}"]`);
+  if (btn && !btn.classList.contains('center')) btn.classList.add('active');
+
+  // R.O.B. center active state
+  const centerBtn = document.querySelector('.dn-btn.center');
+  if (target === 'rob') centerBtn.classList.add('rob-active');
+  else centerBtn.classList.remove('rob-active');
+
+  // Lines
+  document.querySelectorAll('.dn-svg line').forEach(l => l.classList.remove('hl'));
+  if (lineMap[target]) document.getElementById(lineMap[target]).classList.add('hl');
+
+  // Panes
+  panes.forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-' + target).classList.add('active');
+
+  // Header state
+  const labels = { over:'over', visie:'visie', werk:'werk', middel:'middel', rob:'r.o.b. — contactpunt' };
+  hdrState.textContent = '— ' + (labels[target] || target) + ' —';
+
+  // Lazy-load video preview on first Werk activation
+  if (target === 'werk' && !werkPreviewLoaded) {
+    const previewFrame = document.querySelector('.vid-preview-frame');
+    previewFrame.src = 'video.html';
+    werkPreviewLoaded = true;
+  }
+}
+
+// Line map: which line highlights when a button is active
+const lineMap = { over:'l-over', visie:'l-visie', werk:'l-werk', middel:'l-middel', rob:null };
+
+dnBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    activatePane(btn.dataset.p);
+    if (window.innerWidth <= 700) {
+      document.querySelector('.panel-r').scrollIntoView({
+        behavior: motionOK ? 'smooth' : 'auto', block: 'start'
+      });
+    }
+  });
+});
+
+// CTA buttons → navigate to R.O.B.
+document.querySelectorAll('.cta-rob').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activatePane('rob');
+    if (window.innerWidth <= 700) {
+      document.querySelector('.panel-r').scrollIntoView({
+        behavior: motionOK ? 'smooth' : 'auto', block: 'start'
+      });
+    }
+  });
+});
+
+// ── Chat — R.O.B. via Netlify Function ──
+const chatMsgs   = document.getElementById('chat-msgs');
+const chatIn     = document.getElementById('chat-in');
+const chatBtn    = document.getElementById('chat-btn');
+const chatTyping = document.getElementById('chat-typing');
+
+const msgHistory = [];
+
+// XSS-safe message renderer
+function addMsg(text, who) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg' + (who === 'user' ? ' user' : '');
+
+  const whoSpan = document.createElement('span');
+  whoSpan.className = 'chat-msg-who';
+  whoSpan.textContent = who === 'user' ? 'Jij' : 'R.O.B.';
+
+  const textDiv = document.createElement('div');
+  textDiv.className = 'chat-msg-text';
+  textDiv.textContent = text;
+
+  div.appendChild(whoSpan);
+  div.appendChild(textDiv);
+  chatMsgs.appendChild(div);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+}
+
+async function sendMsg() {
+  const val = chatIn.value.trim();
+  if (!val) return;
+
+  addMsg(val, 'user');
+  msgHistory.push({ role: 'user', content: val });
+  chatIn.value = '';
+  chatTyping.classList.add('visible');
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  chatBtn.disabled = true;
+  chatIn.disabled  = true;
+
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: msgHistory })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    msgHistory.push({ role: 'assistant', content: data.reply });
+    chatTyping.classList.remove('visible');
+    addMsg(data.reply, 'rob');
+  } catch (err) {
+    chatTyping.classList.remove('visible');
+    addMsg('Even geen verbinding. Probeer het opnieuw of mail naar robert@robconcepting.nl', 'rob');
+  } finally {
+    chatBtn.disabled = false;
+    chatIn.disabled  = false;
+    chatIn.focus();
+  }
+}
+
+chatBtn.addEventListener('click', sendMsg);
+chatIn.addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
+
+// ── Video overlay ──
+const vidOverlay = document.getElementById('video-overlay');
+const vidIframe  = document.getElementById('vid-iframe');
+const vidClose   = document.getElementById('vid-close');
+const vidEndBar  = document.getElementById('vid-end-bar');
+const vidEndBtn  = document.getElementById('vid-end-btn');
+
+// Total video duration: 10000+12500+12500+12500+13000+14500 = 75000ms
+const VIDEO_DURATION_MS = 75000;
+let vidEndTimer = null;
+
+function openVideo() {
+  vidIframe.src = 'video.html';
+  vidOverlay.classList.add('active');
+  vidEndBar.classList.remove('active');
+  document.body.style.overflow = 'hidden';
+
+  // Show end bar ~500ms after one full cycle
+  clearTimeout(vidEndTimer);
+  vidEndTimer = setTimeout(() => {
+    vidEndBar.classList.add('active');
+  }, VIDEO_DURATION_MS + 500);
+}
+
+function closeVideo() {
+  vidOverlay.classList.remove('active');
+  vidEndBar.classList.remove('active');
+  clearTimeout(vidEndTimer);
+  // Brief delay before clearing src so fade-out plays cleanly
+  setTimeout(() => { vidIframe.src = ''; }, 460);
+  document.body.style.overflow = '';
+}
+
+document.querySelector('.vid-wrap').addEventListener('click', openVideo);
+vidClose.addEventListener('click', closeVideo);
+vidEndBtn.addEventListener('click', closeVideo);
+
+// Also close on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && vidOverlay.classList.contains('active')) closeVideo();
+});
+</script>
+</body>
+</html>

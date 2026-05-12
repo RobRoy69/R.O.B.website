@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#0e1525"/>
+
+  <!-- Browser / app chrome top bar -->
+  <rect x="20" y="18" width="360" height="264" rx="6" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <rect x="20" y="18" width="360" height="28" rx="6" fill="rgba(255,255,255,0.04)"/>
+  <rect x="20" y="34" width="360" height="12" fill="rgba(255,255,255,0.04)"/>
+
+  <!-- URL bar -->
+  <rect x="96" y="24" width="208" height="10" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+  <rect x="100" y="27" width="60" height="4" rx="2" fill="rgba(15,168,203,0.5)"/>
+
+  <!-- Traffic lights -->
+  <circle cx="36" cy="29" r="4" fill="rgba(232,57,30,0.6)"/>
+  <circle cx="50" cy="29" r="4" fill="rgba(232,228,220,0.2)"/>
+  <circle cx="64" cy="29" r="4" fill="rgba(15,168,203,0.3)"/>
+
+  <!-- Left sidebar (nav panel) -->
+  <rect x="20" y="46" width="90" height="236" fill="rgba(232,228,220,0.03)" stroke-right="rgba(255,255,255,0.05)"/>
+  <line x1="110" y1="46" x2="110" y2="282" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+  <!-- Diamond nav circles in sidebar -->
+  <circle cx="65" cy="108" r="16" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <circle cx="65" cy="108" r="6" fill="#001a4d"/>
+  <text x="65" y="131" text-anchor="middle" font-family="sans-serif" font-size="6" fill="rgba(232,228,220,0.4)" letter-spacing="1">OVER</text>
+
+  <circle cx="40" cy="152" r="13" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+  <circle cx="40" cy="152" r="5" fill="rgba(15,168,203,0.4)"/>
+  <text x="40" y="170" text-anchor="middle" font-family="sans-serif" font-size="5" fill="rgba(232,228,220,0.3)" letter-spacing="1">VISIE</text>
+
+  <circle cx="90" cy="152" r="13" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+  <circle cx="90" cy="152" r="5" fill="rgba(15,168,203,0.4)"/>
+  <text x="90" y="170" text-anchor="middle" font-family="sans-serif" font-size="5" fill="rgba(232,228,220,0.3)" letter-spacing="1">WERK</text>
+
+  <!-- Nav lines -->
+  <line x1="49" y1="116" x2="51" y2="146" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+  <line x1="79" y1="116" x2="77" y2="146" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+
+  <!-- Right content panel — dark screen -->
+  <rect x="110" y="46" width="270" height="236" fill="#08111e"/>
+
+  <!-- Scanlines hint -->
+  <rect x="110" y="46" width="270" height="1" fill="rgba(255,255,255,0.03)"/>
+  <rect x="110" y="52" width="270" height="1" fill="rgba(255,255,255,0.03)"/>
+  <rect x="110" y="58" width="270" height="1" fill="rgba(255,255,255,0.03)"/>
+
+  <!-- Pane tag -->
+  <rect x="126" y="62" width="52" height="5" rx="2" fill="rgba(15,168,203,0.5)"/>
+
+  <!-- Pane title -->
+  <rect x="126" y="74" width="160" height="10" rx="2" fill="rgba(232,228,220,0.55)"/>
+  <rect x="126" y="89" width="100" height="10" rx="2" fill="rgba(232,228,220,0.35)"/>
+
+  <!-- Cyan bar -->
+  <rect x="126" y="108" width="24" height="2" rx="1" fill="#0fa8cb"/>
+
+  <!-- Body text lines -->
+  <rect x="126" y="118" width="220" height="4" rx="1" fill="rgba(232,228,220,0.2)"/>
+  <rect x="126" y="126" width="200" height="4" rx="1" fill="rgba(232,228,220,0.15)"/>
+  <rect x="126" y="134" width="180" height="4" rx="1" fill="rgba(232,228,220,0.15)"/>
+
+  <!-- List items -->
+  <circle cx="131" cy="152" r="2" fill="#0fa8cb"/>
+  <rect x="140" y="149" width="140" height="4" rx="1" fill="rgba(232,228,220,0.25)"/>
+  <circle cx="131" cy="163" r="2" fill="#0fa8cb"/>
+  <rect x="140" y="160" width="120" height="4" rx="1" fill="rgba(232,228,220,0.25)"/>
+  <circle cx="131" cy="174" r="2" fill="#0fa8cb"/>
+  <rect x="140" y="171" width="160" height="4" rx="1" fill="rgba(232,228,220,0.25)"/>
+
+  <!-- CTA button -->
+  <rect x="126" y="200" width="110" height="22" rx="4" fill="rgba(15,168,203,0.12)" stroke="rgba(15,168,203,0.35)" stroke-width="1"/>
+  <rect x="136" y="208" width="70" height="4" rx="1" fill="rgba(15,168,203,0.6)"/>
+  <rect x="214" y="208" width="10" height="4" rx="1" fill="rgba(15,168,203,0.4)"/>
+
+  <!-- Ambient glow -->
+  <circle cx="200" cy="160" r="80" fill="none" stroke="rgba(15,168,203,0.04)" stroke-width="40"/>
+</svg>

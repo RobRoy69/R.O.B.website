@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#0e1525"/>
+
+  <!-- Subtle background glow -->
+  <radialGradient id="appGlow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#0fa8cb" stop-opacity="0.06"/>
+    <stop offset="100%" stop-color="#0e1525" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="400" height="300" fill="url(#appGlow)"/>
+
+  <!-- Phone outline (left device) -->
+  <rect x="60" y="28" width="110" height="195" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <!-- Notch -->
+  <rect x="95" y="28" width="40" height="10" rx="5" fill="#0e1525"/>
+  <circle cx="115" cy="33" r="3" fill="rgba(255,255,255,0.15)"/>
+  <!-- Home indicator -->
+  <rect x="97" y="214" width="36" height="3" rx="2" fill="rgba(255,255,255,0.2)"/>
+
+  <!-- App screen inside phone -->
+  <rect x="64" y="42" width="102" height="168" fill="#08111e"/>
+
+  <!-- App status bar -->
+  <rect x="64" y="42" width="102" height="16" fill="rgba(0,26,77,0.6)"/>
+  <rect x="70" y="47" width="20" height="4" rx="1" fill="rgba(232,228,220,0.5)"/>
+  <rect x="140" y="47" width="12" height="4" rx="1" fill="rgba(15,168,203,0.6)"/>
+  <rect x="155" y="47" width="6" height="4" rx="1" fill="rgba(232,57,30,0.6)"/>
+
+  <!-- App header -->
+  <rect x="64" y="58" width="102" height="28" fill="rgba(0,26,77,0.4)"/>
+  <rect x="74" y="66" width="44" height="5" rx="1" fill="rgba(232,228,220,0.7)"/>
+  <rect x="74" y="74" width="28" height="3" rx="1" fill="rgba(15,168,203,0.5)"/>
+  <circle cx="153" cy="72" r="8" fill="rgba(15,168,203,0.15)" stroke="rgba(15,168,203,0.4)" stroke-width="1"/>
+  <rect x="150" y="71" width="6" height="1.5" rx="1" fill="rgba(15,168,203,0.8)"/>
+  <rect x="150" y="73.5" width="6" height="1.5" rx="1" fill="rgba(15,168,203,0.8)"/>
+  <rect x="150" y="76" width="6" height="1.5" rx="1" fill="rgba(15,168,203,0.8)"/>
+
+  <!-- App content: list cards -->
+  <rect x="70" y="94" width="90" height="22" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/>
+  <circle cx="80" cy="105" r="5" fill="rgba(15,168,203,0.3)"/>
+  <rect x="90" y="101" width="44" height="4" rx="1" fill="rgba(232,228,220,0.5)"/>
+  <rect x="90" y="108" width="30" height="3" rx="1" fill="rgba(232,228,220,0.25)"/>
+
+  <rect x="70" y="120" width="90" height="22" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/>
+  <circle cx="80" cy="131" r="5" fill="rgba(232,57,30,0.3)"/>
+  <rect x="90" y="127" width="54" height="4" rx="1" fill="rgba(232,228,220,0.5)"/>
+  <rect x="90" y="134" width="36" height="3" rx="1" fill="rgba(232,228,220,0.25)"/>
+
+  <rect x="70" y="146" width="90" height="22" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/>
+  <circle cx="80" cy="157" r="5" fill="rgba(0,26,77,0.6)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+  <rect x="90" y="153" width="38" height="4" rx="1" fill="rgba(232,228,220,0.5)"/>
+  <rect x="90" y="160" width="52" height="3" rx="1" fill="rgba(232,228,220,0.25)"/>
+
+  <!-- Bottom tab bar -->
+  <rect x="64" y="186" width="102" height="24" fill="rgba(0,26,77,0.5)"/>
+  <circle cx="83" cy="198" r="4" fill="#0fa8cb" opacity="0.9"/>
+  <circle cx="103" cy="198" r="4" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="123" cy="198" r="4" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="143" cy="198" r="4" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="157" cy="198" r="4" fill="rgba(255,255,255,0.2)"/>
+
+  <!-- Second device (tablet, partially visible right) -->
+  <rect x="204" y="44" width="160" height="215" rx="12" fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+  <rect x="208" y="58" width="152" height="192" fill="#08111e"/>
+  <!-- Tablet content -->
+  <rect x="215" y="68" width="70" height="7" rx="2" fill="rgba(232,228,220,0.45)"/>
+  <rect x="215" y="79" width="46" height="5" rx="2" fill="rgba(15,168,203,0.4)"/>
+  <rect x="215" y="94" width="20" height="2" rx="1" fill="#0fa8cb"/>
+  <rect x="215" y="102" width="138" height="3" rx="1" fill="rgba(232,228,220,0.18)"/>
+  <rect x="215" y="109" width="120" height="3" rx="1" fill="rgba(232,228,220,0.14)"/>
+  <rect x="215" y="116" width="130" height="3" rx="1" fill="rgba(232,228,220,0.14)"/>
+  <!-- Tablet mini chart -->
+  <rect x="215" y="130" width="138" height="60" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/>
+  <polyline points="222,178 236,162 250,168 264,148 278,155 292,140 306,144 320,132 334,138 348,122" fill="none" stroke="#0fa8cb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="222,178 236,162 250,168 264,148 278,155 292,140 306,144 320,132 334,138 348,122" fill="none" stroke="rgba(15,168,203,0.15)" stroke-width="8"/>
+  <!-- Tablet CTA -->
+  <rect x="215" y="205" width="88" height="20" rx="4" fill="rgba(15,168,203,0.12)" stroke="rgba(15,168,203,0.3)" stroke-width="1"/>
+  <rect x="224" y="212" width="50" height="4" rx="1" fill="rgba(15,168,203,0.55)"/>
+  <!-- Tablet camera -->
+  <circle cx="284" cy="50" r="4" fill="rgba(255,255,255,0.1)"/>
+</svg>
