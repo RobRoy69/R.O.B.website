@@ -817,7 +817,122 @@
       max-width: clamp(480px, 50vw, 760px);
       padding-top: 10px;
       border-top: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 18px;
+    }
+
+    /* "Hoe deze site werkt" — subtiele meta-knop */
+    .meta-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: none; border: none; padding: 6px 0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: rgba(15,168,203,0.65);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.22s;
+      margin-bottom: 28px;
+    }
+    .meta-link:hover { color: rgba(15,168,203,1); }
+    .meta-link-arrow { opacity: 0.7; font-size: 11px; }
+
+    /* ── Systeem-demo overlay ── */
+    #system-demo-overlay {
+      position: fixed; inset: 0; z-index: 998;
+      background: rgba(8,10,22,0.92);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+      padding: clamp(20px, 4vh, 60px);
+      overflow-y: auto;
+    }
+    #system-demo-overlay.active { opacity: 1; pointer-events: all; }
+    .sd-panel {
+      background: var(--screen);
+      border: 1px solid rgba(15,168,203,0.18);
+      border-radius: 12px;
+      max-width: 820px; width: 100%;
+      padding: clamp(28px, 4vw, 56px);
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .sd-close {
+      position: absolute; top: 18px; right: 22px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.75);
+      font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .sd-close:hover { background: rgba(232,57,30,0.22); transform: scale(1.08); }
+
+    .sd-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: var(--cyan);
+      letter-spacing: 0.22em; text-transform: uppercase;
+      margin-bottom: 14px; font-weight: 500;
+    }
+    .sd-title {
+      font-size: clamp(24px, 2.4vw, 36px); font-weight: 300;
+      color: #ffffff; line-height: 1.2;
+      margin-bottom: 14px; letter-spacing: -0.01em;
+    }
+    .sd-title strong { font-weight: 600; color: var(--cyan); }
+    .sd-bar {
+      width: 36px; height: 2px; background: var(--cyan);
+      margin-bottom: 28px;
+    }
+    .sd-intro {
+      font-size: 14px; color: rgba(238,242,247,0.85);
+      line-height: 1.7; font-weight: 400;
+      margin-bottom: 32px;
+    }
+    .sd-block {
       margin-bottom: 26px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .sd-block:last-child { border-bottom: none; margin-bottom: 0; }
+    .sd-block-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; color: rgba(15,168,203,0.7);
+      letter-spacing: 0.22em; text-transform: uppercase;
+      margin-bottom: 8px; font-weight: 500;
+    }
+    .sd-block-title {
+      font-size: 16px; font-weight: 600;
+      color: rgba(238,242,247,0.92);
+      margin-bottom: 10px; line-height: 1.4;
+    }
+    .sd-block-body {
+      font-size: 13px; color: rgba(238,242,247,0.72);
+      line-height: 1.65; font-weight: 400;
+    }
+    .sd-block-body code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      background: rgba(15,168,203,0.1);
+      border: 1px solid rgba(15,168,203,0.18);
+      border-radius: 3px;
+      padding: 1px 6px;
+      color: rgba(15,168,203,0.95);
+    }
+    .sd-footer {
+      margin-top: 24px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: rgba(238,242,247,0.5);
+      letter-spacing: 0.1em;
+    }
+    .sd-footer a {
+      color: rgba(15,168,203,0.85);
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+    .sd-footer a:hover { color: var(--cyan); }
+    @media (max-width: 700px) {
+      .sd-panel { padding: 28px 22px; max-height: 88vh; }
+      .sd-close { top: 12px; right: 12px; }
     }
     @media (max-width: 720px) {
       .systems-grid { grid-template-columns: 1fr; }
@@ -1679,6 +1794,10 @@
             </div>
           </div>
           <div class="systems-total">12 modules live &middot; 3 in pipeline &middot; 4 systemen in productie</div>
+          <button class="meta-link" id="btn-system-demo" type="button" aria-haspopup="dialog">
+            <span class="meta-link-arrow">&#8599;</span>
+            <span>Hoe deze site werkt</span>
+          </button>
           <button class="cta-rob" data-cta="rob">Vraag een verkenning <span class="cta-rob-arrow">&rarr;</span></button>
         </div>
 
@@ -1768,6 +1887,83 @@
 
   </div><!-- /interface-body -->
 </div><!-- /s-interface -->
+
+
+<!-- ══════ SYSTEEM-DEMO OVERLAY ══════ -->
+<div id="system-demo-overlay" role="dialog" aria-modal="true" aria-labelledby="sd-title-id">
+  <div class="sd-panel">
+    <button class="sd-close" id="sd-close" aria-label="Sluit">&times;</button>
+
+    <div class="sd-tag">meta &mdash; de site als systeem</div>
+    <h2 class="sd-title" id="sd-title-id">Deze site is een <strong>systeem</strong>, niet een pagina.</h2>
+    <div class="sd-bar"></div>
+
+    <p class="sd-intro">
+      R.O.B. praat over visie, systeem en merk als geheel.
+      In plaats van dat te beweren, laat ik zien hoe ik het zelf doe.
+      &Eacute;&eacute;n HTML-bestand, twee Functions, een MP4, zes SVG-mockups. Geen framework, geen build-step, geen externe componentenbibliotheek.
+    </p>
+
+    <div class="sd-block">
+      <div class="sd-block-label">01 &middot; Structuur</div>
+      <div class="sd-block-title">Drie schermen, &eacute;&eacute;n verhaal</div>
+      <div class="sd-block-body">
+        Landing &rarr; micro-transitie &rarr; hoofdinterface. Elk scherm heeft &eacute;&eacute;n functie:
+        binnenhalen, het ritueel inluiden, presenteren. De interface zelf is een diamond-nav met
+        vijf knoppen waarvan R.O.B. de centrale is &mdash; alles leidt naar de chat. Deep-links via
+        <code>#over</code>, <code>#visie</code>, <code>#werk</code>, <code>#middel</code> en <code>#rob</code>.
+      </div>
+    </div>
+
+    <div class="sd-block">
+      <div class="sd-block-label">02 &middot; R.O.B.'s AI</div>
+      <div class="sd-block-title">Een Netlify Function als persoonlijkheid</div>
+      <div class="sd-block-body">
+        De chat draait op <code>claude-haiku-4-5</code> via een serverless proxy.
+        De persona zit in een system-prompt: max 3 zinnen, geen markdown, lees of de bezoeker verkent of al weet, redirect naar mail of WhatsApp via de knop.
+        Streaming-respons via Server-Sent Events &mdash; je ziet R.O.B. zinnen bouwen, geen wachttijd.
+        Rate-limit: 12 calls per 60 sec per IP. History-cap: 12 berichten frontend, 20 server.
+      </div>
+    </div>
+
+    <div class="sd-block">
+      <div class="sd-block-label">03 &middot; WhatsApp zonder nummer in HTML</div>
+      <div class="sd-block-title">Privacy via redirect-Function</div>
+      <div class="sd-block-body">
+        De WhatsApp-knop wijst naar <code>/.netlify/functions/whatsapp</code>.
+        Die Function leest het nummer uit een env-var en redirect 302 naar <code>wa.me</code>.
+        Het nummer staat nergens in de publieke HTML of de Git-repo &mdash; alleen in Netlify's environment.
+      </div>
+    </div>
+
+    <div class="sd-block">
+      <div class="sd-block-label">04 &middot; Mail-notificaties</div>
+      <div class="sd-block-title">Rob krijgt een seintje bij elke verkenning</div>
+      <div class="sd-block-body">
+        Na 3 uitwisselingen stuurt de chat-Function de samenvatting naar Rob's inbox via Resend.
+        Geen dashboard, geen tracking-cookies &mdash; gewoon: dit speelde er, lees terug, reageer.
+        Fire-and-forget, faalt stil als de mail-service even hapert. De chat zelf werkt onafhankelijk.
+      </div>
+    </div>
+
+    <div class="sd-block">
+      <div class="sd-block-label">05 &middot; Code</div>
+      <div class="sd-block-title">Wat hier draait, samengevat</div>
+      <div class="sd-block-body">
+        Ongeveer 2200 regels HTML/CSS/JS in &eacute;&eacute;n bestand. Twee Functions van samen 200 regels.
+        Geen npm-dependencies behalve de Anthropic API. Auto-deploy bij elke push naar
+        GitHub, SSL via Let's Encrypt, DNS via Netlify, security-headers in <code>netlify.toml</code>.
+        Vier contactkanalen (chat, mail, LinkedIn, WhatsApp), elk met een eigen rol.
+      </div>
+    </div>
+
+    <p class="sd-footer">
+      Concepting in praktijk &mdash; deze site is zijn eigen case study.
+      <br>
+      Wil je iets soortgelijks voor je eigen onderneming? <a href="#rob" id="sd-go-rob">Open R.O.B.</a>
+    </p>
+  </div>
+</div>
 
 
 <!-- ══════ VIDEO OVERLAY ══════ -->
@@ -2117,6 +2313,36 @@ chatIn.addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
 document.getElementById('chat-action-over').addEventListener('click', () => {
   activatePane('over');
   scrollPanelIntoViewMobile();
+});
+
+// ── Systeem-demo overlay ──
+const sdOverlay = document.getElementById('system-demo-overlay');
+const sdClose   = document.getElementById('sd-close');
+const sdOpenBtn = document.getElementById('btn-system-demo');
+const sdGoRob   = document.getElementById('sd-go-rob');
+
+function openSystemDemo() {
+  sdOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  sdClose.focus();
+}
+function closeSystemDemo() {
+  sdOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+  sdOpenBtn?.focus();
+}
+
+sdOpenBtn.addEventListener('click', openSystemDemo);
+sdClose.addEventListener('click', closeSystemDemo);
+sdOverlay.addEventListener('click', e => { if (e.target === sdOverlay) closeSystemDemo(); });
+sdGoRob.addEventListener('click', e => {
+  e.preventDefault();
+  closeSystemDemo();
+  activatePane('rob');
+  scrollPanelIntoViewMobile();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && sdOverlay.classList.contains('active')) closeSystemDemo();
 });
 
 // ── Video overlay ──
