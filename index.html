@@ -246,13 +246,14 @@
       text-transform: uppercase; color: var(--purple); line-height: 1;
     }
     .hdr-name-tag {
-      font-size: 8.5px; color: var(--muted); letter-spacing: 0.1em;
-      font-weight: 400; font-style: italic;
+      font-size: 10px; color: rgba(0,26,77,0.62); letter-spacing: 0.08em;
+      font-weight: 400;
     }
     .hdr-right {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; color: rgba(33,0,55,0.3);
+      font-size: 10px; color: rgba(33,0,55,0.58);
       letter-spacing: 0.06em;
+      white-space: nowrap;
     }
 
     /* Body: left + right */
@@ -1185,25 +1186,46 @@
 
     /* ── Responsive ── */
     @media (max-width: 700px) {
-      .interface-body { flex-direction: column; overflow: hidden; }
-      #s-interface { overflow: hidden; }
+      /* Allow document-level scrolling on mobile — fix iOS viewport issues */
+      html, body { height: auto; min-height: 100%; overflow: visible; }
+      .screen { position: absolute; }
+      .screen.active#s-interface { position: relative; min-height: 100dvh; }
+
+      .interface-body { flex-direction: column; overflow: visible; min-height: 0; }
+      #s-interface { overflow: visible; }
       .panel-l {
         width: 100%; flex-shrink: 0;
-        padding: 10px 0 0;
+        padding: 18px 0 14px;
         border-right: none;
         border-bottom: 1px solid var(--border);
         min-height: auto;
       }
       .diamond-nav {
-        transform: scale(0.72);
-        transform-origin: center top;
-        width: 220px; height: 202px;
+        width: 300px; height: 330px;
         margin: 0 auto;
+        transform: none;
       }
-      .panel-r { flex: 1; min-height: 0; overflow-y: auto; }
-      .beeldscherm { min-height: 0; }
+      .panel-r { flex: 1 0 auto; min-height: 0; overflow: visible; }
+      .beeldscherm { min-height: 0; overflow: visible; }
       .pane { padding: 28px 20px; }
       .tools-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Header: condenser op mobiel zodat indicator past */
+      .hdr { padding: 0 14px; }
+      .hdr-name-tag { display: none; }
+      .hdr-right { font-size: 9px; }
+
+      /* Over-pane: stapelt nu sowieso, kaart breder toelaten */
+      .over-layout { gap: 24px; }
+      .cred-card { max-width: 100%; }
+
+      /* Werk-pane: systeemkaart 1 kolom */
+      .systems-grid { grid-template-columns: 1fr; }
+
+      /* Visie-flow: phases stacken op smal scherm */
+      .visie-flow { flex-direction: column; }
+      .vf-phase + .vf-phase { border-left: 1px solid rgba(255,255,255,0.07); border-top: none; }
+      .vf-connector { width: 100%; height: 24px; }
     }
   </style>
 </head>
