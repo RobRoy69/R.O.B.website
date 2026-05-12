@@ -885,6 +885,16 @@
     }
     .cred-linkedin svg { flex-shrink: 0; opacity: 0.85; }
     .cred-arrow { margin-left: auto; opacity: 0.6; font-size: 13px; }
+    .cred-mail {
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: rgba(238,242,247,0.58);
+      letter-spacing: 0.03em; text-decoration: none;
+      margin-top: -6px; padding: 4px 6px;
+      transition: color 0.22s;
+    }
+    .cred-mail:hover { color: rgba(15,168,203,0.92); }
+    .cred-mail:focus-visible { outline: 2px solid rgba(15,168,203,0.5); outline-offset: 3px; border-radius: 3px; }
 
     @media (max-width: 920px) {
       .over-layout { flex-direction: column; gap: 28px; }
@@ -1082,6 +1092,13 @@
     }
     .chat-input::placeholder { color: rgba(238,242,247,0.25); }
     .chat-input:focus { border-color: rgba(15,168,203,0.4); }
+    .chat-mail-link {
+      color: rgba(15,168,203,0.92);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.2s;
+    }
+    .chat-mail-link:hover { color: rgba(15,168,203,1); }
     .chat-send {
       padding: 12px 20px;
       background: var(--cyan); border: none; border-radius: 8px;
@@ -1474,6 +1491,7 @@
                 <span>Connect op LinkedIn</span>
                 <span class="cred-arrow">&rarr;</span>
               </a>
+              <a class="cred-mail" href="mailto:contact@rob-concepting.com" aria-label="Mail naar contact@rob-concepting.com">contact@rob-concepting.com</a>
             </aside>
           </div>
         </div>
@@ -1817,6 +1835,28 @@ function addMsg(text, who) {
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
 }
 
+// XSS-safe system error message with clickable mailto
+function addErrorMsg() {
+  const div = document.createElement('div');
+  div.className = 'chat-msg';
+  const whoSpan = document.createElement('span');
+  whoSpan.className = 'chat-msg-who';
+  whoSpan.textContent = 'R.O.B.';
+  const textDiv = document.createElement('div');
+  textDiv.className = 'chat-msg-text';
+  textDiv.appendChild(document.createTextNode('Even geen verbinding. Probeer het opnieuw of mail naar '));
+  const a = document.createElement('a');
+  a.href = 'mailto:contact@rob-concepting.com';
+  a.textContent = 'contact@rob-concepting.com';
+  a.className = 'chat-mail-link';
+  textDiv.appendChild(a);
+  textDiv.appendChild(document.createTextNode('.'));
+  div.appendChild(whoSpan);
+  div.appendChild(textDiv);
+  chatMsgs.appendChild(div);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+}
+
 async function sendMsg() {
   const val = chatIn.value.trim();
   if (!val) return;
@@ -1847,7 +1887,7 @@ async function sendMsg() {
     addMsg(data.reply, 'rob');
   } catch (err) {
     chatTyping.classList.remove('visible');
-    addMsg('Even geen verbinding. Probeer het opnieuw of mail naar contact@rob-concepting.com', 'rob');
+    addErrorMsg();
   } finally {
     chatBtn.disabled = false;
     chatIn.disabled  = false;
