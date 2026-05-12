@@ -1121,6 +1121,33 @@
       transition: color 0.2s;
     }
     .chat-mail-link:hover { color: rgba(15,168,203,1); }
+
+    .chat-actions {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .chat-action-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 14px;
+      background: rgba(15,168,203,0.08);
+      border: 1px solid rgba(15,168,203,0.26);
+      border-radius: 20px;
+      color: rgba(15,168,203,0.92);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .chat-action-btn:hover {
+      background: rgba(15,168,203,0.16);
+      border-color: rgba(15,168,203,0.46);
+      transform: translateY(-1px);
+    }
+    .chat-action-btn:focus-visible {
+      outline: 2px solid rgba(15,168,203,0.5);
+      outline-offset: 2px;
+    }
+    .chat-action-arrow { font-size: 12px; opacity: 0.85; }
     .chat-send {
       padding: 12px 20px;
       background: var(--cyan); border: none; border-radius: 8px;
@@ -1736,9 +1763,15 @@
               <div class="typing-dot"></div>
               <span style="margin-left:4px">R.O.B. denkt na</span>
             </div>
+            <div class="chat-actions">
+              <button class="chat-action-btn" id="chat-action-over" type="button" aria-label="Ga naar de Over-pane">
+                <span class="chat-action-arrow">&#8599;</span>
+                <span>Over R.O.B.</span>
+              </button>
+            </div>
             <div class="chat-input-row">
               <input class="chat-input" id="chat-in" type="text" placeholder="Stel een vraag of beschrijf je situatie…" autocomplete="off" maxlength="1500">
-              <button class="chat-send" id="chat-btn">Stuur →</button>
+              <button class="chat-send" id="chat-btn">Stuur &rarr;</button>
             </div>
           </div>
         </div>
@@ -1958,6 +1991,16 @@ async function sendMsg() {
 
 chatBtn.addEventListener('click', sendMsg);
 chatIn.addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
+
+// Action-knop in de chat naar Over-pane
+document.getElementById('chat-action-over').addEventListener('click', () => {
+  activatePane('over');
+  if (window.innerWidth <= 700) {
+    document.querySelector('.panel-r').scrollIntoView({
+      behavior: motionOK ? 'smooth' : 'auto', block: 'start'
+    });
+  }
+});
 
 // ── Video overlay ──
 const vidOverlay = document.getElementById('video-overlay');
