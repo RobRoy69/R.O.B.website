@@ -1278,6 +1278,14 @@
       margin-top: 14px; text-align: center;
     }
 
+    /* Testfase eindmelding — rode accent zodat duidelijk een systeem-bericht */
+    .chat-msg.testfase .chat-msg-who { color: rgba(232,57,30,0.75); }
+    .chat-msg.testfase .chat-msg-text {
+      background: rgba(232,57,30,0.06);
+      border-color: rgba(232,57,30,0.24);
+      color: rgba(238,242,247,0.88);
+    }
+
     /* Streaming cursor — R.O.B. typt voor je ogen */
     .chat-streaming-cursor {
       display: inline-block;
@@ -2232,10 +2240,42 @@ const chatBtn    = document.getElementById('chat-btn');
 const chatTyping = document.getElementById('chat-typing');
 
 const msgHistory = [];
-const MAX_HISTORY = 12;        // cap context: laatste 12 berichten naar de Function
-const MAX_INPUT_CHARS = 1500;  // per ingeven bericht
-const NOTIFY_THRESHOLD = 5;    // notify Rob na deze msgHistory-lengte (3 user-turns)
-let sessionNotified = false;   // één mail per browsersessie
+const MAX_HISTORY = 12;            // cap context: laatste 12 berichten naar de Function
+const MAX_INPUT_CHARS = 1500;      // per ingeven bericht
+const NOTIFY_THRESHOLD = 5;        // notify Rob na deze msgHistory-lengte (3 user-turns)
+const TESTFASE_MAX_USER_TURNS = 10; // hardcap aantal wisselingen in testfase
+let sessionNotified = false;       // één mail per browsersessie
+let totalUserTurns = 0;            // teller die niet wordt afgekapt door history-cap
+let testfaseClosed = false;        // chat is afgesloten na hardcap
+
+const TESTFASE_NOTICE_TEXT = 'Bedankt voor je verkenning. R.O.B. zit nog in testfase en houdt elk gesprek bij tien wisselingen. Voor meer: gebruik de knop "Over R.O.B." onder de chat — daar staan mail, LinkedIn en WhatsApp om Rob persoonlijk te bereiken.';
+
+function showTestfaseNotice() {
+  if (testfaseClosed) return;
+  testfaseClosed = true;
+
+  // Eind-bericht in eigen styling
+  const div = document.createElement('div');
+  div.className = 'chat-msg testfase';
+  const whoSpan = document.createElement('span');
+  whoSpan.className = 'chat-msg-who';
+  whoSpan.textContent = 'Testfase';
+  const textDiv = document.createElement('div');
+  textDiv.className = 'chat-msg-text';
+  textDiv.textContent = TESTFASE_NOTICE_TEXT;
+  div.appendChild(whoSpan);
+  div.appendChild(textDiv);
+  chatMsgs.appendChild(div);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+
+  // Input/knop uit
+  chatIn.disabled = true;
+  chatBtn.disabled = true;
+  chatIn.value = '';
+  chatIn.placeholder = 'Gesprek afgerond — gebruik Over R.O.B. voor contact.';
+  chatBtn.style.opacity = '0.4';
+  chatBtn.style.cursor = 'not-allowed';
+}
 
 // Mail-adressen → klikbare mailto's, met juiste redirect voor onze publieke alias
 const EMAIL_RE = /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g;
@@ -2345,12 +2385,13 @@ function renderStreamingMsg(textDiv, text, isFinal) {
 }
 
 async function sendMsg() {
-  if (chatBtn.disabled) return;
+  if (chatBtn.disabled || testfaseClosed) return;
   const val = chatIn.value.trim().slice(0, MAX_INPUT_CHARS);
   if (!val) return;
 
   addMsg(val, 'user');
   msgHistory.push({ role: 'user', content: val });
+  totalUserTurns++;
   if (msgHistory.length > MAX_HISTORY) {
     msgHistory.splice(0, msgHistory.length - MAX_HISTORY);
     while (msgHistory.length && msgHistory[0].role !== 'user') msgHistory.shift();
@@ -2413,6 +2454,11 @@ async function sendMsg() {
     msgHistory.push({ role: 'assistant', content: accumulated });
     refreshSaveBtnVisibility();
 
+    // Testfase-hardcap: na N wisselingen het gesprek netjes afsluiten
+    if (totalUserTurns >= TESTFASE_MAX_USER_TURNS) {
+      showTestfaseNotice();
+    }
+
   } catch (err) {
     chatTyping.classList.remove('visible');
     if (streamingEl) {
@@ -2421,9 +2467,11 @@ async function sendMsg() {
     }
     addErrorMsg();
   } finally {
-    chatBtn.disabled = false;
-    chatIn.disabled  = false;
-    chatIn.focus();
+    if (!testfaseClosed) {
+      chatBtn.disabled = false;
+      chatIn.disabled  = false;
+      chatIn.focus();
+    }
   }
 }
 
