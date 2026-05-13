@@ -1029,23 +1029,38 @@
       gap: 18px;
       position: sticky; top: 0;
     }
-    .cred-brand { display: flex; flex-direction: column; gap: 6px; }
+    .cred-brand {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .cred-portrait {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(15,168,203,0.32);
+      box-shadow: 0 4px 14px rgba(15,168,203,0.18);
+      filter: grayscale(0.1);
+    }
+    .cred-brand-text {
+      display: flex; flex-direction: column; gap: 3px;
+      min-width: 0;
+    }
     .cred-rob {
-      font-size: 26px; font-weight: 700;
-      letter-spacing: 0.12em;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: 0.10em;
       color: rgba(238,242,247,0.92);
       line-height: 1;
     }
     .cred-name {
-      font-size: 13px; font-weight: 500;
+      font-size: 12.5px; font-weight: 500;
       color: rgba(238,242,247,0.74);
-      margin-top: 8px;
+      margin-top: 5px;
     }
     .cred-role {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 9.5px; color: var(--cyan);
-      letter-spacing: 0.2em; text-transform: uppercase;
-      opacity: 0.78; margin-top: 2px;
+      font-size: 9px; color: var(--cyan);
+      letter-spacing: 0.18em; text-transform: uppercase;
+      opacity: 0.8; margin-top: 1px;
     }
     .cred-divider {
       height: 1px; background: rgba(255,255,255,0.07);
@@ -1746,9 +1761,12 @@
             <!-- Credentials card -->
             <aside class="cred-card">
               <div class="cred-brand">
-                <div class="cred-rob">R.O.B.</div>
-                <div class="cred-name">Rob de Rooij</div>
-                <div class="cred-role">Concepting Expert</div>
+                <img class="cred-portrait" src="media/portret-rob.jpg" alt="Rob de Rooij" loading="lazy" decoding="async">
+                <div class="cred-brand-text">
+                  <div class="cred-rob">R.O.B.</div>
+                  <div class="cred-name">Rob de Rooij</div>
+                  <div class="cred-role">Concepting Expert</div>
+                </div>
               </div>
               <div class="cred-divider"></div>
               <div class="cred-focus">
