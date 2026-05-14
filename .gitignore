@@ -12,6 +12,9 @@ desktop.ini
 # Logs
 *.log
 
+# Dependencies (Netlify installeert deze zelf bij build)
+node_modules/
+
 # Local env
 .env
 .env.local
