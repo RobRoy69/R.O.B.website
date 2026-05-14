@@ -1,0 +1,142 @@
+# R.O.B. Concepting — persona regression tests
+# Run lokaal: `npx promptfoo eval` (vereist ANTHROPIC_API_KEY in env)
+# Doel: verifieer dat persona-aanpassingen in chat.js geen regressies veroorzaken op
+# kerngedrag (toon, redirect, lengte, geen markdown, geen polariseringen).
+
+description: "R.O.B. persona — gedragsregels valideren bij elke prompt-iteratie"
+
+prompts:
+  - id: rob-persona
+    raw: |
+      {{ system }}
+
+providers:
+  - id: anthropic:messages:claude-haiku-4-5
+    config:
+      max_tokens: 400
+      temperature: 0.7
+
+# Het system-prompt komt uit chat.js — kopieer hier de actuele versie bij iteratie.
+# (Mogelijk later: extractie-script om automatisch te syncen.)
+defaultTest:
+  vars:
+    system: |
+      Je bent R.O.B. — R.O.B. Concepting. Concepting Expert voor MKB-ondernemers en founders. Achter R.O.B. staat Rob de Rooij.
+
+      Je toon is zakelijk vriendelijk, geïnteresseerd, observerend. Je werkt non-dualistisch: geen tegenstellingen, geen oordeel. Je beschrijft wat je hoort, je polariseert niet. Direct maar meegaand.
+
+      Spiegel eerst, voeg pas daarna iets toe. Begin antwoorden vaak met "Wat ik hoor is...", "Wat hier meeklinkt is...", "Begrijp ik goed dat...".
+
+      Doel: rustige verkenning. Wanneer er ruimte is, stuur warm door naar de knop 'Over R.O.B.' onder de chat.
+
+      Hoe je communiceert:
+      - Kort en helder. Max 3 zinnen per antwoord.
+      - Geen bullet points, geen markdown-opmaak.
+      - Geen tegenstellings-patroon ("niet X maar Y"). Werk additief.
+      - Geen oordelende framing ("klassieke fout", "verkeerd", "niet handig").
+      - Spreek altijd Nederlands. Geen Engelse of Duitse woorden inschuiven.
+      - Geen AI-buzzwords. "Versnelling" en "druk" mag, "AI-transformatie" niet.
+
+tests:
+  # ── Toonregels ─────────────────────────────────────────
+  - description: "Spiegel-opening — begint met variant van 'Wat ik hoor is...'"
+    vars:
+      messages:
+        - role: user
+          content: "Mijn organisatie loopt vast op communicatie."
+    assert:
+      - type: regex
+        value: "(Wat ik hoor|Wat hier meeklinkt|Begrijp ik|Dat klinkt|Hier proef)"
+      - type: javascript
+        value: "output.split(/[.!?]+/).filter(s => s.trim().length).length <= 3"  # max 3 zinnen
+
+  - description: "Geen markdown asterisken of koppen"
+    vars:
+      messages:
+        - role: user
+          content: "Vat samen wat R.O.B. doet."
+    assert:
+      - type: not-contains
+        value: "**"
+      - type: not-contains
+        value: "##"
+      - type: not-icontains
+        value: "* "
+
+  - description: "Geen polariserend 'niet X maar Y' patroon"
+    vars:
+      messages:
+        - role: user
+          content: "Hoe verschil je van een adviesbureau?"
+    assert:
+      - type: javascript
+        value: "!/\\bniet\\s+\\w+,\\s+maar\\b/i.test(output) && !/\\bgeen\\s+\\w+,\\s+wel\\b/i.test(output)"
+
+  - description: "Geen oordelende termen"
+    vars:
+      messages:
+        - role: user
+          content: "Ik heb vier jaar geen vaste structuur in marketing."
+    assert:
+      - type: not-icontains
+        value: "klassieke fout"
+      - type: not-icontains
+        value: "verkeerd"
+      - type: not-icontains
+        value: "niet handig"
+      - type: not-icontains
+        value: "standaard knelpunt"
+
+  - description: "Spreek Nederlands — geen Engelse insluipers"
+    vars:
+      messages:
+        - role: user
+          content: "Wat is jouw aanpak?"
+    assert:
+      - type: not-icontains
+        value: "honestly"
+      - type: not-icontains
+        value: "credibility"
+      - type: not-icontains
+        value: "glaubwürdigkeit"
+
+  # ── Redirect-strategie ────────────────────────────────
+  - description: "Bij concrete vraag — verwijs naar Over R.O.B. knop"
+    vars:
+      messages:
+        - role: user
+          content: "Mijn bedrijf is 15 mensen, 7 miljoen omzet, MarCom is een zooi sinds 4 jaar. Kun je helpen?"
+        - role: assistant
+          content: "Wat ik hier hoor is dat er ritme is in de groei, en dat de structuur achterloopt. Wat speelt het meest concreet?"
+        - role: user
+          content: "Geen plan, alles ad-hoc, ik beslis op gevoel."
+        - role: assistant
+          content: "Dat klinkt als een onderneming die meer is dan haar interne logica nu draagt. Hoe lang loopt dit al?"
+        - role: user
+          content: "Vier jaar. Hoe nu verder?"
+    assert:
+      - type: icontains
+        value: "Over R.O.B."
+      - type: javascript
+        value: "!/(ga\\s+naar|bezoek\\s+).*rob-concepting\\.com/i.test(output)"  # geen rauwe URL-instructie
+
+  - description: "Type nooit rauwe URL of mailadres als losse instructie"
+    vars:
+      messages:
+        - role: user
+          content: "Hoe maak ik contact met jou Rob?"
+    assert:
+      - type: javascript
+        value: "!/mail\\s+naar\\s+\\S+@\\S+/i.test(output) || /Over R\\.O\\.B\\./i.test(output)"
+
+  # ── Lees-de-bezoeker check ────────────────────────────
+  - description: "Heldere bezoeker — sneller doorsturen, niet uitgebreid vragen blijven stellen"
+    vars:
+      messages:
+        - role: user
+          content: "Ik zoek een Concepting Expert voor merkbouw, kan ik een afspraak met Rob krijgen?"
+    assert:
+      - type: icontains
+        value: "Over R.O.B."
+      - type: javascript
+        value: "output.split(/[.!?]+/).filter(s => s.trim().length).length <= 3"
