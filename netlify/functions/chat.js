@@ -173,16 +173,29 @@ export default async (req) => {
     return json({ error: 'Ongeldig verzoek' }, 400, origin);
   }
 
-  // Streamen vanuit Anthropic
+  // Streamen vanuit Anthropic — via Helicone proxy als HELICONE_API_KEY beschikbaar (observability + caching)
+  const heliconeKey = process.env.HELICONE_API_KEY;
+  const anthropicURL = heliconeKey
+    ? 'https://anthropic.helicone.ai/v1/messages'
+    : 'https://api.anthropic.com/v1/messages';
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+    'x-api-key': apiKey,
+    'anthropic-version': '2023-06-01'
+  };
+  if (heliconeKey) {
+    requestHeaders['Helicone-Auth'] = `Bearer ${heliconeKey}`;
+    // Optioneel: tag elke call met user-IP (gehasht) zodat Helicone abuse-detection werkt
+    if (ip) requestHeaders['Helicone-User-Id'] = ip.slice(0, 32);
+    requestHeaders['Helicone-Property-Source'] = 'rob-concepting.com';
+  }
+
   let anthropicRes;
   try {
-    anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+    anthropicRes = await fetch(anthropicURL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
+      headers: requestHeaders,
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
         max_tokens: 400,
