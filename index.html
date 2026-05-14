@@ -2475,31 +2475,21 @@ async function sendMsg() {
       throw new Error(err.error || `HTTP ${res.status}`);
     }
 
-    // Stream is SSE — parse content_block_delta events naar accumulated text
+    // Stream is plain text — chunks komen rechtstreeks binnen via AI SDK toTextStreamResponse()
     chatTyping.classList.remove('visible');
     streamingEl = createStreamingMsg();
 
     const reader  = res.body.getReader();
     const decoder = new TextDecoder();
-    let buffer = '';
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const events = buffer.split('\n\n');
-      buffer = events.pop() || '';
-      for (const event of events) {
-        const dataLine = event.split('\n').find(l => l.startsWith('data: '));
-        if (!dataLine) continue;
-        try {
-          const data = JSON.parse(dataLine.slice(6));
-          if (data.type === 'content_block_delta' && data.delta?.text) {
-            accumulated += data.delta.text;
-            renderStreamingMsg(streamingEl, accumulated, false);
-            chatMsgs.scrollTop = chatMsgs.scrollHeight;
-          }
-        } catch (_) { /* heartbeat of niet-JSON event, negeer */ }
+      const chunk = decoder.decode(value, { stream: true });
+      if (chunk) {
+        accumulated += chunk;
+        renderStreamingMsg(streamingEl, accumulated, false);
+        chatMsgs.scrollTop = chatMsgs.scrollHeight;
       }
     }
 

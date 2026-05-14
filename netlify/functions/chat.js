@@ -1,6 +1,9 @@
-// R.O.B. Concepting — chat proxy (v2, streaming)
-// Vereiste env var in Netlify: ANTHROPIC_API_KEY
-// Optioneel: RESEND_API_KEY, NOTIFY_EMAIL, NOTIFY_FROM
+// R.O.B. Concepting — chat proxy (v2 ESM, Vercel AI SDK)
+// Env-vars: ANTHROPIC_API_KEY (verplicht), HELICONE_API_KEY (optioneel, observability),
+//           RESEND_API_KEY (optioneel, mail-notify), NOTIFY_EMAIL, NOTIFY_FROM (optioneel).
+
+import { streamText } from 'ai';
+import { createAnthropic } from '@ai-sdk/anthropic';
 
 const ROB_SYSTEM = `Je bent R.O.B. — R.O.B. Concepting. Concepting Expert voor MKB-ondernemers en founders. Achter R.O.B. staat Rob de Rooij.
 
@@ -35,7 +38,7 @@ Hoe je communiceert:
 - Geen AI-buzzwords. "Versnelling" en "druk" mag, "AI-transformatie" niet.
 - Stuur warm en concreet richting Rob wanneer er substantie ligt — niet pushen, wel ruimte maken voor de volgende stap.`;
 
-// Toegestane origins — voorkomt dat externe sites jouw Anthropic-budget aftappen.
+// ── Origins whitelist ─────────────────────────────────────────────────────────
 const ALLOWED_ORIGINS = new Set([
   'https://rob-concepting.com',
   'https://www.rob-concepting.com',
@@ -51,7 +54,7 @@ function corsFor(origin) {
   };
 }
 
-// In-memory rate-limiter — per Function-instance, best-effort
+// ── Rate-limit (in-memory, per Function-instance) ─────────────────────────────
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 12;
 const rateBuckets = new Map();
@@ -77,7 +80,7 @@ function rateLimitCheck(ip) {
   return { ok: true };
 }
 
-// Stuurt samenvatting naar Rob via Resend. Faalt stil.
+// ── Resend notificatie (fire-and-forget, faalt stil) ──────────────────────────
 async function notifyRob(conversation) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
@@ -89,24 +92,18 @@ async function notifyRob(conversation) {
   const timestamp = new Date().toLocaleString('nl-NL', {
     timeZone: 'Europe/Amsterdam', dateStyle: 'short', timeStyle: 'short'
   });
-
   const body = conversation.map(m => {
     const who = m.role === 'user' ? 'BEZOEKER' : 'R.O.B.';
     return `${who}:\n${m.content}\n`;
   }).join('\n');
-
   const text = `Een bezoeker had een verkenning met R.O.B.\n\nTijd: ${timestamp}\nUitwisselingen: ${turns}\n\n— GESPREK —\n\n${body}\n— EINDE —\n\nBron: rob-concepting.com`;
 
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendKey}`,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from: fromEmail,
-        to: [toEmail],
+        from: fromEmail, to: [toEmail],
         subject: `R.O.B. — verkenning ingekomen (${turns} turns)`,
         text
       })
@@ -120,7 +117,7 @@ async function notifyRob(conversation) {
   }
 }
 
-// JSON response shortcut
+// ── JSON-response helper ──────────────────────────────────────────────────────
 function json(body, status, origin) {
   return new Response(JSON.stringify(body), {
     status,
@@ -128,6 +125,23 @@ function json(body, status, origin) {
   });
 }
 
+// ── Anthropic provider (met optionele Helicone proxy voor observability) ──────
+function getAnthropic() {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const heliconeKey = process.env.HELICONE_API_KEY;
+
+  const config = { apiKey };
+  if (heliconeKey) {
+    config.baseURL = 'https://anthropic.helicone.ai/v1';
+    config.headers = {
+      'Helicone-Auth': `Bearer ${heliconeKey}`,
+      'Helicone-Property-Source': 'rob-concepting.com'
+    };
+  }
+  return createAnthropic(config);
+}
+
+// ── Main handler ──────────────────────────────────────────────────────────────
 export default async (req) => {
   const origin = req.headers.get('origin') || '';
 
@@ -149,9 +163,11 @@ export default async (req) => {
     );
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return json({ error: 'API key niet geconfigureerd' }, 500, origin);
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return json({ error: 'API key niet geconfigureerd' }, 500, origin);
+  }
 
+  // Parse + cap input
   const MAX_HISTORY = 20;
   const MAX_INPUT_CHARS = 1500;
 
@@ -173,99 +189,31 @@ export default async (req) => {
     return json({ error: 'Ongeldig verzoek' }, 400, origin);
   }
 
-  // Streamen vanuit Anthropic — via Helicone proxy als HELICONE_API_KEY beschikbaar (observability + caching)
-  const heliconeKey = process.env.HELICONE_API_KEY;
-  const anthropicURL = heliconeKey
-    ? 'https://anthropic.helicone.ai/v1/messages'
-    : 'https://api.anthropic.com/v1/messages';
-
-  const requestHeaders = {
-    'Content-Type': 'application/json',
-    'x-api-key': apiKey,
-    'anthropic-version': '2023-06-01'
-  };
-  if (heliconeKey) {
-    requestHeaders['Helicone-Auth'] = `Bearer ${heliconeKey}`;
-    // Optioneel: tag elke call met user-IP (gehasht) zodat Helicone abuse-detection werkt
-    if (ip) requestHeaders['Helicone-User-Id'] = ip.slice(0, 32);
-    requestHeaders['Helicone-Property-Source'] = 'rob-concepting.com';
-  }
-
-  let anthropicRes;
+  // Stream via AI SDK
   try {
-    anthropicRes = await fetch(anthropicURL, {
-      method: 'POST',
-      headers: requestHeaders,
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 400,
-        system: ROB_SYSTEM,
-        messages,
-        stream: true
-      })
-    });
-  } catch (err) {
-    return json({ error: 'Verbindingsfout met Anthropic' }, 502, origin);
-  }
-
-  if (!anthropicRes.ok) {
-    const err = await anthropicRes.json().catch(() => ({}));
-    return json({ error: err.error?.message || `Anthropic HTTP ${anthropicRes.status}` }, 502, origin);
-  }
-
-  // Pipe Anthropic SSE door naar client; tegelijkertijd fullReply bouwen voor notificatie
-  const decoder = new TextDecoder();
-  let fullReply = '';
-  let parseBuffer = '';
-
-  const stream = new ReadableStream({
-    async start(controller) {
-      const reader = anthropicRes.body.getReader();
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          // Parse de chunk om delta-tekst te bewaren (parallel, niet blocking)
-          parseBuffer += decoder.decode(value, { stream: true });
-          const events = parseBuffer.split('\n\n');
-          parseBuffer = events.pop() || '';
-          for (const event of events) {
-            const dataLine = event.split('\n').find(l => l.startsWith('data: '));
-            if (!dataLine) continue;
-            try {
-              const data = JSON.parse(dataLine.slice(6));
-              if (data.type === 'content_block_delta' && data.delta?.text) {
-                fullReply += data.delta.text;
-              }
-            } catch (_) { /* niet-JSON event, negeer */ }
-          }
-
-          // Pass-through naar client
-          controller.enqueue(value);
-        }
-
-        // Notificatie na voltooid stream — fire and forget
-        if (notify && fullReply) {
-          const fullConvo = [...messages, { role: 'assistant', content: fullReply }];
+    const anthropic = getAnthropic();
+    const result = await streamText({
+      model: anthropic('claude-haiku-4-5'),
+      system: ROB_SYSTEM,
+      messages,
+      maxOutputTokens: 400,
+      onFinish: async ({ text }) => {
+        if (notify && text) {
+          const fullConvo = [...messages, { role: 'assistant', content: text }];
           notifyRob(fullConvo).catch(e => console.error('notify error:', e.message));
         }
-
-        controller.close();
-      } catch (e) {
-        console.error('Stream error:', e.message);
-        try { controller.error(e); } catch (_) {}
       }
-    }
-  });
+    });
 
-  return new Response(stream, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      'X-Accel-Buffering': 'no',
-      ...corsFor(origin)
-    }
-  });
+    return result.toTextStreamResponse({
+      headers: {
+        ...corsFor(origin),
+        'Cache-Control': 'no-cache, no-transform',
+        'X-Accel-Buffering': 'no'
+      }
+    });
+  } catch (err) {
+    console.error('chat error:', err.message);
+    return json({ error: err.message || 'Streamfout' }, 502, origin);
+  }
 };

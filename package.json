@@ -1,0 +1,11 @@
+{
+  "name": "rob-concepting-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "R.O.B. Concepting — Netlify Functions deps (AI SDK)",
+  "type": "module",
+  "dependencies": {
+    "ai": "^4.3.0",
+    "@ai-sdk/anthropic": "^1.2.0"
+  }
+}

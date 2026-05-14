@@ -39,12 +39,29 @@ Vanilla HTML/CSS/JS, geen frameworks, geen build-step. Eén `index.html`, twee N
 | Variabele | Vereist | Scope | Doel |
 |---|---|---|---|
 | `ANTHROPIC_API_KEY` | Ja | Functions | Authenticatie voor de chat |
+| `HELICONE_API_KEY` | Optioneel | Functions | LLM-observability via Helicone proxy. Zonder = directe call naar Anthropic. |
 | `WHATSAPP_NUMBER` | Optioneel | Functions | Formaat `31612345678` (zonder + of 00). Zonder geeft `/whatsapp` een 503. |
 | `RESEND_API_KEY` | Optioneel | Functions | Mailnotificatie naar Rob bij chat ≥ 3 turns. Zonder = stilzwijgend uit. |
 | `NOTIFY_EMAIL` | Optioneel | Functions | Default `robderooijbreda@gmail.com` |
 | `NOTIFY_FROM` | Optioneel | Functions | Default `R.O.B. Concepting <onboarding@resend.dev>`. Pas aan na Resend-domein-verificatie. |
 
 Alle keys "Mark as secret".
+
+## Function dependencies (npm)
+
+Sinds de Vercel AI SDK migratie: Netlify installeert deps via `package.json` bij elke build.
+
+```
+"ai": "^4.3.0"           — streaming primitives, multi-provider
+"@ai-sdk/anthropic": "^1.2.0" — Anthropic provider met baseURL-override voor Helicone
+```
+
+Lokale dev: `npm install` in deze map, dan `netlify dev` voor lokale Function-test.
+
+## Promptfoo (dev, niet deployed)
+
+`promptfoo.config.yaml` definieert 8 regressie-tests voor R.O.B.'s persona-prompt.
+Run lokaal: `npx promptfoo eval`. Zie `promptfoo.README.md`.
 
 ## De interface (3 schermen)
 
