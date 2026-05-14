@@ -7,17 +7,21 @@ Live op [rob-concepting.com](https://rob-concepting.com).
 
 ## Architectuur
 
-Vanilla HTML/CSS/JS, geen frameworks, geen build-step. Eén `index.html`, twee Netlify Functions, een MP4 en zes SVG-mockups.
+Frontend is vanilla HTML/CSS/JS in één `index.html` — geen framework, geen frontend-build. De Netlify Functions gebruiken wél npm-deps (Vercel AI SDK), dus Netlify draait `npm install` bij elke build.
 
 ```
 /
-├── index.html              # Landing + transitie + 6-pane interface (~2050 regels, geheel inline)
+├── index.html              # Landing + transitie + 6-pane interface (~2500 regels, geheel inline)
 ├── netlify.toml            # Build-config + security headers + cache-headers
+├── package.json            # type:module + Function-deps (ai, @ai-sdk/anthropic)
 ├── og-image.svg            # Social preview (1200×630)
 ├── sitemap.xml             # SEO
 ├── robots.txt              # SEO
+├── promptfoo.config.yaml   # Dev: persona-regressietests (deployt niet mee)
+├── promptfoo.README.md     # Dev: promptfoo setup + workflow
 ├── media/
-│   └── concept-film.mp4    # Pitch-video (1080×1080, ~8 MB)
+│   ├── concept-film.mp4    # Werk-pane video (1080×1080, ~8 MB)
+│   └── portret-rob.jpg     # Ronde avatar in credentials-kaart (~375 KB)
 ├── werk/                   # SVG-mockups voor tool-cards
 │   ├── apps.svg
 │   ├── dashboards.svg
@@ -26,8 +30,9 @@ Vanilla HTML/CSS/JS, geen frameworks, geen build-step. Eén `index.html`, twee N
 │   ├── portals.svg
 │   └── websites.svg
 └── netlify/functions/
-    ├── chat.js             # AI-chat proxy → Claude API (claude-haiku-4-5)
-    └── whatsapp.js         # WhatsApp redirect (nummer in env-var, niet in HTML)
+    ├── chat.js             # v2 ESM — Vercel AI SDK streamText() → Claude (claude-haiku-4-5),
+    │                       #   Helicone-proxy als HELICONE_API_KEY gezet
+    └── whatsapp.js         # v2 ESM — WhatsApp redirect (nummer in env-var, niet in HTML)
 ```
 
 ## Deploy
