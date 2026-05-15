@@ -821,6 +821,19 @@
       border-top: 1px solid rgba(255,255,255,0.06);
       margin-bottom: 18px;
     }
+    .werk-disclosure {
+      font-size: 13.5px; line-height: 1.65;
+      color: rgba(238,242,247,0.62);
+      max-width: clamp(480px, 56vw, 760px);
+      margin-bottom: 18px;
+    }
+    .werk-cta-inline {
+      color: rgba(15,168,203,0.95); text-decoration: none;
+      border-bottom: 1px solid rgba(15,168,203,0.4);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .werk-cta-inline:hover { color: #0fa8cb; border-bottom-color: #0fa8cb; }
+    .werk-cta-inline:focus-visible { outline: 2px solid #0fa8cb; outline-offset: 3px; border-radius: 2px; }
 
     /* "Hoe deze site werkt" — subtiele meta-knop */
     .meta-link {
@@ -1577,7 +1590,7 @@
     </div>
 
     <!-- Vaste ondertitel -->
-    <div class="landing-subtitle">Systeem ontwerp voor MKB</div>
+    <div class="landing-subtitle">Systeemontwerp voor MKB</div>
 
     <!-- PLAY button met concentrische ringen -->
     <div class="play-outer-ring">
@@ -1920,12 +1933,12 @@
             </div>
             <div class="system-card">
               <div class="sys-modules">
-                <span class="mod live"></span><span class="mod live"></span><span class="mod build"></span><span class="mod build"></span><span class="mod build"></span>
+                <span class="mod live"></span><span class="mod live"></span><span class="mod live"></span><span class="mod build"></span><span class="mod build"></span>
               </div>
               <div class="sys-tag">Expert-OS</div>
               <div class="sys-title">Diagnose-tool met modules</div>
               <div class="sys-ctx">MKB in zwaar weer</div>
-              <div class="sys-status">2 live &middot; 3 in bouw</div>
+              <div class="sys-status">3 live &middot; 2 in bouw</div>
             </div>
             <div class="system-card">
               <div class="sys-modules">
@@ -1946,7 +1959,11 @@
               <div class="sys-status">3 modules &middot; live</div>
             </div>
           </div>
-          <div class="systems-total">12 modules live &middot; 3 in pipeline &middot; 4 systemen in productie</div>
+          <div class="systems-total">13 modules live &middot; 2 in pipeline &middot; 4 systemen in productie &middot; <span id="status-date">status mei 2026</span></div>
+          <div class="werk-disclosure">
+            Rob werkt op vertrouwelijke basis en houdt gevoelige specificaties binnenkamers.
+            Bij interesse of meer diepgang: <a href="#over" class="werk-cta-inline">open Over R.O.B. &rarr;</a>
+          </div>
           <button class="meta-link" id="btn-system-demo" type="button" aria-haspopup="dialog">
             <span class="meta-link-arrow">&#8599;</span>
             <span>Hoe deze site werkt</span>
@@ -2306,7 +2323,7 @@ let sessionNotified = false;       // één mail per browsersessie
 let totalUserTurns = 0;            // teller die niet wordt afgekapt door history-cap
 let testfaseClosed = false;        // chat is afgesloten na hardcap
 
-const TESTFASE_NOTICE_TEXT = 'Bedankt voor je verkenning. R.O.B. zit nog in testfase en houdt elk gesprek bij tien wisselingen. Voor meer: gebruik de knop "Over R.O.B." onder de chat — daar staan mail, LinkedIn en WhatsApp om Rob persoonlijk te bereiken.';
+const TESTFASE_NOTICE_TEXT = 'Bedankt voor je verkenning. R.O.B. houdt elk gesprek tot tien wisselingen. Voor meer: gebruik de knop "Over R.O.B." onder de chat — daar staan mail, LinkedIn en WhatsApp om Rob persoonlijk te bereiken.';
 
 function showTestfaseNotice() {
   if (testfaseClosed) return;
@@ -2317,7 +2334,7 @@ function showTestfaseNotice() {
   div.className = 'chat-msg testfase';
   const whoSpan = document.createElement('span');
   whoSpan.className = 'chat-msg-who';
-  whoSpan.textContent = 'Testfase';
+  whoSpan.textContent = 'Gesprek afgerond';
   const textDiv = document.createElement('div');
   textDiv.className = 'chat-msg-text';
   textDiv.textContent = TESTFASE_NOTICE_TEXT;
@@ -2996,6 +3013,18 @@ document.addEventListener('keydown', e => {
     t.addEventListener('mouseleave', hideTip);
     t.addEventListener('blur',       hideTip);
   });
+})();
+
+// Status-date in Werk-pane — toont automatisch wanneer index.html voor het laatst is geupload (= laatste Netlify-deploy).
+(function() {
+  const el = document.getElementById('status-date');
+  if (!el) return;
+  const d = new Date(document.lastModified);
+  if (isNaN(d.getTime())) return;
+  const months = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  el.textContent = `status ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} · ${hh}:${mm}`;
 })();
 </script>
 </body>
