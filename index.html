@@ -71,7 +71,7 @@
     "areaServed": { "@type": "Country", "name": "Nederland" },
     "contactPoint": {
       "@type": "ContactPoint",
-      "email": "robderooijbreda@gmail.com",
+      "url": "https://rob-concepting.com/#over",
       "contactType": "customer service",
       "availableLanguage": "Dutch"
     },
@@ -1895,7 +1895,6 @@
                 <span>Connect op LinkedIn</span>
                 <span class="cred-arrow">&rarr;</span>
               </a>
-              <a class="cred-mail" href="mailto:robderooijbreda@gmail.com?subject=Contact%20via%20rob-concepting.com" aria-label="Mail naar robderooijbreda@gmail.com" data-tip="Opent je mailclient met onderwerp al ingevuld. Rob reageert persoonlijk binnen 24u.">robderooijbreda@gmail.com</a>
               <a class="cred-whatsapp" href="/.netlify/functions/whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Stuur een WhatsApp-bericht naar Rob" data-tip="Opent WhatsApp met openingszin klaar. Snelle directe lijn — handig op mobiel.">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.82 9.82 0 0012.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 004.73 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24h-.01a8.23 8.23 0 01-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.2 8.2 0 012.42 5.83c-.01 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.39 1.01 2.56.12.17 1.74 2.66 4.22 3.73.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
                 <span>WhatsApp R.O.B.</span>
@@ -1911,7 +1910,8 @@
               <div class="cred-form" id="cred-form" hidden>
                 <form id="cred-form-el" novalidate>
                   <input class="cred-form-input" type="text" name="name" placeholder="Je naam" required maxlength="100" autocomplete="name">
-                  <input class="cred-form-input" type="email" name="email" placeholder="E-mail (optioneel — voor reply)" maxlength="200" autocomplete="email">
+                  <input class="cred-form-input" type="email" name="email" placeholder="E-mail" required maxlength="200" autocomplete="email">
+                  <input class="cred-form-input" type="tel" name="phone" placeholder="Telefoon (optioneel)" maxlength="40" autocomplete="tel">
                   <textarea class="cred-form-textarea" name="message" placeholder="Wat speelt er?" required maxlength="2000" rows="4"></textarea>
                   <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="cred-form-honey">
                   <button type="submit" class="cred-form-submit">Versturen <span class="arr" aria-hidden="true">&rarr;</span></button>
@@ -2497,13 +2497,7 @@ function addErrorMsg() {
   whoSpan.textContent = 'R.O.B.';
   const textDiv = document.createElement('div');
   textDiv.className = 'chat-msg-text';
-  textDiv.appendChild(document.createTextNode('Even geen verbinding. Probeer het opnieuw of mail naar '));
-  const a = document.createElement('a');
-  a.href = 'mailto:robderooijbreda@gmail.com?subject=Contact%20via%20rob-concepting.com';
-  a.textContent = 'robderooijbreda@gmail.com';
-  a.className = 'chat-mail-link';
-  textDiv.appendChild(a);
-  textDiv.appendChild(document.createTextNode('.'));
+  textDiv.textContent = 'Even geen verbinding. Probeer het opnieuw of gebruik het contactformulier onder Over R.O.B.';
   div.appendChild(whoSpan);
   div.appendChild(textDiv);
   chatMsgs.appendChild(div);
@@ -2757,7 +2751,7 @@ ${blocksSvg}
   <g transform="translate(${PAD_X}, ${totalH - 100})">
     <line x1="0" y1="0" x2="${W - PAD_X * 2}" y2="0" stroke="#001a4d" stroke-opacity="0.12" stroke-width="1"/>
     <text x="0" y="32" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="500" fill="#001a4d" fill-opacity="0.65" letter-spacing="2.5">VOLGENDE STAP</text>
-    <text x="0" y="58" font-size="14" font-weight="500" fill="#001a4d" fill-opacity="0.88">Mail naar robderooijbreda@gmail.com met deze schets &mdash; dan reageert Rob persoonlijk.</text>
+    <text x="0" y="58" font-size="14" font-weight="500" fill="#001a4d" fill-opacity="0.88">Stuur via het contactformulier op rob-concepting.com met deze schets &mdash; dan reageert Rob persoonlijk.</text>
   </g>
 
   <!-- Bottom URL -->
@@ -3139,6 +3133,7 @@ document.addEventListener('keydown', e => {
     const payload = {
       name: form.name.value,
       email: form.email.value,
+      phone: form.phone.value,
       message: form.message.value,
       _honey: form._honey.value
     };

@@ -82,23 +82,25 @@ export default async (req) => {
   // Parse + validate
   const MAX_NAME = 100;
   const MAX_EMAIL = 200;
+  const MAX_PHONE = 40;
   const MAX_MESSAGE = 2000;
 
-  let name, email, message;
+  let name, email, phone, message;
   try {
     const parsed = await req.json();
     name = String(parsed.name || '').trim().slice(0, MAX_NAME);
     email = String(parsed.email || '').trim().slice(0, MAX_EMAIL);
+    phone = String(parsed.phone || '').trim().slice(0, MAX_PHONE);
     message = String(parsed.message || '').trim().slice(0, MAX_MESSAGE);
 
     // Honeypot — silent 200 voor bots
     if (parsed._honey) {
       return json({ ok: true }, 200, origin);
     }
-    if (!name || !message) {
-      return json({ error: 'Naam en bericht zijn vereist.' }, 400, origin);
+    if (!name || !email || !message) {
+      return json({ error: 'Naam, e-mail en bericht zijn vereist.' }, 400, origin);
     }
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return json({ error: 'E-mailadres lijkt niet correct.' }, 400, origin);
     }
   } catch {
@@ -115,7 +117,8 @@ export default async (req) => {
   const text = `Nieuw bericht via rob-concepting.com (contactformulier)
 
 Naam: ${name}
-E-mail: ${email || '(niet opgegeven)'}
+E-mail: ${email}
+Telefoon: ${phone || '(niet opgegeven)'}
 Tijd: ${timestamp}
 
 — BERICHT —
