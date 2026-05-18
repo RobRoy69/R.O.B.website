@@ -6,6 +6,7 @@ import { streamText } from 'ai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const ROB_SYSTEM = `Je bent R.O.B. — R.O.B. Concepting. Concepting Expert voor MKB-ondernemers en bestuurders. Achter R.O.B. staat Rob de Rooij.
 
@@ -155,6 +156,52 @@ async function notifyRob(conversation) {
   }
 }
 
+// ── Vertrouwelijk chat-archief (spoor 6 C2, fire-and-forget, faalt stil) ─────
+// Insert elke chat-call in rob_chat_sessions (20voor12-pilot Supabase).
+// RLS staat alleen service_role toe — geen anon read/write ooit (zie migration 0001_rob_chat_sessions).
+// Vereist SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in Netlify env (server-side, nooit in client-bundle).
+// Zonder env-vars = no-op (graceful fallback); chat-stream onveranderd.
+async function archiveChatSession({ messages, aiText, notify, startedAt, userAgent, origin }) {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return;
+
+  const conversation = [...messages, { role: 'assistant', content: aiText }];
+  const turnCount = messages.filter(m => m.role === 'user').length;
+  const uaHash = userAgent
+    ? createHash('sha256').update(userAgent).digest('hex').slice(0, 16)
+    : null;
+  const row = {
+    call_at: new Date(startedAt).toISOString(),
+    turn_count: turnCount,
+    notify_sent: !!notify,
+    conversation,
+    ai_response: aiText,
+    source_url: origin || null,
+    user_agent_hash: uaHash,
+    duration_ms: Date.now() - startedAt
+  };
+
+  try {
+    const res = await fetch(`${url}/rest/v1/rob_chat_sessions`, {
+      method: 'POST',
+      headers: {
+        'apikey': key,
+        'Authorization': `Bearer ${key}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(row)
+    });
+    if (!res.ok) {
+      const err = await res.text().catch(() => '');
+      console.error('archive non-OK:', res.status, err.slice(0, 200));
+    }
+  } catch (e) {
+    console.error('archive failed:', e.message);
+  }
+}
+
 // ── JSON-response helper ──────────────────────────────────────────────────────
 function json(body, status, origin) {
   return new Response(JSON.stringify(body), {
@@ -182,6 +229,8 @@ function getAnthropic() {
 // ── Main handler ──────────────────────────────────────────────────────────────
 export default async (req) => {
   const origin = req.headers.get('origin') || '';
+  const userAgent = req.headers.get('user-agent') || '';
+  const startedAt = Date.now();
 
   if (req.method === 'OPTIONS') {
     return new Response('', { status: 200, headers: corsFor(origin) });
@@ -236,10 +285,15 @@ export default async (req) => {
       messages,
       maxOutputTokens: 400,
       onFinish: async ({ text }) => {
-        if (notify && text) {
+        if (!text) return;
+        // Resend-mail naar Rob alleen bij notify=true (bezoeker stuurde door)
+        if (notify) {
           const fullConvo = [...messages, { role: 'assistant', content: text }];
           notifyRob(fullConvo).catch(e => console.error('notify error:', e.message));
         }
+        // Vertrouwelijk archief: ALTIJD inserten (per spec: agent leert breedst mogelijk)
+        archiveChatSession({ messages, aiText: text, notify, startedAt, userAgent, origin })
+          .catch(e => console.error('archive error:', e.message));
       }
     });
 
