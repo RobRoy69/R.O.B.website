@@ -4,6 +4,8 @@
 
 import { streamText } from 'ai';
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 const ROB_SYSTEM = `Je bent R.O.B. — R.O.B. Concepting. Concepting Expert voor MKB-ondernemers en bestuurders. Achter R.O.B. staat Rob de Rooij.
 
@@ -47,6 +49,29 @@ Hoe je communiceert:
 - Geen formele taal ("geachte", "wij kunnen").
 - Geen AI-buzzwords. "Versnelling" en "druk" mag, "AI-transformatie" niet.
 - Stuur warm en concreet richting Rob wanneer er substantie ligt — niet pushen, wel ruimte maken voor de volgende stap.`;
+
+// ── Canon-content-awareness (5D additieve laag, 2026-05-18) ──────────────────
+// Laadt R.O.B.-canon bundle (propositie · aanbod · project) zodat chat content-vragen
+// over SBH/B.R.A.I.N./20voor12/R.O.B. Werkbank etc. concreet kan beantwoorden.
+// Voice/modus/verboden blijven in ROB_SYSTEM hierboven (authoritative).
+// Bron: R.O.B. Concepting/rob-canon/. Bundle gegenereerd door build-bundle.js.
+// Graceful fallback: bij load-fail blijft chat draaien op alleen ROB_SYSTEM.
+let CANON_CONTEXT = '';
+try {
+  const bundlePath = fileURLToPath(new URL('./rob-canon-bundle.json', import.meta.url));
+  const bundle = JSON.parse(readFileSync(bundlePath, 'utf-8'));
+  const sections = ['propositie', 'aanbod', 'project'];
+  const blocks = sections
+    .map(type => (bundle.notes_by_type[type] || [])
+      .map(n => `## ${n.title}\n${n.content}`).join('\n\n'))
+    .filter(Boolean)
+    .join('\n\n---\n\n');
+  if (blocks) {
+    CANON_CONTEXT = `\n\n---\n\nCANON-CONTEXT (R.O.B. Concepting canon — kennis raadplegen, niet letterlijk inkopiëren):\n\n${blocks}`;
+  }
+} catch (e) {
+  console.error('[chat] rob-canon-bundle load failed, continuing zonder content-awareness:', e.message);
+}
 
 // ── Origins whitelist ─────────────────────────────────────────────────────────
 const ALLOWED_ORIGINS = new Set([
@@ -204,7 +229,7 @@ export default async (req) => {
     const anthropic = getAnthropic();
     const result = await streamText({
       model: anthropic('claude-haiku-4-5'),
-      system: ROB_SYSTEM,
+      system: ROB_SYSTEM + CANON_CONTEXT,
       messages,
       maxOutputTokens: 400,
       onFinish: async ({ text }) => {
