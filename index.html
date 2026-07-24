@@ -1117,6 +1117,36 @@
     }
     .cred-linkedin svg { flex-shrink: 0; opacity: 0.85; }
     .cred-arrow { margin-left: auto; opacity: 0.6; font-size: 13px; }
+
+    /* Whitepaper-link (visie-pane) — document-icoon in cirkel */
+    .wp-link {
+      display: inline-flex; align-items: center; gap: 12px;
+      align-self: flex-start; width: fit-content;
+      padding: 9px 16px 9px 10px;
+      margin-bottom: 24px;
+      background: rgba(15,168,203,0.07);
+      border: 1px solid rgba(15,168,203,0.22);
+      border-radius: 5px;
+      color: rgba(15,168,203,0.92);
+      text-decoration: none;
+      transition: background 0.22s, border-color 0.22s, transform 0.22s;
+    }
+    .wp-link:hover {
+      background: rgba(15,168,203,0.13);
+      border-color: rgba(15,168,203,0.42);
+      transform: translateY(-1px);
+    }
+    .wp-link:hover .wp-link-ring { opacity: 0.85; }
+    .wp-link svg { flex-shrink: 0; display: block; }
+    .wp-link-ring { opacity: 0.45; transition: opacity 0.22s; }
+    .wp-link-txt { display: flex; flex-direction: column; gap: 3px; line-height: 1.25; }
+    .wp-link-main { font-size: 12.5px; font-weight: 500; letter-spacing: 0.03em; }
+    .wp-link-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase;
+      opacity: 0.62;
+    }
+    .wp-link-arrow { opacity: 0.6; font-size: 13px; padding-left: 6px; }
     .cred-mail {
       display: flex; align-items: center; justify-content: center;
       font-family: 'IBM Plex Mono', monospace;
@@ -1984,6 +2014,19 @@
             Concepting is geen fase &mdash; het is de volledige beweging van idee naar werkend systeem.
             Hoe sneller de wereld verandert, hoe meer het geheel telt.
           </p>
+          <a class="wp-link" href="/whitepapers/" aria-label="Bekijk de whitepapers van R.O.B. Concepting" data-tip="Uitgewerkte stukken over systeemontwerp, AI en het organiseren van waarde. Vrij te lezen.">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <circle class="wp-link-ring" cx="16" cy="16" r="15" stroke="currentColor" stroke-width="1"/>
+              <path d="M12 9.5h5.4l3.1 3.1V22a.7.7 0 0 1-.7.7h-7.8a.7.7 0 0 1-.7-.7V10.2a.7.7 0 0 1 .7-.7Z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
+              <path d="M17.3 9.6v3.2h3.2" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
+              <path d="M13.4 16.2h5.2M13.4 18.7h5.2" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+            </svg>
+            <span class="wp-link-txt">
+              <span class="wp-link-main">Whitepapers</span>
+              <span class="wp-link-sub">Nieuw &middot; AI, merk en organisatie</span>
+            </span>
+            <span class="wp-link-arrow">&rarr;</span>
+          </a>
           <button class="cta-rob" data-cta="rob">Toets je situatie <span class="cta-rob-arrow">&rarr;</span></button>
         </div>
 

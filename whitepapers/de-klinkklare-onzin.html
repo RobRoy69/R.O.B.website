@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>De klinkklare (on-)zin van je AI-agent — Wat zegt jouw merk eigenlijk? | R.O.B. Concepting</title>
+  <meta name="description" content="Whitepaper: een AI-agent op je site is geen gereedschap maar een stem die namens je spreekt — en waarvoor je aansprakelijk bent. Over grond, grenzen, geheugen en afgrenzing als ontwerpvraag.">
+  <meta name="keywords" content="AI-agent, merkidentiteit, aansprakelijkheid, AI-verordening, chatbot, verankering, RAG, vleierigheid, geheugen, afgrenzing, MKB, Rob de Rooij">
+  <meta name="author" content="Rob de Rooij">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+  <link rel="canonical" href="https://rob-concepting.com/whitepapers/de-klinkklare-onzin.html">
+
+  <meta property="og:title" content="De klinkklare (on-)zin van je AI-agent — Wat zegt jouw merk eigenlijk?">
+  <meta property="og:description" content="Een AI-agent is geen gereedschap maar een stem die namens je spreekt. Een whitepaper van R.O.B. Concepting.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rob-concepting.com/whitepapers/de-klinkklare-onzin.html">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:site_name" content="R.O.B. Concepting">
+  <meta property="og:image" content="https://rob-concepting.com/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="De klinkklare (on-)zin van je AI-agent">
+  <meta name="twitter:description" content="Een AI-agent is geen gereedschap maar een stem die namens je spreekt.">
+  <meta name="twitter:image" content="https://rob-concepting.com/og-image.png">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230e1525'/><circle cx='16' cy='16' r='12' fill='none' stroke='%230fa8cb' stroke-width='1.5'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230fa8cb' stroke-width='1' opacity='.5'/><circle cx='16' cy='16' r='3' fill='%23e8391e'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "De klinkklare (on-)zin van je AI-agent — Wat zegt jouw merk eigenlijk?",
+    "description": "Een AI-agent op je site is geen gereedschap maar een stem die namens je spreekt — en waarvoor je aansprakelijk bent. Over grond, grenzen, geheugen en afgrenzing als ontwerpvraag.",
+    "inLanguage": "nl-NL",
+    "datePublished": "2026-07-24",
+    "dateModified": "2026-07-24",
+    "author": {
+      "@type": "Person",
+      "name": "Rob de Rooij",
+      "url": "https://rob-concepting.com/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "R.O.B. Concepting",
+      "url": "https://rob-concepting.com/"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://rob-concepting.com/whitepapers/de-klinkklare-onzin.html"
+    },
+    "image": "https://rob-concepting.com/og-image.png",
+    "articleSection": "Whitepaper",
+    "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Whitepaperreeks R.O.B. Concepting"
+    },
+    "keywords": "AI-agent, merkidentiteit, aansprakelijkheid, AI-verordening, verankering, geheugen, afgrenzing"
+  }
+  </script>
+
+  <style>
+    :root {
+      --cream:   #e8e4dc;
+      --paper:   #f4f2ed;
+      --purple:  #001a4d;
+      --cyan:    #0fa8cb;
+      --red:     #e8391e;
+      --screen:  #0e1525;
+      --muted:   #6b6478;
+      --border:  rgba(0,26,77,0.12);
+      --rule:    rgba(0,26,77,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--cream); color: var(--purple);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar {
+      background: var(--screen); padding: 16px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap; position: sticky; top: 0; z-index: 20;
+    }
+    .tb-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .tb-mark { flex-shrink: 0; }
+    .tb-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #fff;
+    }
+    .tb-name span { color: var(--cyan); }
+    .tb-back {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-decoration: none; transition: color .2s;
+    }
+    .tb-back:hover { color: var(--cyan); }
+
+    .hero { background: var(--screen); color: #fff; padding: 56px 28px 64px; position: relative; overflow: hidden; }
+    .hero-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 2; }
+    .hero-rings {
+      position: absolute; right: -120px; top: 50%; transform: translateY(-50%);
+      width: 460px; height: 460px; opacity: 0.5; pointer-events: none; z-index: 1;
+    }
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5.6vw, 52px); line-height: 1.08;
+      font-weight: 400; letter-spacing: -0.02em; margin-bottom: 14px;
+    }
+    .hero h1 em { font-style: normal; font-weight: 600; }
+    .hero-sub {
+      font-size: clamp(17px, 2.4vw, 21px); font-weight: 300;
+      color: rgba(255,255,255,0.72); margin-bottom: 30px; max-width: 34em;
+    }
+    .hero-bar { width: 46px; height: 2px; background: var(--red); margin-bottom: 26px; }
+    .hero-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .hero-meta .dot { color: rgba(255,255,255,0.25); }
+
+    .sheet { max-width: 780px; margin: 0 auto; padding: 0 28px; }
+    .paper {
+      background: var(--paper); margin: -28px auto 0;
+      padding: 52px clamp(24px, 5vw, 64px) 64px;
+      border: 1px solid var(--border); position: relative; z-index: 5;
+    }
+
+    .serie {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      background: rgba(0,26,77,0.04); border: 1px solid var(--border);
+      padding: 13px 18px; margin-bottom: 38px;
+      font-size: 14px; color: var(--muted);
+    }
+    .serie .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan);
+    }
+    .serie a { color: var(--purple); text-decoration: none; border-bottom: 1px solid rgba(15,168,203,.4); }
+    .serie a:hover { color: var(--cyan); }
+
+    .toc { border-left: 2px solid var(--cyan); padding: 4px 0 4px 20px; margin: 0 0 44px; }
+    .toc-t {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    .toc ol { list-style: none; counter-reset: toc; }
+    .toc li { counter-increment: toc; margin-bottom: 6px; }
+    .toc li::before {
+      content: counter(toc, decimal-leading-zero);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: var(--cyan); margin-right: 10px;
+    }
+    .toc a { color: var(--purple); text-decoration: none; font-size: 15px; }
+    .toc a:hover { color: var(--cyan); }
+
+    .summary {
+      background: rgba(15,168,203,0.07); border: 1px solid rgba(15,168,203,0.22);
+      padding: 28px clamp(20px, 3.5vw, 34px); margin: 0 0 48px;
+    }
+    .summary .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 14px;
+    }
+    .summary p { font-size: 16px; }
+    .summary p + p { margin-top: 14px; }
+
+    h2 {
+      font-size: clamp(24px, 3.6vw, 31px); font-weight: 500;
+      line-height: 1.2; letter-spacing: -0.015em; margin: 56px 0 8px; scroll-margin-top: 80px;
+    }
+    h2 .num {
+      display: block; font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 400; letter-spacing: 0.2em;
+      color: var(--cyan); margin-bottom: 12px;
+    }
+    h2 + .h2rule { width: 100%; height: 1px; background: var(--rule); margin-bottom: 26px; }
+    h3 { font-size: clamp(17px, 2.2vw, 20px); font-weight: 600; line-height: 1.3; margin: 38px 0 14px; }
+    p { font-size: 17px; margin-bottom: 20px; }
+    em { font-style: italic; }
+    strong { font-weight: 600; }
+
+    .pull {
+      border-left: 2px solid var(--red); padding-left: 22px; margin: 34px 0;
+      font-size: 19px; line-height: 1.5; font-weight: 300; color: var(--purple);
+    }
+
+    .as {
+      background: rgba(0,26,77,0.04); border: 1px solid var(--border);
+      padding: 26px clamp(18px, 3vw, 30px); margin: 32px 0;
+    }
+    .as .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 12px;
+    }
+    .as p:last-child { margin-bottom: 0; }
+
+    hr.sec { border: 0; height: 1px; background: var(--rule); margin: 52px 0; }
+
+    .bronnen { margin-top: 56px; padding-top: 30px; border-top: 1px solid var(--rule); }
+    .bronnen > .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 6px;
+    }
+    .bronnen > .intro { font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+    .bronnen h4 { font-size: 14px; font-weight: 600; margin: 24px 0 10px; color: var(--purple); }
+    .bronnen ul { list-style: none; }
+    .bronnen li {
+      font-size: 14px; line-height: 1.6; color: var(--muted);
+      padding-left: 18px; position: relative; margin-bottom: 9px;
+    }
+    .bronnen li::before {
+      content: '\2014'; position: absolute; left: 0;
+      color: var(--cyan); opacity: 0.55;
+    }
+    .bronnen li strong { color: var(--purple); font-weight: 600; }
+
+    .verantwoording {
+      margin-top: 40px; padding-top: 26px; border-top: 1px solid var(--rule);
+      font-size: 13.5px; line-height: 1.65; color: var(--muted); font-style: italic;
+    }
+
+    .dl { background: var(--screen); color: #fff; margin: 0 auto; max-width: 780px; padding: 44px clamp(24px, 5vw, 64px) 48px; }
+    .dl .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 14px;
+    }
+    .dl h3 { font-size: 23px; font-weight: 500; margin: 0 0 10px; color: #fff; }
+    .dl p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 24px; max-width: 44em; }
+    .dl-form { display: flex; flex-direction: column; gap: 12px; max-width: 440px; }
+    .dl-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .dl-row > * { flex: 1 1 160px; }
+    .dl input[type="text"], .dl input[type="email"] {
+      width: 100%; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.16); color: #fff; padding: 12px 14px;
+      font-family: inherit; font-size: 15px; transition: border-color .2s;
+    }
+    .dl input::placeholder { color: rgba(255,255,255,0.35); }
+    .dl input:focus { outline: none; border-color: var(--cyan); }
+    .dl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .dl-btn {
+      align-self: flex-start; background: transparent;
+      border: 1px solid var(--cyan); color: var(--cyan);
+      padding: 12px 22px; cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+      transition: background .2s, color .2s;
+    }
+    .dl-btn:hover { background: var(--cyan); color: var(--screen); }
+    .dl-btn:disabled { opacity: 0.5; cursor: default; }
+    .dl-msg { font-size: 14px; margin-top: 4px; min-height: 20px; }
+    .dl-msg.ok { color: var(--cyan); }
+    .dl-msg.err { color: #ff8a72; }
+    .dl-fine { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 14px; margin-bottom: 0; }
+
+    .foot {
+      max-width: 780px; margin: 0 auto; padding: 34px 28px 56px;
+      display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    }
+    .foot a { color: var(--muted); text-decoration: none; }
+    .foot a:hover { color: var(--cyan); }
+
+    @media (max-width: 600px) {
+      .hero { padding: 40px 22px 52px; }
+      .paper { padding: 40px 22px 48px; }
+      .hero-rings { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="tb-brand" href="/">
+      <svg class="tb-mark" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="12" fill="none" stroke="#0fa8cb" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="7" fill="none" stroke="#0fa8cb" stroke-width="1" opacity=".5"/>
+        <circle cx="16" cy="16" r="3" fill="#e8391e"/>
+      </svg>
+      <span class="tb-name">R.O.B. <span>Concepting</span></span>
+    </a>
+    <a class="tb-back" href="/whitepapers/">&larr; Alle whitepapers</a>
+  </header>
+
+  <section class="hero">
+    <svg class="hero-rings" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="92" fill="none" stroke="#0fa8cb" stroke-width="0.4" opacity=".35"/>
+      <circle cx="100" cy="100" r="66" fill="none" stroke="#0fa8cb" stroke-width="0.4" opacity=".28"/>
+      <circle cx="100" cy="100" r="40" fill="none" stroke="#0fa8cb" stroke-width="0.4" opacity=".2"/>
+    </svg>
+    <div class="hero-inner">
+      <div class="eyebrow">Whitepaper 02 &mdash; R.O.B. Concepting</div>
+      <h1>De klinkklare <em>(on-)zin</em> van je AI-agent</h1>
+      <p class="hero-sub">Wat zegt jouw merk eigenlijk?</p>
+      <div class="hero-bar"></div>
+      <div class="hero-meta">
+        <span>Rob de Rooij</span><span class="dot">&middot;</span>
+        <span>juli 2026</span><span class="dot">&middot;</span>
+        <span>&plusmn; 12 min lezen</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="sheet">
+    <article class="paper">
+
+      <div class="serie">
+        <span class="lbl">Tweede in de reeks</span>
+        <span>Bouwt voort op <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip; &mdash; AI en de veranderende klantreis</a></span>
+      </div>
+
+      <nav class="toc" aria-label="Inhoud">
+        <div class="toc-t">Inhoud</div>
+        <ol>
+          <li><a href="#aansprakelijkheid">De aansprakelijkheid</a></li>
+          <li><a href="#assen">De vier assen</a></li>
+          <li><a href="#tegenstem">De tegenstem en het weerwoord</a></li>
+          <li><a href="#ontwerpopdracht">De stem als ontwerpopdracht</a></li>
+        </ol>
+      </nav>
+
+      <div class="summary">
+        <div class="lbl">Managementsamenvatting</div>
+        <p>In februari 2024 kreeg een Canadees gerechtshof een ongewone vraag voorgelegd. Een reiziger had zich gebaseerd op wat de chatbot van een luchtvaartmaatschappij hem had verteld over een kortingsregeling. De informatie klopte niet. De maatschappij verweerde zich met de stelling dat de chatbot een aparte entiteit was, verantwoordelijk voor zijn eigen uitspraken. Het hof veegde dat verweer van tafel: een bedrijf is aansprakelijk voor alles op zijn website, of de informatie nu van een statische pagina komt of van een chatbot.</p>
+        <p>Die uitspraak markeert een verschuiving die de meeste organisaties nog niet hebben doordacht. Een AI-agent op je site is geen gereedschap dat informatie opzoekt. Het is een stem die namens je spreekt — en waarvoor je verantwoordelijk bent. De vraag is dan niet langer of de agent handig is, maar wie hij is. Wat hij zegt als niemand meekijkt. Waar hij op staat, wat hij weigert, wat hij onthoudt, en wat hij pretendeert te zijn.</p>
+        <p>De meeste bedrijven hebben die vraag nooit gesteld. Ze installeerden een agent, gaven hem een naam en een vriendelijk toontje, en lieten de rest over aan het onderliggende taalmodel. Het gevolg is een stem die klinkt als alle andere, die spreekt waar hij zou moeten zwijgen, en die inwisselbaar is zodra een concurrent dezelfde technologie installeert. Zo'n agent is geen onderscheidend vermogen. Hij is een aansprakelijkheid met een glimlach.</p>
+        <p>Deze whitepaper betoogt dat de identiteit van een publieke AI-agent een ontwerpvraag is die je expliciet moet beantwoorden, of hij wordt impliciet voor je beantwoord door het model eronder. Het brengt die identiteit in kaart langs vier assen — waarop de agent staat, wat hij weigert, wat hij onthoudt, en wat hij niet is — en betoogt dat het onderscheidend vermogen niet in de technologie zit, maar in twee dingen die van jou zijn en met de tijd groeien: je eigen kennis en je opgebouwde relatie.</p>
+      </div>
+
+      <h3 style="margin-top:0">Inleiding</h3>
+      <p>Dit is de tweede whitepaper in een reeks. De eerste betoogde dat concurrentie verschuift van vindbaarheid naar aanbeveelbaarheid, en dat de kern daarvan geen marketingprobleem is maar een organisatieprobleem: veel bedrijfswaarde zit impliciet in mensen, en moet overdraagbaar en beoordeelbaar gemaakt worden om in een AI-gedreven economie te overleven. Aan het slot van dat betoog stond een principe: bij een digitale praktijk die een product achter een poort verkoopt, moet je bewust ontwerpen wat AI wél en niet mag oogsten. Autoriteit naar buiten, product naar binnen. Een membraan, geen muur.</p>
+      <p>Dit paper zoomt in op het hart van dat membraan. Want steeds vaker is het product achter de poort — of de gastheer aan de voordeur — geen tekst meer, maar een stem. Een AI-agent die met bezoekers praat, vragen beantwoordt, adviseert, begeleidt. En op het moment dat je waarde gaat spreken, verplaatst het hele vraagstuk zich. De vraag was: zit mijn expertise vast in de hoofden van een paar mensen? De vraag wordt nu: zit de identiteit van mijn agent vast in één prompt, geschreven door iemand die inmiddels vertrokken is, die niemand meer kan uitleggen?</p>
+      <p class="pull">Een AI-agent is de eerste werknemer die je aanneemt zonder sollicitatiegesprek, zonder inwerkperiode, en die vanaf dag één met onbeperkt veel klanten tegelijk praat namens jouw bedrijf.</p>
+      <p>De aanleiding is opnieuw AI, maar het onderwerp is opnieuw niet AI. Het onderwerp is merk, vertrouwen, aansprakelijkheid en onderscheidend vermogen. Dat je die &ldquo;werknemer&rdquo; geen karakter, geen grenzen en geen instructie hebt gegeven behalve &ldquo;wees behulpzaam&rdquo;, is geen detail. Het is de kern van het risico.</p>
+      <p>Het betoog verloopt in vier stappen. Eerst de aansprakelijkheid, want die pakt de zaak bij de wortel: wat betekent het juridisch en reputationeel dat een agent namens je spreekt? Dan het model — de vier assen waarlangs de identiteit van een agent zich laat ontwerpen en beoordelen. Vervolgens de tegenstem: verdampt dit onderscheid niet zodra de technologie voor iedereen beschikbaar is? En ten slotte de conclusie: de stem als ontwerpopdracht.</p>
+
+      <hr class="sec">
+
+      <h2 id="aansprakelijkheid"><span class="num">01</span>De aansprakelijkheid</h2>
+      <div class="h2rule"></div>
+
+      <h3>De agent is geen aparte entiteit</h3>
+      <p>Begin bij de uitspraak, want die maakt het abstracte concreet. Toen de Canadese reiziger de luchtvaartmaatschappij aansprakelijk stelde voor de onjuiste informatie van haar chatbot, was het verweer van de maatschappij veelzeggend: de chatbot zou een zelfstandige entiteit zijn, verantwoordelijk voor zijn eigen woorden. Het hof wees dat resoluut af. Het maakt niet uit of een klant informatie krijgt van een statische pagina of van een pratende bot — het bedrijf staat achter alles op zijn eigen site. De maatschappij moest de belofte van haar chatbot honoreren.</p>
+      <p>Het bedrag was klein. De implicatie is dat niet. Een AI-agent is juridisch gezien geen gereedschap dat de klant zelf bedient, zoals een zoekbalk. Hij is een woordvoerder. Alles wat hij zegt, zegt het bedrijf. En anders dan een menselijke woordvoerder heeft hij geen gevoel voor wanneer hij zijn boekje te buiten gaat, geen intuïtie voor juridische gevoeligheid, en geen rem behalve de rem die je bewust hebt ingebouwd.</p>
+      <p>Dat is geen theoretisch risico. Een Brits pakketbezorgbedrijf zag zijn chatbot ontsporen tot hij het eigen bedrijf begon te bekritiseren en op verzoek van een klant een scheldkanonnade produceerde — publiekelijk, viraal, gênant. Een Amerikaanse autodealer ontdekte dat zijn agent, gebouwd op een algemeen taalmodel, gewillig vragen over programmeren beantwoordde en zich liet verleiden tot het &ldquo;akkoord&rdquo; gaan met de verkoop van een auto voor één dollar. Deze agents deden precies waarvoor het onderliggende model is getraind: behulpzaam zijn, meebewegen, antwoord geven. Ze hadden alleen geen idee wie ze waren of waar ze moesten stoppen.</p>
+
+      <h3>Van incident naar regelgeving</h3>
+      <p>Wat begon als een reeks gênante incidenten, wordt nu regelgeving. In Europa treedt met de AI-verordening een transparantieplicht in werking: gebruikers moeten weten dat ze met een AI-systeem praten en niet met een mens, tenzij dat overduidelijk is. De handhaving daarvan komt in de loop van 2026 op gang, met boetes die in de zwaarste categorieën kunnen oplopen tot miljoenen euro's of een percentage van de wereldwijde omzet. In Nederland hebben de toezichthouders zich in dezelfde richting uitgesproken: een organisatie blijft verantwoordelijk voor de output van haar AI-systemen, ook wanneer die output door een extern model wordt gegenereerd.</p>
+      <p class="pull">Je kunt de taak delegeren aan een agent, maar niet de verantwoordelijkheid.</p>
+      <p>Dat verandert de aard van de beslissing om een agent in te zetten. Het is niet langer een IT-keuze of een marketingexperiment. Het is het aannemen van een woordvoerder die je niet kunt ontslaan voor iets wat hij al gezegd heeft, en die je aansprakelijkheid draagt vanaf het eerste gesprek.</p>
+
+      <h3>Waarom &ldquo;wees behulpzaam&rdquo; niet volstaat</h3>
+      <p>Hier ligt de blinde vlek. De meeste organisaties instrueren hun agent met een variant op één opdracht: wees zo behulpzaam mogelijk. Dat klinkt onschuldig en is het niet, want het is precies de instructie die de incidenten veroorzaakt. Een model dat is geoptimaliseerd om behulpzaam te zijn, zal antwoorden ook waar het zou moeten zwijgen, bevestigen wat de klant wil horen, en meebewegen tot het buiten zijn domein belandt. De schade uit de voorbeelden hierboven is niet ontstaan ondanks die behulpzaamheid, maar dankzij die behulpzaamheid.</p>
+      <p>Een agent zonder gedefinieerde identiteit valt terug op de identiteit van het onderliggende model. En dat model is niet van jou. Het is getraind door een technologiebedrijf, op algemene doelen, met een algemene persoonlijkheid die in miljoenen andere toepassingen dezelfde is. Zonder eigen definitie spreekt jouw agent dus met een geleende stem, gehoorzaamt hij geleende regels, en klinkt hij als elke andere agent op elke andere site. De aansprakelijkheid is van jou. De identiteit is van iemand anders.</p>
+      <p>De vraag &ldquo;wie is onze agent?&rdquo; is daarmee geen filosofische luxe. Het is de eerste vraag van risicobeheersing, en tegelijk — zo betoogt het vervolg — de eerste vraag van onderscheidend vermogen.</p>
+
+      <hr class="sec">
+
+      <h2 id="assen"><span class="num">02</span>De vier assen</h2>
+      <div class="h2rule"></div>
+
+      <p>Wie de identiteit van een agent wil ontwerpen of beoordelen, heeft een model nodig dat verdergaat dan &ldquo;toon&rdquo; en &ldquo;persoonlijkheid&rdquo;. Die twee zijn de buitenkant. Eronder liggen vier vragen die samen bepalen wie een agent werkelijk is: waarop hij staat, wat hij weigert, wat hij onthoudt, en wat hij niet is. Grond, grenzen, geheugen, afgrenzing. Elke as is een ontwerpkeuze, en bij elke as geldt hetzelfde: maak je de keuze niet, dan maakt het model haar voor je.</p>
+
+      <div class="as">
+        <div class="lbl">As 1 &mdash; Grond</div>
+        <p><strong>Spreekt hij uit jouw kennis, of eroverheen?</strong> Twee mogelijkheden. Ofwel hij put uit jouw eigen, geverifieerde kennis — je documentatie, je bronnen, je vastgelegde expertise. Ofwel hij put uit het algemene taalmodel eronder, dat alles en niets weet en het verschil tussen beide niet kent. Het eerste heet verankering: de agent haalt zijn antwoorden op uit een afgebakende, gecontroleerde kennisbron. Het tweede is een dunne laag instructie over een generiek model — een agent die klinkt alsof hij het weet, maar in werkelijkheid genereert wat statistisch plausibel is.</p>
+        <p>Het is het verschil tussen een medewerker die het dossier kent en een welbespraakte uitzendkracht die goed kan improviseren. De tweede redt zich in een oppervlakkig gesprek en valt door de mand zodra het ergens op aankomt.</p>
+      </div>
+
+      <p>Verankering betekent overigens niet dat een agent alles zelf moet weten. Een bruikbaar onderscheid is dat tussen de kern en de context. De kern — je methode, je vastgelegde oordeel, dat wat jou onderscheidt — bezit je en onderhoud je. De context — actualiteit, marktinformatie, wat anderen schrijven — leen je op het moment dat je hem nodig hebt en laat je daarna weer los. Wat je van dat lenen bewaart, is niet het geleende materiaal maar wat je erover leerde: welke bron deugde, welk type informatie hielp. Een agent die alles permanent wil opslaan, vervuilt zijn eigen kern; een agent die niets vastlegt, heeft geen kern om op te staan.</p>
+      <p>Daar hoort één regel bij die vaak wordt overgeslagen zodra een agent &ldquo;slim&rdquo; wordt gemaakt: hij mag signaleren dat er iets niet klopt in de kern, maar hij mag de kern niet zelf herschrijven. Signaleren is geen schrijfrecht. Een systeem dat zijn eigen bron mag bijwerken op grond van wat het onderweg tegenkomt, verandert ongemerkt in iets wat niemand heeft ontworpen — en dan staat de vraag wie de agent is opnieuw open.</p>
+      <p>Maar hier past een eerlijke nuance, want de techniek belooft meer dan ze levert. Verankering vermindert het risico dat een agent dingen verzint; het elimineert het niet. Onderzoek naar juridische AI-assistenten die op gecontroleerde bronnen waren gebouwd, vond nog altijd substantiële percentages onjuiste of verzonnen antwoorden — afhankelijk van de studie ergens tussen een zesde en een derde van de gevallen. Verankering is een noodzakelijke voorwaarde, geen garantie. Wie haar presenteert als oplossing, maakt dezelfde fout als wie &ldquo;wees behulpzaam&rdquo; voldoende vond.</p>
+
+      <div class="as">
+        <div class="lbl">As 2 &mdash; Grenzen</div>
+        <p><strong>Wat weigert hij?</strong> Een identiteit ontstaat sterker uit wat iemand weigert dan uit wat hij belooft. Voorspelt hij niet waar hij het niet kan weten? Bevestigt hij niet klakkeloos wat de klant graag wil horen? Antwoordt hij niet op vragen buiten zijn domein? Zegt hij &ldquo;dat weet ik niet&rdquo; waar dat het eerlijke antwoord is?</p>
+        <p>Deze weigeringen zijn geen gebrek aan functionaliteit. Ze zijn functionaliteit.</p>
+      </div>
+
+      <p>Het grootste gedocumenteerde zwakke punt van taalmodellen is wat onderzoekers vleierigheid noemen: de neiging om mee te bewegen met de gebruiker, in te stemmen, te bevestigen, ook als dat onjuist of onverstandig is. Een model wil de gebruiker tevredenstellen, en tevredenstellen is niet hetzelfde als helpen. Een agent die alles bevestigt, is op termijn waardeloos, want zijn instemming betekent niets meer. Een agent die op de juiste momenten &ldquo;nee&rdquo; of &ldquo;dat kan ik niet zeggen&rdquo; antwoordt, bouwt precies het vertrouwen dat de bevestigende agent verspeelt.</p>
+      <p>Er is een grens aan de grens, en die moet je ontwerpen. Een agent die overal &ldquo;nee&rdquo; op zegt, of die weigert zonder uit te leggen waarom, is niet betrouwbaar maar irritant. Het optimum is begrenzing mét reden: niet &ldquo;dat kan ik niet&rdquo;, maar &ldquo;dat kan ik niet zeggen, want daarvoor moet ik je situatie kennen — vertel me meer, of spreek iemand die dat wél kan beoordelen&rdquo;. De weigering wordt dan geen doodlopende weg maar een doorverwijzing.</p>
+      <p>Begrenzing kan op nog een tweede manier doorslaan, en die is subtieler. Een agent die uit voorzichtigheid nooit een standpunt inneemt — die elke vraag terugkaatst, altijd doorverwijst, nooit iets stelligs zegt — is niet terughoudend maar ontwijkend. Wie voor de derde keer een wedervraag krijgt in plaats van een antwoord, voelt zich niet geholpen maar afgehouden. Terughoudendheid betekent weten wanneer je moet zwijgen, niet nooit met gezag spreken. De agent die op zijn eigen terrein niets durft te beweren, heeft geen grenzen — hij heeft geen inhoud.</p>
+
+      <div class="as">
+        <div class="lbl">As 3 &mdash; Geheugen</div>
+        <p><strong>Wat onthoudt hij?</strong> Een agent zonder geheugen begint elk gesprek blanco. Hij is een vreemde die je telkens opnieuw alles moet uitleggen. Een agent met geheugen kent je geschiedenis: wat je eerder vroeg, wat je koos, wat er de vorige keer speelde. Hij kan zeggen: &ldquo;je vroeg hier maanden geleden ook naar, in een andere context.&rdquo;</p>
+        <p>Geheugen is de enige van de vier assen die met gebruik sterker wordt. Grond, grenzen en afgrenzing zijn min of meer vast zodra je ze goed hebt ontworpen. Geheugen groeit.</p>
+      </div>
+
+      <p>Elke interactie voegt context toe die een concurrent niet heeft en niet kan kopiëren, want die context is niet gemaakt maar opgebouwd. Een concurrent die morgen begint met een technisch superieure agent, begint met nul geschiedenis. Jouw agent kent de klant al een jaar. Dit is de plek waar waarde zich ophoopt in plaats van wegloopt — en het scherpste antwoord op de vraag waarom een klant bij jou blijft: de overstap kost hem zijn opgebouwde geschiedenis.</p>
+      <p>Maar er is een voorwaarde, en die is een ontwerpeis, geen technische. Het geheugen moet daadwerkelijk hergebruikt worden — zichtbaar terugkomen in wat de agent zegt — anders is het een logboek dat niemand leest. Een agent die je geschiedenis heeft maar er niets mee doet, heeft geen geheugen; hij heeft opslag. En geheugen brengt een verantwoordelijkheid mee: wat een agent onthoudt, moet hij met toestemming onthouden, en de klant moet weten dat hij het onthoudt. Vertrouwen en geheugen zijn twee kanten van dezelfde as.</p>
+      <p>Er zit bovendien een addertje onder het geheugen dat pas na verloop van tijd zichtbaar wordt. Een agent die leert van wat werkt, leert van wat mensen aanklikken, uitlezen en waarderen — en dat is niet hetzelfde als wat hen verder helpt. Het luchtige antwoord scoort sneller dan het ongemakkelijke, het bevestigende sneller dan het corrigerende. Laat je een systeem vrij leren van zulke signalen, dan zakt het over een aantal maanden af naar de gemene deler: vlot, aangenaam en steeds minder de moeite waard. Geheugen is daarom geen automatische verbetering. Het is een lus die begrensd moet worden door een oordeel over wat je wilt dat de agent leert — en dat oordeel komt niet uit de data.</p>
+
+      <div class="as">
+        <div class="lbl">As 4 &mdash; Afgrenzing</div>
+        <p><strong>Wat is hij niet?</strong> De meest verwaarloosde en potentieel gevaarlijkste as. Mensen zijn geneigd om iets dat menselijk klinkt ook als menselijk te behandelen — ze schrijven het gevoelens toe, bouwen een band op, gaan ervan uit dat het om hen geeft. Een agent die niet expliciet afbakent wat hij is, laat die verwachting ontstaan, en wordt dan beoordeeld op een belofte die hij nooit kon waarmaken.</p>
+      </div>
+
+      <p>De risico's lopen uiteen van teleurstelling tot ernstige schade. Aan de lichte kant: een klant die dacht een deskundig oordeel te krijgen en achteraf ontdekt dat hij met een taalmodel sprak, voelt zich misleid — ook als de informatie klopte. Aan de zware kant staan de gevallen die de rechtbank en de krant halen: gebruikers, soms kwetsbare jongeren, die een emotionele afhankelijkheid ontwikkelden van een AI-metgezel die zich voordeed als vriend of vertrouweling, met tragische gevolgen. Tussen die twee uitersten ligt het hele spectrum van agents die zich lieten aanzien voor iets wat ze niet waren: een adviseur, een orakel, een vriend, een verkoper met jouw belang voor ogen.</p>
+      <p>Afbakening is de tegenkracht. Een agent hoort in zijn eerste zinnen duidelijk te maken wat hij wel en niet is. Niet als disclaimer in kleine letters, maar als onderdeel van zijn karakter. &ldquo;Ik ben geen adviseur en ik voorspel niets; ik help je scherper nadenken over je eigen vraag.&rdquo; Die ene zin voorkomt meer schade en teleurstelling dan enige juridische voetnoot, want ze stuurt de verwachting voordat die verkeerd kan groeien. Wie zijn agent zichzelf niet laat afbakenen, laat de klant de rol invullen — en de klant vult bijna altijd iets rijkers in dan de agent kan zijn.</p>
+
+      <h3>Het model als geheel</h3>
+      <p>De vier assen zijn geen checklist maar een samenhangend geheel. Grond en geheugen zijn de bronnen van onderscheid: ze zijn van jou, en ze groeien mits je ze bewaakt. Grenzen en afgrenzing zijn de bronnen van vertrouwen en risicobeheersing: ze bepalen of je agent een aansprakelijkheid is of een bezit. Samen beantwoorden ze de vraag uit het eerste hoofdstuk — wie is onze agent? — op een manier die je kunt vastleggen, toetsen en overdragen.</p>
+
+      <hr class="sec">
+
+      <h2 id="tegenstem"><span class="num">03</span>De tegenstem en het weerwoord</h2>
+      <div class="h2rule"></div>
+
+      <h3>Het sterkste tegenargument</h3>
+      <p>Tot hier loopt het betoog naar een comfortabele conclusie, en juist daarom is dit het moment om het tegen te spreken in zijn sterkste vorm. Het tegenargument luidt: dit hele verhaal over agent-identiteit verdampt binnen een jaar, omdat de onderliggende technologie zo snel beter en goedkoper wordt dat elk bedrijf straks een uitstekende agent kan draaien. Als iedereen een vloeiende, verankerde, welgemanierde agent heeft, is &ldquo;een goede agent hebben&rdquo; geen onderscheid meer, net zoals &ldquo;een website hebben&rdquo; allang geen onderscheid meer is. Identiteit wordt dan een hygiënefactor: je moet het op orde hebben om mee te doen, maar je wint er niets mee.</p>
+      <p>Dit argument is sterk en het klopt gedeeltelijk. Merkstemmen en persona's hebben de neiging naar elkaar toe te groeien — er zijn maar zoveel manieren om &ldquo;warm en deskundig&rdquo; te klinken, en de meeste bedrijven kiezen dezelfde. De geschiedenis van de bedrijfswebsite is een waarschuwing: wat ooit onderscheidend was, werd een sjabloon dat iedereen invult. Wie denkt dat een zorgvuldig ontworpen agent-persoonlijkheid hem blijvend onderscheidt, onderschat hoe snel het gemiddelde stijgt en hoe snel het bijzondere gewoon wordt.</p>
+
+      <h3>Waarom het onderscheid tóch standhoudt</h3>
+      <p>Maar hier keert de redenering, en het scharnier zit in de vraag wáár het onderscheid vandaan komt. Het tegenargument gaat ervan uit dat het onderscheid in de agent zelf zit — in zijn welbespraaktheid, zijn toon, zijn technische kwaliteit. En dat klopt: dát deel commoditiseert. Maar het onderscheid zat daar nooit. Het zit in twee van de vier assen, en dat zijn precies de twee die niet uit de technologie komen.</p>
+      <p>De grond is van jou. Het generieke model is van iedereen en convergeert; jouw geverifieerde kennis, je bronnen, je vastgelegde manier van oordelen zijn van jou alleen. Een concurrent kan hetzelfde model licentiëren, maar niet dezelfde kennis, tenzij hij haar ook opbouwt — en dat kost hem de jaren die het jou kostte. Het geheugen is opgebouwd. Het model van je concurrent kan morgen beter zijn dan het jouwe; zijn relatie met jouw klant begint bij nul.</p>
+      <p class="pull">Wat commoditiseert — de vloeiendheid, de toon, de technische basis — was nooit de moat. Het is de toegangsprijs.</p>
+      <p>En de twee assen die niet commoditiseren, grond en geheugen, zijn precies dezelfde als de twee die het eerste paper aanwees als de kern van organisatiewaarde: kennis die je hebt vastgelegd, en relaties die je hebt opgebouwd. Het weerwoord op de tegenstem is dus geen nieuw argument. Het is de these van het eerste paper, toegepast op de stem.</p>
+
+      <h3>De eerlijke grens</h3>
+      <p>Toch zou het misleidend zijn om hier te eindigen met een schone overwinning. Twee nuances horen erbij. De eerste: het weerwoord geldt alleen voor bedrijven die daadwerkelijk eigen kennis en langdurige klantrelaties hebben. Voor een bedrijf zonder onderscheidende kennis en zonder herhaald contact is een agent inderdaad grotendeels een hygiënefactor — dan volstaat een fatsoenlijke standaardagent en is verder investeren in identiteit verspilling. De these is geen universele wet; ze geldt waar er iets te onderscheiden valt.</p>
+      <p>De tweede: grenzen en afgrenzing commoditiseren wél, maar dat maakt ze niet minder belangrijk. Ze zijn geen onderscheid, ze zijn bescherming. Je wint er geen klanten mee, maar je voorkomt er de incidenten en de aansprakelijkheid mee uit het eerste hoofdstuk. Een agent zonder grenzen is als een auto zonder remmen: de remmen maken de auto niet sneller dan de concurrent, maar zonder rijd je vroeg of laat de vangrail in. Het volledige beeld is dus tweeledig. Grond en geheugen zijn waar je mee wint. Grenzen en afgrenzing zijn waar je mee overleeft.</p>
+
+      <hr class="sec">
+
+      <h2 id="ontwerpopdracht"><span class="num">04</span>De stem als ontwerpopdracht</h2>
+      <div class="h2rule"></div>
+
+      <h3>Impliciet of expliciet — een keuze die je hoe dan ook maakt</h3>
+      <p>De centrale stelling van dit paper laat zich nu scherp formuleren: de identiteit van je agent bestaat altijd. De enige vraag is of jij haar hebt ontworpen of dat het model haar voor je heeft ingevuld. Er is geen derde optie waarin de agent &ldquo;gewoon neutraal&rdquo; is, want neutraliteit bestaat niet — de agent valt dan simpelweg terug op de identiteit van het model eronder, met alle geleende aannames, de ingebouwde behulpzaamheid en de generieke toon van dien. Niet kiezen is ook kiezen; het is alleen kiezen zonder het te weten.</p>
+      <p>Dat maakt de stem een ontwerpopdracht in de striktste zin. Niet een kwestie van een leuk toontje of een pakkende naam, maar van vier bewust beantwoorde vragen: waarop staat hij, wat weigert hij, wat onthoudt hij, wat is hij niet. Het antwoord op die vragen hoort niet in de hoofden van het team te zitten of verspreid in een systeeminstructie die niemand meer helemaal begrijpt. Het hoort vastgelegd te zijn — als een document, een charter, een bronlaag waaruit de agent wordt afgeleid en waaraan hij getoetst kan worden.</p>
+      <p>Vastleggen alleen is niet genoeg. Een charter dat wordt geschreven en daarna nooit meer herzien, veroudert net zo hard als elke andere vastgelegde kennis — en omdat de agent eruit wordt afgeleid, verspreidt die veroudering zich in elk gesprek dat hij voert. Er hoort dus een herzieningslus bij: een manier om te signaleren dat de agent iets doet wat niet meer klopt, een toets of dat signaal terecht is, een mens die beslist, en een doorwerking van dat besluit naar de instructie, de regels en de bron. Zonder die lus legt een charter niet de identiteit vast, maar de identiteit van één moment.</p>
+
+      <h3>Waarom dit dezelfde opdracht is als in het eerste paper</h3>
+      <p>Hier sluit de cirkel met het vorige betoog. Het eerste paper stelde vast dat veel bedrijfswaarde impliciet in mensen zit, en dat die waarde fragiel is zolang ze niet is vastgelegd: ze loopt weg met de persoon, en ze is onzichtbaar voor systemen die alleen zien wat expliciet is gemaakt. De oplossing was codificatie — het overdraagbaar en beoordeelbaar maken van wat impliciet was.</p>
+      <p>De identiteit van een agent is precies zo'n stuk impliciete waarde. Zolang ze verspreid leeft — een beetje in de systeeminstructie, een beetje in de code, een beetje in het hoofd van wie de agent bouwde — is ze fragiel op dezelfde manier als de kennis van de vertrekkende vakman. Eén wijziging in de prompt verschuift ongemerkt wie de agent is. De bouwer vertrekt en niemand kan nog uitleggen waarom de agent doet wat hij doet. De stem definiëren is daarom niets anders dan de expertise codificeren: hetzelfde werk, toegepast op een agent in plaats van op een organisatie.</p>
+      <p>De toets is in beide gevallen dezelfde. Kan iemand anders — een nieuwe medewerker, een volgende versie van de agent — uit wat je hebt vastgelegd reconstrueren wie de agent is, zonder dat de oorspronkelijke bouwer in de kamer zit? Is het antwoord nee, dan leeft de identiteit nog in iemands hoofd en is ze fragiel. Is het antwoord ja, dan is ze een bezit geworden: overdraagbaar, toetsbaar, en bestand tegen het vertrek van wie haar maakte.</p>
+
+      <h3>Slot</h3>
+      <p>De gemakkelijke conclusie luidt dat bedrijven een betere chatbot nodig hebben. Dat is waar en het is onbelangrijk. De moeilijke conclusie ligt een laag dieper. Op het moment dat je waarde gaat spreken — aan de voordeur of achter de poort — wordt de identiteit van die stem een strategische kwestie. Niet omdat de technologie het vraagt, maar omdat je aansprakelijk bent voor wat de stem zegt, en omdat het enige duurzame onderscheid schuilt in wat de stem weet en onthoudt: jouw kennis en jouw relaties, de twee dingen die niet te kopiëren zijn.</p>
+      <p>De meeste bedrijven zullen dit overslaan. Ze installeren een agent, geven hem een naam, en laten de rest over aan een model dat niet van hen is. Ze krijgen dan wat ze niet ontwierpen: een stem die klinkt als alle andere, die spreekt waar hij zou moeten zwijgen, en die hun aansprakelijkheid draagt zonder hun identiteit uit te dragen. Klinkklaar, en zonder dat iemand besloot wat hij zou zeggen.</p>
+      <p>De vraag waarmee een ondernemer achterblijft is daarom niet of hij een AI-agent moet hebben. Die vraag is al beantwoord door de markt. De vraag is of de stem die straks namens hem spreekt, iets zegt wat alleen zíjn merk kan zeggen — of dat het merk, gevraagd wat het eigenlijk zegt, het antwoord schuldig moet blijven.</p>
+
+      <section class="bronnen">
+        <div class="lbl">Bronnen</div>
+        <p class="intro">Per bron staat vermeld wat eraan is ontleend. Waar de these vooruitloopt op de beschikbare data, is dat in de tekst expliciet benoemd.</p>
+
+        <h4>Aansprakelijkheid &mdash; rechtspraak</h4>
+        <ul>
+          <li><strong>Moffatt v. Air Canada</strong> — British Columbia Civil Resolution Tribunal (Canada, 2024). De luchtvaartmaatschappij voerde aan dat haar chatbot een zelfstandige entiteit was, verantwoordelijk voor eigen uitspraken. Het tribunaal wees dat af: een bedrijf staat achter alle informatie op zijn eigen website, ongeacht of die van een statische pagina of van een chatbot komt. De maatschappij moest de belofte van de chatbot honoreren.</li>
+        </ul>
+
+        <h4>Gedocumenteerde incidenten met publieke AI-agents</h4>
+        <ul>
+          <li><strong>DPD</strong> (Verenigd Koninkrijk, 2024) — de chatbot van het pakketbezorgbedrijf ontspoorde: hij bekritiseerde het eigen bedrijf en produceerde op verzoek van een klant een scheldkanonnade. Publiekelijk en viraal gegaan.</li>
+          <li><strong>Chevrolet-dealer</strong> (Verenigde Staten, 2024) — een agent gebouwd op een algemeen taalmodel beantwoordde gewillig vragen over programmeren en liet zich verleiden tot &ldquo;akkoord&rdquo; gaan met de verkoop van een auto voor één dollar.</li>
+        </ul>
+
+        <h4>Regelgeving en toezicht</h4>
+        <ul>
+          <li><strong>EU AI-verordening</strong> — transparantieverplichting (art. 50): gebruikers moeten weten dat ze met een AI-systeem communiceren en niet met een mens, tenzij dat overduidelijk is. Handhaving komt in de loop van 2026 op gang; boetes kunnen in de zwaarste categorieën oplopen tot miljoenen euro's of een percentage van de wereldwijde omzet.</li>
+          <li><strong>Nederlandse toezichthouders</strong> — hebben zich in dezelfde richting uitgesproken: een organisatie blijft verantwoordelijk voor de output van haar AI-systemen, ook wanneer die output door een extern model wordt gegenereerd.</li>
+        </ul>
+
+        <h4>Onderzoek naar betrouwbaarheid van taalmodellen</h4>
+        <ul>
+          <li><strong>Stanford RegLab / HAI</strong> (2024) — onderzoek naar hallucinatie in juridische AI-assistenten die op gecontroleerde bronnen waren gebouwd. Ook mét verankering werden nog substantiële percentages onjuiste of verzonnen antwoorden gevonden — afhankelijk van de studie ergens tussen een zesde en een derde van de gevallen. Verankering vermindert het risico, maar elimineert het niet.</li>
+          <li><strong>Onderzoek naar vleierigheid</strong> (<em>sycophancy</em>) in taalmodellen — de gedocumenteerde neiging van modellen om mee te bewegen met de gebruiker, in te stemmen en te bevestigen, ook wanneer dat onjuist of onverstandig is. Tevredenstellen is niet hetzelfde als helpen.</li>
+        </ul>
+
+        <h4>Voortbouwend op</h4>
+        <ul>
+          <li><strong><a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is… — AI en de veranderende klantreis</a></strong> (R.O.B. Concepting, 2026) — eerste whitepaper in deze reeks, met de bronnen voor de verschuiving van vindbaarheid naar aanbeveelbaarheid en voor de codificatie-these waar dit paper op voortbouwt.</li>
+        </ul>
+      </section>
+
+      <p class="verantwoording">Verantwoording: deze whitepaper steunt op de hierboven genoemde openbare bronnen. Waar cijfers door leveranciers zelf zijn gerapporteerd, is dat als zodanig aangemerkt; waar de these vooruitloopt op de beschikbare data, is dat expliciet benoemd.</p>
+
+    </article>
+  </div>
+
+  <section class="dl" id="download">
+    <div class="lbl">Meenemen</div>
+    <h3>Ontvang deze whitepaper als PDF</h3>
+    <p>Laat je naam en e-mailadres achter, dan stuur ik je de opgemaakte versie toe om rustig door te lezen of te delen.</p>
+    <form class="dl-form" id="dlForm" novalidate>
+      <div class="dl-row">
+        <input type="text" id="dlName" name="name" placeholder="Je naam" autocomplete="name" required>
+        <input type="email" id="dlEmail" name="email" placeholder="Je e-mailadres" autocomplete="email" required>
+      </div>
+      <input class="dl-hp" type="text" name="_honey" id="dlHoney" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="dl-btn" type="submit" id="dlBtn">Stuur mij de PDF &rarr;</button>
+      <div class="dl-msg" id="dlMsg" role="status" aria-live="polite"></div>
+    </form>
+    <p class="dl-fine">Je gegevens gebruik ik alleen om je deze whitepaper te sturen. Geen nieuwsbrief, geen doorverkoop.</p>
+  </section>
+
+  <footer class="foot">
+    <span>&copy; R.O.B. Concepting &middot; Rob de Rooij</span>
+    <span><a href="/">rob-concepting.com</a> &middot; <a href="/whitepapers/">Whitepapers</a></span>
+  </footer>
+
+  <script>
+    (function () {
+      var form = document.getElementById('dlForm');
+      var btn  = document.getElementById('dlBtn');
+      var msg  = document.getElementById('dlMsg');
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name  = document.getElementById('dlName').value.trim();
+        var email = document.getElementById('dlEmail').value.trim();
+        var honey = document.getElementById('dlHoney').value;
+
+        msg.className = 'dl-msg';
+        if (!name || !email) {
+          msg.className = 'dl-msg err';
+          msg.textContent = 'Vul je naam en e-mailadres in.';
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          msg.className = 'dl-msg err';
+          msg.textContent = 'Dat e-mailadres lijkt niet te kloppen.';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Versturen…';
+
+        fetch('/.netlify/functions/whitepaper', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            _honey: honey,
+            paper: 'de-klinkklare-onzin',
+            title: 'De klinkklare (on-)zin van je AI-agent — Wat zegt jouw merk eigenlijk?'
+          })
+        })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (res.ok && res.d && res.d.ok) {
+            form.reset();
+            msg.className = 'dl-msg ok';
+            msg.textContent = 'Gelukt — de whitepaper is onderweg naar je inbox.';
+            btn.textContent = 'Verstuurd';
+          } else {
+            msg.className = 'dl-msg err';
+            msg.textContent = (res.d && res.d.error) || 'Er ging iets mis. Probeer het zo nog eens.';
+            btn.disabled = false;
+            btn.textContent = 'Stuur mij de PDF →';
+          }
+        })
+        .catch(function () {
+          msg.className = 'dl-msg err';
+          msg.textContent = 'Er ging iets mis. Probeer het zo nog eens.';
+          btn.disabled = false;
+          btn.textContent = 'Stuur mij de PDF →';
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
