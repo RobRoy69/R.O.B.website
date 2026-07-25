@@ -19,3 +19,7 @@ node_modules/
 .env
 .env.local
 
+
+# tijdelijke vergelijkingsbestanden
+/api.json
+/site.json
