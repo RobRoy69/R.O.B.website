@@ -1,6 +1,11 @@
 [build]
   publish = "."
   functions = "netlify/functions"
+  # Register-sync + publicatiepoort. De sync valt terug op de meegecommitte
+  # projectie als Supabase onbereikbaar is (exit 0), zodat een storing daar geen
+  # deploy hier blokkeert. De poort faalt wél hard: een pagina mag nooit een claim
+  # tonen die het register niet vrijgeeft. Sabotage-test: verify-bronnen --saboteer.
+  command = "node tools/sync-register.mjs && node tools/verify-bronnen.mjs"
 
 [build.environment]
   NODE_VERSION = "20"
