@@ -507,17 +507,17 @@
   <section class="dl" id="download">
     <div class="lbl">Meenemen</div>
     <h3>Ontvang deze whitepaper als PDF</h3>
-    <p>Laat je naam en e-mailadres achter, dan stuur ik je de opgemaakte versie toe om rustig door te lezen of te delen.</p>
+    <p>Laat je naam en e-mailadres achter. Je krijgt eerst een korte bevestigingsmail; na één klik stuur ik de opgemaakte PDF toe.</p>
     <form class="dl-form" id="dlForm" novalidate>
       <div class="dl-row">
         <input type="text" id="dlName" name="name" placeholder="Je naam" autocomplete="name" required>
         <input type="email" id="dlEmail" name="email" placeholder="Je e-mailadres" autocomplete="email" required>
       </div>
       <input class="dl-hp" type="text" name="_honey" id="dlHoney" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button class="dl-btn" type="submit" id="dlBtn">Stuur mij de PDF &rarr;</button>
+      <button class="dl-btn" type="submit" id="dlBtn">Vraag de PDF aan &rarr;</button>
       <div class="dl-msg" id="dlMsg" role="status" aria-live="polite"></div>
     </form>
-    <p class="dl-fine">Je gegevens gebruik ik alleen om je deze whitepaper te sturen. Geen nieuwsbrief, geen doorverkoop.</p>
+    <p class="dl-fine">Je gegevens gebruik ik alleen om je deze whitepaper te sturen. Geen nieuwsbrief, geen doorverkoop. Klik je niet op de bevestiging, dan bewaar ik niets.</p>
   </section>
 
   <footer class="foot">
@@ -569,20 +569,20 @@
           if (res.ok && res.d && res.d.ok) {
             form.reset();
             msg.className = 'dl-msg ok';
-            msg.textContent = 'Gelukt — de whitepaper is onderweg naar je inbox.';
-            btn.textContent = 'Verstuurd';
+            msg.textContent = 'Bijna klaar — check je inbox en klik op de bevestigingslink.';
+            btn.textContent = 'Check je inbox';
           } else {
             msg.className = 'dl-msg err';
             msg.textContent = (res.d && res.d.error) || 'Er ging iets mis. Probeer het zo nog eens.';
             btn.disabled = false;
-            btn.textContent = 'Stuur mij de PDF →';
+            btn.textContent = 'Vraag de PDF aan →';
           }
         })
         .catch(function () {
           msg.className = 'dl-msg err';
           msg.textContent = 'Er ging iets mis. Probeer het zo nog eens.';
           btn.disabled = false;
-          btn.textContent = 'Stuur mij de PDF →';
+          btn.textContent = 'Vraag de PDF aan →';
         });
       });
     })();

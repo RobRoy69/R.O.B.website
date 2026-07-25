@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /.netlify/
 Disallow: /whitepapers/bestand/
+Disallow: /whitepapers/bevestig
 
 Sitemap: https://rob-concepting.com/sitemap.xml

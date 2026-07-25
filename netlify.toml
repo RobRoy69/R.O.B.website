@@ -5,6 +5,13 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# ── Nette URL voor de whitepaper-opt-in-bevestiging ──
+# Staat in de bevestigingsmail; leest prettiger dan /.netlify/functions/...
+[[redirects]]
+  from = "/whitepapers/bevestig"
+  to = "/.netlify/functions/whitepaper-confirm"
+  status = 200
+
 # ── Globale security headers ──
 [[headers]]
   for = "/*"
