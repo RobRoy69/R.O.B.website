@@ -17,6 +17,11 @@ const PAPERS = {
     title: 'De klinkklare (on-)zin van je AI-agent — Wat zegt jouw merk eigenlijk?',
     file:  'de-klinkklare-onzin.pdf',
     page:  '/whitepapers/de-klinkklare-onzin.html'
+  },
+  'de-mens-beslist': {
+    title: 'De mens beslist (of niet meer?) — Waarom goedkeuren geen beslissen is',
+    file:  'de-mens-beslist.pdf',
+    page:  '/whitepapers/de-mens-beslist.html'
   }
 };
 
