@@ -193,8 +193,13 @@ async function notifyRob(conversation) {
 }
 
 // ── Vertrouwelijk chat-archief (spoor 6 C2, fire-and-forget, faalt stil) ─────
-// Insert elke chat-call in rob_chat_sessions (20voor12-pilot Supabase).
-// RLS staat alleen service_role toe — geen anon read/write ooit (zie migration 0001_rob_chat_sessions).
+// Insert elke chat-call in rob_chat_sessions (agora-rob-register Supabase).
+// Verhuisd uit 20voor12-pilot op 2026-07-26 (D-SCHEIDING-001): vertrouwelijke
+// bezoekersdata hoort in het register van het eigen merk. Zie
+// infra/rob-chat/migrations/0002_verhuizing_naar_rob_register.sql.
+// RLS staat alleen service_role toe — geen anon read/write ooit. Dat weegt hier zwaarder
+// dan op de oude plek: de anon-key van DIT project staat in de publieke site. Geverifieerd
+// op prod: anon select geeft 0 rijen, anon insert geeft 42501.
 // Vereist SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in Netlify env (server-side, nooit in client-bundle).
 // Zonder env-vars = no-op (graceful fallback); chat-stream onveranderd.
 async function archiveChatSession({ messages, aiText, notify, startedAt, userAgent, origin }) {
@@ -322,14 +327,30 @@ export default async (req) => {
       maxOutputTokens: 400,
       onFinish: async ({ text }) => {
         if (!text) return;
+        // AWAIT — niet fire-and-forget. Dit waren zwevende beloftes: onFinish keerde
+        // meteen terug en de fetches liepen nog. In een streaming serverless functie mag
+        // de instantie bevriezen zodra de stream sluit, en dan wordt zo'n belofte nooit
+        // afgemaakt.
+        //
+        // Het ging twee maanden goed omdat de verbinding naar het oude Supabase-project
+        // warm was. Bij de verhuizing naar agora-rob-register kwam er een DNS-lookup en
+        // een nieuwe TLS-handshake bij, en toen viel het om: 0 rijen, en in het
+        // Supabase-logboek GEEN ENKELE POST — het verzoek werd niet geweigerd, het werd
+        // nooit verstuurd. Een latente fout, blootgelegd door de verhuizing, niet
+        // veroorzaakt door de verhuizing.
+        //
+        // allSettled zodat een mislukte mail het archief niet meesleept, en andersom.
+        const fullConvo = [...messages, { role: 'assistant', content: text }];
+        const taken = [
+          // Vertrouwelijk archief: ALTIJD inserten (per spec: agent leert breedst mogelijk)
+          archiveChatSession({ messages, aiText: text, notify, startedAt, userAgent, origin })
+            .catch(e => { console.error('archive error:', e.message); throw e; }),
+        ];
         // Resend-mail naar Rob alleen bij notify=true (bezoeker stuurde door)
         if (notify) {
-          const fullConvo = [...messages, { role: 'assistant', content: text }];
-          notifyRob(fullConvo).catch(e => console.error('notify error:', e.message));
+          taken.push(notifyRob(fullConvo).catch(e => { console.error('notify error:', e.message); throw e; }));
         }
-        // Vertrouwelijk archief: ALTIJD inserten (per spec: agent leert breedst mogelijk)
-        archiveChatSession({ messages, aiText: text, notify, startedAt, userAgent, origin })
-          .catch(e => console.error('archive error:', e.message));
+        await Promise.allSettled(taken);
       }
     });
 
