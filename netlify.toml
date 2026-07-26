@@ -5,7 +5,7 @@
   # projectie als Supabase onbereikbaar is (exit 0), zodat een storing daar geen
   # deploy hier blokkeert. De poort faalt wél hard: een pagina mag nooit een claim
   # tonen die het register niet vrijgeeft. Sabotage-test: verify-bronnen --saboteer.
-  command = "node tools/sync-register.mjs && node tools/build-doors.mjs && node tools/verify-bronnen.mjs && node tools/verify-lagen.mjs && node tools/verify-publish-tree.mjs"
+  command = "node tools/sync-register.mjs && node tools/build-doors.mjs && node tools/build-vragen.mjs && node tools/verify-bronnen.mjs && node tools/verify-lagen.mjs && node tools/verify-publish-tree.mjs"
 
 [build.environment]
   NODE_VERSION = "20"

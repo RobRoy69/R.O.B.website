@@ -1,0 +1,253 @@
+// R.O.B. Concepting — genereert /vragen/index.html uit de vragenpoorten.
+//
+// Alleen deuren met publication_status 'publishable' komen op de pagina. Een deur die
+// terugvalt naar draft verdwijnt dus automatisch — de pagina volgt het register.
+//
+// TAAL-WET: naar bezoekers geen systeemtaal. Woorden als deur, claim, register,
+// verdict of ring staan niet op deze pagina. Wat de bezoeker ziet: een vraag, een
+// antwoord, en waar dat op rust met een datum.
+//
+// Draai: node tools/build-vragen.mjs   (na build-doors)
+
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import path from 'node:path';
+
+const ROOT = path.resolve(import.meta.dirname, '..');
+const DOORS = path.join(ROOT, 'whitepapers', '_doors.json');
+const OUTDIR = path.join(ROOT, 'vragen');
+const OUT = path.join(OUTDIR, 'index.html');
+
+if (!existsSync(DOORS)) {
+  console.error('build-vragen: whitepapers/_doors.json ontbreekt — draai eerst build-doors.');
+  process.exit(1);
+}
+const data = JSON.parse(readFileSync(DOORS, 'utf8'));
+const vragen = data.doors.filter(d => d.publication_status === 'publishable' && d.mode === 'public');
+
+if (!vragen.length) {
+  console.error('build-vragen: geen enkele vraag is leverbaar — pagina niet gebouwd.');
+  process.exit(1);
+}
+
+// Taal-wet-poort: verboden systeemtermen mogen niet in de bezoekerstekst staan.
+//
+// Op WOORDGRENS toetsen, niet op substring. Eerste versie zocht op 'ring ' en sloeg
+// aan op gewoon Nederlands ('ervaring', 'verankering') — een valse melding die de build
+// blokkeerde. Het spiegelbeeld van de .env-fout in verify-publish-tree, die juist te
+// weinig ving. Een poort moet precies zijn in beide richtingen, anders leer je hem
+// negeren. 'ring' is als los woord te generiek voor Nederlands en staat er daarom niet in;
+// de echte risicotermen zijn de systeemidentifiers.
+const VERBODEN = ['claim', 'claims', 'verdict', 'publication_status', 'ext_ref',
+                  'needs-review', 'showcase', 'ledger'];
+const taalfouten = [];
+for (const v of vragen) {
+  const tekst = `${v.question} ${v.antwoord} ${v.bewijs.map(b => b.text).join(' ')}`.toLowerCase();
+  const woorden = new Set(tekst.split(/[^a-z0-9_-]+/));
+  for (const w of VERBODEN) if (woorden.has(w)) taalfouten.push(`${v.id}: bevat systeemterm "${w}"`);
+}
+if (taalfouten.length) {
+  console.error('build-vragen: TAAL-WET GESCHONDEN — systeemtaal in bezoekerstekst:');
+  for (const f of taalfouten) console.error('  · ' + f);
+  process.exit(1);
+}
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const slug = id => id.split(':').pop();
+const MND = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+// Datumprecisie. Het register heeft geen apart precisie-veld — dat is een bekend gat —
+// dus de precisie zit in de opslagconventie: jaarprecisie als YYYY-01-01,
+// maandprecisie als YYYY-MM-01, dagprecisie als de echte datum.
+//
+// Eerste versie toonde alleen YYYY-01-01 als jaartal en gaf maandprecieze bronnen dus
+// weer als '1 april 2025' — valse precisie op 6 van de 35 bewijsregels, en dat op een
+// pagina die datering als integriteitssignaal presenteert. Precies de fout die de
+// whitepapers hier aanwijzen.
+//
+// AANNAME, expliciet: een dag-01 betekent 'maand bekend, dag niet'. Dat geldt voor deze
+// verzameling (geen enkele dagprecieze bron valt op de 1e). Komt er ooit een bron bij die
+// echt op de 1e is vastgesteld, dan toont die te grof — dat is de veilige kant, maar het
+// blijft een reden om alsnog een precisie-veld in het register op te nemen.
+const datum = d => {
+  if (!d) return '';
+  const [j, m, dg] = d.split('-').map(Number);
+  if (m === 1 && dg === 1) return String(j);           // jaarprecisie
+  if (dg === 1) return `${MND[m - 1]} ${j}`;           // maandprecisie
+  return `${dg} ${MND[m - 1]} ${j}`;                   // dagprecisie
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: vragen.map(v => ({
+    '@type': 'Question',
+    name: v.question,
+    acceptedAnswer: { '@type': 'Answer', text: v.antwoord }
+  }))
+};
+
+const secties = vragen.map((v, i) => `
+      <section class="vraag" id="${esc(slug(v.id))}">
+        <div class="v-nr">${String(i + 1).padStart(2, '0')}</div>
+        <h2>${esc(v.question)}</h2>
+        <p class="v-antwoord">${esc(v.antwoord)}</p>
+        <div class="v-grond">
+          <div class="v-grond-kop">Waar dit op rust</div>
+          <ul>
+${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datum(b.dated))}</span>${esc(b.text)}</li>`).join('\n')}
+          </ul>
+        </div>${(v.verder || []).length ? `
+        <div class="v-verder">Uitgewerkt in ${v.verder.map(([t, u]) => `<a href="${esc(u)}">${esc(t)}</a>`).join(' &middot; ')}</div>` : ''}
+      </section>`).join('\n');
+
+const html = `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vragen die vaak terugkomen — R.O.B. Concepting</title>
+  <meta name="description" content="Antwoorden op vragen over AI, vindbaarheid, kennis en besluitvorming in het MKB — met per antwoord de onderbouwing en de datum waarop die is vastgesteld.">
+  <meta name="author" content="Rob de Rooij">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+  <link rel="canonical" href="https://rob-concepting.com/vragen/">
+
+  <meta property="og:title" content="Vragen die vaak terugkomen — R.O.B. Concepting">
+  <meta property="og:description" content="Antwoorden met onderbouwing en datum. Ook waar het antwoord tegen de aanname in gaat.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rob-concepting.com/vragen/">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:site_name" content="R.O.B. Concepting">
+  <meta property="og:image" content="https://rob-concepting.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vragen die vaak terugkomen">
+  <meta name="twitter:image" content="https://rob-concepting.com/og-image.png">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230e1525'/><circle cx='16' cy='16' r='12' fill='none' stroke='%230fa8cb' stroke-width='1.5'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230fa8cb' stroke-width='1' opacity='.5'/><circle cx='16' cy='16' r='3' fill='%23e8391e'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+${JSON.stringify(faq, null, 2).split('\n').map(l => '  ' + l).join('\n')}
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "R.O.B. Concepting", "item": "https://rob-concepting.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Vragen", "item": "https://rob-concepting.com/vragen/" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root{--cream:#e8e4dc;--paper:#f4f2ed;--purple:#001a4d;--cyan:#0fa8cb;--red:#e8391e;
+      --screen:#0e1525;--muted:#6b6478;--border:rgba(0,26,77,.12);--rule:rgba(0,26,77,.08)}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',system-ui,sans-serif;background:var(--cream);color:var(--purple);
+      line-height:1.7;-webkit-font-smoothing:antialiased}
+    .topbar{background:var(--screen);padding:16px 28px;display:flex;align-items:center;
+      justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .tb-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .tb-name{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;
+      text-transform:uppercase;color:#fff}
+    .tb-name span{color:var(--cyan)}
+    .tb-back{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;
+      text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s}
+    .tb-back:hover{color:var(--cyan)}
+    .hero{background:var(--screen);color:#fff;padding:56px 28px 66px;position:relative;overflow:hidden}
+    .hero-inner{max-width:820px;margin:0 auto;position:relative;z-index:2}
+    .hero-rings{position:absolute;right:-130px;top:50%;transform:translateY(-50%);
+      width:480px;height:480px;opacity:.5;pointer-events:none;z-index:1}
+    .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;
+      text-transform:uppercase;color:var(--cyan);margin-bottom:20px}
+    .hero h1{font-size:clamp(33px,6vw,54px);line-height:1.07;font-weight:400;
+      letter-spacing:-.02em;margin-bottom:18px}
+    .hero h1 strong{font-weight:600}
+    .hero-bar{width:46px;height:2px;background:var(--red);margin-bottom:24px}
+    .hero p{font-size:clamp(16px,2.2vw,19px);font-weight:300;color:rgba(255,255,255,.72);max-width:44em}
+    .wrap{max-width:820px;margin:0 auto;padding:52px 28px 20px}
+    .vraag{background:var(--paper);border:1px solid var(--border);padding:30px clamp(22px,4vw,42px);
+      margin-bottom:20px;position:relative}
+    .v-nr{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;
+      color:var(--cyan);margin-bottom:12px}
+    .vraag h2{font-size:clamp(21px,3vw,28px);font-weight:500;line-height:1.22;
+      letter-spacing:-.01em;margin-bottom:14px;scroll-margin-top:24px;text-wrap:balance}
+    .v-antwoord{font-size:17px;margin-bottom:24px}
+    .v-grond{border-left:2px solid var(--cyan);padding:2px 0 2px 20px}
+    .v-grond-kop{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+    .v-grond ul{list-style:none}
+    .v-grond li{font-size:14.5px;line-height:1.6;color:var(--muted);margin-bottom:11px}
+    .v-datum{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;
+      color:var(--purple);background:rgba(15,168,203,.1);padding:1px 7px;margin-right:9px;
+      white-space:nowrap;font-variant-numeric:tabular-nums}
+    .v-verder{margin-top:22px;padding-top:16px;border-top:1px solid var(--rule);
+      font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:var(--muted)}
+    .v-verder a{color:var(--cyan);text-decoration:none}
+    .v-verder a:hover{text-decoration:underline}
+    .slot{max-width:820px;margin:0 auto;padding:14px 28px 0}
+    .slot-in{background:var(--screen);color:#fff;padding:34px clamp(22px,4vw,42px)}
+    .slot-in .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;
+      text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
+    .slot-in p{font-size:15.5px;color:rgba(255,255,255,.7);max-width:46em;margin-bottom:0}
+    .foot{max-width:820px;margin:0 auto;padding:34px 28px 56px;display:flex;
+      justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;
+      font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .foot a{color:var(--muted);text-decoration:none}
+    .foot a:hover{color:var(--cyan)}
+    @media(max-width:600px){.hero{padding:42px 22px 52px}.hero-rings{display:none}.wrap{padding:38px 22px 12px}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="tb-brand" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="12" fill="none" stroke="#0fa8cb" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="7" fill="none" stroke="#0fa8cb" stroke-width="1" opacity=".5"/>
+        <circle cx="16" cy="16" r="3" fill="#e8391e"/>
+      </svg>
+      <span class="tb-name">R.O.B. <span>Concepting</span></span>
+    </a>
+    <a class="tb-back" href="/">&larr; Terug naar de site</a>
+  </header>
+
+  <section class="hero">
+    <svg class="hero-rings" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="92" fill="none" stroke="#0fa8cb" stroke-width=".4" opacity=".35"/>
+      <circle cx="100" cy="100" r="66" fill="none" stroke="#0fa8cb" stroke-width=".4" opacity=".28"/>
+      <circle cx="100" cy="100" r="40" fill="none" stroke="#0fa8cb" stroke-width=".4" opacity=".2"/>
+    </svg>
+    <div class="hero-inner">
+      <div class="eyebrow">R.O.B. Concepting</div>
+      <h1>Vragen die vaak <strong>terugkomen</strong></h1>
+      <div class="hero-bar"></div>
+      <p>Bij elk antwoord staat waar het op rust, en wanneer dat is vastgesteld. Ook wanneer het antwoord tegen de aanname in gaat &mdash; dat is meestal het nuttigste antwoord.</p>
+    </div>
+  </section>
+
+  <main class="wrap">
+${secties}
+  </main>
+
+  <section class="slot">
+    <div class="slot-in">
+      <div class="lbl">Waarom hier datums staan</div>
+      <p>Een cijfer zonder datum is een bewering zonder houdbaarheid. Alles hierboven is gebonden aan een bron met een vastgestelde datum; verandert die bron, dan is te herleiden welk antwoord dat raakt. Dat is dezelfde manier van werken die Rob voor opdrachtgevers bouwt.</p>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>&copy; R.O.B. Concepting &middot; Rob de Rooij</span>
+    <span><a href="/">rob-concepting.com</a> &middot; <a href="/whitepapers/">Whitepapers</a></span>
+  </footer>
+</body>
+</html>
+`;
+
+mkdirSync(OUTDIR, { recursive: true });
+writeFileSync(OUT, html);
+console.log(`build-vragen: ${vragen.length} vragen gerenderd naar vragen/index.html (${data.doors.length - vragen.length} niet leverbaar, weggelaten)`);

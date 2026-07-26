@@ -25,7 +25,7 @@ const ROOT_TOEGESTAAN = new Set([
   'og-image.png', 'og-image.svg',
   'netlify.toml', 'package.json', 'package-lock.json',
   'promptfoo.config.yaml', 'promptfoo.README.md',
-  'media', 'netlify', 'tools', 'werk', 'whitepapers'
+  'media', 'netlify', 'tools', 'vragen', 'werk', 'whitepapers'
 ]);
 
 // Les 2026-07-26: deze allowlist was opgebouwd uit de LOKALE map en brak de build,
