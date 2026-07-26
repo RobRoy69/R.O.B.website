@@ -1,11 +1,16 @@
 [build]
-  publish = "."
+  publish = "publiek"
   functions = "netlify/functions"
+  # publish = "publiek": alleen wat build-publiek daar bewust neerzet is publiek. Stond
+  # op "." — toen werd ALLES geserveerd (api.json/site.json lekten zo op 2026-07-25, en
+  # whitepapers/_*.json met interne velden waren opvraagbaar). Een inclusielijst faalt de
+  # goede kant op: een vergeten pagina is zichtbaar weg, een vergeten uitsluiting lekte stil.
+  #
   # Register-sync + publicatiepoort. De sync valt terug op de meegecommitte
   # projectie als Supabase onbereikbaar is (exit 0), zodat een storing daar geen
   # deploy hier blokkeert. De poort faalt wél hard: een pagina mag nooit een claim
   # tonen die het register niet vrijgeeft. Sabotage-test: verify-bronnen --saboteer.
-  command = "node tools/sync-register.mjs && node tools/build-doors.mjs && node tools/build-vragen.mjs && node tools/verify-bronnen.mjs && node tools/verify-lagen.mjs && node tools/verify-publish-tree.mjs"
+  command = "node tools/sync-register.mjs && node tools/build-doors.mjs && node tools/build-vragen.mjs && node tools/verify-bronnen.mjs && node tools/verify-lagen.mjs && node tools/build-publiek.mjs && node tools/verify-publiek.mjs"
 
 [build.environment]
   NODE_VERSION = "20"
