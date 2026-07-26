@@ -25,9 +25,19 @@ const ROOT_TOEGESTAAN = new Set([
   'og-image.png', 'og-image.svg',
   'netlify.toml', 'package.json', 'package-lock.json',
   'promptfoo.config.yaml', 'promptfoo.README.md',
-  'media', 'netlify', 'tools', 'werk', 'whitepapers',
-  '.gitignore', '.git', 'node_modules'
+  'media', 'netlify', 'tools', 'werk', 'whitepapers'
 ]);
+
+// Les 2026-07-26: deze allowlist was opgebouwd uit de LOKALE map en brak de build,
+// omdat Netlify tijdens het bouwen eigen mappen aanmaakt (.netlify, .cache, node_modules).
+// Precies de fout uit de les van 2026-07-18: een allowlist opgebouwd in de verkeerde
+// omgeving. Daarom nu een expliciet onderscheid:
+//   - een onbekende map/bestand ZONDER punt is fataal — daar zat de oorspronkelijke bug
+//     (api.json, site.json die publiek stonden);
+//   - een onbekende entry MET punt is gereedschap van de buildomgeving en wordt gemeld,
+//     niet geweigerd. Dotfiles worden door Netlify niet als content geserveerd, en de
+//     extensie-check hieronder vangt een .env alsnog waar hij ook staat.
+const isGereedschap = (naam) => naam.startsWith('.') || naam === 'node_modules';
 
 // Extensies die nergens in de publish-tree horen, hoe diep ook.
 const VERBODEN_EXT = ['.sql', '.log', '.env', '.bak', '.tmp', '.pem', '.key'];
@@ -49,11 +59,13 @@ try {
     console.error('POORT ROOD: root-inventaris is leeg — dat kan niet kloppen. Fail closed.');
     process.exit(1);
   }
+  const gemeld = [];
   for (const naam of inhoud) {
-    if (!ROOT_TOEGESTAAN.has(naam)) {
-      fouten.push(`onbekend in de root: ${naam} — zet hem bewust in ROOT_TOEGESTAAN of haal hem weg`);
-    }
+    if (ROOT_TOEGESTAAN.has(naam)) continue;
+    if (isGereedschap(naam)) { gemeld.push(naam); continue; }
+    fouten.push(`onbekend in de root: ${naam} — zet hem bewust in ROOT_TOEGESTAAN of haal hem weg`);
   }
+  if (gemeld.length) console.log(`  buildomgeving-gereedschap genegeerd: ${gemeld.join(', ')}`);
 
   // ── 2. verboden extensies in de hele tree ──
   const loop = (dir, rel = '') => {
@@ -62,9 +74,15 @@ try {
       const p = path.join(dir, e.name);
       const r = rel ? `${rel}/${e.name}` : e.name;
       if (e.isDirectory()) { loop(p, r); continue; }
-      const ext = path.extname(e.name).toLowerCase();
-      if (VERBODEN_EXT.includes(ext)) {
-        fouten.push(`verboden bestandstype in de publish-tree: ${r} (${ext})`);
+      // LET OP: path.extname('.env') geeft een LEGE string terug, niet '.env'.
+      // Alleen op extname toetsen liet dotfiles als .env dus ongemoeid door — de poort
+      // beloofde bescherming die hij niet leverde. Daarom ook de bestandsnaam zelf
+      // toetsen, en op 'eindigt op' in plaats van gelijkheid (vangt ook .env.local).
+      const naam = e.name.toLowerCase();
+      const ext  = path.extname(naam);
+      const raak = VERBODEN_EXT.find(v => ext === v || naam === v || naam.startsWith(v + '.'));
+      if (raak) {
+        fouten.push(`verboden bestandstype in de publish-tree: ${r} (${raak})`);
       }
     }
   };
