@@ -11,6 +11,7 @@
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
+import { datum, datumLabel as maakLabel } from './lib/datum.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DOORS = path.join(ROOT, 'whitepapers', '_doors.json');
@@ -53,37 +54,10 @@ if (taalfouten.length) {
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const slug = id => id.split(':').pop();
-const MND = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
-// Datumprecisie komt sinds migratie 0007 als VELD uit het register (datum_precisie:
-// dag/maand/jaar) en wordt hier niet meer afgeleid. Eerder gokte deze functie de precisie
-// uit de opslagconventie (dag-01 = maand onbekend); dat werkte voor de toenmalige
-// verzameling maar zou breken bij een bron die écht op de eerste van de maand is
-// vastgesteld. Een aanname in commentaar is geen afspraak — nu staat het in de data.
-//
-// Fail closed op onbekende precisie: liever te grof tonen dan precisie suggereren.
-const datum = (d, precisie) => {
-  if (!d) return '';
-  const [j, m, dg] = d.split('-').map(Number);
-  switch (precisie) {
-    case 'jaar':  return String(j);
-    case 'maand': return `${MND[m - 1]} ${j}`;
-    case 'dag':   return `${dg} ${MND[m - 1]} ${j}`;
-    default:      return String(j);   // precisie onbekend → alleen het jaartal
-  }
-};
 
-// Sinds migratie 0008 draagt elke bewering óók wat de datum BETEKENT. Een brondatum is
-// wanneer het bewijs is vastgesteld; een registratiedatum is alleen wanneer het register
-// de bron zag. Die twee mogen op een publiek oppervlak niet identiek ogen — dan beweert
-// het tweede een dateringssterkte die het niet heeft.
-//
-// Fail closed: alles wat geen expliciete brondatum is, krijgt het voorvoegsel. Nu raakt
-// dat geen enkele zichtbare bewering (de vragen rusten op wp- en prop-beweringen, allemaal
-// brondatum), maar zodra er één bijkomt die op een registratiedatum rust, staat het er.
-const datumLabel = (b) => {
-  const d = datum(b.dated, b.precisie);
-  return b.soort === 'brondatum' ? d : `vastgelegd ${d}`;
-};
+// Datum- en soortweergave komen uit tools/lib/datum.mjs, gedeeld met
+// build-site-kennis.mjs. Zie daar waarom dat een module is en geen kopie.
+const datumLabel = (b) => maakLabel(b.dated, b.precisie, b.soort);
 
 const faq = {
   '@context': 'https://schema.org',

@@ -24,6 +24,7 @@
 
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
+import { datumLabel } from './lib/datum.mjs';
 
 const ROOT  = path.resolve(import.meta.dirname, '..');
 const UIT   = path.join(ROOT, 'publiek');
@@ -60,11 +61,11 @@ const vragen = doors.map(d => ({
   antwoord: d.antwoord,
   // Datums meegeven zodat de agent kan zeggen WANNEER iets is vastgesteld in plaats van
   // te moeten weigeren. Hij weigerde eerder een datum te noemen die op zijn eigen site stond.
+  // Datum in MENSENTAAL, via dezelfde module als de pagina. Eerste versie gaf het rauwe
+  // veld door en de agent antwoordde "2025-07-22" terwijl de site "22 juli 2025" toont.
   onderbouwing: d.bewijs.map(b => ({
     bewering: b.text,
-    datum: b.dated,
-    precisie: b.precisie,
-    soort: b.soort,
+    datum: datumLabel(b.dated, b.precisie, b.soort),
   })),
   uitgewerkt_in: (d.verder || []).map(([titel, pad]) => ({ titel, pad })),
 }));

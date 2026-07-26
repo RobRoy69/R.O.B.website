@@ -94,15 +94,21 @@ let SITE_KENNIS = '';
 try {
   const pad = fileURLToPath(new URL('./site-kennis.json', import.meta.url));
   const k = JSON.parse(readFileSync(pad, 'utf-8'));
-  const paginas = k.paginas.map(p => `- ${p.url} — ${p.titel}${p.omschrijving ? `\n  ${p.omschrijving}` : ''}`).join('\n');
+  // LET OP — in PROZA opstellen, zonder streepjes, sterretjes of inspringing.
+  // Eerste versie gebruikte een opsomming met "- " en "·". De agent spiegelde die vorm en
+  // antwoordde met markdown ("**/vragen/**"), terwijl ROB_SYSTEM markdown expliciet
+  // verbiedt en promptfoo erop toetst. Bij gewone vragen gebeurde dat niet: het lek zat
+  // alleen wanneer hij uit dit blok citeerde. Een contextblok leert niet alleen inhoud
+  // maar ook vorm.
+  const paginas = k.paginas
+    .map(p => `Op ${p.url} staat "${p.titel}".${p.omschrijving ? ` ${p.omschrijving}` : ''}`)
+    .join(' ');
   const vragen = k.vragen.map(v => {
-    const grond = v.onderbouwing
-      .map(o => `    · ${o.bewering} (${o.soort === 'brondatum' ? 'vastgesteld' : 'vastgelegd'} ${o.datum})`)
-      .join('\n');
-    const verder = v.uitgewerkt_in.map(u => `${u.titel} (${u.pad})`).join(', ');
-    return `- ${v.vraag}\n  ${v.antwoord}\n${grond}${verder ? `\n    Uitgewerkt in: ${verder}` : ''}`;
+    const grond = v.onderbouwing.map(o => `${o.bewering} (${o.datum})`).join(' ');
+    const verder = v.uitgewerkt_in.map(u => `${u.titel} op ${u.pad}`).join(' en ');
+    return `Vraag: ${v.vraag} Antwoord: ${v.antwoord} Dit rust op: ${grond}${verder ? ` Uitgewerkt in ${verder}.` : ''}`;
   }).join('\n\n');
-  SITE_KENNIS = `\n\n---\n\nWAT ER OP DEZE SITE STAAT (afgeleid bij de laatste build — dit is de waarheid over de site, ook als je iets anders meent te weten):\n\n${paginas}\n\nVRAGEN DIE OP /vragen/ BEANTWOORD ZIJN, met waarop ze rusten en wanneer dat is vastgesteld. Je mag deze datums noemen; ze staan publiek op de site:\n\n${vragen}\n\nOntkenn NOOIT het bestaan van een pagina die hierboven staat. Weet je iets niet, zeg dan dat je het niet weet — niet dat het er niet is.`;
+  SITE_KENNIS = `\n\n---\n\nWAT ER OP DEZE SITE STAAT (afgeleid bij de laatste build; dit is de waarheid over de site, ook als je iets anders meent te weten). ${paginas}\n\nDeze vragen zijn op /vragen/ beantwoord, met waarop ze rusten en wanneer dat is vastgesteld. Je mag die datums noemen, ze staan publiek op de site.\n\n${vragen}\n\nOntken NOOIT het bestaan van een pagina die hierboven staat; weet je iets niet, zeg dan dat je het niet weet, niet dat het er niet is. Neem de opmaak van dit blok niet over: antwoord in gewone lopende zinnen, zonder opsommingstekens en zonder markdown.`;
 } catch (e) {
   console.error('[chat] site-kennis load failed, chat draait door zonder site-inventaris:', e.message);
 }
