@@ -48,10 +48,20 @@ try {
   terugvallen(`fetch mislukte (${e.message})`);
 }
 
-// Alleen de whitepaper-laag; de Agora-eigen claims horen niet op deze site.
-const wp = rijen.filter(r => (r.ext_ref || '').startsWith('claim:wp:'));
+// Welke lagen horen bij DIT Deliver-oppervlak. Expliciet, niet impliciet:
+//   wp   = whitepaper-bronnen (de bronnensecties)
+//   prop = propositie-onderbouwing en tegenbewijs (de vragenpoorten)
+// Bewust NIET: claim:agora: hoort bij agora-systems.com, claim:amend: is ring
+// private en komt al niet door claims_public.
+//
+// Les 2026-07-26: deze filter stond eerst alleen op 'claim:wp:'. Toen de
+// propositie-laag erbij kwam, meldden de deuren die claims als "wachtend op
+// reviewpoort" terwijl ze goedgekeurd waren — de sync liet ze simpelweg niet door.
+// Een verkeerde diagnose is erger dan geen diagnose; daarom staat de lijst nu hier.
+const LAGEN = ['claim:wp:', 'claim:prop:'];
+const wp = rijen.filter(r => LAGEN.some(l => (r.ext_ref || '').startsWith(l)));
 
-if (!wp.length) terugvallen('claims_public leverde geen enkele claim:wp:-claim');
+if (!wp.length) terugvallen(`claims_public leverde geen claim uit ${LAGEN.join(' of ')}`);
 
 const projectie = {
   bron: 'agora-rob-register / claims_public',

@@ -1,6 +1,6 @@
 {
   "bron": "afgeleid uit whitepapers/_register.json (agora-rob-register)",
-  "gebouwd_op": "2026-07-25T17:54:09.185Z",
+  "gebouwd_op": "2026-07-26T06:53:37.185Z",
   "toelichting": "publication_status is afgeleid uit de claimstatus, niet beweerd. Bewerk de DB, niet dit bestand.",
   "doors": [
     {
@@ -13,7 +13,8 @@
         "claim:wp:002",
         "claim:wp:003",
         "claim:wp:004",
-        "claim:wp:017"
+        "claim:wp:017",
+        "claim:wp:030"
       ],
       "source_refs": [],
       "publication_status": "publishable",
@@ -23,11 +24,9 @@
       "copy_review_status": "needs-review",
       "snippet": "Het aandeel zoekopdrachten dat op een website eindigt daalt aantoonbaar. De vraag verschuift van gevonden worden naar genoemd worden.",
       "quality_signals": {
-        "claims_gebonden": 5,
-        "claims_kandidaat": 1,
-        "wachtend_op_reviewpoort": [
-          "claim:wp:030"
-        ]
+        "claims_gebonden": 6,
+        "claims_kandidaat": 0,
+        "wachtend_op_reviewpoort": []
       }
     },
     {
@@ -35,24 +34,24 @@
       "title": "Waarop een opdrachtgever kiest",
       "mode": "public",
       "question": "Waarop word ik straks gekozen, als iedereen alles kan nazoeken?",
-      "claim_refs": [],
+      "claim_refs": [
+        "claim:wp:021",
+        "claim:wp:022",
+        "claim:wp:031",
+        "claim:prop:007",
+        "claim:prop:008"
+      ],
       "source_refs": [],
-      "publication_status": "draft",
+      "publication_status": "publishable",
       "ring": "open",
       "publication_scope": "public",
       "citation_policy": "snippet",
       "copy_review_status": "needs-review",
       "snippet": "De machine maakt de eerste selectie, de mens valideert die met groeiende argwaan. Wat telt is bevestigbaar bewijs, niet zichtbaarheid.",
       "quality_signals": {
-        "claims_gebonden": 0,
-        "claims_kandidaat": 5,
-        "wachtend_op_reviewpoort": [
-          "claim:wp:021",
-          "claim:wp:022",
-          "claim:wp:031",
-          "claim:prop:007",
-          "claim:prop:008"
-        ]
+        "claims_gebonden": 5,
+        "claims_kandidaat": 0,
+        "wachtend_op_reviewpoort": []
       }
     },
     {
@@ -64,7 +63,10 @@
         "claim:wp:006",
         "claim:wp:012",
         "claim:wp:013",
-        "claim:wp:016"
+        "claim:wp:016",
+        "claim:wp:025",
+        "claim:prop:009",
+        "claim:prop:010"
       ],
       "source_refs": [],
       "publication_status": "publishable",
@@ -74,13 +76,9 @@
       "copy_review_status": "needs-review",
       "snippet": "Kennis die nergens is vastgelegd verdwijnt met de persoon en is onzichtbaar voor systemen. Dat maakt een bedrijf twee keer kwetsbaar.",
       "quality_signals": {
-        "claims_gebonden": 4,
-        "claims_kandidaat": 3,
-        "wachtend_op_reviewpoort": [
-          "claim:wp:025",
-          "claim:prop:009",
-          "claim:prop:010"
-        ]
+        "claims_gebonden": 7,
+        "claims_kandidaat": 0,
+        "wachtend_op_reviewpoort": []
       }
     },
     {
@@ -91,7 +89,9 @@
       "claim_refs": [
         "claim:wp:007",
         "claim:wp:008",
-        "claim:wp:019"
+        "claim:wp:019",
+        "claim:wp:028",
+        "claim:wp:034"
       ],
       "source_refs": [],
       "publication_status": "publishable",
@@ -101,12 +101,9 @@
       "copy_review_status": "needs-review",
       "snippet": "Je kunt de taak delegeren, niet de verantwoordelijkheid. Een agent zonder ontworpen grenzen is een aansprakelijkheid.",
       "quality_signals": {
-        "claims_gebonden": 3,
-        "claims_kandidaat": 2,
-        "wachtend_op_reviewpoort": [
-          "claim:wp:028",
-          "claim:wp:034"
-        ]
+        "claims_gebonden": 5,
+        "claims_kandidaat": 0,
+        "wachtend_op_reviewpoort": []
       }
     },
     {
@@ -117,7 +114,10 @@
       "claim_refs": [
         "claim:wp:009",
         "claim:wp:010",
-        "claim:wp:018"
+        "claim:wp:018",
+        "claim:wp:026",
+        "claim:wp:027",
+        "claim:wp:032"
       ],
       "source_refs": [],
       "publication_status": "publishable",
@@ -127,13 +127,9 @@
       "copy_review_status": "needs-review",
       "snippet": "Naarmate een systeem vaker gelijk heeft, stopt de mens met controleren. Een echte beslissing vraagt om afwijsbaarheid, bevraagbaarheid en consequentie.",
       "quality_signals": {
-        "claims_gebonden": 3,
-        "claims_kandidaat": 3,
-        "wachtend_op_reviewpoort": [
-          "claim:wp:026",
-          "claim:wp:027",
-          "claim:wp:032"
-        ]
+        "claims_gebonden": 6,
+        "claims_kandidaat": 0,
+        "wachtend_op_reviewpoort": []
       }
     },
     {
@@ -141,24 +137,24 @@
       "title": "De achterstand die er niet is",
       "mode": "public",
       "question": "Loopt het Nederlandse MKB achter met AI?",
-      "claim_refs": [],
+      "claim_refs": [
+        "claim:prop:002",
+        "claim:prop:003",
+        "claim:prop:004",
+        "claim:prop:005",
+        "claim:prop:006"
+      ],
       "source_refs": [],
-      "publication_status": "draft",
+      "publication_status": "publishable",
       "ring": "open",
       "publication_scope": "public",
       "citation_policy": "snippet",
       "copy_review_status": "needs-review",
       "snippet": "Op basisniveau loopt Nederland voor op het EU-gemiddelde. De achterstand zit niet in adoptie maar in strategie: het ontbreken van visie.",
       "quality_signals": {
-        "claims_gebonden": 0,
-        "claims_kandidaat": 5,
-        "wachtend_op_reviewpoort": [
-          "claim:prop:002",
-          "claim:prop:003",
-          "claim:prop:004",
-          "claim:prop:005",
-          "claim:prop:006"
-        ]
+        "claims_gebonden": 5,
+        "claims_kandidaat": 0,
+        "wachtend_op_reviewpoort": []
       }
     }
   ]
