@@ -54,25 +54,22 @@ if (taalfouten.length) {
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const slug = id => id.split(':').pop();
 const MND = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
-// Datumprecisie. Het register heeft geen apart precisie-veld — dat is een bekend gat —
-// dus de precisie zit in de opslagconventie: jaarprecisie als YYYY-01-01,
-// maandprecisie als YYYY-MM-01, dagprecisie als de echte datum.
+// Datumprecisie komt sinds migratie 0007 als VELD uit het register (datum_precisie:
+// dag/maand/jaar) en wordt hier niet meer afgeleid. Eerder gokte deze functie de precisie
+// uit de opslagconventie (dag-01 = maand onbekend); dat werkte voor de toenmalige
+// verzameling maar zou breken bij een bron die écht op de eerste van de maand is
+// vastgesteld. Een aanname in commentaar is geen afspraak — nu staat het in de data.
 //
-// Eerste versie toonde alleen YYYY-01-01 als jaartal en gaf maandprecieze bronnen dus
-// weer als '1 april 2025' — valse precisie op 6 van de 35 bewijsregels, en dat op een
-// pagina die datering als integriteitssignaal presenteert. Precies de fout die de
-// whitepapers hier aanwijzen.
-//
-// AANNAME, expliciet: een dag-01 betekent 'maand bekend, dag niet'. Dat geldt voor deze
-// verzameling (geen enkele dagprecieze bron valt op de 1e). Komt er ooit een bron bij die
-// echt op de 1e is vastgesteld, dan toont die te grof — dat is de veilige kant, maar het
-// blijft een reden om alsnog een precisie-veld in het register op te nemen.
-const datum = d => {
+// Fail closed op onbekende precisie: liever te grof tonen dan precisie suggereren.
+const datum = (d, precisie) => {
   if (!d) return '';
   const [j, m, dg] = d.split('-').map(Number);
-  if (m === 1 && dg === 1) return String(j);           // jaarprecisie
-  if (dg === 1) return `${MND[m - 1]} ${j}`;           // maandprecisie
-  return `${dg} ${MND[m - 1]} ${j}`;                   // dagprecisie
+  switch (precisie) {
+    case 'jaar':  return String(j);
+    case 'maand': return `${MND[m - 1]} ${j}`;
+    case 'dag':   return `${dg} ${MND[m - 1]} ${j}`;
+    default:      return String(j);   // precisie onbekend → alleen het jaartal
+  }
 };
 
 const faq = {
@@ -93,7 +90,7 @@ const secties = vragen.map((v, i) => `
         <div class="v-grond">
           <div class="v-grond-kop">Waar dit op rust</div>
           <ul>
-${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datum(b.dated))}</span>${esc(b.text)}</li>`).join('\n')}
+${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datum(b.dated, b.precisie))}</span>${esc(b.text)}</li>`).join('\n')}
           </ul>
         </div>${(v.verder || []).length ? `
         <div class="v-verder">Uitgewerkt in ${v.verder.map(([t, u]) => `<a href="${esc(u)}">${esc(t)}</a>`).join(' &middot; ')}</div>` : ''}

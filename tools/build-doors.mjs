@@ -95,7 +95,7 @@ const doors = DEUREN.map(d => {
     verder: d.verder,
     // Tekst en datum van elke gebonden bewering, zodat de vragenpagina het bewijs
     // kan tonen zonder de DB opnieuw te bevragen.
-    bewijs: gebonden.map(r => ({ ext_ref: r, text: claimById.get(r)?.text, dated: claimById.get(r)?.dated })),
+    bewijs: gebonden.map(r => ({ ext_ref: r, text: claimById.get(r)?.text, dated: claimById.get(r)?.dated, precisie: claimById.get(r)?.dated_precisie })),
     claim_refs: gebonden,
     source_refs: [],                       // afgeleid uit de claims bij projectie
     publication_status: gebonden.length ? 'publishable' : 'draft',
