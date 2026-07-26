@@ -1,6 +1,6 @@
 {
   "bron": "agora-rob-register / claims_public",
-  "synced_at": "2026-07-26T07:32:47.600Z",
+  "synced_at": "2026-07-26T08:29:27.712Z",
   "toelichting": "Afgeleide projectie. Bewerk de DB, niet dit bestand.",
   "claims": [
     {
@@ -8,6 +8,7 @@
       "text": "Een samenhangend systeem van werkpraktijken levert substantieel hogere productiviteit op, terwijl het los invoeren van individuele praktijken geen meetbaar effect heeft.",
       "dated": "1995-11-01",
       "dated_precisie": "maand",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -15,6 +16,7 @@
       "text": "In 2025 gebruikte 13,8 procent van de Nederlandse microbedrijven AI-technologie, tegen 29,8 procent van het MKB en 66,2 procent van het grootbedrijf. Van de microbedrijven die AI overwogen maar afzagen, noemde 71,6 procent gebrek aan ervaring als reden.",
       "dated": "2026-03-16",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -22,6 +24,7 @@
       "text": "AI-gebruik in het Nederlandse mkb groeit maar blijft gefragmenteerd; het ontbreken van visie en strategie speelt volgens de geraadpleegde experts een sleutelrol, en ondersteuning zou zich eerst op visie- en strategievorming moeten richten.",
       "dated": "2025-09-29",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -29,6 +32,7 @@
       "text": "Het Nederlandse mkb bereikte in 2024 een basisniveau digitalisering van 81,5 procent tegen een doel van 95 procent in 2030, en AI-adoptie steeg van 13 naar 23 procent. Het doel dat 75 procent geavanceerde digitale technologie gebruikt is nog ver weg.",
       "dated": "2025-03-07",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -36,6 +40,7 @@
       "text": "In 2024 haalde 73 procent van de EU-mkbers een basisniveau digitale intensiteit en gebruikte 13 procent van de EU-bedrijven AI-technologie. Nederland staat daarmee BOVEN het EU-gemiddelde, niet onder.",
       "dated": "2025-04-01",
       "dated_precisie": "maand",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -43,6 +48,7 @@
       "text": "Ondernemers richten zich vooral op behoud van de huidige situatie (38 procent) en efficienter werken (35 procent); 23 procent noemt gebrek aan prioriteit en 17 procent gebrek aan vaardigheden als rem. Digitalisering is daarmee op efficientie gericht, niet op vernieuwing.",
       "dated": "2025-10-10",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -50,6 +56,7 @@
       "text": "Merken waarvan belofte en ervaring niet op elkaar aansluiten haalden een voorkeursscore van 32, tegen 61 voor merken waar dat wel het geval was: een verschil van 29 punten. Tot 75 procent van de merkopbouw komt uit ervaringstouchpoints.",
       "dated": "2023-02-07",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -57,6 +64,7 @@
       "text": "Van 362 onderzochte bedrijven geloofde 80 procent dat zij een superieure klantervaring leverden, terwijl de perceptie van hun klanten een heel ander beeld gaf.",
       "dated": "2005-09-27",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -64,6 +72,7 @@
       "text": "Duurzaam concurrentievoordeel vereist middelen die tegelijk waardevol, zeldzaam, moeilijk imiteerbaar en niet substitueerbaar zijn — aan alle vier voorwaarden moet worden voldaan.",
       "dated": "1991-03-01",
       "dated_precisie": "maand",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -71,6 +80,7 @@
       "text": "Over 125 studies met samen ruim 29.000 organisaties is de effectgrootte tussen strategische middelen en prestatie conservatief 0,22, stijgend naar 0,29 wanneer die middelen daadwerkelijk zeldzaam en moeilijk imiteerbaar zijn.",
       "dated": "2008-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -78,6 +88,7 @@
       "text": "Elke medewerker kan zijn individuele doelen halen terwijl de organisatie als geheel de strategie alsnog niet uitvoert; doelen werken alleen als ze rekening houden met kritische onderlinge afhankelijkheden tussen silos.",
       "dated": "2018-06-05",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -85,6 +96,7 @@
       "text": "Slechts 30 procent van de digitale transformaties haalt de beoogde waarde. Bedrijven die drie of vier van de zes succesfactoren op orde hebben falen ongeacht welke combinatie: alleen het volledige stel werkt.",
       "dated": "2020-10-29",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -92,6 +104,7 @@
       "text": "De in de literatuur circulerende faalpercentages van 50 tot 90 procent voor strategie-implementatie berusten op bewijs dat verouderd, fragmentarisch, fragiel of afwezig is; het werkelijke faalpercentage is onbekend. Opgeblazen faalpercentages dienen consultants als marketinginstrument.",
       "dated": "2015-01-14",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -99,6 +112,7 @@
       "text": "Van de ondervraagde zelfstandigen werkt 73,8 procent via een intermediair omdat de opdrachtgever dat eist, en 40,3 procent verloor het afgelopen jaar opdrachten omdat directe contractering niet mogelijk was. Oorzaak is regelgevingsonzekerheid, niet een voorkeur voor bureauschaal.",
       "dated": "2026-06-25",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -106,6 +120,7 @@
       "text": "Het aantal zzp-ers in Nederland daalde in 2025 met 62.000; alleen in het eerste kwartaal stapten 59.000 zzp-ers over naar een dienstverband, bijna het dubbele van het jaar ervoor.",
       "dated": "2026-02-12",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -113,6 +128,7 @@
       "text": "Bedrijven huren zelfstandigen vooral in wegens een tekort aan gekwalificeerd personeel (39,1 procent) en de behoefte aan specifieke kennis of ervaring (22,1 procent), ver boven flexibiliteit (19,3 procent) en productiepieken (11,9 procent).",
       "dated": "2025-03-06",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -120,6 +136,7 @@
       "text": "Wanneer Google een AI-samenvatting toont, klikt 8 procent van de gebruikers door naar een onderliggende website; zonder die samenvatting 15 procent. Op een bron binnen de samenvatting klikt circa 1 procent. Gemeten over 68.879 zoekopdrachten van circa 900 Amerikaanse deelnemers in maart 2025.",
       "dated": "2025-07-22",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -127,6 +144,7 @@
       "text": "De aanwezigheid van een AI-samenvatting verlaagde in april 2025 de doorklikkans van de hoogste organische zoekpositie met 34,5 procent, gemeten over 300.000 zoekwoorden.",
       "dated": "2025-04-17",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -134,6 +152,7 @@
       "text": "In februari 2026 was datzelfde effect opgelopen naar 58 procent lagere doorklikkans voor de hoogste organische positie, op basis van cijfers over december 2025.",
       "dated": "2026-02-04",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -141,6 +160,7 @@
       "text": "In Duitsland daalde de doorklikkans van zoekpositie 1 van 27 procent zonder AI-samenvatting naar 11 procent met, gemeten over meer dan honderd miljoen zoekwoorden; Duitse websites verliezen samen circa 265 miljoen organische kliks per maand.",
       "dated": "2026-02-25",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -148,6 +168,7 @@
       "text": "Gartner voorspelt dat tegen 2028 90 procent van de zakelijke inkoop via AI-agenten verloopt, goed voor meer dan 15 biljoen dollar. Dit is een prognose, geen meting.",
       "dated": "2025-10-21",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -155,6 +176,7 @@
       "text": "Ruim twee derde van de Nederlandse ondernemers wil binnen tien jaar stoppen; van hen heeft 22 procent geen concrete opvolgingsplannen en zoekt 20 procent wel maar zonder resultaat. Bijna 13 procent is 65-plus.",
       "dated": "2025-12-03",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -162,6 +184,7 @@
       "text": "Een bedrijf is aansprakelijk voor de informatie die zijn chatbot geeft: de chatbot is onderdeel van de website en niet een zelfstandige entiteit met eigen verantwoordelijkheid.",
       "dated": "2024-02-14",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -169,6 +192,7 @@
       "text": "Een publieke AI-agent zonder ingebouwde grenzen kan ontsporen tot hij het eigen bedrijf bekritiseert en op verzoek van een klant scheldt.",
       "dated": "2024-01-19",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -176,6 +200,7 @@
       "text": "Menselijke tussenkomst bij een geautomatiseerd besluit telt alleen wanneer zij betekenisvol is: staat de uitkomst in de praktijk al vast voordat de mens ernaar kijkt, dan is er sprake van geautomatiseerde besluitvorming, ook al zet een mens de handtekening.",
       "dated": "2023-12-07",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -183,6 +208,7 @@
       "text": "Na drie maanden routinematige AI-ondersteuning daalde bij ervaren endoscopisten de detectiegraad zonder dat systeem van 28,4 naar 22,4 procent: zes procentpunt absoluut, circa twintig procent relatief. Observationeel onderzoek; de auteurs spreken van een risico, niet van bewezen causaliteit.",
       "dated": "2025-08-12",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -190,6 +216,7 @@
       "text": "Gedetailleerde uitleg bij een aanbeveling vergroot het vertrouwen in die aanbeveling, ook wanneer de aanbeveling onjuist is.",
       "dated": "2022-06-21",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -197,6 +224,7 @@
       "text": "Een deel van wat mensen weten laat zich niet in woorden vastleggen: we weten meer dan we kunnen zeggen. Die stilzwijgende kennis is reeel en waardevol, en buitengewoon moeilijk over te dragen.",
       "dated": "1966-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -204,6 +232,7 @@
       "text": "Organisaties creeren kennis door wisselwerking tussen stilzwijgende en expliciete kennis; het expliciet maken van impliciete kennis is een van die conversies.",
       "dated": "1994-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -211,6 +240,7 @@
       "text": "Het vermogen van een bedrijf om zich te vernieuwen door interne en externe vaardigheden en kennis te integreren en te herconfigureren, is een onderscheidend vermogen op zichzelf.",
       "dated": "1997-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -218,6 +248,7 @@
       "text": "Ontwerpen kent oplopende ordes van schaal en complexiteit; de hoogste orde betreft niet losse producten of communicatie maar de systemen en omgevingen waarbinnen het overige werk plaatsvindt.",
       "dated": "1992-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -225,6 +256,7 @@
       "text": "Nederland telde in 2022 bijna 300.000 familiebedrijven, verantwoordelijk voor ruim 31 procent van alle werknemersbanen en ruim 152 miljard euro toegevoegde waarde.",
       "dated": "2024-12-03",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -232,6 +264,7 @@
       "text": "In Google AI Mode eindigde 92 tot 94 procent van de zoeksessies zonder klik naar buiten, tegen 35 tot 46 procent bij traditionele zoekopdrachten. Vroege indicatie: kleine gebruikersgroep, afgebakende meetperiode.",
       "dated": "2025-07-30",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -239,6 +272,7 @@
       "text": "Over 106 experimenten presteerden mens-AI-combinaties gemiddeld slechter dan de beste van de twee alleen, met verlies bij beslistaken en winst bij het maken van inhoud.",
       "dated": "2024-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -246,6 +280,7 @@
       "text": "Juridische AI-assistenten die op gecontroleerde bronnen zijn gebouwd, produceerden nog steeds tussen 17 en 33 procent onjuiste of verzonnen antwoorden. Verankering vermindert het risico, maar heft het niet op.",
       "dated": "2024-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -253,6 +288,7 @@
       "text": "Het aantal gedocumenteerde rechtszaken waarin door AI verzonnen inhoud bij een rechter werd ingediend, groeide van 1.458 (22 mei 2026) naar 1.598 (9 juni 2026) en stond eind juli 2026 rond de 1.800 — bijna acht nieuwe zaken per dag.",
       "dated": "2026-07-25",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -260,6 +296,7 @@
       "text": "Van bijna 18.000 ondervraagde zakelijke kopers wereldwijd gebruikte 94 procent AI bij aankopen, tegen 89 procent een jaar eerder. Een koopbeslissing kent gemiddeld 13 interne betrokkenen en 9 externe beinvloeders.",
       "dated": "2026-01-21",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -267,6 +304,7 @@
       "text": "Onder 1.076 zakelijke softwarekopers gebruikt 71 procent een AI-chatbot bij softwareonderzoek, tegen circa 60 procent zeven maanden eerder. Chatbots zijn met 54 procent de belangrijkste invloed op de shortlist, voor reviewsites met 43 procent; 69 procent kwam via een chatbot bij een andere leverancier uit.",
       "dated": "2026-04-15",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -274,6 +312,7 @@
       "text": "36 procent van de ondervraagde inkoopdirecteuren heeft generatieve AI op betekenisvolle wijze uitgerold, geconcentreerd in ondersteunende taken als spend-analyse en contractmanagement. Kleine steekproef: circa 75 respondenten.",
       "dated": "2025-02-01",
       "dated_precisie": "maand",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -281,6 +320,7 @@
       "text": "49 procent van de inkoopteams pilotte generatieve AI in 2024, terwijl 4 procent grootschalige uitrol rapporteerde.",
       "dated": "2025-04-10",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -288,6 +328,7 @@
       "text": "Een zorgvuldige bedrijfsoverdracht duurt meestal vijf tot zeven jaar.",
       "dated": "2025-11-11",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -295,6 +336,7 @@
       "text": "27 radiologen beoordeelden 50 mammogrammen met een vermeend AI-systeem. Na een trainingsset met correcte suggesties volgden zij ook de onjuiste suggesties; alle ervaringsniveaus bleken gevoelig, onervaren lezers het meest.",
       "dated": "2023-05-02",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -302,6 +344,7 @@
       "text": "Menselijke tussenkomst is pas betekenisvol als de beoordelaar voldoende kennis, tijd en ruimte heeft om zelfstandig van het algoritme af te wijken; enkel aftekenen nadat het systeem een besluit voorstelt, volstaat niet.",
       "dated": "2025-07-01",
       "dated_precisie": "maand",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -309,6 +352,7 @@
       "text": "Ook met menselijk toezicht kan een proces feitelijk geautomatiseerd worden wanneer beoordelaars zich naar de systeemaanbeveling schikken. Een mens toevoegen garandeert geen betere uitkomst en is geen manier om verantwoordelijkheid af te schuiven.",
       "dated": "2025-09-23",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -316,6 +360,7 @@
       "text": "Een advocaat diende zes door een taalmodel verzonnen rechterlijke uitspraken in; de rechter legde een sanctie van 5.000 dollar op, hoofdelijk aan twee advocaten en hun kantoor.",
       "dated": "2023-06-22",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -323,6 +368,7 @@
       "text": "Van elke duizend zoekopdrachten in de Verenigde Staten eindigde 58,5 procent zonder klik naar buiten; in de Europese Unie 59,7 procent. Meetperiode september 2022 tot mei 2024.",
       "dated": "2024-07-02",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -330,6 +376,7 @@
       "text": "Zakelijke kopers spraken in 2024 pas met verkopers wanneer zij circa 70 procent van hun aankooptraject hadden afgelegd. De bron heeft dit in 2025 zelf herzien naar circa 60 procent.",
       "dated": "2024-10-09",
       "dated_precisie": "dag",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -337,6 +384,7 @@
       "text": "In een veldexperiment beoordeelden 228 screeners 48 werkelijke inzendingen. Verhalende uitleg bij een AI-aanbeveling verhoogde de navolging maar verbeterde de besliskwaliteit niet: de navolging was asymmetrisch, beoordelaars namen vooral afwijzingen over en lieten zo goede inzendingen ten onrechte vallen.",
       "dated": "2024-08-01",
       "dated_precisie": "maand",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -344,6 +392,7 @@
       "text": "Waar de kreukelzone van een auto de bestuurder beschermt, beschermt de morele kreukelzone de integriteit van het technische systeem — ten koste van de nabijste menselijke operator, aan wie de verantwoordelijkheid ten onrechte wordt toegerekend terwijl hij weinig controle had.",
       "dated": "2019-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     },
     {
@@ -351,6 +400,7 @@
       "text": "Vijf state-of-the-art AI-assistenten vertoonden consistent vleierij over vier vrije-tekst-taken. Menselijke feedback bij het finetunen moedigt antwoorden aan die overeenkomen met de overtuiging van de gebruiker in plaats van met de waarheid.",
       "dated": "2023-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
       "ring": "open"
     }
   ]

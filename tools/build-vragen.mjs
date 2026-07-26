@@ -72,6 +72,19 @@ const datum = (d, precisie) => {
   }
 };
 
+// Sinds migratie 0008 draagt elke bewering óók wat de datum BETEKENT. Een brondatum is
+// wanneer het bewijs is vastgesteld; een registratiedatum is alleen wanneer het register
+// de bron zag. Die twee mogen op een publiek oppervlak niet identiek ogen — dan beweert
+// het tweede een dateringssterkte die het niet heeft.
+//
+// Fail closed: alles wat geen expliciete brondatum is, krijgt het voorvoegsel. Nu raakt
+// dat geen enkele zichtbare bewering (de vragen rusten op wp- en prop-beweringen, allemaal
+// brondatum), maar zodra er één bijkomt die op een registratiedatum rust, staat het er.
+const datumLabel = (b) => {
+  const d = datum(b.dated, b.precisie);
+  return b.soort === 'brondatum' ? d : `vastgelegd ${d}`;
+};
+
 const faq = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -90,7 +103,7 @@ const secties = vragen.map((v, i) => `
         <div class="v-grond">
           <div class="v-grond-kop">Waar dit op rust</div>
           <ul>
-${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datum(b.dated, b.precisie))}</span>${esc(b.text)}</li>`).join('\n')}
+${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datumLabel(b))}</span>${esc(b.text)}</li>`).join('\n')}
           </ul>
         </div>${(v.verder || []).length ? `
         <div class="v-verder">Uitgewerkt in ${v.verder.map(([t, u]) => `<a href="${esc(u)}">${esc(t)}</a>`).join(' &middot; ')}</div>` : ''}
