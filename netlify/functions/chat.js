@@ -73,8 +73,38 @@ try {
   if (blocks) {
     CANON_CONTEXT = `\n\n---\n\nCANON-CONTEXT (R.O.B. Concepting canon — kennis raadplegen, niet letterlijk inkopiëren):\n\n${blocks}`;
   }
+  // CRITICAL_FACTS werd wél in de bundel gezet en NOOIT gelezen — 1.450 tekens harde
+  // feitcorrecties die niets deden, terwijl dat bestand juist bestaat om feitfouten te
+  // voorkomen. Vandaag gaf de agent een fout antwoord over Agora; dit is het bestand dat
+  // dat had moeten vangen. Nu aangesloten, en bewust vóór de canon-context zodat een
+  // correctie zwaarder weegt dan de lopende tekst.
+  if (bundle.critical_facts) {
+    CANON_CONTEXT = `\n\n---\n\nHARDE FEITEN (gaan vóór op alles hieronder; bij twijfel volg deze):\n\n${bundle.critical_facts}${CANON_CONTEXT}`;
+  }
 } catch (e) {
   console.error('[chat] rob-canon-bundle load failed, continuing zonder content-awareness:', e.message);
+}
+
+// ── Site-kennis: AFGELEID, niet geschreven ───────────────────────────────────
+// De agent ontkende op 2026-07-26 het bestaan van /vragen/ terwijl die pagina live stond,
+// en weigerde een datum te noemen die op zijn eigen site staat. Beide omdat zijn site-
+// kennis met de hand werd bijgehouden. Dit blok komt uit build-site-kennis.mjs, dat bij
+// elke build afleidt welke pagina's er werkelijk staan en welke vragen beantwoord zijn.
+let SITE_KENNIS = '';
+try {
+  const pad = fileURLToPath(new URL('./site-kennis.json', import.meta.url));
+  const k = JSON.parse(readFileSync(pad, 'utf-8'));
+  const paginas = k.paginas.map(p => `- ${p.url} — ${p.titel}${p.omschrijving ? `\n  ${p.omschrijving}` : ''}`).join('\n');
+  const vragen = k.vragen.map(v => {
+    const grond = v.onderbouwing
+      .map(o => `    · ${o.bewering} (${o.soort === 'brondatum' ? 'vastgesteld' : 'vastgelegd'} ${o.datum})`)
+      .join('\n');
+    const verder = v.uitgewerkt_in.map(u => `${u.titel} (${u.pad})`).join(', ');
+    return `- ${v.vraag}\n  ${v.antwoord}\n${grond}${verder ? `\n    Uitgewerkt in: ${verder}` : ''}`;
+  }).join('\n\n');
+  SITE_KENNIS = `\n\n---\n\nWAT ER OP DEZE SITE STAAT (afgeleid bij de laatste build — dit is de waarheid over de site, ook als je iets anders meent te weten):\n\n${paginas}\n\nVRAGEN DIE OP /vragen/ BEANTWOORD ZIJN, met waarop ze rusten en wanneer dat is vastgesteld. Je mag deze datums noemen; ze staan publiek op de site:\n\n${vragen}\n\nOntkenn NOOIT het bestaan van een pagina die hierboven staat. Weet je iets niet, zeg dan dat je het niet weet — niet dat het er niet is.`;
+} catch (e) {
+  console.error('[chat] site-kennis load failed, chat draait door zonder site-inventaris:', e.message);
 }
 
 // ── Origins whitelist ─────────────────────────────────────────────────────────
@@ -281,7 +311,7 @@ export default async (req) => {
     const anthropic = getAnthropic();
     const result = await streamText({
       model: anthropic('claude-haiku-4-5'),
-      system: ROB_SYSTEM + CANON_CONTEXT,
+      system: ROB_SYSTEM + CANON_CONTEXT + SITE_KENNIS,
       messages,
       maxOutputTokens: 400,
       onFinish: async ({ text }) => {

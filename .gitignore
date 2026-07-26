@@ -24,3 +24,4 @@ node_modules/
 /api.json
 /site.json
 publiek/
+netlify/functions/site-kennis.json
