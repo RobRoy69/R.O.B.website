@@ -11,6 +11,7 @@
 // publieke site. Geverifieerd op prod: anon select 0 rijen, anon insert 42501.
 
 import { createHash } from 'node:crypto';
+import { mailFrom, mailToRob } from './mail.js';
 
 // ── Meting ───────────────────────────────────────────────────────────────────
 // Het archief dreef twee maanden op timing zonder dat iets dat zei: de insert was een
@@ -39,8 +40,8 @@ export async function meldArchiefStoring(reden) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) { console.error('[archief] geen RESEND_API_KEY — storing blijft onopgemerkt'); return; }
 
-  const toEmail   = process.env.NOTIFY_EMAIL || 'robderooijbreda@gmail.com';
-  const fromEmail = process.env.NOTIFY_FROM  || 'R.O.B. Concepting <onboarding@resend.dev>';
+  const toEmail   = mailToRob();
+  const fromEmail = mailFrom();
   const tijd = new Date().toLocaleString('nl-NL', {
     timeZone: 'Europe/Amsterdam', dateStyle: 'short', timeStyle: 'short'
   });

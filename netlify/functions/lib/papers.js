@@ -5,6 +5,10 @@
 // NIEUWE WHITEPAPER TOEVOEGEN: hier een entry bij, PDF in whitepapers/bestand/,
 // HTML-pagina in whitepapers/, kaart in whitepapers/index.html, regel in sitemap.xml.
 
+// Afzender, ontvanger en verzending staan in lib/mail.js — een plek, niet vier.
+// Hier doorgegeven zodat bestaande imports uit dit bestand blijven werken.
+export { mailFrom, mailToRob, sendMail } from './mail.js';
+
 export const SITE = 'https://rob-concepting.com';
 
 export const PAPERS = {
@@ -59,26 +63,6 @@ export function json(body, status, origin) {
 }
 
 // ── Resend ────────────────────────────────────────────────────────────────────
-export function mailFrom() {
-  return process.env.NOTIFY_FROM || 'R.O.B. Concepting <contact@rob-concepting.com>';
-}
-
-export function mailToRob() {
-  return process.env.NOTIFY_EMAIL || 'robderooijbreda@gmail.com';
-}
-
-export async function sendMail(key, payload) {
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) {
-    const err = await res.text().catch(() => '');
-    throw new Error(`Resend ${res.status}: ${err.slice(0, 200)}`);
-  }
-  return res;
-}
 
 export function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => (

@@ -152,6 +152,24 @@ try {
       fouten.push(`${n} vraagt de PDF aan onder slug "${slug || '(geen)'}" — dat levert het verkeerde bestand`);
     }
   }
+
+  // ── 6. geen persoonlijk adres in de functiebron ─────────────────────────────
+  // De ontvanger van leads, contactaanvragen en storingsmeldingen stond als terugval
+  // hardgecodeerd in vier functiebestanden, in een PUBLIEKE repo — en NOTIFY_EMAIL was
+  // nooit gezet, dus die terugval wás de instelling. Nu een plek (lib/mail.js) met een
+  // zakelijk adres. Deze poort voorkomt dat er weer een persoonlijk adres in sluipt.
+  const fnDir = path.resolve(ROOT, 'netlify', 'functions');
+  const scanFns = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) { scanFns(p); continue; }
+      if (!e.name.endsWith('.js')) continue;
+      const src = readFileSync(p, 'utf-8');
+      const treffer = src.match(/[a-z0-9._%+-]+@(gmail|hotmail|outlook|live|icloud|yahoo)\.[a-z.]+/i);
+      if (treffer) fouten.push(`persoonlijk mailadres in de bron: netlify/functions/${e.name} bevat ${treffer[0]}`);
+    }
+  };
+  scanFns(fnDir);
 } catch (e) {
   console.error('POORT ROOD: publicatie kon niet gelezen worden —', e.message, '(fail closed)');
   if (saboteer && existsSync(saboteurPad)) unlinkSync(saboteurPad);

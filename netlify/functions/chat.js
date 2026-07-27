@@ -3,6 +3,7 @@
 //           RESEND_API_KEY (optioneel, mail-notify), NOTIFY_EMAIL, NOTIFY_FROM (optioneel).
 
 import { streamText } from 'ai';
+import { mailFrom, mailToRob } from './lib/mail.js';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -116,8 +117,8 @@ async function notifyRob(conversation) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
 
-  const toEmail   = process.env.NOTIFY_EMAIL || 'robderooijbreda@gmail.com';
-  const fromEmail = process.env.NOTIFY_FROM  || 'R.O.B. Concepting <onboarding@resend.dev>';
+  const toEmail   = mailToRob();
+  const fromEmail = mailFrom();
 
   const turns = conversation.filter(m => m.role === 'user').length;
   const timestamp = new Date().toLocaleString('nl-NL', {

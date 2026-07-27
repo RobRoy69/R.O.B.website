@@ -1,6 +1,8 @@
 // R.O.B. Concepting — contact form proxy (v2 ESM, Resend)
 // Env-vars: RESEND_API_KEY (verplicht), NOTIFY_EMAIL, NOTIFY_FROM (optioneel).
 
+import { mailFrom, mailToRob } from './lib/mail.js';
+
 // ── Origins whitelist ─────────────────────────────────────────────────────────
 const ALLOWED_ORIGINS = new Set([
   'https://rob-concepting.com',
@@ -108,8 +110,8 @@ export default async (req) => {
   }
 
   // Compose mail
-  const toEmail   = process.env.NOTIFY_EMAIL || 'robderooijbreda@gmail.com';
-  const fromEmail = process.env.NOTIFY_FROM  || 'R.O.B. Concepting <onboarding@resend.dev>';
+  const toEmail   = mailToRob();
+  const fromEmail = mailFrom();
 
   const timestamp = new Date().toLocaleString('nl-NL', {
     timeZone: 'Europe/Amsterdam', dateStyle: 'short', timeStyle: 'short'
