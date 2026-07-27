@@ -1,6 +1,6 @@
 {
   "bron": "agora-rob-register / claims_public",
-  "synced_at": "2026-07-27T12:29:04.734Z",
+  "synced_at": "2026-07-27T12:53:31.601Z",
   "toelichting": "Afgeleide projectie. Bewerk de DB, niet dit bestand.",
   "claims": [
     {
@@ -400,6 +400,38 @@
       "text": "Vijf state-of-the-art AI-assistenten vertoonden consistent vleierij over vier vrije-tekst-taken. Menselijke feedback bij het finetunen moedigt antwoorden aan die overeenkomen met de overtuiging van de gebruiker in plaats van met de waarheid.",
       "dated": "2023-01-01",
       "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:051",
+      "text": "De kosten voor taalmodelprestaties op GPT-3.5-niveau daalden van 20 dollar naar 7 dollarcent per miljoen tokens tussen november 2022 en oktober 2024, een daling van ruim een factor 280.",
+      "dated": "2025-01-01",
+      "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:052",
+      "text": "De prijs voor een gegeven taalmodel-prestatieniveau daalt, afhankelijk van de taak, naar schatting 9 tot 900 keer per jaar.",
+      "dated": "2025-01-01",
+      "dated_precisie": "jaar",
+      "dated_soort": "brondatum",
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:053",
+      "text": "In december 2025 gebruikte 46,8 procent van de Nederlandse medewerkers AI-hulpmiddelen zonder dit te melden, terwijl 97 procent van de bedrijven een AI-beleid had.",
+      "dated": "2025-12-01",
+      "dated_precisie": "maand",
+      "dated_soort": "brondatum",
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:054",
+      "text": "Een tweede, onafhankelijke Nederlandse meting uit december 2025 rapporteert hetzelfde patroon: ruim de helft van de medewerkers meldt AI-gebruik niet.",
+      "dated": "2025-12-01",
+      "dated_precisie": "maand",
       "dated_soort": "brondatum",
       "ring": "open"
     }
