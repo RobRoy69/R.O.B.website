@@ -25,3 +25,4 @@ node_modules/
 /site.json
 publiek/
 netlify/functions/site-kennis.json
+tools/generated/
