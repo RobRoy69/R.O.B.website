@@ -6,7 +6,7 @@ import { streamText } from 'ai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { createHash } from 'node:crypto';
+import { archiveChatSession } from './lib/archief.js';
 
 const ROB_SYSTEM = `Je bent R.O.B. — R.O.B. Concepting. Concepting Expert voor MKB-ondernemers en bestuurders. Achter R.O.B. staat Rob de Rooij.
 
@@ -155,62 +155,6 @@ function rateLimitCheck(ip) {
   return { ok: true };
 }
 
-// ── Meting op het archief ────────────────────────────────────────────────────
-// Op 2026-07-26 bleek het archief twee maanden lang op timing te hebben gedreven: de
-// insert was een zwevende belofte die de instantie-bevriezing kon verliezen. Dat het 30
-// keer lukte, was geluk. Ontdekt doordat er expliciet naar gekeken werd, niet doordat er
-// iets meldde. Zolang een mislukte insert alleen een console.error is, blijft "het archief
-// werkt" een aanname.
-//
-// ONTWERPREGEL: de meting leeft NIET in wat hij meet. Ligt Supabase eruit, dan kun je dat
-// niet in Supabase schrijven. Daarom mail via Resend — ander kanaal, andere leverancier.
-//
-// PRIVACY: de melding bevat GEEN bezoekersinhoud. Alleen dat het misging, wanneer, en
-// waarom. Een storingsmelding is geen reden om alsnog een gesprek te versturen.
-//
-// Drempel per functie-instantie, zodat een uur Supabase-storing geen mailstroom wordt.
-// Bewust grof: het doel is dat Rob het WEET, niet dat hij het per geval telt.
-let laatsteStoringsmail = 0;
-const STORING_INTERVAL_MS = 30 * 60 * 1000;
-
-async function meldArchiefStoring(reden) {
-  console.error(`[archief] MISLUKT — ${reden}`);
-
-  const nu = Date.now();
-  if (nu - laatsteStoringsmail < STORING_INTERVAL_MS) return;
-  laatsteStoringsmail = nu;
-
-  const resendKey = process.env.RESEND_API_KEY;
-  if (!resendKey) { console.error('[archief] geen RESEND_API_KEY — storing blijft onopgemerkt'); return; }
-
-  const toEmail   = process.env.NOTIFY_EMAIL || 'robderooijbreda@gmail.com';
-  const fromEmail = process.env.NOTIFY_FROM  || 'R.O.B. Concepting <onboarding@resend.dev>';
-  const tijd = new Date().toLocaleString('nl-NL', {
-    timeZone: 'Europe/Amsterdam', dateStyle: 'short', timeStyle: 'short'
-  });
-
-  try {
-    await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: fromEmail, to: [toEmail],
-        subject: 'R.O.B. — chat-archief slaat niet op',
-        text: `Een gesprek op rob-concepting.com is NIET gearchiveerd.\n\n`
-            + `Tijd: ${tijd}\nReden: ${reden}\n\n`
-            + `Het gesprek zelf staat niet in deze mail: een storingsmelding is geen reden om `
-            + `bezoekersinhoud te versturen. Het gesprek is verloren, niet verplaatst.\n\n`
-            + `Deze melding komt maximaal eens per 30 minuten per serverinstantie.\n\n`
-            + `Waar te kijken: Supabase-project agora-rob-register, tabel rob_chat_sessions, `
-            + `en de omgevingsvariabelen SUPABASE_URL en SUPABASE_SERVICE_ROLE_KEY in Netlify.`
-      })
-    });
-  } catch (e) {
-    // Laatste vangnet: als ook de melding faalt, is er niets meer dat het kan zeggen.
-    console.error('[archief] storingsmail zelf mislukt:', e.message);
-  }
-}
-
 // ── Resend notificatie (fire-and-forget, faalt stil) ──────────────────────────
 async function notifyRob(conversation) {
   const resendKey = process.env.RESEND_API_KEY;
@@ -249,67 +193,6 @@ async function notifyRob(conversation) {
 }
 
 // ── Vertrouwelijk chat-archief (spoor 6 C2, fire-and-forget, faalt stil) ─────
-// Insert elke chat-call in rob_chat_sessions (agora-rob-register Supabase).
-// Verhuisd uit 20voor12-pilot op 2026-07-26 (D-SCHEIDING-001): vertrouwelijke
-// bezoekersdata hoort in het register van het eigen merk. Zie
-// infra/rob-chat/migrations/0002_verhuizing_naar_rob_register.sql.
-// RLS staat alleen service_role toe — geen anon read/write ooit. Dat weegt hier zwaarder
-// dan op de oude plek: de anon-key van DIT project staat in de publieke site. Geverifieerd
-// op prod: anon select geeft 0 rijen, anon insert geeft 42501.
-// Vereist SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in Netlify env (server-side, nooit in client-bundle).
-// Zonder env-vars = no-op (graceful fallback); chat-stream onveranderd.
-async function archiveChatSession({ messages, aiText, notify, startedAt, userAgent, origin }) {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  // Was een stille return. Ontbrekende configuratie is geen "graceful fallback" maar een
-  // storing: er wordt niets bewaard terwijl de site doet alsof er niets aan de hand is.
-  // Precies dit pad zou de oorzaak van 2026-07-26 verzwegen hebben.
-  if (!url || !key) {
-    await meldArchiefStoring(
-      `configuratie ontbreekt (${!url ? 'SUPABASE_URL' : ''}${!url && !key ? ' en ' : ''}${!key ? 'SUPABASE_SERVICE_ROLE_KEY' : ''} niet gezet)`
-    );
-    return;
-  }
-
-  const conversation = [...messages, { role: 'assistant', content: aiText }];
-  const turnCount = messages.filter(m => m.role === 'user').length;
-  const uaHash = userAgent
-    ? createHash('sha256').update(userAgent).digest('hex').slice(0, 16)
-    : null;
-  const row = {
-    call_at: new Date(startedAt).toISOString(),
-    turn_count: turnCount,
-    notify_sent: !!notify,
-    conversation,
-    ai_response: aiText,
-    source_url: origin || null,
-    user_agent_hash: uaHash,
-    duration_ms: Date.now() - startedAt
-  };
-
-  try {
-    const res = await fetch(`${url}/rest/v1/rob_chat_sessions`, {
-      method: 'POST',
-      headers: {
-        'apikey': key,
-        'Authorization': `Bearer ${key}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(row)
-    });
-    if (!res.ok) {
-      const err = await res.text().catch(() => '');
-      await meldArchiefStoring(`Supabase gaf ${res.status} — ${err.slice(0, 200)}`);
-      return;
-    }
-    // Positief spoor. Zonder dit is "het werkt" alleen af te leiden uit de afwezigheid van
-    // een fout, en afwezigheid van een fout was vandaag precies het probleem.
-    console.log('[archief] opgeslagen');
-  } catch (e) {
-    await meldArchiefStoring(`verzoek mislukte — ${e.message}`);
-  }
-}
 
 // ── JSON-response helper ──────────────────────────────────────────────────────
 function json(body, status, origin) {
