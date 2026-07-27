@@ -155,6 +155,62 @@ function rateLimitCheck(ip) {
   return { ok: true };
 }
 
+// ── Meting op het archief ────────────────────────────────────────────────────
+// Op 2026-07-26 bleek het archief twee maanden lang op timing te hebben gedreven: de
+// insert was een zwevende belofte die de instantie-bevriezing kon verliezen. Dat het 30
+// keer lukte, was geluk. Ontdekt doordat er expliciet naar gekeken werd, niet doordat er
+// iets meldde. Zolang een mislukte insert alleen een console.error is, blijft "het archief
+// werkt" een aanname.
+//
+// ONTWERPREGEL: de meting leeft NIET in wat hij meet. Ligt Supabase eruit, dan kun je dat
+// niet in Supabase schrijven. Daarom mail via Resend — ander kanaal, andere leverancier.
+//
+// PRIVACY: de melding bevat GEEN bezoekersinhoud. Alleen dat het misging, wanneer, en
+// waarom. Een storingsmelding is geen reden om alsnog een gesprek te versturen.
+//
+// Drempel per functie-instantie, zodat een uur Supabase-storing geen mailstroom wordt.
+// Bewust grof: het doel is dat Rob het WEET, niet dat hij het per geval telt.
+let laatsteStoringsmail = 0;
+const STORING_INTERVAL_MS = 30 * 60 * 1000;
+
+async function meldArchiefStoring(reden) {
+  console.error(`[archief] MISLUKT — ${reden}`);
+
+  const nu = Date.now();
+  if (nu - laatsteStoringsmail < STORING_INTERVAL_MS) return;
+  laatsteStoringsmail = nu;
+
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) { console.error('[archief] geen RESEND_API_KEY — storing blijft onopgemerkt'); return; }
+
+  const toEmail   = process.env.NOTIFY_EMAIL || 'robderooijbreda@gmail.com';
+  const fromEmail = process.env.NOTIFY_FROM  || 'R.O.B. Concepting <onboarding@resend.dev>';
+  const tijd = new Date().toLocaleString('nl-NL', {
+    timeZone: 'Europe/Amsterdam', dateStyle: 'short', timeStyle: 'short'
+  });
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: fromEmail, to: [toEmail],
+        subject: 'R.O.B. — chat-archief slaat niet op',
+        text: `Een gesprek op rob-concepting.com is NIET gearchiveerd.\n\n`
+            + `Tijd: ${tijd}\nReden: ${reden}\n\n`
+            + `Het gesprek zelf staat niet in deze mail: een storingsmelding is geen reden om `
+            + `bezoekersinhoud te versturen. Het gesprek is verloren, niet verplaatst.\n\n`
+            + `Deze melding komt maximaal eens per 30 minuten per serverinstantie.\n\n`
+            + `Waar te kijken: Supabase-project agora-rob-register, tabel rob_chat_sessions, `
+            + `en de omgevingsvariabelen SUPABASE_URL en SUPABASE_SERVICE_ROLE_KEY in Netlify.`
+      })
+    });
+  } catch (e) {
+    // Laatste vangnet: als ook de melding faalt, is er niets meer dat het kan zeggen.
+    console.error('[archief] storingsmail zelf mislukt:', e.message);
+  }
+}
+
 // ── Resend notificatie (fire-and-forget, faalt stil) ──────────────────────────
 async function notifyRob(conversation) {
   const resendKey = process.env.RESEND_API_KEY;
@@ -205,7 +261,15 @@ async function notifyRob(conversation) {
 async function archiveChatSession({ messages, aiText, notify, startedAt, userAgent, origin }) {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return;
+  // Was een stille return. Ontbrekende configuratie is geen "graceful fallback" maar een
+  // storing: er wordt niets bewaard terwijl de site doet alsof er niets aan de hand is.
+  // Precies dit pad zou de oorzaak van 2026-07-26 verzwegen hebben.
+  if (!url || !key) {
+    await meldArchiefStoring(
+      `configuratie ontbreekt (${!url ? 'SUPABASE_URL' : ''}${!url && !key ? ' en ' : ''}${!key ? 'SUPABASE_SERVICE_ROLE_KEY' : ''} niet gezet)`
+    );
+    return;
+  }
 
   const conversation = [...messages, { role: 'assistant', content: aiText }];
   const turnCount = messages.filter(m => m.role === 'user').length;
@@ -236,10 +300,14 @@ async function archiveChatSession({ messages, aiText, notify, startedAt, userAge
     });
     if (!res.ok) {
       const err = await res.text().catch(() => '');
-      console.error('archive non-OK:', res.status, err.slice(0, 200));
+      await meldArchiefStoring(`Supabase gaf ${res.status} — ${err.slice(0, 200)}`);
+      return;
     }
+    // Positief spoor. Zonder dit is "het werkt" alleen af te leiden uit de afwezigheid van
+    // een fout, en afwezigheid van een fout was vandaag precies het probleem.
+    console.log('[archief] opgeslagen');
   } catch (e) {
-    console.error('archive failed:', e.message);
+    await meldArchiefStoring(`verzoek mislukte — ${e.message}`);
   }
 }
 
