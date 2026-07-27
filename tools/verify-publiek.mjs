@@ -40,6 +40,7 @@ const MOET_BESTAAN = [
   'whitepapers/de-mens-beslist.html',
   'whitepapers/de-klinkklare-onzin.html',
   'whitepapers/de-beste-keuze-is.html',
+  'whitepapers/wie-heeft-de-sleutels.html',
 ];
 
 // Interne projecties die juist NIET meer publiek mogen zijn. Dit was het lek.

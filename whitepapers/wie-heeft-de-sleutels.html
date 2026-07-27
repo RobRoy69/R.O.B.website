@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wie heeft de sleutels? — Gezag over eigen kennis in het AI-tijdperk | R.O.B. Concepting</title>
+  <meta name="description" content="Modellen worden goedkoper en inwisselbaar; gezag over eigen kennis wordt schaars. Vier eisen die elke organisatie vandaag aan elke AI-leverancier kan stellen.">
+  <meta name="keywords" content="automation bias, betekenisvolle menselijke tussenkomst, beslisrecht, stempelrecht, deskilling, SCHUFA, AVG artikel 22, AI-governance, moral crumple zone, MKB, Rob de Rooij">
+  <meta name="author" content="Rob de Rooij">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+  <link rel="canonical" href="https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels.html">
+
+  <meta property="og:title" content="Wie heeft de sleutels? — Gezag over eigen kennis in het AI-tijdperk">
+  <meta property="og:description" content="De modellen worden commodity. Schaars wordt wie bepaalt wat waar is, wat verouderd is en wat gezegd mag worden.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels.html">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:site_name" content="R.O.B. Concepting">
+  <meta property="og:image" content="https://rob-concepting.com/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Wie heeft de sleutels?">
+  <meta name="twitter:description" content="Waarom goedkeuren geen beslissen is.">
+  <meta name="twitter:image" content="https://rob-concepting.com/og-image.png">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230e1525'/><circle cx='16' cy='16' r='12' fill='none' stroke='%230fa8cb' stroke-width='1.5'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230fa8cb' stroke-width='1' opacity='.5'/><circle cx='16' cy='16' r='3' fill='%23e8391e'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Wie heeft de sleutels? Gezag over eigen kennis in het AI-tijdperk",
+    "description": "Modellen worden goedkoper en inwisselbaar; gezag over eigen kennis wordt schaars. Vier eisen die elke organisatie vandaag aan elke AI-leverancier kan stellen.",
+    "inLanguage": "nl-NL",
+    "datePublished": "2026-07-27",
+    "dateModified": "2026-07-27",
+    "author": { "@type": "Person", "name": "Rob de Rooij", "url": "https://rob-concepting.com/", "sameAs": ["https://www.linkedin.com/in/rob-concepting/"], "worksFor": { "@type": "Organization", "name": "R.O.B. Concepting" } },
+    "publisher": { "@type": "Organization", "name": "R.O.B. Concepting", "url": "https://rob-concepting.com/" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels.html" },
+    "image": "https://rob-concepting.com/og-image.png",
+    "articleSection": "Kennisgezag en AI",
+    "isPartOf": { "@type": "CreativeWorkSeries", "name": "Wat AI verandert aan organisaties" },
+    "keywords": "gezag over eigen kennis, AI-leverancier, kennisbasis, vendor lock-in, GEO, commoditisering"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "R.O.B. Concepting",
+        "item": "https://rob-concepting.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Whitepapers",
+        "item": "https://rob-concepting.com/whitepapers/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Wie heeft de sleutels?",
+        "item": "https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels.html"
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --cream:   #e8e4dc;
+      --paper:   #f4f2ed;
+      --purple:  #001a4d;
+      --cyan:    #0fa8cb;
+      --red:     #e8391e;
+      --screen:  #0e1525;
+      --muted:   #6b6478;
+      --border:  rgba(0,26,77,0.12);
+      --rule:    rgba(0,26,77,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--cream); color: var(--purple);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar {
+      background: var(--screen); padding: 16px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap; position: sticky; top: 0; z-index: 20;
+    }
+    .tb-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .tb-mark { flex-shrink: 0; }
+    .tb-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #fff;
+    }
+    .tb-name span { color: var(--cyan); }
+    .tb-back {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-decoration: none; transition: color .2s;
+    }
+    .tb-back:hover { color: var(--cyan); }
+
+    .hero { background: var(--screen); color: #fff; padding: 56px 28px 64px; position: relative; overflow: hidden; }
+    .hero-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 2; }
+    .hero-rings {
+      position: absolute; right: -120px; top: 50%; transform: translateY(-50%);
+      width: 460px; height: 460px; opacity: 0.5; pointer-events: none; z-index: 1;
+    }
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5.6vw, 52px); line-height: 1.08;
+      font-weight: 400; letter-spacing: -0.02em; margin-bottom: 14px;
+    }
+    .hero h1 em { font-style: normal; font-weight: 600; }
+    .hero-sub {
+      font-size: clamp(17px, 2.4vw, 21px); font-weight: 300;
+      color: rgba(255,255,255,0.72); margin-bottom: 30px; max-width: 34em;
+    }
+    .hero-bar { width: 46px; height: 2px; background: var(--red); margin-bottom: 26px; }
+    .hero-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .hero-meta .dot { color: rgba(255,255,255,0.25); }
+
+    .sheet { max-width: 780px; margin: 0 auto; padding: 0 28px; }
+    .paper {
+      background: var(--paper); margin: -28px auto 0;
+      padding: 52px clamp(24px, 5vw, 64px) 64px;
+      border: 1px solid var(--border); position: relative; z-index: 5;
+    }
+
+    .serie {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      background: rgba(0,26,77,0.04); border: 1px solid var(--border);
+      padding: 13px 18px; margin-bottom: 38px;
+      font-size: 14px; color: var(--muted);
+    }
+    .serie .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan);
+    }
+    .serie a { color: var(--purple); text-decoration: none; border-bottom: 1px solid rgba(15,168,203,.4); }
+    .serie a:hover { color: var(--cyan); }
+
+    .toc { border-left: 2px solid var(--cyan); padding: 4px 0 4px 20px; margin: 0 0 44px; }
+    .toc-t {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    .toc ol { list-style: none; counter-reset: toc; }
+    .toc li { counter-increment: toc; margin-bottom: 6px; }
+    .toc li::before {
+      content: counter(toc, decimal-leading-zero);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: var(--cyan); margin-right: 10px;
+    }
+    .toc a { color: var(--purple); text-decoration: none; font-size: 15px; }
+    .toc a:hover { color: var(--cyan); }
+
+    .summary {
+      background: rgba(15,168,203,0.07); border: 1px solid rgba(15,168,203,0.22);
+      padding: 28px clamp(20px, 3.5vw, 34px); margin: 0 0 48px;
+    }
+    .summary .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 14px;
+    }
+    .summary p { font-size: 16px; }
+    .summary p + p { margin-top: 14px; }
+
+    h2 {
+      font-size: clamp(24px, 3.6vw, 31px); font-weight: 500;
+      line-height: 1.2; letter-spacing: -0.015em; margin: 56px 0 8px; scroll-margin-top: 80px;
+    }
+    h2 .num {
+      display: block; font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 400; letter-spacing: 0.2em;
+      color: var(--cyan); margin-bottom: 12px;
+    }
+    h2 + .h2rule { width: 100%; height: 1px; background: var(--rule); margin-bottom: 26px; }
+    h3 { font-size: clamp(17px, 2.2vw, 20px); font-weight: 600; line-height: 1.3; margin: 38px 0 14px; }
+    p { font-size: 17px; margin-bottom: 20px; }
+    em { font-style: italic; }
+    strong { font-weight: 600; }
+
+    .pull {
+      border-left: 2px solid var(--red); padding-left: 22px; margin: 34px 0;
+      font-size: 19px; line-height: 1.5; font-weight: 300; color: var(--purple);
+    }
+
+    .as {
+      background: rgba(0,26,77,0.04); border: 1px solid var(--border);
+      padding: 26px clamp(18px, 3vw, 30px); margin: 32px 0;
+    }
+    .as .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 12px;
+    }
+    .as p:last-child { margin-bottom: 0; }
+
+    hr.sec { border: 0; height: 1px; background: var(--rule); margin: 52px 0; }
+
+    .bronnen { margin-top: 56px; padding-top: 30px; border-top: 1px solid var(--rule); }
+    .bronnen > .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 6px;
+    }
+    .bronnen > .intro { font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+    .bronnen h4 { font-size: 14px; font-weight: 600; margin: 24px 0 10px; color: var(--purple); }
+    .bronnen ul { list-style: none; }
+    .bronnen li {
+      font-size: 14px; line-height: 1.6; color: var(--muted);
+      padding-left: 18px; position: relative; margin-bottom: 9px;
+    }
+    .bronnen li::before {
+      content: '\2014'; position: absolute; left: 0;
+      color: var(--cyan); opacity: 0.55;
+    }
+    .bronnen li strong { color: var(--purple); font-weight: 600; }
+
+    .verantwoording {
+      margin-top: 40px; padding-top: 26px; border-top: 1px solid var(--rule);
+      font-size: 13.5px; line-height: 1.65; color: var(--muted); font-style: italic;
+    }
+
+    .dl { background: var(--screen); color: #fff; margin: 0 auto; max-width: 780px; padding: 44px clamp(24px, 5vw, 64px) 48px; }
+    .dl .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 14px;
+    }
+    .dl h3 { font-size: 23px; font-weight: 500; margin: 0 0 10px; color: #fff; }
+    .dl p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 24px; max-width: 44em; }
+    .dl-form { display: flex; flex-direction: column; gap: 12px; max-width: 440px; }
+    .dl-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .dl-row > * { flex: 1 1 160px; }
+    .dl input[type="text"], .dl input[type="email"] {
+      width: 100%; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.16); color: #fff; padding: 12px 14px;
+      font-family: inherit; font-size: 15px; transition: border-color .2s;
+    }
+    .dl input::placeholder { color: rgba(255,255,255,0.35); }
+    .dl input:focus { outline: none; border-color: var(--cyan); }
+    .dl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .dl-btn {
+      align-self: flex-start; background: transparent;
+      border: 1px solid var(--cyan); color: var(--cyan);
+      padding: 12px 22px; cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+      transition: background .2s, color .2s;
+    }
+    .dl-btn:hover { background: var(--cyan); color: var(--screen); }
+    .dl-btn:disabled { opacity: 0.5; cursor: default; }
+    .dl-msg { font-size: 14px; margin-top: 4px; min-height: 20px; }
+    .dl-msg.ok { color: var(--cyan); }
+    .dl-msg.err { color: #ff8a72; }
+    .dl-fine { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 14px; margin-bottom: 0; }
+
+    .foot {
+      max-width: 780px; margin: 0 auto; padding: 34px 28px 56px;
+      display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    }
+    .foot a { color: var(--muted); text-decoration: none; }
+    .foot a:hover { color: var(--cyan); }
+
+    @media (max-width: 600px) {
+      .hero { padding: 40px 22px 52px; }
+      .paper { padding: 40px 22px 48px; }
+      .hero-rings { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="tb-brand" href="/">
+      <svg class="tb-mark" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="12" fill="none" stroke="#0fa8cb" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="7" fill="none" stroke="#0fa8cb" stroke-width="1" opacity=".5"/>
+        <circle cx="16" cy="16" r="3" fill="#e8391e"/>
+      </svg>
+      <span class="tb-name">R.O.B. <span>Concepting</span></span>
+    </a>
+    <a class="tb-back" href="/whitepapers/">&larr; Alle whitepapers</a>
+  </header>
+
+  <section class="hero">
+    <svg class="hero-rings" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="92" fill="none" stroke="#0fa8cb" stroke-width="0.4" opacity=".35"/>
+      <circle cx="100" cy="100" r="66" fill="none" stroke="#0fa8cb" stroke-width="0.4" opacity=".28"/>
+      <circle cx="100" cy="100" r="40" fill="none" stroke="#0fa8cb" stroke-width="0.4" opacity=".2"/>
+    </svg>
+    <div class="hero-inner">
+      <div class="eyebrow">Whitepaper 04 &mdash; R.O.B. Concepting</div>
+      <h1>Wie heeft de <em>sleutels</em>?</h1>
+      <p class="hero-sub">Gezag over eigen kennis in het AI-tijdperk</p>
+      <div class="hero-bar"></div>
+      <div class="hero-meta">
+        <span>Rob de Rooij</span><span class="dot">&middot;</span>
+        <span>juli 2026</span><span class="dot">&middot;</span>
+        <span>&plusmn; 12 min lezen</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="sheet">
+    <article class="paper">
+
+      <div class="serie">
+        <span class="lbl">Vierde in de reeks</span>
+        <span>Volgt op <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a>, <a href="/whitepapers/de-klinkklare-onzin.html">De klinkklare (on-)zin van je AI-agent</a> en <a href="/whitepapers/de-mens-beslist.html">De mens beslist (of niet meer?)</a></span>
+      </div>
+
+      <nav class="toc" aria-label="Inhoud">
+        <div class="toc-t">Inhoud</div>
+        <ol>
+          <li><a href="#probleem">Het probleem dat al bestond</a></li>
+          <li><a href="#loge">De log&eacute; en de sleutels</a></li>
+          <li><a href="#tegenstem">De tegenstem: werkt het niet gewoon prima zo?</a></li>
+          <li><a href="#omkering">De omkering: je eigenheid als besturingslogica</a></li>
+          <li><a href="#amendement">Amendement: over wat de markt GEO noemt</a></li>
+        </ol>
+      </nav>
+
+      <div class="summary">
+        <div class="lbl">Managementsamenvatting</div>
+        <p>Wie vandaag kunstmatige intelligentie inkoopt, betaalt een fractie van wat dezelfde prestatie drie jaar geleden kostte &mdash; en krijgt er morgen meer voor. De modellen worden beter, goedkoper en vooral: inwisselbaarder. Dat is goed nieuws voor wie ze gebruikt, en het betekent iets ongemakkelijks voor wie erop rekent zich ermee te onderscheiden. Een technologie die iedereen kan afnemen, onderscheidt niemand.</p>
+        <p>Toch kopen kennisgedreven organisaties &mdash; kantoren, adviespraktijken, specialistische bureaus &mdash; op dit moment vooral technologie. Een chatbot, een tool, een &ldquo;transformatie&rdquo;. Ze kopen het antwoord op de verkeerde vraag. Want het werkelijke vraagstuk is niet welk model je gebruikt. Het is wie er zeggenschap heeft over wat dat model namens jou beweert: wie bepaalt wat waar is, wat verouderd is, wat gezegd mag worden &mdash; en wie de sleutels heeft van de kennis waarop de organisatie draait.</p>
+        <p>Dit paper geeft dat vraagstuk een naam: gezag over eigen kennis. Het betoogt dat dit gezag schaars wordt terwijl de modellen overvloedig worden, en het vertaalt het naar een huiselijk principe &mdash; de briljante log&eacute; die alles mag lezen en meepraten, maar nooit zelf boeken in de kast zet en nooit een sleutel krijgt. Daaruit volgen vier eisen die elke organisatie aan elke AI-leverancier kan stellen, vandaag al, zonder &eacute;&eacute;n technische term. En het eindigt met een omkering: niet de AI is het onderscheid; de eigen werkwijze, vastgelegd als kennis, is het onderscheid &mdash; de AI voert haar hooguit uit.</p>
+      </div>
+
+      <h3 style="margin-top:0">Inleiding</h3>
+      <p>De race om de slimste machine is beslist, en vrijwel niemand die dit leest deed mee. Een handvol laboratoria met miljardenbudgetten bouwt de modellen; alle anderen nemen af. Dat is geen nederlaag maar een gegeven, en het wordt elk kwartaal zichtbaarder in de prijs: rekenkracht die drie jaar geleden een strategische investering was, is vandaag een abonnement, en wat vandaag een abonnement is, zit morgen gratis in de kantoorsoftware. De curve wijst &eacute;&eacute;n kant op &mdash; naar beneden. Stanfords jaarlijkse AI Index maakte de daling meetbaar: voor dezelfde prestatie die eind 2022 nog twintig dollar per miljoen verwerkte teksteenheden kostte, betaalde een afnemer twee jaar later zeven dollarcent &mdash; ruim 280 keer minder. En de modellen van de verschillende aanbieders groeien intussen naar elkaar toe. Wat overblijft is een markt van verwisselbare motoren.</p>
+      <p>Voor de meeste bedrijfsmiddelen zou dat het einde van het gesprek zijn. Niemand schrijft whitepapers over de vraag welk merk elektriciteit een kantoor moet afnemen. Maar bij AI blijft het gesprek hangen bij de motor &mdash; welk model, welke tool, welke leverancier &mdash; terwijl de vraag die ertoe doet ergens anders ligt. Niet: hoe slim is de machine? Maar: waar haalt de machine vandaan wat zij namens j&oacute;uw organisatie beweert, en wie heeft daar iets over te zeggen?</p>
+      <p>Die vraag heeft geen gangbare naam, en wat geen naam heeft, wordt niet gemanaged. Dit paper geeft hem er een: gezag over eigen kennis. Het is de vierde whitepaper in een reeks over wat AI werkelijk verandert aan organisaties &mdash; niet aan hun marketing of hun gereedschap, maar aan hun fundament. De eerdere delen gingen over de vraag waarop organisaties worden gekozen, wie er namens hen spreekt, en wie er werkelijk beslist. Dit deel gaat over wat daaronder ligt: van wie de kennis is waarop dat alles draait.</p>
+      <p>Het betoog verloopt in vier stappen. Eerst het probleem dat al bestond voordat AI het versnelde. Dan de misvatting die organisaties op dit moment geld kost, en het principe dat ervoor in de plaats hoort &mdash; verteld aan de hand van een log&eacute; en een boekenkast. Vervolgens de tegenstem, want er is een goed argument om dit alles overdreven te vinden. En ten slotte de omkering die van een beheersvraag een kansvraag maakt.</p>
+
+      <h2 id="probleem"><span class="num">01</span>Het probleem dat al bestond</h2>
+
+      <h3>Drie lekken</h3>
+      <p>Wie in een kennisorganisatie werkt &mdash; een advocatenkantoor, een accountantspraktijk, een adviesbureau, een specialistische dienstverlener &mdash; herkent drie verschijnselen die zelden samen worden benoemd.</p>
+      <p>Het eerste is de terugkerende vraag. Een substantieel deel van wat klanten vragen, is eerder gevraagd en eerder beantwoord &mdash; niet identiek, maar in patroon. Toch wordt het antwoord telkens opnieuw gemaakt, door iemand wiens uur ook aan iets nieuws besteed had kunnen worden. De kennis bestaat; ze is alleen niet vindbaar op het moment dat ze nodig is, of ze zit in het hoofd van iemand die toevallig op vakantie is.</p>
+      <p>Het tweede is de weglekkende experttijd. De duurste mensen van de organisatie besteden een opvallend deel van hun tijd niet aan het werk waarvoor klanten hen inhuren, maar aan de voorbereiding ervan: zoeken, controleren, herformuleren wat al eens geformuleerd was, en uitleggen wat al eens uitgelegd is. Dat is geen luiheid van de organisatie; het is het ontbreken van een plek waar het eerdere werk als kennis is neergeslagen in plaats van als document in een map.</p>
+      <p>Het derde is het stilste en het gevaarlijkste: het verkeerde antwoord met de goede handtekening. In elke kennisorganisatie circuleert informatie die ooit klopte en inmiddels niet meer &mdash; het oude tarief, de ingetrokken regeling, het achterhaalde standpunt. Zolang mensen het werk doen, corrigeert de ervaren collega het meestal op tijd. Maar het risico bestond altijd al: dat de verouderde versie naar buiten gaat, met de naam van de organisatie eronder, en dat niemand kan aanwijzen waar het misging.</p>
+      <p>Geen van deze drie is een AI-probleem. Ze bestonden toen het archief nog van papier was. Wat AI verandert, is het tempo en de schaal: een systeem dat in seconden antwoorden produceert, produceert ook in seconden de verkeerde &mdash; en het aantal antwoorden dat een organisatie per dag de deur uit doet, vermenigvuldigt zich. Wie zijn kennis niet op orde had toen mensen het werk deden, merkt dat nu een machine het werk versnelt. Het lek zat er al. De druk is verhoogd.</p>
+
+      <h3>De misvatting</h3>
+      <p>De gangbare reactie op die druk is een aankoop. Ergens in de organisatie wordt besloten dat er &ldquo;iets met AI&rdquo; moet gebeuren, en de markt staat klaar: een chatbot voor de klantvragen, een tool voor de documenten, een transformatietraject voor het geheel. De aanschaf voelt als vooruitgang, en soms is ze dat ook. Maar ze rust op een aanname die zelden wordt uitgesproken en die niet klopt: dat het model het onderscheid maakt.</p>
+      <p>Het model maakt het onderscheid niet, om de reden uit de inleiding: iedereen heeft hetzelfde model, of kan het morgen hebben, goedkoper. De motoren zijn commodity aan het worden &mdash; dezelfde intelligentie voor iedereen, per maand afrekenbaar. Wanneer alle concurrenten over dezelfde motor beschikken, verschuift de vraag naar wat die motor te verwerken krijgt. Twee kantoren met hetzelfde model en dezelfde tool geven niet hetzelfde antwoord; ze geven het antwoord dat hun eigen informatie toelaat. Het ene kantoor voedt de motor met een zorgvuldig bijgehouden, vastgestelde, actuele kennisbasis. Het andere met een gedeelde schijf vol versies, concepten en verouderde waarheden. De motor is gelijk. De uitkomst niet.</p>
+      <p class="pull">Wat schaars wordt, is niet intelligentie &mdash; die wordt elke maand goedkoper. Schaars wordt het gezag over de kennis die de intelligentie te verwerken krijgt.</p>
+      <p>Wie bepaalt wat waar is, wat verouderd is, wat gezegd mag worden en namens wie? Dat gezag kun je niet kopen bij een leverancier, want het gaat over iets wat alleen de organisatie zelf bezit. En het is precies het onderwerp waarover de meeste AI-aanbiedingen zwijgen &mdash; begrijpelijk, want er valt voor hen niets aan te verkopen.</p>
+
+      <h2 id="loge"><span class="num">02</span>De log&eacute; en de sleutels</h2>
+
+      <h3>Het principe</h3>
+      <p>Het principe dat hier nodig is, laat zich het best huiselijk vertellen.</p>
+      <p>Stel je een huis voor, en in dat huis een boekenkast. Geen gewone kast: hier staat alles wat de familie weet en waar ze voor staat &mdash; de recepten die generaties meegaan, de afspraken die het huishouden dragen, de verhalen die bepalen wie deze familie is. De kast is in decennia opgebouwd. Wat erin staat, is niet toevallig: iemand heeft ooit besloten dat dit boek erin hoort en dat andere niet.</p>
+      <p>Nu komt er een log&eacute;. Een briljante log&eacute; &mdash; belezen, snel, onvermoeibaar, op elk uur van de dag beschikbaar. De log&eacute; mag alles: elk boek pakken, elk hoofdstuk citeren, meepraten aan tafel, verbanden leggen die de familie zelf nooit zag. De log&eacute; mag zelfs zeggen: &ldquo;dit boek klopt niet meer, kijk maar, hier staat het achterhaalde tarief.&rdquo; Dat is waardevolle hulp, en het huis wordt er beter van.</p>
+      <p>Maar drie dingen doet de log&eacute; nooit. Hij zet geen boeken in de kast. Hij haalt geen boeken uit de kast. En hij krijgt geen sleutel. Wanneer de log&eacute; vindt dat er een boek bij moet of uit moet, zegt hij het &mdash; en iemand van de familie beslist. Misschien heeft de log&eacute; gelijk; vaak zelfs. Maar het besluit over de kast is van het huis, want de kast &iacute;s het huis. En als de log&eacute; ooit vertrekt &mdash; omdat er een betere logeert, of omdat de verstandhouding bekoelt &mdash; dan staat de kast er nog. Compleet, geordend, van de familie.</p>
+      <p class="pull">De slimme log&eacute; is altijd welkom. De sleutels blijven van jou.</p>
+      <p>Vertaal het beeld en het principe staat er: het model is de log&eacute;. Briljant, behulpzaam, en per definitie een gast &mdash; vandaag deze, morgen desnoods een andere. De boekenkast is de vastgestelde kennis van de organisatie: wat zij weet, vindt en verantwoordt. De sleutels zijn het gezag: wie beslist wat erin komt, wat eruit gaat en wat geldig blijft. E&eacute;n scherpe afbakening hoort erbij: dit gaat over wie beslist, niet over wie meeleest. Een log&eacute; die alles mag lezen, kan veel onthouden &mdash; wat je publiek toegankelijk maakt, moet je publiek durven maken, en dat is een ander vraagstuk, elders in deze reeks behandeld. De sleutelvraag gaat over zeggenschap, en zeggenschap is niet te kopi&euml;ren.</p>
+      <p>De vraag die dit beeld oproept, is de vraag van dit paper, en ze is direct te stellen aan elke oplossing die op dit moment ergens in jouw organisatie draait: wie heeft daar eigenlijk de sleutels? Wie bepaalt wat het systeem als waar behandelt? Kan er iemand van jou bij, of alleen iemand van hen? En als je morgen weg wilt bij de leverancier &mdash; gaat de kast dan mee, of blijkt ze in h&uacute;n huis te staan?</p>
+
+      <h3>Vier eisen die iedereen kan stellen</h3>
+      <p>Uit het principe volgen vier eisen. Ze vergen geen technische kennis, en elke koper kan ze vandaag aan elke leverancier stellen. Aan de antwoorden herken je met wie je te maken hebt.</p>
+      <p><strong>E&eacute;n: de kennis is expliciet vastgesteld.</strong> Er bestaat een aanwijsbare verzameling van wat de organisatie als geldig beschouwt &mdash; niet &ldquo;onze documenten&rdquo;, maar vastgestelde kennis: beoordeeld, geordend, met een datum en een eigenaar. Wat rondzweeft in mailboxen en mappen is materiaal, geen kennis. De eis aan een systeem is dat het onderscheid kent tussen wat vastgesteld is en wat toevallig ergens staat.</p>
+      <p><strong>Twee: een mens beslist wat geldig is en blijft.</strong> Niet als formaliteit, maar als werkende rol: iemand die vaststelt, herziet en intrekt &mdash; en die het systeem volgt in plaats van andersom. Een systeem dat zichzelf bijwerkt op grond van wat het onderweg tegenkomt, herschrijft de boekenkast zonder dat iemand het merkt. Het mag signaleren dat een boek veroudert; het plaatst en verwijdert niet zelf. Wie <a href="/whitepapers/de-mens-beslist.html">het derde deel van deze reeks</a> las, herkent de lat: goedkeuren is niet beslissen, en dat geldt hier onverkort.</p>
+      <p><strong>Drie: elk antwoord is herleidbaar naar zijn bron.</strong> Bij elk antwoord dat het systeem geeft, moet de vraag &ldquo;waar komt dit vandaan?&rdquo; beantwoordbaar zijn &mdash; welk vastgesteld stuk kennis, welke versie, van wanneer. Niet omdat elke klant het vraagt, maar omdat de organisatie het moet kunnen vragen op de dag dat er iets misgaat. Een antwoord zonder herkomst is een mening van de log&eacute;.</p>
+      <p><strong>Vier: de kennis verhuist niet mee met de leverancier.</strong> De organisatie moet van model en van leverancier kunnen wisselen zonder dat de kennisbasis opnieuw moet worden opgebouwd &mdash; omdat die basis van haar is, in een vorm die zij beheert, buiten het systeem van de gast. Dit is de sleuteltest in zijn zuiverste vorm: wie niet weg kan, heeft geen leverancier maar een hospita.</p>
+      <p>Vier eisen, &eacute;&eacute;n patroon: het denken erachter is overal hetzelfde &mdash; de kast is van het huis, de gast is te gast. Een leverancier die deze vragen soepel beantwoordt, verdient het gesprek. Een leverancier die eroverheen praat, heeft je zojuist iets belangrijks verteld.</p>
+
+      <h2 id="tegenstem"><span class="num">03</span>De tegenstem: werkt het niet gewoon prima zo?</h2>
+
+      <h3>Het sterkste tegenargument</h3>
+      <p>Er is een nuchter bezwaar tegen dit hele betoog, en het verdient een eerlijke behandeling in zijn sterkste vorm.</p>
+      <p>Het luidt zo: dit is een consultant-probleem. De praktijk is dat medewerkers gewoon een algemene chatbot gebruiken &mdash; massaal, dagelijks, grotendeels buiten het zicht van de organisatie &mdash; en dat dit voor het overgrote deel van de gevallen prima werkt. De vraag wordt beantwoord, de mail wordt geschreven, de samenvatting klopt genoeg. Waarom een kluis bouwen voor kennis die toch elke maand verandert? Waarom gezag organiseren over antwoorden die in de praktijk gewoon goed genoeg zijn? De boekenkast is een mooi beeld, maar de meeste vragen aan de log&eacute; gaan helemaal niet over de familiegeheimen &mdash; ze gaan over hoe je een brief begint. Wie daar governance omheen bouwt, maakt van een hulpmiddel een project.</p>
+      <p>Het bezwaar is sterk omdat het grotendeels waar is. Voor het merendeel van het dagelijkse gebruik is de generieke log&eacute; inderdaad genoeg, en wie elke AI-interactie door een goedkeuringsproces haalt, organiseert vooral vertraging. De cijfers over stil gebruik onderstrepen het: volgens Nederlands werkgeversonderzoek uit eind 2025 gebruikt bijna de helft van de medewerkers AI-hulpmiddelen zonder het te melden &mdash; terwijl vrijwel elk bedrijf een AI-beleid op papier heeft. Het gebeurt dus al, grotendeels buiten elk kader, en meestal zonder ongelukken. Het werkende antwoord op negentig procent van de vragen is er al, en het kostte niets.</p>
+
+      <h3>Waarom de tien procent beslist</h3>
+      <p>Maar het bezwaar bewijst iets anders dan het denkt. Het beschrijft &mdash; correct &mdash; de vragen waar weinig op het spel staat. Het zwijgt over de andere.</p>
+      <p>Want er is een categorie waar &ldquo;goed genoeg&rdquo; niet bestaat: het advies waar de handtekening van de organisatie onder komt. Het standpunt naar de klant. Het antwoord waar aansprakelijkheid aan hangt, of reputatie, of de relatie van twintig jaar. Voor een kennisorganisatie is die categorie niet de uitzondering op het werk &mdash; ze &iacute;s het werk; al het andere is voorbereiding. En precies daar keert elk element van het nuchtere bezwaar zich om. Dat het meestal goed gaat, is daar geen geruststelling maar het gevaar zelf: hoe vaker de log&eacute; gelijk heeft, hoe minder er wordt gecontroleerd &mdash; <a href="/whitepapers/de-mens-beslist.html">het derde deel van deze reeks</a> documenteert dat mechanisme in detail. Dat de kennis elke maand verandert, is daar geen argument tegen de kast maar h&eacute;t argument ervoor: juist wat verandert, vraagt iemand die bijhoudt wat nog geldt. En dat het gebruik stil en ongezien gebeurt, betekent daar dat niemand kan zeggen welk antwoord op welke bron rustte &mdash; tot de dag dat het moet.</p>
+      <p>De conclusie is dus geen keuze tussen losjes en streng. Het is een scheiding: weet welke vragen van de log&eacute; mogen komen, en welke uit de kast moeten komen. De organisatie die dat onderscheid niet maakt, behandelt haar familiegeheimen als briefjes en haar briefjes als familiegeheimen &mdash; en betaalt op beide fronten: bureaucratie waar snelheid kon, en risico waar gezag moest staan. De vier eisen uit het vorige hoofdstuk gelden niet voor alles. Ze gelden voor het deel waarop de organisatie afgerekend wordt. Dat deel is kleiner dan de hype suggereert, en belangrijker dan het bezwaar toegeeft.</p>
+
+      <h2 id="omkering"><span class="num">04</span>De omkering: je eigenheid als besturingslogica</h2>
+
+      <h3>Van beheersvraag naar kansvraag</h3>
+      <p>Tot hier klinkt gezag over kennis als een beheersvraag &mdash; risico, herleidbaarheid, sleutels. Dat is de halve waarheid, en de minst interessante helft. De andere helft is een kans die in het gesprek over AI vrijwel onbenoemd blijft.</p>
+      <p>Begin bij een ongemakkelijke observatie: het onderscheidend vermogen van de meeste kennisorganisaties bestaat vooral als taal. De eigen aanpak, de bijzondere werkwijze, de manier waarop dit kantoor naar een casus kijkt &mdash; het staat op de website en in het verkoopverhaal, en het leeft in de hoofden van een handvol mensen. Als tekst is het marketing. Als kennis is het nergens vastgelegd. Vraag een willekeurige medewerker om de veelgeroemde eigen aanpak toe te passen op een nieuwe casus, en wat je krijgt hangt af van wie er toevallig antwoordt.</p>
+      <p>Nu de omkering. Een generiek model heeft alles &mdash; behalve dat. Het kent de wet, de literatuur, de gemiddelde aanpak van de gemiddelde organisatie. Wat het per definitie niet kent, is hoe j&oacute;uw organisatie weegt, kiest en formuleert: welke vragen zij eerst stelt, welke risico&rsquo;s zij zwaarder telt, waar zij nee zegt waar anderen ja zeggen. Dat is precies het materiaal dat niet in de trainingsdata zit, omdat het nooit is opgeschreven. De organisatie die haar eigenheid vastlegt &mdash; niet als slogan maar als werkende kennis: afwegingen, criteria, werkwijze &mdash; geeft de inwisselbare motor iets wat geen concurrent kan namaken. De eigen manier van denken wordt uitvoerbaar: in de intake die de juiste vragen stelt, in de kwalificatie die weegt zoals de oprichter woog, in antwoorden die klinken naar het huis en nergens anders naar. En er is een neveneffect dat buiten dit paper valt maar vermelding verdient: dezelfde eigenschappen &mdash; vastgesteld, actueel, herleidbaar &mdash; zijn precies wat machinale selecteurs als betrouwbare bron behandelen. De buitenwereld beloont wat voor de binnenwereld gebouwd werd; <a href="#amendement">het amendement bij dit paper</a> werkt dat uit.</p>
+      <p class="pull">Niet de AI is het product; de AI is de uitvoerder. Het product is de eigen kracht van de organisatie &mdash; mits vastgelegd, vastgesteld en van sleutels voorzien.</p>
+      <p>Daarmee draait de rangorde om die de markt op dit moment hanteert. Twee kantoren met dezelfde motor concurreren dan niet op de motor, en ook niet meer op wie de beste mensen toevallig aan boord heeft, maar op wiens kennis het best is georganiseerd. Dat is dezelfde conclusie waar <a href="/whitepapers/de-beste-keuze-is.html">het eerste deel van deze reeks</a> op uitkwam langs een andere weg, en ze wint hier aan urgentie: de organisatie die haar eigenheid vastlegt, maakt haar schaalbaar; de organisatie die haar in hoofden laat, huurt straks dezelfde log&eacute; als iedereen en vraagt zich af waarom alle antwoorden hetzelfde klinken.</p>
+
+      <h3>Slot</h3>
+      <p>De race om de slimste machine is beslist, en dat is voor vrijwel iedereen goed nieuws: de winnaars verhuren hun machines voor steeds minder. De race die begint, gaat ergens anders over. Niet wie de beste log&eacute; heeft &mdash; die logeert overal. Maar wie de best georganiseerde kast heeft, en wie de sleutels beheert.</p>
+      <p>Voor kennisorganisaties is dat geen technologievraag. Het is de vraag waar hun waarde eigenlijk zit, waar die is vastgelegd, wie erover gaat, en wat er overblijft wanneer de log&eacute; vertrekt. Wie die vragen kan beantwoorden, kan elke AI aan. Wie ze niet kan beantwoorden, heeft geen AI-probleem &mdash; hij had al een kennisprobleem, en de log&eacute; maakt het alleen sneller zichtbaar.</p>
+      <p class="pull">Als kennis jouw kapitaal is: wie beheert dan de kluis?</p>
+
+      <h2 id="amendement"><span class="num">A</span>Amendement: over wat de markt GEO noemt</h2>
+      <div class="serie">
+        <span class="lbl">Amendement</span>
+        <span>Een amendement verhoudt zich tot een paper zoals een kanttekening tot een wet: het verandert de tekst niet, het verheldert haar toepassing. Geen zelfstandig deel van de reeks.</span>
+      </div>
+
+      <h3>Wat GEO is, ontdaan van de verkoop</h3>
+      <p>Generative Engine Optimization &mdash; GEO &mdash; is de jonge discipline die belooft wat de afkorting suggereert: zorgen dat AI-systemen een organisatie vinden, begrijpen en citeren wanneer zij hun antwoorden samenstellen. Het vraagstuk erachter is re&euml;el. <a href="/whitepapers/de-beste-keuze-is.html">Het eerste deel van deze reeks</a> documenteerde de verschuiving: wie iets zoekt, krijgt steeds vaker een antwoord in plaats van een lijst met links &mdash; en wie in dat antwoord niet voorkomt, bestaat voor die zoeker niet. De vraag hoe je in het antwoord komt, is dus legitiem, en de markt die haar beantwoordt, groeit hard.</p>
+      <p>Wat die markt levert, is in de kern tekst- en techniekwerk aan de buitenkant. Pagina&rsquo;s herschrijven in vraag-en-antwoordvorm. Gestructureerde gegevens toevoegen zodat machines de inhoud beter lezen. Formuleringen aanpassen zodat ze zich makkelijker laten citeren. Aanwezigheid opbouwen op de plekken die taalmodellen zwaar wegen. Niets daarvan is onzin, en een deel ervan is gewoon vakwerk. Maar het is optimalisatie van de presentatie, uitgevoerd door een externe partij, op een fundament waarnaar die partij zelden vraagt. En daarmee begint het probleem.</p>
+
+      <h3>De buitenkant werkt niet zonder de binnenkant</h3>
+      <p>Waarom citeert een AI-systeem de ene bron wel en de andere niet? Het eerste deel van deze reeks gaf het antwoord op patroonniveau: zulke systemen behandelen als betrouwbaar wat consistent is over meerdere plekken, wat door onafhankelijke derden wordt bevestigd, wat controleerbaar is, en wat herleidbaar is naar een aanwijsbare herkomst. Dat zijn geen eigenschappen van een tekst. Het zijn eigenschappen van een organisatie &mdash; van hoe zij haar kennis vaststelt, bijhoudt en verantwoordt.</p>
+      <p>Daaruit volgt de grens van elk aanbod dat alleen aan de buitenkant werkt. Wie zijn teksten laat optimaliseren terwijl zijn kennisbasis niet is vastgesteld, poetst de etalage van een winkel zonder voorraadbeheer. Het kan even werken; het houdt geen stand tegen een concurrent bij wie het klopt. En er is een scherper risico, dat dit paper als derde lek beschreef: het verkeerde antwoord met de goede handtekening. Een organisatie waarvan de openbare informatie verouderde standpunten, oude tarieven en tegenstrijdige versies bevat, en die dat geheel vervolgens beter vindbaar en citeerbaar laat maken, versnelt precies het verkeerde. De machine citeert dan met meer overtuiging wat niet meer waar is &mdash; met de naam van de organisatie eronder.</p>
+      <p class="pull">Optimaliseren zonder gezag is de fout verspreiden op schaal. Dat is geen argument tegen GEO. Het is een volgorde-argument: eerst de kast, dan de etalage.</p>
+
+      <h3>De vier eisen zijn het programma</h3>
+      <p>Hier keren de vier eisen terug, en de vertaling is opvallend direct. Bedoeld als sleuteltest voor de eigen kennisbasis, blijken zij &eacute;&eacute;n voor &eacute;&eacute;n precies het profiel op te bouwen dat selectiemachines als betrouwbare bron behandelen.</p>
+      <p>Kennis die expliciet is vastgesteld, verschijnt overal in dezelfde, actuele versie &mdash; en consistentie over bronnen is voor een machine een van de sterkste betrouwbaarheidssignalen. Een mens die beslist wat geldig blijft, zorgt dat verouderde claims niet alleen intern worden herzien maar ook extern verdwijnen &mdash; waardoor het systeem geen tegenspraak aantreft tussen wat de organisatie vandaag zegt en wat zij vorig jaar zei. Antwoorden die herleidbaar zijn naar hun bron, leveren exact het soort controleerbare claims dat machines zwaarder wegen dan beweringen zonder herkomst. En een kennisbasis die eigendom blijft van de organisatie, maakt van het citatieprofiel een bezit dat meegroeit &mdash; geen campagne die stopt als het contract stopt.</p>
+      <p>De conclusie laat zich in &eacute;&eacute;n zin samenvatten: wat de markt GEO noemt, is grotendeels een bijproduct van gezag over eigen kennis. De buitenwereld beloont wat voor de binnenwereld gebouwd werd. Wie de vier eisen serieus neemt, voert het GEO-programma uit zonder er &eacute;&eacute;n term van te kennen &mdash; en wie ze overslaat, koopt zichtbaarheid voor een fundament dat de zichtbaarheid niet draagt.</p>
+
+      <h3>Drie vragen voor wie een GEO-aanbieding op tafel heeft</h3>
+      <p>Voor de koper die op dit moment een voorstel beoordeelt, volgt hieruit een korte toets &mdash; dezelfde sleuteltest, nu toegepast op de GEO-markt zelf.</p>
+      <p><strong>E&eacute;n: vraagt deze partij naar onze vastgestelde kennis, of gaat ze direct naar de teksten?</strong> Een aanbieder die begint bij de vraag wat de organisatie als geldig beschouwt, wie dat bijhoudt en hoe actueel het is, werkt aan het fundament. Een aanbieder die begint bij de pagina&rsquo;s, werkt aan de etalage &mdash; en zal na oplevering niet verantwoordelijk zijn voor wat erin lag.</p>
+      <p><strong>Twee: kan ze uitleggen waar&oacute;p een systeem ons zou citeren &mdash; herleidbaar &mdash; of belooft ze zichtbaarheid zonder grond?</strong> Wie zichtbaarheid belooft, moet kunnen aanwijzen welke controleerbare, consistente, bevestigde kennis die zichtbaarheid gaat dragen. Een belofte zonder dat antwoord is een mening over de toekomst.</p>
+      <p><strong>Drie: wat blijft er staan als wij van aanbieder wisselen?</strong> Als het antwoord neerkomt op herschreven teksten en instellingen in andermans systeem, is het werk een dienst. Als het antwoord een geordende, vastgestelde, eigen kennisbasis is die elk volgend systeem kan voeden, is het werk een bezit. Het verschil tussen die twee is het verschil tussen huren en hebben.</p>
+      <p>Aan de antwoorden herken je, net als in het paper, met wie je te maken hebt. En de volgorde blijft zoals ze is: een organisatie die de kast op orde heeft, kan elke etalagebouwer gebruiken &mdash; een organisatie die alleen de etalage laat bouwen, heeft straks bezoekers voor een lege winkel.</p>
+      <p class="pull">Wie de kast op orde heeft, hoeft de log&eacute; niet te overtuigen. Machines citeren vanzelf de best geordende bron in de kamer.</p>
+
+      <section class="bronnen">
+        <div class="lbl">Bronnen en verantwoording</div>
+        <p class="intro">Dit paper voert twee eigen metingen aan en bouwt voor de rest op de eerdere drie delen, waar de onderbouwing per bron is nagetrokken en gedateerd. Waar dit paper naar die delen verwijst, staat het bewijs daar.</p>
+
+        <h4>Waarop dit paper rust</h4>
+        <ul>
+          <li><strong>De verschuiving van vindbaarheid naar aanbeveelbaarheid</strong>, en de patronen waarop AI-systemen bronnen selecteren &mdash; onderbouwd in <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a>, met gedateerde bronnen bij elke bewering. Het amendement steunt hier volledig op.</li>
+          <li><strong>Dat goedkeuren geen beslissen is</strong>, en dat controle afneemt naarmate een systeem vaker gelijk heeft &mdash; onderbouwd in <a href="/whitepapers/de-mens-beslist.html">De mens beslist (of niet meer?)</a>, met meta-analyses en veldexperimenten.</li>
+          <li><strong>Dat een publieke AI-agent namens de organisatie spreekt met de aansprakelijkheid die daarbij hoort</strong> &mdash; onderbouwd in <a href="/whitepapers/de-klinkklare-onzin.html">De klinkklare (on-)zin van je AI-agent</a>.</li>
+        </ul>
+
+        <h4>Eigen bronnen van dit paper</h4>
+        <p class="intro">Per bron staat vermeld wat eraan is ontleend en over welke periode is gemeten.</p>
+        <ul>
+          <li><strong>Stanford HAI</strong> &mdash; <em>AI Index Report 2025</em>. De kosten voor prestaties op GPT-3.5-niveau daalden van <strong>20 dollar naar 7 dollarcent per miljoen tokens</strong> tussen <strong>november 2022 en oktober 2024</strong>: een daling van ruim een factor 280. Hieraan is de uitspraak ontleend dat rekenkracht die drie jaar geleden een investering was, vandaag een abonnement is. <a href="https://hai.stanford.edu/ai-index/2025-ai-index-report" target="_blank" rel="noopener noreferrer">Stanford HAI</a></li>
+          <li><strong>Epoch AI</strong> &mdash; analyse van inferentieprijzen. Schat dat de prijs voor een gegeven prestatieniveau, afhankelijk van de taak, <strong>9 tot 900 keer per jaar</strong> daalt. Ontleend: de richting en de orde van grootte van de commoditisering, niet een exact tempo. <a href="https://epoch.ai/data-insights/llm-inference-price-trends" target="_blank" rel="noopener noreferrer">Epoch AI</a></li>
+          <li><strong>Sharp</strong> &mdash; Nederlands werkgeversonderzoek, <strong>december 2025</strong>. <strong>46,8 procent</strong> van de Nederlandse medewerkers gebruikt AI-hulpmiddelen zonder dit te melden, terwijl <strong>97 procent</strong> van de bedrijven een AI-beleid heeft. Hieraan is de passage over stil gebruik ontleend, inclusief de spanning tussen beleid op papier en praktijk.</li>
+          <li><strong>Beeckestijn Business School</strong> &mdash; <em>AI &amp; Digital Marketing Trends 2026</em>, <strong>december 2025</strong>. Rapporteert onafhankelijk hetzelfde patroon: ruim de helft van de medewerkers meldt het gebruik niet. Opgenomen als bevestiging uit een tweede, onafhankelijke meting.</li>
+        </ul>
+      </section>
+    </article>
+  </div>
+
+  <footer class="foot">
+    <span>&copy; R.O.B. Concepting &middot; Rob de Rooij</span>
+    <span><a href="/">rob-concepting.com</a> &middot; <a href="/whitepapers/">Whitepapers</a></span>
+  </footer>
+
+  <script>
+    (function () {
+      var form = document.getElementById('dlForm');
+      var btn  = document.getElementById('dlBtn');
+      var msg  = document.getElementById('dlMsg');
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name  = document.getElementById('dlName').value.trim();
+        var email = document.getElementById('dlEmail').value.trim();
+        var honey = document.getElementById('dlHoney').value;
+
+        msg.className = 'dl-msg';
+        if (!name || !email) {
+          msg.className = 'dl-msg err';
+          msg.textContent = 'Vul je naam en e-mailadres in.';
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          msg.className = 'dl-msg err';
+          msg.textContent = 'Dat e-mailadres lijkt niet te kloppen.';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Versturen…';
+
+        fetch('/.netlify/functions/whitepaper', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            _honey: honey,
+            paper: 'de-mens-beslist',
+            title: 'De mens beslist (of niet meer?) — Waarom goedkeuren geen beslissen is'
+          })
+        })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (res.ok && res.d && res.d.ok) {
+            form.reset();
+            msg.className = 'dl-msg ok';
+            msg.textContent = 'Bijna klaar — check je inbox en klik op de bevestigingslink.';
+            btn.textContent = 'Check je inbox';
+          } else {
+            msg.className = 'dl-msg err';
+            msg.textContent = (res.d && res.d.error) || 'Er ging iets mis. Probeer het zo nog eens.';
+            btn.disabled = false;
+            btn.textContent = 'Vraag de PDF aan →';
+          }
+        })
+        .catch(function () {
+          msg.className = 'dl-msg err';
+          msg.textContent = 'Er ging iets mis. Probeer het zo nog eens.';
+          btn.disabled = false;
+          btn.textContent = 'Vraag de PDF aan →';
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
