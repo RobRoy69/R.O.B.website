@@ -79,6 +79,32 @@ function page({ status = 200, eyebrow, title, body, cta }) {
 }
 
 // ── Handler ───────────────────────────────────────────────────────────────────
+// Storing in de LEVERING melden. Bewust via mail en niet alleen via console.error: een
+// logregel die niemand leest is geen meting, en dat is vandaag al twee keer gebleken
+// (het chat-archief dat twee maanden op timing dreef, en deze levering die pas opviel
+// doordat Rob een mail opende). Bevat geen bezoekersgegevens — alleen wat er misging.
+async function meldLeveringsstoring(resendKey, paper, reden) {
+  if (!resendKey) { console.error('[levering] geen RESEND_API_KEY — storing blijft onopgemerkt'); return; }
+  const tijd = new Date().toLocaleString('nl-NL', {
+    timeZone: 'Europe/Amsterdam', dateStyle: 'short', timeStyle: 'short'
+  });
+  try {
+    await sendMail(resendKey, {
+      from: mailFrom(),
+      to: [mailToRob()],
+      subject: 'R.O.B. — whitepaper-levering geblokkeerd',
+      text: `Een bevestigde whitepaper-aanvraag is NIET geleverd.\n\n`
+          + `Tijd: ${tijd}\nWhitepaper: ${paper.title}\nVerwacht bestand: ${paper.file}\nReden: ${reden}\n\n`
+          + `De bezoeker heeft zijn adres wel bevestigd en ziet een bericht dat jij hem persoonlijk stuurt.\n`
+          + `Gegevens van die persoon staan in de gewone lead-mail, niet hier.\n\n`
+          + `Waar te kijken: whitepapers/bestand/ in de publicatie, en de PAPERS-tabel in `
+          + `netlify/functions/lib/papers.js.`
+    });
+  } catch (e) {
+    console.error('[levering] storingsmail zelf mislukt:', e.message);
+  }
+}
+
 export default async (req) => {
   const url   = new URL(req.url);
   const token = url.searchParams.get('t');
@@ -188,6 +214,41 @@ ${SITE}`;
   </div>
 </body></html>`;
 
+  // ── Meting VÓÓR de aflevering ───────────────────────────────────────────────
+  // Op 2026-07-27 kreeg Rob de verkeerde PDF toegestuurd: paper 04 vroeg aan onder de slug
+  // van paper 03, omdat de downloadsectie letterlijk was overgenomen. Niets ving dat — de
+  // hele buildketen dekte de publicatie en niets dekte wat er per mail uitging. Hij
+  // ontdekte het door de mail te openen.
+  //
+  // De buildpoort vangt die kopieerfout nu, maar dat is een controle op de bron. Hier
+  // staat de controle op de AFLEVERING: bestaat het bestand waarnaar we een bezoeker
+  // sturen werkelijk? Een mail met een dode link is erger dan geen mail, want de bezoeker
+  // heeft dan wél zijn adres afgegeven.
+  //
+  // Onderscheid tussen "bewezen weg" en "kon niet kijken": een harde 404 blokkeert de
+  // verzending, een netwerkfout niet. Een legitieme aflevering weigeren omdat onze eigen
+  // controle hapert, zou de bezoeker straffen voor onze storing.
+  let bestandStatus = 'ongecontroleerd';
+  try {
+    const head = await fetch(pdfUrl, { method: 'HEAD' });
+    bestandStatus = String(head.status);
+    if (head.status === 404) {
+      console.error(`[levering] GEBLOKKEERD — ${paper.file} bestaat niet op ${pdfUrl}`);
+      await meldLeveringsstoring(resendKey, paper, `het bestand ${paper.file} geeft 404 — er is GEEN mail verstuurd`);
+      return page({
+        status: 200,
+        eyebrow: 'Bevestigd',
+        title: 'Dank &mdash; <b>je adres is bevestigd</b>',
+        body: `<p>Bij het klaarzetten van het bestand ging iets mis aan onze kant. Rob heeft hier bericht van gekregen en stuurt je de whitepaper persoonlijk toe.</p>
+               <p class="fine">Excuses voor het ongemak &mdash; je hoeft verder niets te doen.</p>`,
+        cta: backToOverview
+      });
+    }
+  } catch (e) {
+    // Niet kunnen kijken is geen bewijs van afwezigheid. Wel melden.
+    console.error(`[levering] kon ${paper.file} niet controleren: ${e.message}`);
+  }
+
   let mailed = true;
   try {
     await sendMail(resendKey, {
@@ -198,6 +259,9 @@ ${SITE}`;
       html,
       reply_to: mailToRob()
     });
+    // Positief spoor: WELK bestand is verstuurd, onder welke slug. Zonder dit is een
+    // verkeerde levering alleen te ontdekken door de mail te openen.
+    console.log(`[levering] verstuurd — slug=${check.slug} bestand=${paper.file} status=${bestandStatus}`);
   } catch (err) {
     console.error('[whitepaper-confirm] PDF-mail mislukt:', err.message);
     mailed = false;
@@ -216,6 +280,8 @@ ${SITE}`;
 Naam: ${check.name || '(niet opgegeven)'}
 E-mail: ${check.email}   <- bevestigd via de opt-in-link
 Whitepaper: ${paper.title}
+Bestand: ${paper.file}   <- controleer of dit bij bovenstaande titel hoort
+Aangevraagd onder: ${check.slug}
 Bevestigd op: ${stamp}
 
 De PDF is ${mailed ? 'naar deze persoon gestuurd' : 'NIET verstuurd — de mail faalde; volg dit handmatig op'}.`,
