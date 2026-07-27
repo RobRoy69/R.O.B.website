@@ -140,6 +140,17 @@ try {
     if (!existsSync(pdf) || statSync(pdf).size < 20000) {
       fouten.push(`${n} biedt een PDF aan die ontbreekt of verdacht klein is`);
     }
+    // De slug in het aanvraagformulier bepaalt WELKE pdf de bezoeker krijgt. Op
+    // 2026-07-27 stond in paper 04 de slug van paper 03, omdat de downloadsectie
+    // letterlijk was overgenomen inclusief het script. Wie "Wie heeft de sleutels?"
+    // aanvroeg, kreeg "De mens beslist" toegestuurd — het verkeerde antwoord met de
+    // goede handtekening, precies wat dat paper beschrijft. Niets ving dat; Rob
+    // ontdekte het doordat hij de mail opende.
+    const eigen = n.replace(/\.html$/, '');
+    const slug = (paper.match(/paper:\s*'([a-z0-9-]+)'/) || [])[1];
+    if (slug !== eigen) {
+      fouten.push(`${n} vraagt de PDF aan onder slug "${slug || '(geen)'}" — dat levert het verkeerde bestand`);
+    }
   }
 } catch (e) {
   console.error('POORT ROOD: publicatie kon niet gelezen worden —', e.message, '(fail closed)');
