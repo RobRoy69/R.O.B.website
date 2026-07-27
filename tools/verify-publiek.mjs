@@ -125,6 +125,22 @@ try {
   } else if (Number(geteld) !== papers) {
     fouten.push(`whitepaper-index zegt "${geteld} whitepapers" terwijl er ${papers} zijn`);
   }
+
+  // ── 5. beloofde PDF's moeten bestaan ────────────────────────────────────────
+  // De whitepaper-index belooft "de opgemaakte versie stuur ik je als PDF toe". Paper 04
+  // ging op 2026-07-27 live ZONDER PDF en zonder downloadsectie: een bezoeker vond die
+  // belofte daar niet terug. Stil, want niets controleerde het. Nu wel.
+  for (const n of readdirSync(path.join(UIT, 'whitepapers')).filter(x => x.endsWith('.html') && x !== 'index.html')) {
+    const paper = readFileSync(path.join(UIT, 'whitepapers', n), 'utf-8');
+    if (!paper.includes('class="dl"')) {
+      fouten.push(`${n} heeft geen downloadsectie terwijl de index een PDF belooft`);
+      continue;
+    }
+    const pdf = path.join(UIT, 'whitepapers', 'bestand', n.replace(/\.html$/, '.pdf'));
+    if (!existsSync(pdf) || statSync(pdf).size < 20000) {
+      fouten.push(`${n} biedt een PDF aan die ontbreekt of verdacht klein is`);
+    }
+  }
 } catch (e) {
   console.error('POORT ROOD: publicatie kon niet gelezen worden —', e.message, '(fail closed)');
   if (saboteer && existsSync(saboteurPad)) unlinkSync(saboteurPad);

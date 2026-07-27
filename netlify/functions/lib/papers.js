@@ -22,6 +22,11 @@ export const PAPERS = {
     title: 'De mens beslist (of niet meer?) — Waarom goedkeuren geen beslissen is',
     file:  'de-mens-beslist.pdf',
     page:  '/whitepapers/de-mens-beslist.html'
+  },
+  'wie-heeft-de-sleutels': {
+    title: 'Wie heeft de sleutels? — Gezag over eigen kennis in het AI-tijdperk',
+    file:  'wie-heeft-de-sleutels.pdf',
+    page:  '/whitepapers/wie-heeft-de-sleutels.html'
   }
 };
 
