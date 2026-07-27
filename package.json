@@ -10,6 +10,7 @@
   },
   "scripts": {
     "test:agent": "node tools/build-promptfoo-prompt.mjs && npx promptfoo eval",
-    "test:archief": "node tools/test-archief-alarm.mjs"
+    "test:archief": "node tools/test-archief-alarm.mjs",
+    "review": "node tools/review.mjs"
   }
 }
