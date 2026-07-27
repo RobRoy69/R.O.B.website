@@ -16,7 +16,7 @@
 // Sabotage-test: node tools/verify-publiek.mjs --saboteer
 // Exit 0 = groen, exit 1 = rood.
 
-import { readdirSync, existsSync, writeFileSync, unlinkSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, writeFileSync, unlinkSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -105,6 +105,25 @@ try {
     if (existsSync(path.join(UIT, p))) {
       fouten.push(`hoort NIET publiek te zijn: ${p}`);
     }
+  }
+
+  // ── 4. tellen wat geteld wordt ──────────────────────────────────────────────
+  // Op 2026-07-27 stond op de whitepaper-index "3 whitepapers" terwijl er vier waren:
+  // de kaart en de ItemList waren bijgewerkt, de teller niet. Weer een met de hand
+  // onderhouden kopie van iets dat te tellen valt. Deze poort telt het gewoon.
+  const idx = readFileSync(path.join(UIT, 'whitepapers', 'index.html'), 'utf-8');
+  const kaarten = (idx.match(/class="card"/g) || []).length;
+  const geteld  = (idx.match(/<span>(\d+) whitepapers?<\/span>/) || [])[1];
+  const papers  = readdirSync(path.join(UIT, 'whitepapers'))
+    .filter(n => n.endsWith('.html') && n !== 'index.html').length;
+
+  if (kaarten !== papers) {
+    fouten.push(`whitepaper-index toont ${kaarten} kaart(en) terwijl er ${papers} paper-pagina's zijn gepubliceerd`);
+  }
+  if (geteld === undefined) {
+    fouten.push('whitepaper-index heeft geen leesbare teller ("N whitepapers")');
+  } else if (Number(geteld) !== papers) {
+    fouten.push(`whitepaper-index zegt "${geteld} whitepapers" terwijl er ${papers} zijn`);
   }
 } catch (e) {
   console.error('POORT ROOD: publicatie kon niet gelezen worden —', e.message, '(fail closed)');

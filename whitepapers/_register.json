@@ -1,6 +1,6 @@
 {
   "bron": "agora-rob-register / claims_public",
-  "synced_at": "2026-07-27T12:53:31.601Z",
+  "synced_at": "2026-07-27T14:48:09.033Z",
   "toelichting": "Afgeleide projectie. Bewerk de DB, niet dit bestand.",
   "claims": [
     {
@@ -413,7 +413,7 @@
     },
     {
       "ext_ref": "claim:wp:052",
-      "text": "De prijs voor een gegeven taalmodel-prestatieniveau daalt, afhankelijk van de taak, naar schatting 9 tot 900 keer per jaar.",
+      "text": "De prijs voor een gegeven taalmodel-prestatieniveau daalt structureel en snel; schattingen van het tempo lopen sterk uiteen naar taak.",
       "dated": "2025-01-01",
       "dated_precisie": "jaar",
       "dated_soort": "brondatum",
@@ -421,7 +421,7 @@
     },
     {
       "ext_ref": "claim:wp:053",
-      "text": "In december 2025 gebruikte 46,8 procent van de Nederlandse medewerkers AI-hulpmiddelen zonder dit te melden, terwijl 97 procent van de bedrijven een AI-beleid had.",
+      "text": "In december 2025 gebruikte 46,8 procent van de Nederlandse medewerkers AI-hulpmiddelen zonder dit te melden.",
       "dated": "2025-12-01",
       "dated_precisie": "maand",
       "dated_soort": "brondatum",
