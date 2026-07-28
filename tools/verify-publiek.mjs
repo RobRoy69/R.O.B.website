@@ -162,18 +162,26 @@ try {
   // hardgecodeerd in vier functiebestanden, in een PUBLIEKE repo — en NOTIFY_EMAIL was
   // nooit gezet, dus die terugval wás de instelling. Nu een plek (lib/mail.js) met een
   // zakelijk adres. Deze poort voorkomt dat er weer een persoonlijk adres in sluipt.
-  const fnDir = path.resolve(ROOT, 'netlify', 'functions');
-  const scanFns = (dir) => {
+  //
+  // OOK DE DOCUMENTATIE, sinds 2026-07-28. De poort keek alleen naar .js in
+  // netlify/functions/. De README stond ondertussen in dezelfde publieke repo met het
+  // privéadres als "default" van NOTIFY_EMAIL — een regel die niemand meer las omdat de code
+  // al gerepareerd was. Een lek in een leesbaar bestand is geen kleiner lek.
+  const PERSOONLIJK = /[a-z0-9._%+-]+@(gmail|hotmail|outlook|live|icloud|yahoo)\.[a-z.]+/i;
+  const scan = (dir, mag) => {
     for (const e of readdirSync(dir, { withFileTypes: true })) {
+      if (e.name === 'node_modules' || e.name.startsWith('.')) continue;
       const p = path.join(dir, e.name);
-      if (e.isDirectory()) { scanFns(p); continue; }
-      if (!e.name.endsWith('.js')) continue;
-      const src = readFileSync(p, 'utf-8');
-      const treffer = src.match(/[a-z0-9._%+-]+@(gmail|hotmail|outlook|live|icloud|yahoo)\.[a-z.]+/i);
-      if (treffer) fouten.push(`persoonlijk mailadres in de bron: netlify/functions/${e.name} bevat ${treffer[0]}`);
+      if (e.isDirectory()) { scan(p, mag); continue; }
+      if (!mag(e.name)) continue;
+      const treffer = readFileSync(p, 'utf-8').match(PERSOONLIJK);
+      if (treffer) {
+        fouten.push(`persoonlijk mailadres in de repo: ${path.relative(ROOT, p).split(path.sep).join('/')} bevat ${treffer[0]}`);
+      }
     }
   };
-  scanFns(fnDir);
+  scan(path.resolve(ROOT, 'netlify', 'functions'), (n) => n.endsWith('.js'));
+  scan(ROOT, (n) => n.endsWith('.md') || n === 'netlify.toml' || n === 'package.json');
 
   // ── 7. entiteitsgraaf en llms.txt ───────────────────────────────────────────
   // Voor 2026-07-27 stonden er VIJF losse Person-objecten voor dezelfde persoon en NUL

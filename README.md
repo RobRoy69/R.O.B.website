@@ -47,7 +47,7 @@ Frontend is vanilla HTML/CSS/JS in één `index.html` — geen framework, geen f
 | `HELICONE_API_KEY` | Optioneel | Functions | LLM-observability via Helicone proxy. Zonder = directe call naar Anthropic. |
 | `WHATSAPP_NUMBER` | Optioneel | Functions | Formaat `31612345678` (zonder + of 00). Zonder geeft `/whatsapp` een 503. |
 | `RESEND_API_KEY` | Optioneel | Functions | Mailnotificatie naar Rob bij chat ≥ 3 turns. Zonder = stilzwijgend uit. |
-| `NOTIFY_EMAIL` | Optioneel | Functions | Default `robderooijbreda@gmail.com` |
+| `NOTIFY_EMAIL` | Optioneel | Functions | Default `contact@rob-concepting.com` (zie `netlify/functions/lib/mail.js`) |
 | `NOTIFY_FROM` | Optioneel | Functions | Default `R.O.B. Concepting <onboarding@resend.dev>`. Pas aan na Resend-domein-verificatie. |
 
 Alle keys "Mark as secret".
