@@ -198,6 +198,30 @@ try {
     }
   };
   scanLd(UIT);
+
+  // ── 8. koppenstructuur ──────────────────────────────────────────────────────
+  // De homepage had ZES h1-koppen (een sr-only plus vijf pane-titels) en de whitepapers
+  // sprongen van h1 naar h3 naar h2. Een pagina heeft één hoofdkop, en niveaus slaan niet
+  // over: dat is hoe een schermlezer en een crawler de structuur lezen.
+  const scanKop = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) { scanKop(p); continue; }
+      if (!e.name.endsWith('.html')) continue;
+      const h = readFileSync(p, 'utf-8');
+      const rel = path.relative(UIT, p).split(path.sep).join('/');
+      const h1 = (h.match(/<h1[\s>]/g) || []).length;
+      if (h1 !== 1) fouten.push(`${rel} heeft ${h1} h1-kop(pen) — er hoort er precies één te zijn`);
+      const niveaus = [...h.matchAll(/<h([1-4])[\s>]/g)].map(m => Number(m[1]));
+      for (let i = 1; i < niveaus.length; i++) {
+        if (niveaus[i] - niveaus[i - 1] > 1) {
+          fouten.push(`${rel} slaat een kopniveau over: h${niveaus[i - 1]} direct gevolgd door h${niveaus[i]}`);
+          break;
+        }
+      }
+    }
+  };
+  scanKop(UIT);
 } catch (e) {
   console.error('POORT ROOD: publicatie kon niet gelezen worden —', e.message, '(fail closed)');
   if (saboteer && existsSync(saboteurPad)) unlinkSync(saboteurPad);

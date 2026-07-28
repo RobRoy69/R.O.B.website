@@ -59,6 +59,21 @@ const slug = id => id.split(':').pop();
 // build-site-kennis.mjs. Zie daar waarom dat een module is en geen kopie.
 const datumLabel = (b) => maakLabel(b.dated, b.precisie, b.soort);
 
+// De bronlink. /vragen/ toonde 34 gedateerde beweringen en NUL links: de pagina zei "waar
+// dit op rust" en liet je het niet nazoeken. Het meest citeerbare oppervlak had daarmee de
+// minst verifieerbare onderbouwing — op een site die herleidbaarheid bepleit.
+//
+// Niet elke bron heeft een URL: boeken en academische werken (Polanyi, Nonaka, Teece,
+// Buchanan) staan er zonder. Dan komt de naam er wel, zonder link. Een naam is nog altijd
+// herleidbaar; een verzonnen link is dat niet.
+const bronlink = (b) => {
+  if (!b.bron_naam) return '';
+  const naam = esc(b.bron_naam);
+  return b.bron_url
+    ? ` <a class="v-bron" href="${esc(b.bron_url)}" target="_blank" rel="noopener noreferrer">${naam}</a>`
+    : ` <span class="v-bron v-bron-los">${naam}</span>`;
+};
+
 const faq = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -77,7 +92,7 @@ const secties = vragen.map((v, i) => `
         <div class="v-grond">
           <div class="v-grond-kop">Waar dit op rust</div>
           <ul>
-${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datumLabel(b))}</span>${esc(b.text)}</li>`).join('\n')}
+${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datumLabel(b))}</span>${esc(b.text)}${bronlink(b)}</li>`).join('\n')}
           </ul>
         </div>${(v.verder || []).length ? `
         <div class="v-verder">Uitgewerkt in ${v.verder.map(([t, u]) => `<a href="${esc(u)}">${esc(t)}</a>`).join(' &middot; ')}</div>` : ''}
@@ -169,6 +184,10 @@ ${JSON.stringify(faq, null, 2).split('\n').map(l => '  ' + l).join('\n')}
     .v-datum{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;
       color:var(--purple);background:rgba(15,168,203,.1);padding:1px 7px;margin-right:9px;
       white-space:nowrap;font-variant-numeric:tabular-nums}
+    .v-bron{font-size:13px;white-space:nowrap;color:var(--cyan);text-decoration:none;
+      border-bottom:1px solid rgba(15,168,203,.35)}
+    .v-bron:hover{border-bottom-color:var(--cyan)}
+    .v-bron-los{color:var(--muted);border-bottom:1px dotted rgba(107,100,120,.5)}
     .v-verder{margin-top:22px;padding-top:16px;border-top:1px solid var(--rule);
       font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:var(--muted)}
     .v-verder a{color:var(--cyan);text-decoration:none}

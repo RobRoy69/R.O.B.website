@@ -114,6 +114,9 @@ const STIJL = `
     .b-vid .speel span{background:rgba(14,21,37,.82);color:#fff;font-family:'IBM Plex Mono',monospace;
       font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px 22px}
     .b-vid:hover .speel span{background:var(--cyan)}
+    .b-bron{font-size:13px;white-space:nowrap;color:var(--cyan);text-decoration:none;
+      border-bottom:1px solid rgba(15,168,203,.35)}
+    .b-bron-los{color:var(--muted);border-bottom:1px dotted rgba(107,100,120,.5)}
     .deel{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
       display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .deel-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
@@ -227,7 +230,7 @@ const grond = (b) => b.bewijs.length ? `
         <div class="b-grond">
           <div class="b-grond-kop">Waar dit op rust</div>
           <ul>
-${b.bewijs.map(c => `            <li><span class="b-datumchip">${esc(datumLabel(c.dated, c.dated_precisie, c.dated_soort))}</span>${esc(c.text)}</li>`).join('\n')}
+${b.bewijs.map(c => `            <li><span class="b-datumchip">${esc(datumLabel(c.dated, c.dated_precisie, c.dated_soort))}</span>${esc(c.text)}${c.bron_naam ? (c.bron_url ? ` <a class="b-bron" href="${esc(c.bron_url)}" target="_blank" rel="noopener noreferrer">${esc(c.bron_naam)}</a>` : ` <span class="b-bron b-bron-los">${esc(c.bron_naam)}</span>`) : ''}</li>`).join('\n')}
           </ul>
         </div>` : '';
 
