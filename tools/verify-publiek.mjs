@@ -222,6 +222,46 @@ try {
     }
   };
   scanKop(UIT);
+
+  // ── 9. het bewijs-endpoint ──────────────────────────────────────────────────
+  // /bewijs.json geeft het gedateerde bewijs machineleesbaar uit. Het mag GEEN
+  // registerkennis dragen: reviewtoestand, ringstatus, publicatiestatus. Precies die velden
+  // lekten tot 2026-07-26 mee in _doors.json.
+  //
+  // Op SLEUTELS toetsen, niet op tekst. Een tekstscan op "ring" sloeg vandaag aan op het
+  // woord "bewering" — de derde valse melding van dat soort in een dag. Een structuur toets
+  // je structureel.
+  const bewijsPad = path.join(UIT, 'bewijs.json');
+  if (!existsSync(bewijsPad)) {
+    fouten.push('bewijs.json ontbreekt in de publicatie');
+  } else {
+    const VERBODEN_SLEUTEL = new Set(['ring', 'review_status', 'publication_status',
+      'copy_review_status', 'quality_signals', 'source_ref', 'verdict', 'mode',
+      'wachtend_op_reviewpoort']);
+    try {
+      const bewijs = JSON.parse(readFileSync(bewijsPad, 'utf-8'));
+      const zoek = (n) => {
+        if (Array.isArray(n)) { n.forEach(zoek); return; }
+        if (!n || typeof n !== 'object') return;
+        for (const [k, v] of Object.entries(n)) {
+          if (VERBODEN_SLEUTEL.has(k)) fouten.push(`bewijs.json draagt interne sleutel "${k}"`);
+          zoek(v);
+        }
+      };
+      zoek(bewijs);
+      if (!Array.isArray(bewijs.beweringen) || bewijs.beweringen.length < 10) {
+        fouten.push('bewijs.json draagt te weinig beweringen om een bewijsbestand te zijn');
+      }
+      for (const b of bewijs.beweringen || []) {
+        if (!b.vastgesteld?.datum || !b.vastgesteld?.precisie || !b.vastgesteld?.soort) {
+          fouten.push(`bewijs.json: ${b.id || '(zonder id)'} mist datum, precisie of soort`);
+          break;
+        }
+      }
+    } catch (e) {
+      fouten.push(`bewijs.json is geen geldige JSON (${e.message})`);
+    }
+  }
 } catch (e) {
   console.error('POORT ROOD: publicatie kon niet gelezen worden —', e.message, '(fail closed)');
   if (saboteer && existsSync(saboteurPad)) unlinkSync(saboteurPad);
