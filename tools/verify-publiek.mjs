@@ -18,6 +18,7 @@
 
 import { readdirSync, readFileSync, existsSync, writeFileSync, unlinkSync, statSync } from 'node:fs';
 import path from 'node:path';
+import { nestingFouten } from './lib/nesting.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const UIT  = path.join(ROOT, 'publiek');
@@ -262,6 +263,21 @@ try {
       fouten.push(`bewijs.json is geen geldige JSON (${e.message})`);
     }
   }
+
+  // ── 10. nesting ────────────────────────────────────────────────────────────
+  // Zie tools/lib/nesting.mjs voor waarom dit een scanner is en geen telling.
+  const scanVorm = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) { scanVorm(p); continue; }
+      if (!e.name.endsWith('.html')) continue;
+      const r = path.relative(UIT, p).split(path.sep).join('/');
+      for (const fout of nestingFouten(readFileSync(p, 'utf-8'))) {
+        fouten.push(`${r}: ${fout}`);
+      }
+    }
+  };
+  scanVorm(UIT);
 } catch (e) {
   console.error('POORT ROOD: publicatie kon niet gelezen worden —', e.message, '(fail closed)');
   if (saboteer && existsSync(saboteurPad)) unlinkSync(saboteurPad);
