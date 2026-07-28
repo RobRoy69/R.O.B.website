@@ -24,6 +24,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { datum, datumLabel } from './lib/datum.mjs';
+import { status, soortLabel } from './lib/status.mjs';
 import { BASIS } from './lib/entiteiten.mjs';
 
 const ROOT  = path.resolve(import.meta.dirname, '..');
@@ -68,6 +69,9 @@ const beweringen = [...gebruik.keys()].sort().map(ref => {
       soort: c.dated_soort,                // brondatum | registratiedatum
       weergave: datumLabel(c.dated, c.dated_precisie, c.dated_soort),
     },
+    soort: c.soort || null,
+    stand: (() => { const s = status(c); return s ? { status: s.woord, waarom: s.uitleg } : null; })(),
+    nagetrokken_op: c.nagetrokken_op || null,
     bron: { naam: c.bron_naam || null, url: c.bron_url || null },
     gebruikt_in: [...gebruik.get(ref)].sort(),
   };

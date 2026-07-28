@@ -100,6 +100,19 @@ if (bewijs) {
   console.log('\nBEWIJS');
   console.log(`  ${a.beweringen} beweringen · ${a.met_bronlink} met bronlink · ${a.beweringen - a.met_bronlink} zonder`);
   console.log(`  precisie: ${a.dagprecies} dag · ${a.maandprecies} maand · ${a.jaarprecies} jaar`);
+
+  // De stand per bewering. "Wacht" is hier geen bijvangst maar de nuttigste regel van het
+  // hele rapport: dat zijn de beweringen die publiek staan zonder dat iemand ze bij de bron
+  // heeft gecontroleerd. Ze bij naam noemen, want een aantal zonder namen doet niets.
+  const st = (w) => bewijs.beweringen.filter(x => x.stand?.status === w);
+  const grondslag = bewijs.beweringen.filter(x => !x.stand);
+  console.log(`  stand: ${st('Klopt').length} klopt · ${st('Verloopt').length} verloopt · `
+    + `${st('Wacht').length} wacht · ${grondslag.length} grondslag (geen houdbaarheid)`);
+  for (const w of ['Verloopt', 'Wacht']) {
+    if (st(w).length) {
+      console.log(`  ${w.toLowerCase()}: ` + st(w).map(x => `${x.bron.naam || x.id}`).join(', '));
+    }
+  }
   const reg = bewijs.beweringen.filter(b => b.vastgesteld.soort !== 'brondatum').length;
   console.log(`  ${reg} bewering(en) op een registratiedatum in plaats van een brondatum`);
   const zonder = bewijs.beweringen.filter(b => !b.bron.url).map(b => b.bron.naam);

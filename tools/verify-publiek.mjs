@@ -37,6 +37,7 @@ const MOET_BESTAAN = [
   'robots.txt',
   'sitemap.xml',
   'vragen/index.html',
+  'bewijs/index.html',
   'nieuws/index.html',
   'nieuws/feed.xml',
   'whitepapers/index.html',
@@ -223,6 +224,30 @@ try {
     }
   };
   scanKop(UIT);
+
+  // ── 8b. dekt de sitemap precies de publicatie? ────────────────────────────────
+  // De sitemap stond tot vandaag met de hand in de repo en miste al een bericht. Nu wordt
+  // hij afgeleid — en deze poort bewaakt dat de afleiding klopt. Beide richtingen: een
+  // pagina die ontbreekt wordt niet gevonden, een URL die niet bestaat is een 404 in de
+  // sitemap en dat kost vertrouwen bij precies de partij die je wilt overtuigen.
+  const smPad = path.join(UIT, 'sitemap.xml');
+  if (existsSync(smPad)) {
+    const inSitemap = new Set([...readFileSync(smPad, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)]
+      .map(m => m[1].replace('https://rob-concepting.com', '')));
+    const opSchijf = new Set();
+    const wandel = (map, pre) => {
+      for (const naam of readdirSync(map)) {
+        const vol = path.join(map, naam);
+        if (statSync(vol).isDirectory()) { wandel(vol, `${pre}${naam}/`); continue; }
+        if (naam.endsWith('.html')) opSchijf.add(naam === 'index.html' ? pre : `${pre}${naam}`);
+      }
+    };
+    wandel(UIT, '/');
+    for (const u of opSchijf) if (!inSitemap.has(u)) fouten.push(`sitemap: ${u} is gepubliceerd maar staat er niet in`);
+    for (const u of inSitemap) if (!opSchijf.has(u)) fouten.push(`sitemap: ${u} staat erin maar bestaat niet`);
+  } else {
+    fouten.push('sitemap.xml ontbreekt in de publicatie');
+  }
 
   // ── 9. het bewijs-endpoint ──────────────────────────────────────────────────
   // /bewijs.json geeft het gedateerde bewijs machineleesbaar uit. Het mag GEEN

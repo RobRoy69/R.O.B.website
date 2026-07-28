@@ -12,6 +12,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { datum, datumLabel as maakLabel } from './lib/datum.mjs';
+import { statusHtml, STATUS_CSS } from './lib/status.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DOORS = path.join(ROOT, 'whitepapers', '_doors.json');
@@ -92,7 +93,7 @@ const secties = vragen.map((v, i) => `
         <div class="v-grond">
           <div class="v-grond-kop">Waar dit op rust</div>
           <ul>
-${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datumLabel(b))}</span>${esc(b.text)}${bronlink(b)}</li>`).join('\n')}
+${v.bewijs.map(b => `            <li><span class="v-datum">${esc(datumLabel(b))}</span>${esc(b.text)}${bronlink(b)}${statusHtml(b, esc)}</li>`).join('\n')}
           </ul>
         </div>${(v.verder || []).length ? `
         <div class="v-verder">Uitgewerkt in ${v.verder.map(([t, u]) => `<a href="${esc(u)}">${esc(t)}</a>`).join(' &middot; ')}</div>` : ''}
@@ -190,6 +191,7 @@ ${JSON.stringify(faq, null, 2).split('\n').map(l => '  ' + l).join('\n')}
       border-bottom:1px solid rgba(15,168,203,.35)}
     .v-bron:hover{border-bottom-color:var(--cyan)}
     .v-bron-los{color:var(--muted);border-bottom:1px dotted rgba(107,100,120,.5)}
+${STATUS_CSS}
     .v-verder{margin-top:22px;padding-top:16px;border-top:1px solid var(--rule);
       font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:var(--muted)}
     .v-verder a{color:var(--cyan);text-decoration:none}
@@ -244,7 +246,7 @@ ${secties}
     <div class="slot-in">
       <div class="lbl">Waarom hier datums staan</div>
       <p>Een cijfer zonder datum is een bewering zonder houdbaarheid. Alles hierboven is gebonden aan een bron met een vastgestelde datum; verandert die bron, dan is te herleiden welk antwoord dat raakt. Dat is dezelfde manier van werken die Rob voor opdrachtgevers bouwt.</p>
-      <p style="margin-top:12px">Alles wat hierboven staat, is ook <a href="/bewijs.json" style="color:var(--cyan)">in één overzicht</a> te vinden: elke bewering met haar datum en haar bron, zodat wie ernaar verwijst de datum kan meenemen.</p>
+      <p style="margin-top:12px">Alles wat hierboven staat, is ook <a href="/bewijs/" style="color:var(--cyan)">in één overzicht</a> te vinden: elke bewering met haar datum, haar bron en of ze bij die bron is nagetrokken &mdash; inclusief wat nog niet is nagetrokken. Voor wie het machinaal wil inlezen: <a href="/bewijs.json" style="color:var(--cyan)">bewijs.json</a>.</p>
     </div>
   </section>
 

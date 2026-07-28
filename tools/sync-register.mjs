@@ -39,7 +39,7 @@ if (!url || !key) terugvallen('AGORA_URL of AGORA_KEY ontbreekt');
 
 let rijen;
 try {
-  const res = await fetch(`${url}/rest/v1/claims_public?select=ext_ref,text,ring,dated,dated_precisie,dated_soort,bron_url,bron_naam&order=ext_ref`, {
+  const res = await fetch(`${url}/rest/v1/claims_public?select=ext_ref,text,ring,dated,dated_precisie,dated_soort,bron_url,bron_naam,soort,herzien_na,in_herziening,nagetrokken_op&order=ext_ref`, {
     headers: { apikey: key, Authorization: `Bearer ${key}` }
   });
   if (!res.ok) terugvallen(`Supabase gaf ${res.status}`);
@@ -67,7 +67,9 @@ const projectie = {
   bron: 'agora-rob-register / claims_public',
   synced_at: new Date().toISOString(),
   toelichting: 'Afgeleide projectie. Bewerk de DB, niet dit bestand.',
-  claims: wp.map(r => ({ ext_ref: r.ext_ref, text: r.text, dated: r.dated, dated_precisie: r.dated_precisie, dated_soort: r.dated_soort, bron_url: r.bron_url, bron_naam: r.bron_naam, ring: r.ring }))
+  claims: wp.map(r => ({ ext_ref: r.ext_ref, text: r.text, dated: r.dated, dated_precisie: r.dated_precisie, dated_soort: r.dated_soort, bron_url: r.bron_url, bron_naam: r.bron_naam, soort: r.soort,
+    herzien_na: r.herzien_na, in_herziening: r.in_herziening,
+    nagetrokken_op: r.nagetrokken_op, ring: r.ring }))
 };
 
 mkdirSync(path.dirname(OUT), { recursive: true });

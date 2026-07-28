@@ -1,6 +1,6 @@
 {
   "bron": "afgeleid uit whitepapers/_register.json (agora-rob-register)",
-  "gebouwd_op": "2026-07-28T13:40:31.252Z",
+  "gebouwd_op": "2026-07-28T13:56:51.082Z",
   "toelichting": "publication_status is afgeleid uit de claimstatus, niet beweerd. Bewerk de DB, niet dit bestand.",
   "doors": [
     {
@@ -21,54 +21,72 @@
           "text": "Wanneer Google een AI-samenvatting toont, klikt 8 procent van de gebruikers door naar een onderliggende website; zonder die samenvatting 15 procent. Op een bron binnen de samenvatting klikt circa 1 procent. Gemeten over 68.879 zoekopdrachten van circa 900 Amerikaanse deelnemers in maart 2025.",
           "dated": "2025-07-22",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/",
-          "bron_naam": "Pew Research Center"
+          "bron_naam": "Pew Research Center",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:002",
           "text": "De aanwezigheid van een AI-samenvatting verlaagde in april 2025 de doorklikkans van de hoogste organische zoekpositie met 34,5 procent, gemeten over 300.000 zoekwoorden.",
           "dated": "2025-04-17",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://ahrefs.com/blog/ai-overviews-reduce-clicks/",
-          "bron_naam": "Ahrefs"
+          "bron_naam": "Ahrefs",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:003",
           "text": "In februari 2026 was datzelfde effect opgelopen naar 58 procent lagere doorklikkans voor de hoogste organische positie, op basis van cijfers over december 2025.",
           "dated": "2026-02-04",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://ahrefs.com/blog/ai-overviews-reduce-clicks-update/",
-          "bron_naam": "Ahrefs"
+          "bron_naam": "Ahrefs",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:004",
           "text": "In Duitsland daalde de doorklikkans van zoekpositie 1 van 27 procent zonder AI-samenvatting naar 11 procent met, gemeten over meer dan honderd miljoen zoekwoorden; Duitse websites verliezen samen circa 265 miljoen organische kliks per maand.",
           "dated": "2026-02-25",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.sistrix.de/news/ai-overviews-in-deutschland-so-stark-sinken-die-klickraten-wirklich/",
-          "bron_naam": "SISTRIX"
+          "bron_naam": "SISTRIX",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:017",
           "text": "In Google AI Mode eindigde 92 tot 94 procent van de zoeksessies zonder klik naar buiten, tegen 35 tot 46 procent bij traditionele zoekopdrachten. Vroege indicatie: kleine gebruikersgroep, afgebakende meetperiode.",
           "dated": "2025-07-30",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.semrush.com/blog/google-ai-mode-seo-impact/",
-          "bron_naam": "Semrush met Datos"
+          "bron_naam": "Semrush met Datos",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:030",
           "text": "Van elke duizend zoekopdrachten in de Verenigde Staten eindigde 58,5 procent zonder klik naar buiten; in de Europese Unie 59,7 procent. Meetperiode september 2022 tot mei 2024.",
           "dated": "2024-07-02",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://sparktoro.com/blog/2024-zero-click-search-study-for-every-1000-us-google-searches-only-374-clicks-go-to-the-open-web-in-the-eu-its-360/",
-          "bron_naam": "SparkToro (Rand Fishkin)"
+          "bron_naam": "SparkToro (Rand Fishkin)",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         }
       ],
       "claim_refs": [
@@ -110,45 +128,60 @@
           "text": "Van bijna 18.000 ondervraagde zakelijke kopers wereldwijd gebruikte 94 procent AI bij aankopen, tegen 89 procent een jaar eerder. Een koopbeslissing kent gemiddeld 13 interne betrokkenen en 9 externe beinvloeders.",
           "dated": "2026-01-21",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.forrester.com/blogs/state-of-business-buying-2026/",
-          "bron_naam": "Forrester"
+          "bron_naam": "Forrester",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:wp:022",
           "text": "Onder 1.076 zakelijke softwarekopers gebruikt 71 procent een AI-chatbot bij softwareonderzoek, tegen circa 60 procent zeven maanden eerder. Chatbots zijn met 54 procent de belangrijkste invloed op de shortlist, voor reviewsites met 43 procent; 69 procent kwam via een chatbot bij een andere leverancier uit.",
           "dated": "2026-04-15",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://learn.g2.com/g2-2026-ai-search-insight-report",
-          "bron_naam": "G2"
+          "bron_naam": "G2",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:wp:031",
           "text": "Zakelijke kopers spraken in 2024 pas met verkopers wanneer zij circa 70 procent van hun aankooptraject hadden afgelegd. De bron heeft dit in 2025 zelf herzien naar circa 60 procent.",
           "dated": "2024-10-09",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://6sense.com/science-of-b2b/the-critical-period-for-b2b-buying/",
-          "bron_naam": "6sense (Kerry Cunningham)"
+          "bron_naam": "6sense (Kerry Cunningham)",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:prop:007",
           "text": "Merken waarvan belofte en ervaring niet op elkaar aansluiten haalden een voorkeursscore van 32, tegen 61 voor merken waar dat wel het geval was: een verschil van 29 punten. Tot 75 procent van de merkopbouw komt uit ervaringstouchpoints.",
           "dated": "2023-02-07",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.kantar.com/Inspiration/Brands/Mind-the-Gap-Why-customer-experience-and-brand-need-to-get-closer",
-          "bron_naam": "Kantar"
+          "bron_naam": "Kantar",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:prop:008",
           "text": "Van 362 onderzochte bedrijven geloofde 80 procent dat zij een superieure klantervaring leverden, terwijl de perceptie van hun klanten een heel ander beeld gaf.",
           "dated": "2005-09-27",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.bain.com/insights/closing-the-delivery-gap",
-          "bron_naam": "Bain & Company"
+          "bron_naam": "Bain & Company",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         }
       ],
       "claim_refs": [
@@ -189,63 +222,84 @@
           "text": "Ruim twee derde van de Nederlandse ondernemers wil binnen tien jaar stoppen; van hen heeft 22 procent geen concrete opvolgingsplannen en zoekt 20 procent wel maar zonder resultaat. Bijna 13 procent is 65-plus.",
           "dated": "2025-12-03",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.abnamro.nl/nl/zakelijk/insights/sectoren-en-trends/sectorprognoses/alle-sectoren/tweederde-van-ondernemers-wil-binnen-tien-jaar-stoppen-maar-opvolging-hapert.html",
-          "bron_naam": "Ipsos I&O in opdracht van ABN AMRO"
+          "bron_naam": "Ipsos I&O in opdracht van ABN AMRO",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:012",
           "text": "Een deel van wat mensen weten laat zich niet in woorden vastleggen: we weten meer dan we kunnen zeggen. Die stilzwijgende kennis is reeel en waardevol, en buitengewoon moeilijk over te dragen.",
           "dated": "1966-01-01",
           "precisie": "jaar",
-          "soort": "brondatum",
+          "soort": "grondslag",
           "bron_url": null,
-          "bron_naam": "Michael Polanyi"
+          "bron_naam": "Michael Polanyi",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:wp:013",
           "text": "Organisaties creeren kennis door wisselwerking tussen stilzwijgende en expliciete kennis; het expliciet maken van impliciete kennis is een van die conversies.",
           "dated": "1994-01-01",
           "precisie": "jaar",
-          "soort": "brondatum",
+          "soort": "grondslag",
           "bron_url": null,
-          "bron_naam": "Ikujiro Nonaka"
+          "bron_naam": "Ikujiro Nonaka",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:wp:016",
           "text": "Nederland telde in 2022 bijna 300.000 familiebedrijven, verantwoordelijk voor ruim 31 procent van alle werknemersbanen en ruim 152 miljard euro toegevoegde waarde.",
           "dated": "2024-12-03",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.cbs.nl/nl-nl/nieuws/2024/49/bijna-300-duizend-familiebedrijven-in-nederland",
-          "bron_naam": "Centraal Bureau voor de Statistiek"
+          "bron_naam": "Centraal Bureau voor de Statistiek",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:025",
           "text": "Een zorgvuldige bedrijfsoverdracht duurt meestal vijf tot zeven jaar.",
           "dated": "2025-11-11",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.kvk.nl/verkopen-en-overnemen/mijn-bedrijf-verkopen-wat-komt-daarbij-kijken/",
-          "bron_naam": "Kamer van Koophandel"
+          "bron_naam": "Kamer van Koophandel",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:prop:009",
           "text": "Duurzaam concurrentievoordeel vereist middelen die tegelijk waardevol, zeldzaam, moeilijk imiteerbaar en niet substitueerbaar zijn — aan alle vier voorwaarden moet worden voldaan.",
           "dated": "1991-03-01",
           "precisie": "maand",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://journals.sagepub.com/doi/10.1177/014920639101700108",
-          "bron_naam": "Jay Barney"
+          "bron_naam": "Jay Barney",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:prop:010",
           "text": "Over 125 studies met samen ruim 29.000 organisaties is de effectgrootte tussen strategische middelen en prestatie conservatief 0,22, stijgend naar 0,29 wanneer die middelen daadwerkelijk zeldzaam en moeilijk imiteerbaar zijn.",
           "dated": "2008-01-01",
           "precisie": "jaar",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://econpapers.repec.org/article/blastratm/v_3a29_3ay_3a2008_3ai_3a11_3ap_3a1141-1154.htm",
-          "bron_naam": "Crook, Ketchen, Combs & Todd"
+          "bron_naam": "Crook, Ketchen, Combs & Todd",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         }
       ],
       "claim_refs": [
@@ -288,45 +342,60 @@
           "text": "Een bedrijf is aansprakelijk voor de informatie die zijn chatbot geeft: de chatbot is onderdeel van de website en niet een zelfstandige entiteit met eigen verantwoordelijkheid.",
           "dated": "2024-02-14",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": "bronversie",
           "bron_url": "https://www.americanbar.org/groups/business_law/resources/business-law-today/2024-february/bc-tribunal-confirms-companies-remain-liable-information-provided-ai-chatbot/",
-          "bron_naam": "British Columbia Civil Resolution Tribunal"
+          "bron_naam": "British Columbia Civil Resolution Tribunal",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:008",
           "text": "Een publieke AI-agent zonder ingebouwde grenzen kan ontsporen tot hij het eigen bedrijf bekritiseert en op verzoek van een klant scheldt.",
           "dated": "2024-01-19",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.itv.com/news/2024-01-19/dpd-disables-ai-chatbot-after-customer-service-bot-appears-to-go-rogue",
-          "bron_naam": "ITV News"
+          "bron_naam": "ITV News",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:019",
           "text": "Juridische AI-assistenten die op gecontroleerde bronnen zijn gebouwd, produceerden nog steeds tussen 17 en 33 procent onjuiste of verzonnen antwoorden. Verankering vermindert het risico, maar heft het niet op.",
           "dated": "2024-01-01",
           "precisie": "jaar",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://dho.stanford.edu/wp-content/uploads/Legal_RAG_Hallucinations.pdf",
-          "bron_naam": "Stanford RegLab & HAI"
+          "bron_naam": "Stanford RegLab & HAI",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:028",
           "text": "Ook met menselijk toezicht kan een proces feitelijk geautomatiseerd worden wanneer beoordelaars zich naar de systeemaanbeveling schikken. Een mens toevoegen garandeert geen betere uitkomst en is geen manier om verantwoordelijkheid af te schuiven.",
           "dated": "2025-09-23",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.edps.europa.eu/data-protection/our-work/publications/techdispatch/2025-09-23-techdispatch-22025-human-oversight-automated-making_en",
-          "bron_naam": "Europese Toezichthouder voor Gegevensbescherming"
+          "bron_naam": "Europese Toezichthouder voor Gegevensbescherming",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:034",
           "text": "Vijf state-of-the-art AI-assistenten vertoonden consistent vleierij over vier vrije-tekst-taken. Menselijke feedback bij het finetunen moedigt antwoorden aan die overeenkomen met de overtuiging van de gebruiker in plaats van met de waarheid.",
           "dated": "2023-01-01",
           "precisie": "jaar",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://arxiv.org/abs/2310.13548",
-          "bron_naam": "Sharma e.a."
+          "bron_naam": "Sharma e.a.",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         }
       ],
       "claim_refs": [
@@ -367,54 +436,72 @@
           "text": "Menselijke tussenkomst bij een geautomatiseerd besluit telt alleen wanneer zij betekenisvol is: staat de uitkomst in de praktijk al vast voordat de mens ernaar kijkt, dan is er sprake van geautomatiseerde besluitvorming, ook al zet een mens de handtekening.",
           "dated": "2023-12-07",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": "bronversie",
           "bron_url": "https://eur-lex.europa.eu/legal-content/NL/ALL/?uri=CELEX:62021CA0634",
-          "bron_naam": "Hof van Justitie van de EU"
+          "bron_naam": "Hof van Justitie van de EU",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:010",
           "text": "Na drie maanden routinematige AI-ondersteuning daalde bij ervaren endoscopisten de detectiegraad zonder dat systeem van 28,4 naar 22,4 procent: zes procentpunt absoluut, circa twintig procent relatief. Observationeel onderzoek; de auteurs spreken van een risico, niet van bewezen causaliteit.",
           "dated": "2025-08-12",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.eurekalert.org/news-releases/1094223",
-          "bron_naam": "EurekAlert"
+          "bron_naam": "EurekAlert",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:018",
           "text": "Over 106 experimenten presteerden mens-AI-combinaties gemiddeld slechter dan de beste van de twee alleen, met verlies bij beslistaken en winst bij het maken van inhoud.",
           "dated": "2024-01-01",
           "precisie": "jaar",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.nature.com/articles/s41562-024-02024-1",
-          "bron_naam": "Vaccaro, Almaatouq & Malone"
+          "bron_naam": "Vaccaro, Almaatouq & Malone",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:026",
           "text": "27 radiologen beoordeelden 50 mammogrammen met een vermeend AI-systeem. Na een trainingsset met correcte suggesties volgden zij ook de onjuiste suggesties; alle ervaringsniveaus bleken gevoelig, onervaren lezers het meest.",
           "dated": "2023-05-02",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://pubs.rsna.org/doi/full/10.1148/radiol.222176",
-          "bron_naam": "Dratsch e.a."
+          "bron_naam": "Dratsch e.a.",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:027",
           "text": "Menselijke tussenkomst is pas betekenisvol als de beoordelaar voldoende kennis, tijd en ruimte heeft om zelfstandig van het algoritme af te wijken; enkel aftekenen nadat het systeem een besluit voorstelt, volstaat niet.",
           "dated": "2025-07-01",
           "precisie": "maand",
-          "soort": "brondatum",
+          "soort": "bronversie",
           "bron_url": "https://www.autoriteitpersoonsgegevens.nl/system/files?file=2025-07/Betekenisvolle+Menselijke+Tussenkomst.pdf",
-          "bron_naam": "Autoriteit Persoonsgegevens"
+          "bron_naam": "Autoriteit Persoonsgegevens",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:wp:032",
           "text": "In een veldexperiment beoordeelden 228 screeners 48 werkelijke inzendingen. Verhalende uitleg bij een AI-aanbeveling verhoogde de navolging maar verbeterde de besliskwaliteit niet: de navolging was asymmetrisch, beoordelaars namen vooral afwijzingen over en lieten zo goede inzendingen ten onrechte vallen.",
           "dated": "2024-08-01",
           "precisie": "maand",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4914367",
-          "bron_naam": "Lane, Boussioux, Ayoubi e.a."
+          "bron_naam": "Lane, Boussioux, Ayoubi e.a.",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         }
       ],
       "claim_refs": [
@@ -451,45 +538,60 @@
           "text": "In 2025 gebruikte 13,8 procent van de Nederlandse microbedrijven AI-technologie, tegen 29,8 procent van het MKB en 66,2 procent van het grootbedrijf. Van de microbedrijven die AI overwogen maar afzagen, noemde 71,6 procent gebrek aan ervaring als reden.",
           "dated": "2026-03-16",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.cbs.nl/nl-nl/longread/rapportages/2026/gebruik-van-ai-technologie-door-nederlandse-microbedrijven",
-          "bron_naam": "CBS"
+          "bron_naam": "CBS",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:prop:003",
           "text": "AI-gebruik in het Nederlandse mkb groeit maar blijft gefragmenteerd; het ontbreken van visie en strategie speelt volgens de geraadpleegde experts een sleutelrol, en ondersteuning zou zich eerst op visie- en strategievorming moeten richten.",
           "dated": "2025-09-29",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.rijksoverheid.nl/documenten/rapporten/2025/09/29/onderzoek-ai-gebruik-in-het-mkb",
-          "bron_naam": "Dialogic in opdracht van het Ministerie van Economische Zaken"
+          "bron_naam": "Dialogic in opdracht van het Ministerie van Economische Zaken",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:prop:004",
           "text": "Het Nederlandse mkb bereikte in 2024 een basisniveau digitalisering van 81,5 procent tegen een doel van 95 procent in 2030, en AI-adoptie steeg van 13 naar 23 procent. Het doel dat 75 procent geavanceerde digitale technologie gebruikt is nog ver weg.",
           "dated": "2025-03-07",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.rijksoverheid.nl/actueel/nieuws/2025/03/07/meer-digitalisering-mkb-concurrentiekracht-totale-digitale-economie-onder-druk",
-          "bron_naam": "Ministerie van Economische Zaken"
+          "bron_naam": "Ministerie van Economische Zaken",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:prop:005",
           "text": "In 2024 haalde 73 procent van de EU-mkbers een basisniveau digitale intensiteit en gebruikte 13 procent van de EU-bedrijven AI-technologie. Nederland staat daarmee BOVEN het EU-gemiddelde, niet onder.",
           "dated": "2025-04-01",
           "precisie": "maand",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://ec.europa.eu/eurostat/web/interactive-publications/digitalisation-2025",
-          "bron_naam": "Eurostat"
+          "bron_naam": "Eurostat",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         },
         {
           "ext_ref": "claim:prop:006",
           "text": "Ondernemers richten zich vooral op behoud van de huidige situatie (38 procent) en efficienter werken (35 procent); 23 procent noemt gebrek aan prioriteit en 17 procent gebrek aan vaardigheden als rem. Digitalisering is daarmee op efficientie gericht, niet op vernieuwing.",
           "dated": "2025-10-10",
           "precisie": "dag",
-          "soort": "brondatum",
+          "soort": null,
           "bron_url": "https://www.kvk.nl/pers/kvk-onderzoek-ondernemers-missen-ruimte-voor-vernieuwing/",
-          "bron_naam": "Kamer van Koophandel"
+          "bron_naam": "Kamer van Koophandel",
+          "herzien_na": null,
+          "in_herziening": false,
+          "nagetrokken_op": "2026-07-01"
         }
       ],
       "claim_refs": [

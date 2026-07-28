@@ -19,6 +19,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { datumLabel } from './lib/datum.mjs';
 import { BASIS, ID } from './lib/entiteiten.mjs';
+import { statusHtml, STATUS_CSS } from './lib/status.mjs';
 
 const ROOT   = path.resolve(import.meta.dirname, '..');
 const BER    = path.join(ROOT, 'nieuws', '_berichten.json');
@@ -121,6 +122,7 @@ const STIJL = `
     .route{background:var(--paper);border-left:3px solid var(--red);padding:16px 20px;
       margin-bottom:20px;font-size:15px}
     .route a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(15,168,203,.4)}
+${STATUS_CSS}
     .deel{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
       display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .deel-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
@@ -240,7 +242,7 @@ const grond = (b) => b.bewijs.length ? `
         <div class="b-grond">
           <div class="b-grond-kop">Waar dit op rust</div>
           <ul>
-${b.bewijs.map(c => `            <li><span class="b-datumchip">${esc(datumLabel(c.dated, c.dated_precisie, c.dated_soort))}</span>${esc(c.text)}${c.bron_naam ? (c.bron_url ? ` <a class="b-bron" href="${esc(c.bron_url)}" target="_blank" rel="noopener noreferrer">${esc(c.bron_naam)}</a>` : ` <span class="b-bron b-bron-los">${esc(c.bron_naam)}</span>`) : ''}</li>`).join('\n')}
+${b.bewijs.map(c => `            <li><span class="b-datumchip">${esc(datumLabel(c.dated, c.dated_precisie, c.dated_soort))}</span>${esc(c.text)}${c.bron_naam ? (c.bron_url ? ` <a class="b-bron" href="${esc(c.bron_url)}" target="_blank" rel="noopener noreferrer">${esc(c.bron_naam)}</a>` : ` <span class="b-bron b-bron-los">${esc(c.bron_naam)}</span>`) : ''}${statusHtml(c, esc)}</li>`).join('\n')}
           </ul>
         </div>` : '';
 

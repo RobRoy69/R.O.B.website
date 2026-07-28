@@ -1,6 +1,6 @@
 {
   "bron": "agora-rob-register / claims_public",
-  "synced_at": "2026-07-28T13:40:30.567Z",
+  "synced_at": "2026-07-28T13:56:50.274Z",
   "toelichting": "Afgeleide projectie. Bewerk de DB, niet dit bestand.",
   "claims": [
     {
@@ -11,6 +11,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.nber.org/papers/w5333",
       "bron_naam": "Ichniowski, Shaw & Prennushi",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -21,6 +25,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.cbs.nl/nl-nl/longread/rapportages/2026/gebruik-van-ai-technologie-door-nederlandse-microbedrijven",
       "bron_naam": "CBS",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -31,6 +39,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.rijksoverheid.nl/documenten/rapporten/2025/09/29/onderzoek-ai-gebruik-in-het-mkb",
       "bron_naam": "Dialogic in opdracht van het Ministerie van Economische Zaken",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -41,6 +53,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.rijksoverheid.nl/actueel/nieuws/2025/03/07/meer-digitalisering-mkb-concurrentiekracht-totale-digitale-economie-onder-druk",
       "bron_naam": "Ministerie van Economische Zaken",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -51,6 +67,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://ec.europa.eu/eurostat/web/interactive-publications/digitalisation-2025",
       "bron_naam": "Eurostat",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -61,6 +81,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.kvk.nl/pers/kvk-onderzoek-ondernemers-missen-ruimte-voor-vernieuwing/",
       "bron_naam": "Kamer van Koophandel",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -71,6 +95,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.kantar.com/Inspiration/Brands/Mind-the-Gap-Why-customer-experience-and-brand-need-to-get-closer",
       "bron_naam": "Kantar",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -81,6 +109,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.bain.com/insights/closing-the-delivery-gap",
       "bron_naam": "Bain & Company",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -91,6 +123,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://journals.sagepub.com/doi/10.1177/014920639101700108",
       "bron_naam": "Jay Barney",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -101,6 +137,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://econpapers.repec.org/article/blastratm/v_3a29_3ay_3a2008_3ai_3a11_3ap_3a1141-1154.htm",
       "bron_naam": "Crook, Ketchen, Combs & Todd",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -111,6 +151,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://sloanreview.mit.edu/article/with-goals-fast-beats-smart/",
       "bron_naam": "MIT Sloan Management Review",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -121,6 +165,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.prnewswire.com/news-releases/companies-can-flip-the-odds-of-success-in-digital-transformations-from-30-to-80-301162310.html",
       "bron_naam": "BCG",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -131,6 +179,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.cambridge.org/core/journals/journal-of-management-and-organization/article/abs/strategy-implementation-what-is-the-failure-rate/6A048C7CC0D46D8CA22C6D4375CFC4BA",
       "bron_naam": "Candido & Santos",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -141,6 +193,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.zzp-nederland.nl/nieuws/onderzoek-onzekerheid-drijft-opdrachtgevers-naar-intermediairs",
       "bron_naam": "Vereniging ZZP Nederland",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -151,6 +207,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.cbs.nl/nl-nl/nieuws/2026/07/aantal-zzp-ers-in-2025-gedaald-met-62-duizend",
       "bron_naam": "CBS",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -161,6 +221,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.cbs.nl/nl-nl/nieuws/2025/10/ruim-4-op-de-10-bedrijven-verwachten-minder-zzp-ers-in-te-huren-in-2025",
       "bron_naam": "CBS met KVK, EIB, MKB-Nederland en VNO-NCW",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -171,6 +235,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/",
       "bron_naam": "Pew Research Center",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -181,6 +249,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://ahrefs.com/blog/ai-overviews-reduce-clicks/",
       "bron_naam": "Ahrefs",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -191,6 +263,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://ahrefs.com/blog/ai-overviews-reduce-clicks-update/",
       "bron_naam": "Ahrefs",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -201,6 +277,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.sistrix.de/news/ai-overviews-in-deutschland-so-stark-sinken-die-klickraten-wirklich/",
       "bron_naam": "SISTRIX",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -211,6 +291,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.gartner.com/en/newsroom/press-releases/2025-10-21-gartner-unveils-top-predictions-for-it-organizations-and-users-in-2026-and-beyond",
       "bron_naam": "Gartner",
+      "soort": "prognose",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -221,6 +305,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.abnamro.nl/nl/zakelijk/insights/sectoren-en-trends/sectorprognoses/alle-sectoren/tweederde-van-ondernemers-wil-binnen-tien-jaar-stoppen-maar-opvolging-hapert.html",
       "bron_naam": "Ipsos I&O in opdracht van ABN AMRO",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -231,6 +319,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.americanbar.org/groups/business_law/resources/business-law-today/2024-february/bc-tribunal-confirms-companies-remain-liable-information-provided-ai-chatbot/",
       "bron_naam": "British Columbia Civil Resolution Tribunal",
+      "soort": "bronversie",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -241,6 +333,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.itv.com/news/2024-01-19/dpd-disables-ai-chatbot-after-customer-service-bot-appears-to-go-rogue",
       "bron_naam": "ITV News",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -251,6 +347,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://eur-lex.europa.eu/legal-content/NL/ALL/?uri=CELEX:62021CA0634",
       "bron_naam": "Hof van Justitie van de EU",
+      "soort": "bronversie",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -261,6 +361,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.eurekalert.org/news-releases/1094223",
       "bron_naam": "EurekAlert",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -271,6 +375,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.microsoft.com/en-us/research/publication/overreliance-on-ai-literature-review/",
       "bron_naam": "Passi & Vorvoreanu",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -281,6 +389,10 @@
       "dated_soort": "brondatum",
       "bron_url": null,
       "bron_naam": "Michael Polanyi",
+      "soort": "grondslag",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": null,
       "ring": "open"
     },
     {
@@ -291,6 +403,10 @@
       "dated_soort": "brondatum",
       "bron_url": null,
       "bron_naam": "Ikujiro Nonaka",
+      "soort": "grondslag",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": null,
       "ring": "open"
     },
     {
@@ -301,6 +417,10 @@
       "dated_soort": "brondatum",
       "bron_url": null,
       "bron_naam": "Teece, Pisano & Shuen",
+      "soort": "grondslag",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": null,
       "ring": "open"
     },
     {
@@ -311,6 +431,10 @@
       "dated_soort": "brondatum",
       "bron_url": null,
       "bron_naam": "Richard Buchanan",
+      "soort": "grondslag",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": null,
       "ring": "open"
     },
     {
@@ -321,6 +445,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.cbs.nl/nl-nl/nieuws/2024/49/bijna-300-duizend-familiebedrijven-in-nederland",
       "bron_naam": "Centraal Bureau voor de Statistiek",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -331,6 +459,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.semrush.com/blog/google-ai-mode-seo-impact/",
       "bron_naam": "Semrush met Datos",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -341,6 +473,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.nature.com/articles/s41562-024-02024-1",
       "bron_naam": "Vaccaro, Almaatouq & Malone",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -351,6 +487,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://dho.stanford.edu/wp-content/uploads/Legal_RAG_Hallucinations.pdf",
       "bron_naam": "Stanford RegLab & HAI",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -361,6 +501,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.damiencharlotin.com/hallucinations/",
       "bron_naam": "Damien Charlotin (Smart Law Hub, HEC Paris)",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -371,6 +515,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.forrester.com/blogs/state-of-business-buying-2026/",
       "bron_naam": "Forrester",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": null,
       "ring": "open"
     },
     {
@@ -381,6 +529,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://learn.g2.com/g2-2026-ai-search-insight-report",
       "bron_naam": "G2",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": null,
       "ring": "open"
     },
     {
@@ -391,6 +543,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.ey.com/content/dam/ey-unified-site/ey-com/en-gl/services/consulting/documents/ey-gl-cpo-survey-2025-outlook-report-02-2025.pdf",
       "bron_naam": "EY",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -401,6 +557,10 @@
       "dated_soort": "brondatum",
       "bron_url": null,
       "bron_naam": "The Hackett Group",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": null,
       "ring": "open"
     },
     {
@@ -411,6 +571,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.kvk.nl/verkopen-en-overnemen/mijn-bedrijf-verkopen-wat-komt-daarbij-kijken/",
       "bron_naam": "Kamer van Koophandel",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -421,6 +585,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://pubs.rsna.org/doi/full/10.1148/radiol.222176",
       "bron_naam": "Dratsch e.a.",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -431,6 +599,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.autoriteitpersoonsgegevens.nl/system/files?file=2025-07/Betekenisvolle+Menselijke+Tussenkomst.pdf",
       "bron_naam": "Autoriteit Persoonsgegevens",
+      "soort": "bronversie",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -441,6 +613,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.edps.europa.eu/data-protection/our-work/publications/techdispatch/2025-09-23-techdispatch-22025-human-oversight-automated-making_en",
       "bron_naam": "Europese Toezichthouder voor Gegevensbescherming",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -451,6 +627,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.law.berkeley.edu/wp-content/uploads/2025/12/Mata-v-Avianca-Inc.pdf",
       "bron_naam": "Mata v. Avianca, Inc., No. 1:22-cv-01461 (S.D.N.Y.), 678 F. Supp. 3d 443",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -461,6 +641,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://sparktoro.com/blog/2024-zero-click-search-study-for-every-1000-us-google-searches-only-374-clicks-go-to-the-open-web-in-the-eu-its-360/",
       "bron_naam": "SparkToro (Rand Fishkin)",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -471,6 +655,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://6sense.com/science-of-b2b/the-critical-period-for-b2b-buying/",
       "bron_naam": "6sense (Kerry Cunningham)",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -481,6 +669,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4914367",
       "bron_naam": "Lane, Boussioux, Ayoubi e.a.",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -491,6 +683,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://estsjournal.org/index.php/ests/article/view/260",
       "bron_naam": "Madeleine Clare Elish",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -501,6 +697,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://arxiv.org/abs/2310.13548",
       "bron_naam": "Sharma e.a.",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -511,6 +711,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
       "bron_naam": "Stanford HAI",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -521,6 +725,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://epoch.ai/data-insights/llm-inference-price-trends",
       "bron_naam": "Epoch AI",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -531,6 +739,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.sharp.nl/nieuws/nederlandse-mkbers-lopen-voor-in-ai-adoptie-in-europa-maar-snelle-groei-vergroot-risico-op",
       "bron_naam": "Sharp",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     },
     {
@@ -541,6 +753,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://www.beeckestijn.org/en/about-us/news/half-of-dutch-organizations-have-no-ai-policy-while-employees-are-using-their-own-tools-en-masse/",
       "bron_naam": "Beeckestijn Business School",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-01",
       "ring": "open"
     }
   ]
