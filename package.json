@@ -12,6 +12,7 @@
     "test:agent": "node tools/build-promptfoo-prompt.mjs && npx promptfoo eval",
     "test:archief": "node tools/test-archief-alarm.mjs",
     "review": "node tools/review.mjs",
-    "bericht": "node tools/bericht.mjs"
+    "bericht": "node tools/bericht.mjs",
+    "rapport": "node tools/rapport.mjs"
   }
 }

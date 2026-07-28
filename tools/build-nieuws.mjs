@@ -295,7 +295,7 @@ ${grond(b)}
 ${deel(b, u)}
       </div>
       <div class="route">
-        Dit bericht hoort bij een doorlopend betoog over wat AI verandert aan organisaties. Het leest het best van voren af aan: begin bij <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a>.
+        De achtergrond bij dit bericht staat uitgewerkt in de whitepapers, met de bronnen erbij. <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a> is het eerste deel.
       </div>
 
       <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;
@@ -333,10 +333,6 @@ writeFileSync(path.join(OUTDIR, 'index.html'),
   </section>
 
   <main class="wrap">
-      <div class="route">
-        Nieuw hier? De whitepapers vormen &eacute;&eacute;n doorlopend betoog. Het leest het best van voren af aan: begin bij <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a>, of bekijk <a href="/whitepapers/">de hele reeks</a>.
-      </div>
-
 ${berichten.length ? '' : `      <div class="b"><p>Er staan nog geen berichten. Het eerste volgt binnenkort.</p>
         <p style="font-size:14.5px;color:var(--muted)">Ondertussen: de <a href="/whitepapers/" style="color:var(--cyan)">whitepapers</a> en de <a href="/vragen/" style="color:var(--cyan)">vragen met onderbouwing</a>.</p></div>`}
 ${berichten.map(b => `      <article class="b">
@@ -347,6 +343,9 @@ ${media(b)}
 ${grond(b)}
 ${deel(b, `${BASIS}/nieuws/${b.slug}/`)}
       </article>`).join('\n')}
+      <div class="route">
+        Deze berichten bouwen voort op de whitepapers &mdash; daar staat het betoog uitgewerkt, met de bronnen erbij. Het leest van voren af aan: <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a> is het eerste deel, <a href="/whitepapers/">hier staat de hele reeks</a>.
+      </div>
   </main>
 
 ` + VOET);
