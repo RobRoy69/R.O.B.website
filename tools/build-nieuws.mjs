@@ -117,6 +117,16 @@ const STIJL = `
     .b-bron{font-size:13px;white-space:nowrap;color:var(--cyan);text-decoration:none;
       border-bottom:1px solid rgba(15,168,203,.35)}
     .b-bron-los{color:var(--muted);border-bottom:1px dotted rgba(107,100,120,.5)}
+    .instap{background:var(--screen);color:#fff;padding:26px clamp(22px,4vw,42px);margin-bottom:20px}
+    .instap .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;
+      text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+    .instap p{font-size:15.5px;color:rgba(255,255,255,.74);margin-bottom:14px;max-width:46em}
+    .instap p:last-child{margin-bottom:0}
+    .instap a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(15,168,203,.4)}
+    .instap a:hover{border-bottom-color:var(--cyan)}
+    .route{background:var(--paper);border-left:3px solid var(--red);padding:16px 20px;
+      margin-bottom:20px;font-size:15px}
+    .route a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(15,168,203,.4)}
     .deel{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
       display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .deel-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
@@ -284,6 +294,15 @@ ${alineas}
 ${grond(b)}
 ${deel(b, u)}
       </div>
+      <div class="instap">
+        <div class="lbl">Op de hoogte blijven</div>
+        <p>Er is geen nieuwsbrief. Elk bericht verschijnt ook op <a href="https://www.linkedin.com/in/rob-concepting/" target="_blank" rel="noopener noreferrer">LinkedIn</a>; wie liever zonder platform meeleest, neemt de <a href="/nieuws/feed.xml">feed</a>.</p>
+      </div>
+
+      <div class="route">
+        Dit bericht hoort bij een doorlopend betoog over wat AI verandert aan organisaties. Het leest het best van voren af aan: begin bij <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a>.
+      </div>
+
       <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;
          text-transform:uppercase"><a href="/nieuws/" style="color:var(--cyan);text-decoration:none">&larr; Alle berichten</a></p>
   </main>
@@ -319,6 +338,16 @@ writeFileSync(path.join(OUTDIR, 'index.html'),
   </section>
 
   <main class="wrap">
+      <div class="instap">
+        <div class="lbl">Op de hoogte blijven</div>
+        <p>Er is geen nieuwsbrief. Wie meeleest, doet dat via <a href="https://www.linkedin.com/in/rob-concepting/" target="_blank" rel="noopener noreferrer">LinkedIn</a> &mdash; daar verschijnt elk bericht ook, met een verwijzing naar de volledige versie hier.</p>
+        <p>Liever zonder platform? Neem dan de <a href="/nieuws/feed.xml">feed</a> op in je nieuwslezer. Dat is een technisch instrument en geen vervanging van een nieuwsbrief, maar het werkt zonder account en zonder dat iemand je adres krijgt.</p>
+      </div>
+
+      <div class="route">
+        Nieuw hier? De whitepapers vormen &eacute;&eacute;n doorlopend betoog. Het leest het best van voren af aan: begin bij <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a>, of bekijk <a href="/whitepapers/">de hele reeks</a>.
+      </div>
+
 ${berichten.length ? '' : `      <div class="b"><p>Er staan nog geen berichten. Het eerste volgt binnenkort.</p>
         <p style="font-size:14.5px;color:var(--muted)">Ondertussen: de <a href="/whitepapers/" style="color:var(--cyan)">whitepapers</a> en de <a href="/vragen/" style="color:var(--cyan)">vragen met onderbouwing</a>.</p></div>`}
 ${berichten.map(b => `      <article class="b">

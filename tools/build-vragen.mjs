@@ -108,6 +108,7 @@ const html = `<!DOCTYPE html>
   <meta name="author" content="Rob de Rooij">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
   <link rel="canonical" href="https://rob-concepting.com/vragen/">
+  <link rel="alternate" type="application/rss+xml" title="R.O.B. Concepting — nieuws" href="https://rob-concepting.com/nieuws/feed.xml">
 
   <meta property="og:title" content="Vragen die vaak terugkomen — R.O.B. Concepting">
   <meta property="og:description" content="Antwoorden met onderbouwing en datum. Ook waar het antwoord tegen de aanname in gaat.">
@@ -188,6 +189,11 @@ ${JSON.stringify(faq, null, 2).split('\n').map(l => '  ' + l).join('\n')}
       border-bottom:1px solid rgba(15,168,203,.35)}
     .v-bron:hover{border-bottom-color:var(--cyan)}
     .v-bron-los{color:var(--muted);border-bottom:1px dotted rgba(107,100,120,.5)}
+    .instap{background:var(--screen);color:#fff;padding:24px clamp(22px,4vw,42px);margin-top:14px}
+    .instap .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;
+      text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+    .instap p{font-size:15px;color:rgba(255,255,255,.7);margin:0;max-width:46em}
+    .instap a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(15,168,203,.4)}
     .v-verder{margin-top:22px;padding-top:16px;border-top:1px solid var(--rule);
       font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:var(--muted)}
     .v-verder a{color:var(--cyan);text-decoration:none}
@@ -235,6 +241,13 @@ ${JSON.stringify(faq, null, 2).split('\n').map(l => '  ' + l).join('\n')}
   <main class="wrap">
 ${secties}
   </main>
+
+  <section class="slot">
+    <div class="instap">
+      <div class="lbl">Op de hoogte blijven</div>
+      <p>Er is geen nieuwsbrief. Nieuwe antwoorden, whitepapers en losse berichten verschijnen op <a href="/nieuws/">de nieuwspagina</a> en op <a href="https://www.linkedin.com/in/rob-concepting/" target="_blank" rel="noopener noreferrer">LinkedIn</a>; wie liever zonder platform meeleest, neemt de <a href="/nieuws/feed.xml">feed</a>. Het betoog achter deze antwoorden staat uitgewerkt in <a href="/whitepapers/">de whitepaperreeks</a>, die het best van voren af aan leest.</p>
+    </div>
+  </section>
 
   <section class="slot">
     <div class="slot-in">
