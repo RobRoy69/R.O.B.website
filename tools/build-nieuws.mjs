@@ -105,6 +105,15 @@ const STIJL = `
     .b-datumchip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;
       color:var(--purple);background:rgba(15,168,203,.1);padding:1px 7px;margin-right:9px;
       white-space:nowrap;font-variant-numeric:tabular-nums}
+    .b-media{margin:0 0 20px;line-height:0}
+    .b-media img,.b-media video{width:100%;height:auto;display:block;border:1px solid var(--border)}
+    .b-media figcaption{font-size:13px;color:var(--muted);line-height:1.5;padding-top:8px;
+      font-style:italic}
+    .b-vid{position:relative;display:block}
+    .b-vid .speel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .b-vid .speel span{background:rgba(14,21,37,.82);color:#fff;font-family:'IBM Plex Mono',monospace;
+      font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px 22px}
+    .b-vid:hover .speel span{background:var(--cyan)}
     .deel{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
       display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .deel-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
@@ -120,7 +129,7 @@ const STIJL = `
     .foot a:hover{color:var(--cyan)}
     @media(max-width:600px){.hero{padding:42px 22px 52px}.hero-rings{display:none}.wrap{padding:38px 22px 12px}}`;
 
-const KOP = (titel, omschr, canon, extraLd = '') => `<!DOCTYPE html>
+const KOP = (titel, omschr, canon, extraLd = '', ogBeeld = `${BASIS}/og-image.png`) => `<!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
@@ -137,7 +146,7 @@ const KOP = (titel, omschr, canon, extraLd = '') => `<!DOCTYPE html>
   <meta property="og:url" content="${canon}">
   <meta property="og:locale" content="nl_NL">
   <meta property="og:site_name" content="R.O.B. Concepting">
-  <meta property="og:image" content="${BASIS}/og-image.png">
+  <meta property="og:image" content="${ogBeeld}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230e1525'/><circle cx='16' cy='16' r='12' fill='none' stroke='%230fa8cb' stroke-width='1.5'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230fa8cb' stroke-width='1' opacity='.5'/><circle cx='16' cy='16' r='3' fill='%23e8391e'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -167,6 +176,52 @@ const VOET = `  <footer class="foot">
 </body>
 </html>
 `;
+
+// Media. Twee keuzes die uitleg verdienen.
+//
+// ALT-TEKST is verplicht in de database (constraint sinds 0012), dus hier hoeft niet
+// gecontroleerd te worden of hij bestaat — dat kan al niet meer misgaan.
+//
+// VIDEO: een zelf-gehoste mp4 speelt op de pagina. Een YouTube-URL wordt NIET als iframe
+// ingebed maar als aanklikbare poster gerenderd. Reden: een YouTube-embed laadt code van
+// derden op een site die verder geen enkele tracker heeft, en de CSP hier staat geen
+// frame-src toe. Wie doorklikt, kiest daar zelf voor. Wil je een echte embed, dan is dat
+// een bewuste CSP-wijziging en geen bijvangst van een bouwstap.
+const jtId = (u) => (String(u).match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([A-Za-z0-9_-]{6,})/) || [])[1];
+
+const media = (b) => {
+  if (b.video) {
+    const id = jtId(b.video);
+    if (id) {
+      return `
+        <figure class="b-media">
+          <a class="b-vid" href="${esc(b.video)}" target="_blank" rel="noopener noreferrer"
+             aria-label="Bekijk de video op YouTube (opent in een nieuw tabblad)">
+            <img src="${b.afbeelding ? esc(b.afbeelding) : `https://i.ytimg.com/vi/${id}/hqdefault.jpg`}"
+                 alt="${esc(b.afbeelding_alt || 'Videovoorbeeld')}" loading="lazy">
+            <span class="speel"><span>Bekijk op YouTube &rarr;</span></span>
+          </a>
+          <figcaption>Deze video opent bij YouTube. Op deze pagina staat geen ingebedde speler, zodat er geen code van derden meelaadt.</figcaption>
+        </figure>`;
+    }
+    return `
+        <figure class="b-media">
+          <video controls preload="metadata"${b.afbeelding ? ` poster="${esc(b.afbeelding)}"` : ''}>
+            <source src="${esc(b.video)}" type="video/mp4">
+            Je browser kan deze video niet weergeven.
+          </video>${b.afbeelding_alt ? `
+          <figcaption>${esc(b.afbeelding_alt)}</figcaption>` : ''}
+        </figure>`;
+  }
+  if (b.afbeelding) {
+    return `
+        <figure class="b-media">
+          <img src="${esc(b.afbeelding)}" alt="${esc(b.afbeelding_alt)}" loading="lazy">
+          <figcaption>${esc(b.afbeelding_alt)}</figcaption>
+        </figure>`;
+  }
+  return '';
+};
 
 const grond = (b) => b.bewijs.length ? `
         <div class="b-grond">
@@ -198,13 +253,13 @@ for (const b of berichten) {
     dateModified: (b.updated_at || '').slice(0, 10) || b.gepubliceerd_op,
     author: { '@id': ID.persoon }, publisher: { '@id': ID.org },
     mainEntityOfPage: { '@type': 'WebPage', '@id': u },
-    image: `${BASIS}/og-image.png`,
+    image: b.afbeelding ? `${BASIS}${b.afbeelding}` : `${BASIS}/og-image.png`,
   }, null, 2).split('\n').map(l => '  ' + l).join('\n') + '\n  </script>\n';
 
   const alineas = b.tekst.split(/\n\s*\n/).map(p => `      <p>${esc(p.trim())}</p>`).join('\n');
   mkdirSync(path.join(OUTDIR, b.slug), { recursive: true });
   writeFileSync(path.join(OUTDIR, b.slug, 'index.html'),
-    KOP(`${b.titel} — R.O.B. Concepting`, b.samenvatting, u, ld) +
+    KOP(`${b.titel} — R.O.B. Concepting`, b.samenvatting, u, ld, b.afbeelding ? `${BASIS}${b.afbeelding}` : `${BASIS}/og-image.png`) +
 `  <section class="hero">
     <svg class="hero-rings" viewBox="0 0 200 200" aria-hidden="true">
       <circle cx="100" cy="100" r="92" fill="none" stroke="#0fa8cb" stroke-width=".4" opacity=".35"/>
@@ -221,6 +276,7 @@ for (const b of berichten) {
 
   <main class="wrap">
       <div class="b">
+${media(b)}
 ${alineas}
 ${grond(b)}
 ${deel(b, u)}
@@ -265,6 +321,7 @@ ${berichten.length ? '' : `      <div class="b"><p>Er staan nog geen berichten. 
 ${berichten.map(b => `      <article class="b">
         <div class="b-datum">${esc(nlDatum(b.gepubliceerd_op))}</div>
         <h2><a href="/nieuws/${esc(b.slug)}/">${esc(b.titel)}</a></h2>
+${media(b)}
         <p>${esc(b.samenvatting)}</p>
 ${grond(b)}
 ${deel(b, `${BASIS}/nieuws/${b.slug}/`)}

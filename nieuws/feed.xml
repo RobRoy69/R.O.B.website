@@ -6,6 +6,12 @@
     <atom:link href="https://rob-concepting.com/nieuws/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Berichten over systeemontwerp, AI en het organiseren van waarde. Bij elk bericht de onderbouwing met datum.</description>
     <language>nl-NL</language>
-
+    <item>
+      <title>Wie heeft de sleutels van je eigen kennis?</title>
+      <link>https://rob-concepting.com/nieuws/wie-heeft-de-sleutels/</link>
+      <guid isPermaLink="true">https://rob-concepting.com/nieuws/wie-heeft-de-sleutels/</guid>
+      <pubDate>Mon, 27 Jul 2026 07:00:00 GMT</pubDate>
+      <description>Het vierde whitepaper staat online, met een amendement over wat de markt GEO noemt. De kern: de modellen worden commodity, en wat schaars wordt is het gezag over de kennis die ze te verwerken krijgen.</description>
+    </item>
   </channel>
 </rss>

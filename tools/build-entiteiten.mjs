@@ -49,7 +49,11 @@ const loop = (dir) => {
     if (!e.name.endsWith('.html')) continue;
 
     let h = readFileSync(p, 'utf-8');
-    if (h.includes(`"@id": "${ID.persoon}"`)) continue;   // al gedaan
+    // "Al gedaan" is de aanwezigheid van de GRAAF, niet van een @id-verwijzing. Eerste
+    // versie keek naar ID.persoon, en sloeg daardoor de berichtpagina's over: build-nieuws
+    // zet die verwijzing zelf al in het NewsArticle. Gevolg: pagina's zonder graaf, gevangen
+    // door verify-publiek. Een aanwezigheidstoets moet op het ding zelf staan.
+    if (h.includes('"@graph"')) continue;
 
     h = h.replace(/(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g, (m, open, body, close) => {
       let obj;

@@ -113,8 +113,19 @@ for (const naam of bestanden.sort()) {
     overgeslagen++; continue;
   }
 
+  // Media. Alt is verplicht zodra er een afbeelding is — de database weigert het anders,
+  // maar hier meld ik het met een leesbare reden in plaats van een constraint-fout.
+  if (kop.afbeelding && (!kop.alt || kop.alt.trim().length < 10)) {
+    console.error(`  ✗ ${naam}: 'afbeelding' zonder bruikbare 'alt' (minimaal 10 tekens).`);
+    console.error(`    Een afbeelding zonder alt is onbruikbaar voor wie hem niet ziet.`);
+    overgeslagen++; continue;
+  }
+
   const rij = {
     slug, titel: kop.titel, samenvatting: kop.samenvatting, tekst,
+    afbeelding: kop.afbeelding || null,
+    afbeelding_alt: kop.alt || null,
+    video: kop.video || null,
     claim_refs: claims.join(','),
     gepubliceerd_op: kop.datum || new Date().toISOString().slice(0, 10),
     updated_at: new Date().toISOString(),
