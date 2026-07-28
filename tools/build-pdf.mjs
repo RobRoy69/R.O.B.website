@@ -17,10 +17,20 @@
 // WAAROM UIT publiek/ EN NIET VAN DE LIVE SITE. De PDF hoort te tonen wat er straks staat,
 // niet wat er nu staat. Anders print je de vorige deploy.
 //
+// WAAROM VIA HET DEVTOOLS-PROTOCOL EN NIET VIA --print-to-pdf. Die vlag deed hier niets:
+// deze Chrome negeert --headless, start een volledige browser en schrijft geen bestand;
+// Edge schreef evenmin iets. In plaats van tegen dat gedrag te vechten laat dit script de
+// browser gewoon zélf printen — Chrome start met een debug-poort, en Page.printToPDF is
+// exact wat "Opslaan als PDF" in het printvenster aanroept. Zelfde knop, zonder venster.
+//
+// Eigen profielmap en eigen poort, zodat een openstaande Chrome van de gebruiker er niet
+// mee te maken krijgt. Ik heb eerder vandaag chrome.exe hardhandig afgesloten om een vastloper
+// op te ruimen; dat was onnodig ingrijpend en hoeft met deze opzet niet meer.
+//
 // Draai: npm run pdf     (na build-publiek)
 
 import { createServer } from 'node:http';
-import { readFileSync, readdirSync, existsSync, statSync, mkdirSync, renameSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, statSync, mkdirSync, renameSync, rmSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import os from 'node:os';
@@ -54,12 +64,35 @@ const server = createServer((req, res) => {
   res.end(readFileSync(vol));
 });
 
-const draai = (cmd, args, ms) => new Promise((klaar) => {
-  const kind = spawn(cmd, args, { stdio: 'ignore' });
-  const klok = setTimeout(() => { kind.kill('SIGKILL'); klaar({ ok: false, fout: 'tijd op' }); }, ms);
-  kind.on('error', (e) => { clearTimeout(klok); klaar({ ok: false, fout: e.message }); });
-  kind.on('exit', () => { clearTimeout(klok); klaar({ ok: true }); });
-});
+// ── het DevTools-protocol, kaal ────────────────────────────────────────────────
+// Node 24 heeft WebSocket ingebouwd, dus hier is geen enkele afhankelijkheid voor nodig.
+const wacht = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function verbind(url) {
+  const ws = new WebSocket(url);
+  await new Promise((ok, fout) => { ws.onopen = ok; ws.onerror = () => fout(new Error('geen verbinding')); });
+  let nr = 0;
+  const open = new Map();
+  ws.onmessage = (e) => {
+    const b = JSON.parse(e.data);
+    if (b.id && open.has(b.id)) {
+      const { ok, fout } = open.get(b.id); open.delete(b.id);
+      b.error ? fout(new Error(b.error.message)) : ok(b.result);
+    }
+  };
+  return {
+    // sessionId hoort NAAST params in het bericht, niet erin. Eerste versie stopte hem in
+    // params en kreeg "'Page.enable' wasn't found": het commando ging naar de browser zelf,
+    // en die kent geen Page-domein — dat hoort bij een tabblad.
+    stuur: (methode, params = {}, sessionId) => new Promise((ok, fout) => {
+      const id = ++nr;
+      open.set(id, { ok, fout });
+      ws.send(JSON.stringify({ id, method: methode, params, ...(sessionId ? { sessionId } : {}) }));
+      setTimeout(() => { if (open.has(id)) { open.delete(id); fout(new Error(`${methode}: tijd op`)); } }, 90000);
+    }),
+    sluit: () => ws.close(),
+  };
+}
 
 await new Promise(r => server.listen(0, '127.0.0.1', r));
 const poort = server.address().port;
@@ -69,7 +102,34 @@ const papers = readdirSync(path.join(UIT, 'whitepapers'))
 
 mkdirSync(DOEL, { recursive: true });
 const werkmap = path.join(os.tmpdir(), `rob-pdf-${poort}`);
+const debugPoort = 9333 + (poort % 200);
 let gelukt = 0;
+
+// Chrome starten met een debug-poort. Eigen profiel, geen extensies, geen eerste-start-scherm.
+const browser = spawn(CHROME, [
+  `--remote-debugging-port=${debugPoort}`,
+  `--user-data-dir=${werkmap}-profiel`,
+  '--no-first-run', '--no-default-browser-check', '--disable-extensions',
+  '--disable-background-networking', '--disable-sync', '--window-position=-32000,-32000',
+  'about:blank',
+], { stdio: 'ignore', detached: false });
+
+// Wachten tot de debug-poort antwoordt. Pollen, niet gokken: een vaste pauze is te kort op
+// een koude start en te lang op een warme.
+let doel = null;
+for (let i = 0; i < 60 && !doel; i++) {
+  await wacht(500);
+  try {
+    const r = await fetch(`http://127.0.0.1:${debugPoort}/json/version`);
+    if (r.ok) doel = (await r.json()).webSocketDebuggerUrl;
+  } catch { /* nog niet op */ }
+}
+if (!doel) {
+  console.error(`build-pdf: Chrome antwoordde niet op poort ${debugPoort}.`);
+  browser.kill(); server.close(); process.exit(1);
+}
+console.log(`  browser gestart op debug-poort ${debugPoort}`);
+const cdp = await verbind(doel);
 
 for (const n of papers) {
   const naam = n.replace(/\.html$/, '');
@@ -77,23 +137,48 @@ for (const n of papers) {
   const eind = path.join(DOEL, `${naam}.pdf`);
   const oud = existsSync(eind) ? statSync(eind).size : 0;
 
-  // ASYNC, NIET spawnSync. Eerste versie gebruikte spawnSync en hing: die blokkeert de
-  // Node-thread, dus de HTTP-server hierboven — in ditzelfde proces — kon Chrome's verzoek
-  // niet beantwoorden. Chrome stond te wachten op een server die niet mocht praten.
-  const r = await draai(CHROME, [
-    '--headless', '--disable-gpu', '--no-sandbox', '--no-pdf-header-footer',
-    `--user-data-dir=${werkmap}-profiel`,
-    // Wachten tot de webfonts geladen zijn; zonder deze pauze print Chrome de
-    // terugvallettertypes en ziet de PDF er anders uit dan de pagina.
-    '--virtual-time-budget=12000',
-    `--print-to-pdf=${tijdelijk}`,
-    `http://127.0.0.1:${poort}/whitepapers/${n}`,
-  ], 120000);
+  // Een eigen tabblad per paper, zodat een stukke render de volgende niet meebesmet.
+  let data;
+  try {
+    const { targetId } = await cdp.stuur('Target.createTarget', { url: 'about:blank' });
+    const { sessionId } = await cdp.stuur('Target.attachToTarget', { targetId, flatten: true });
+    // Elk commando gaat naar dít tabblad, via de sessie-id. (Zonder sessionId praat je tegen
+    // de browser zelf en doet Page.printToPDF niets.)
+    const inTab = (m, p = {}) => cdp.stuur(m, p, sessionId);
 
-  if (!r.ok || !existsSync(tijdelijk)) {
-    console.error(`  ${naam}: MISLUKT — ${r.fout || 'geen bestand geschreven'}`);
+    await inTab('Page.enable');
+    await inTab('Page.navigate', { url: `http://127.0.0.1:${poort}/whitepapers/${n}` });
+
+    // Wachten tot de webfonts er zijn. Zonder dit print Chrome de terugvallettertypes en
+    // ziet de PDF er anders uit dan de pagina — het verschil dat niemand opmerkt tot het
+    // stuk bij een lezer op tafel ligt.
+    for (let i = 0; i < 40; i++) {
+      await wacht(500);
+      const r = await inTab('Runtime.evaluate', {
+        expression: 'document.readyState === "complete" && document.fonts.status === "loaded"',
+        returnByValue: true,
+      });
+      if (r?.result?.value) break;
+    }
+    await wacht(1200);
+
+    ({ data } = await inTab('Page.printToPDF', {
+      printBackground: true,
+      preferCSSPageSize: false,
+      paperWidth: 8.27, paperHeight: 11.69,          // A4 in inches
+      marginTop: 0.4, marginBottom: 0.4, marginLeft: 0.4, marginRight: 0.4,
+      displayHeaderFooter: false,
+      transferMode: 'ReturnAsBase64',
+    }));
+    await cdp.stuur('Target.closeTarget', { targetId });
+  } catch (e) {
+    console.error(`  ${naam}: MISLUKT — ${e.message}`);
     continue;
   }
+
+  if (!data) { console.error(`  ${naam}: MISLUKT — geen data terug`); continue; }
+  mkdirSync(werkmap, { recursive: true });
+  writeFileSync(tijdelijk, Buffer.from(data, 'base64'));
   const nieuw = statSync(tijdelijk).size;
   // Fail closed op onzin: een PDF van een paar kilobyte is een lege of stukke render, en die
   // mag de goede niet overschrijven.
@@ -107,6 +192,8 @@ for (const n of papers) {
   gelukt++;
 }
 
+cdp.sluit();
+browser.kill();
 server.close();
 try { rmSync(werkmap, { recursive: true, force: true }); } catch {}
 try { rmSync(`${werkmap}-profiel`, { recursive: true, force: true }); } catch {}
