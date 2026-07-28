@@ -1,6 +1,6 @@
 {
   "bron": "afgeleid uit whitepapers/_register.json (agora-rob-register)",
-  "gebouwd_op": "2026-07-28T13:56:51.082Z",
+  "gebouwd_op": "2026-07-28T14:23:35.874Z",
   "toelichting": "publication_status is afgeleid uit de claimstatus, niet beweerd. Bewerk de DB, niet dit bestand.",
   "doors": [
     {
@@ -133,7 +133,7 @@
           "bron_naam": "Forrester",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": null
+          "nagetrokken_op": "2026-07-28"
         },
         {
           "ext_ref": "claim:wp:022",
@@ -145,7 +145,7 @@
           "bron_naam": "G2",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": null
+          "nagetrokken_op": "2026-07-28"
         },
         {
           "ext_ref": "claim:wp:031",
@@ -169,7 +169,7 @@
           "bron_naam": "Kantar",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:prop:008",
@@ -181,7 +181,7 @@
           "bron_naam": "Bain & Company",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         }
       ],
       "claim_refs": [
@@ -275,7 +275,7 @@
           "bron_naam": "Kamer van Koophandel",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:prop:009",
@@ -287,7 +287,7 @@
           "bron_naam": "Jay Barney",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:prop:010",
@@ -299,7 +299,7 @@
           "bron_naam": "Crook, Ketchen, Combs & Todd",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         }
       ],
       "claim_refs": [
@@ -543,7 +543,7 @@
           "bron_naam": "CBS",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:prop:003",
@@ -555,7 +555,7 @@
           "bron_naam": "Dialogic in opdracht van het Ministerie van Economische Zaken",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:prop:004",
@@ -567,7 +567,7 @@
           "bron_naam": "Ministerie van Economische Zaken",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:prop:005",
@@ -579,7 +579,7 @@
           "bron_naam": "Eurostat",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         },
         {
           "ext_ref": "claim:prop:006",
@@ -591,7 +591,7 @@
           "bron_naam": "Kamer van Koophandel",
           "herzien_na": null,
           "in_herziening": false,
-          "nagetrokken_op": "2026-07-01"
+          "nagetrokken_op": null
         }
       ],
       "claim_refs": [
