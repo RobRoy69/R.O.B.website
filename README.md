@@ -111,6 +111,23 @@ Code bouw/R.O.B. Concepting/R.O.B. website/Index Netlify/   ← git-repo, produc
    GitHub → Netlify → rob-concepting.com
 ```
 
+### Een whitepaper gewijzigd? Print de PDF opnieuw
+
+De bouwketen op Netlify kan dit niet doen — daar staat geen Chrome. Het is dus een **lokale
+stap**, en die vergeet je precies één keer te vaak: op 2026-07-28 bleken alle vier de PDF's
+zeven tot tien commits achter te lopen. Wie de PDF van paper 01 aanvroeg, kreeg de
+Semrush-toeschrijving toegestuurd die op de site al was gecorrigeerd.
+
+```bash
+npm run pdf        # print alle vier de papers opnieuw uit publiek/, ~2 min
+npm run rapport    # bevestigt: geen PDF loopt achter op zijn pagina
+```
+
+`npm run rapport` meldt het per paper wanneer de pagina nieuwer is dan de PDF. Bewust geen
+bouwpoort: die zou elke deploy blokkeren op iets dat de build zelf niet kan repareren.
+
+**De PDF is een afgeleide van de pagina, geen tweede document.** Nooit los bijwerken.
+
 ## Toolkit / dependencies
 
 - **Geen** runtime dependencies of build-tools
