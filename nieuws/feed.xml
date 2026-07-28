@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R.O.B. Concepting — nieuws</title>
+    <link>https://rob-concepting.com/nieuws/</link>
+    <atom:link href="https://rob-concepting.com/nieuws/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>Berichten over systeemontwerp, AI en het organiseren van waarde. Bij elk bericht de onderbouwing met datum.</description>
+    <language>nl-NL</language>
+
+  </channel>
+</rss>

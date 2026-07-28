@@ -25,8 +25,16 @@ export const ID = {
 // dat deze Rob de Rooij dezelfde is als die daar. Nu staat er één profiel. Elk extra
 // GEVERIFIEERD profiel maakt de entiteit steviger — maar alleen profielen die echt van Rob
 // zijn en waar de link terugwijst. Een verzonnen of onbevestigd profiel verzwakt juist.
+// Alle drie geverifieerd op 2026-07-27: de URL's resolven (LinkedIn geeft 999, dat is hun
+// bot-afweer en geen fout).
+//
+// LET OP — sameAs is het sterkst wanneer de verwijzing WEDERKERIG is: het profiel linkt
+// terug naar het domein. GitHub doet dat op dit moment niet; een link naar
+// rob-concepting.com in dat profiel maakt het signaal aantoonbaar sterker.
 export const SAME_AS = [
   'https://www.linkedin.com/in/rob-concepting/',
+  'https://www.youtube.com/@R-O-B-concepting',
+  'https://github.com/RobRoy69',
 ];
 
 export function graaf() {

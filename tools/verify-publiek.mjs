@@ -36,6 +36,8 @@ const MOET_BESTAAN = [
   'robots.txt',
   'sitemap.xml',
   'vragen/index.html',
+  'nieuws/index.html',
+  'nieuws/feed.xml',
   'whitepapers/index.html',
   'whitepapers/de-mens-beslist.html',
   'whitepapers/de-klinkklare-onzin.html',

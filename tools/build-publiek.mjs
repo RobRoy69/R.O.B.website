@@ -44,6 +44,10 @@ const PUBLIEK = [
   // wachtend_op_reviewpoort — interne registerkennis, geen uitgifte. Een bewust,
   // schoongemaakt bewijsbestand komt er later naast; dat is iets anders dan dit lek.
   { soort: 'map', pad: 'whitepapers', filter: (naam) => !naam.startsWith('_') },
+
+  // nieuws: de pagina's en de feed wél; de projectie (_berichten.json) en de
+  // conceptbestanden NIET. Een concept is werk in bewerking en hoort niet op het web.
+  { soort: 'map', pad: 'nieuws', filter: (naam) => !naam.startsWith('_') && naam !== 'concept' },
 ];
 
 // Wat er NOOIT in mag, ook niet als het per ongeluk in een meegekopieerde map zit.
