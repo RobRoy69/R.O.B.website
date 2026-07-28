@@ -57,7 +57,7 @@ const regels = b.beweringen.map(x => {
         <dl class="bw-meta">
           <dt>Vastgesteld</dt><dd>${esc(x.vastgesteld.weergave)}</dd>
           <dt>Bron</dt><dd>${bron}</dd>
-          ${s ? `<dt>Stand</dt><dd>${esc(s.status)} &mdash; ${esc(s.waarom)}</dd>` : ''}
+          ${s ? `<dt>Stand</dt><dd>${esc(s.waarom)}</dd>` : ''}
           <dt>Gebruikt op</dt><dd>${x.gebruikt_in.map(u =>
             `<a href="${esc(u.replace(BASIS, ''))}">${esc(paginanaam(u))}</a>`).join(' &middot; ')}</dd>
         </dl>
