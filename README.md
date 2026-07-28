@@ -7,33 +7,55 @@ Live op [rob-concepting.com](https://rob-concepting.com).
 
 ## Architectuur
 
-Frontend is vanilla HTML/CSS/JS in één `index.html` — geen framework, geen frontend-build. De Netlify Functions gebruiken wél npm-deps (Vercel AI SDK), dus Netlify draait `npm install` bij elke build.
+Frontend is vanilla HTML/CSS/JS — geen framework, geen frontend-build. De Netlify Functions
+gebruiken wél npm-deps (Vercel AI SDK), dus Netlify draait `npm install` bij elke build.
+
+**Wat je hier bewerkt is niet wat er live staat.** De repo bevat de bron; `npm run bouw` stelt
+daaruit `publiek/` samen en dát is de publicatiemap. Pagina's die uit het claim-register komen
+(`/vragen/`, `/nieuws/`, `/bewijs/`) worden gegenereerd — die bewerk je in het register of in
+de bouwer, nooit in de HTML.
 
 ```
-/
-├── index.html              # Landing + transitie + 6-pane interface (~2500 regels, geheel inline)
-├── netlify.toml            # Build-config + security headers + cache-headers
-├── package.json            # type:module + Function-deps (ai, @ai-sdk/anthropic)
-├── og-image.svg            # Social preview (1200×630)
-├── sitemap.xml             # SEO
-├── robots.txt              # SEO
-├── promptfoo.config.yaml   # Dev: persona-regressietests (deployt niet mee)
-├── promptfoo.README.md     # Dev: promptfoo setup + workflow
-├── media/
-│   ├── concept-film.mp4    # Werk-pane video (1080×1080, ~8 MB)
-│   └── portret-rob.jpg     # Ronde avatar in credentials-kaart (~375 KB)
-├── werk/                   # SVG-mockups voor tool-cards
-│   ├── apps.svg
-│   ├── dashboards.svg
-│   ├── logo-branding.svg
-│   ├── os.svg
-│   ├── portals.svg
-│   └── websites.svg
-└── netlify/functions/
-    ├── chat.js             # v2 ESM — Vercel AI SDK streamText() → Claude (claude-haiku-4-5),
-    │                       #   Helicone-proxy als HELICONE_API_KEY gezet
-    └── whatsapp.js         # v2 ESM — WhatsApp redirect (nummer in env-var, niet in HTML)
+/                            ← bron
+├── index.html               # Landing + transitie + 5-pane interface (geheel inline)
+├── netlify.toml             # Roept npm run deploy aan + security- en cache-headers
+├── package.json             # De bouwketen (bouw/deploy/pdf/rapport) + Function-deps
+├── robots.txt               # SEO. sitemap.xml staat hier NIET: die wordt afgeleid
+├── og-image.svg/.png        # Social preview (1200×630)
+├── promptfoo.config.yaml    # Dev: persona-regressietests (deployt niet mee)
+│
+├── whitepapers/             # De vier papers, met de hand geschreven
+│   ├── *.html               #   de papers zelf
+│   ├── bestand/*.pdf        #   afgeleid — npm run pdf, nooit los bijwerken
+│   └── _register.json       #   projectie uit het claim-register (niet publiek)
+├── vragen/                  # AFGELEID uit de vragenpoorten — build-vragen.mjs
+├── nieuws/                  # AFGELEID uit de berichtentabel — build-nieuws.mjs
+│   └── concept/*.md         #   hier schrijf je een bericht, dan npm run bericht
+├── media/, werk/            # Video, portret, SVG-mockups
+│
+├── tools/                   # De bouwketen: build-* maakt, verify-* bewaakt
+│   ├── build-publiek.mjs    #   stelt publiek/ samen uit een INSLUITLIJST
+│   ├── verify-publiek.mjs   #   tien controles op wat er werkelijk gepubliceerd wordt
+│   ├── build-pdf.mjs        #   print de papers via het DevTools-protocol (lokaal)
+│   ├── rapport.mjs          #   npm run rapport — de stand, structureel gemeten
+│   └── lib/                 #   gedeeld: datum, entiteiten, status, nesting
+│
+├── netlify/functions/       # chat, contact, whatsapp, whitepaper(-confirm)
+│   └── lib/                 #   mail, token, archief, papers, systeemprompt
+│
+└── publiek/                 ← AFGELEID, staat in .gitignore. Dit is wat Netlify uitserveert
 ```
+
+### Twee regels die hieruit volgen
+
+**Afgeleid nooit met de hand bijwerken.** `publiek/`, `sitemap.xml`, `llms.txt`, `bewijs.json`,
+`/bewijs/`, `/vragen/`, `/nieuws/` en de PDF's worden gemaakt. Wie er een tweede exemplaar van
+onderhoudt, onderhoudt een fout — dat is in juli 2026 zes keer gebeurd (publicatielijst,
+whitepaperteller, "deze drie stukken", datumprecisie, sitemap, PDF's).
+
+**Poorten falen dicht.** Elke `verify-*` stopt de build bij een bevinding en heeft een
+sabotage-test (`--saboteer`) die bewijst dat hij rood kán worden. Een poort die nooit rood
+wordt, meet niets.
 
 ## Deploy
 

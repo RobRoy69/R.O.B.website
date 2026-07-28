@@ -183,6 +183,33 @@ try {
   scan(path.resolve(ROOT, 'netlify', 'functions'), (n) => n.endsWith('.js'));
   scan(ROOT, (n) => n.endsWith('.md') || n === 'netlify.toml' || n === 'package.json');
 
+  // ── 6b. beschrijft de README de repo die er werkelijk staat? ────────────────
+  // De README beschreef tot 2026-07-28 de repo van vóór /vragen/, /nieuws/, /bewijs/ en
+  // tools/ — zes mappen die er wel waren maar nergens genoemd werden. Geen lek, wel
+  // misleidend voor wie er als eerste in kijkt. En het is exact hetzelfde patroon als de
+  // andere zes: een met de hand onderhouden beschrijving van iets dat te bekijken valt.
+  //
+  // ALLEEN ÉÉN RICHTING: bestaat het, dan moet het genoemd worden. De andere kant — staat
+  // er iets in de README dat niet bestaat — vraagt om het parseren van proza, en een poort
+  // die op tekstherkenning leunt is precies wat deze week zes valse meldingen opleverde.
+  const readmePad = path.join(ROOT, 'README.md');
+  if (existsSync(readmePad)) {
+    const readme = readFileSync(readmePad, 'utf-8');
+    // Wat niet in de repo hoort of puur gereedschap is, hoeft niet beschreven te worden.
+    const NEGEER = new Set(['node_modules', 'publiek', 'package-lock.json', '.gitignore',
+                            '.netlify', '.cache', 'README.md']);
+    for (const e of readdirSync(ROOT, { withFileTypes: true })) {
+      if (e.name.startsWith('.') || NEGEER.has(e.name)) continue;
+      // Op naam toetsen mét grens, zodat "werk" niet aanslaat op "netwerk".
+      const grens = new RegExp(`(^|[^a-z0-9._/-])${e.name.replace(/[.]/g, '\.')}([^a-z0-9._-]|$)`, 'im');
+      if (!grens.test(readme)) {
+        fouten.push(`README beschrijft ${e.name}${e.isDirectory() ? '/' : ''} niet, terwijl het in de repo staat`);
+      }
+    }
+  } else {
+    fouten.push('README.md ontbreekt');
+  }
+
   // ── 7. entiteitsgraaf en llms.txt ───────────────────────────────────────────
   // Voor 2026-07-27 stonden er VIJF losse Person-objecten voor dezelfde persoon en NUL
   // @id-verwijzingen: voor een machine vijf mogelijke mensen. Deze poort bewaakt dat de
