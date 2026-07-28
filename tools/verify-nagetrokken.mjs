@@ -31,14 +31,42 @@ if (!existsSync(PROJ)) {
   process.exit(1);
 }
 
-// Alle URL's die als link in een bronnensectie staan. Alleen dáár: een link in de lopende
-// tekst is een verwijzing, geen bronverantwoording, en draagt de belofte niet.
+// Alle URL's die de lezer ergens als bronlink kan volgen.
+//
+// NIET ALLEEN DE PAPERS. Eerste versie keek uitsluitend in de bronnensecties van de
+// whitepapers, en verklaarde daarmee achttien bronnen achter /vragen/ onvindbaar terwijl ze
+// daar bij elke bewering als link staan. De poort mat de vindplaats die ik toevallig had
+// bedacht, niet de vindbaarheid die hij moest bewaken.
+//
+// Wél alleen BRONCONTEXT, op de klasse en niet op de tekst: een link in een lopende alinea
+// is een verwijzing, geen bronverantwoording, en draagt de belofte niet.
 const gelinkt = new Set();
+const oogst = (html, patronen) => {
+  for (const p of patronen) for (const m of html.matchAll(p)) gelinkt.add(m[1]);
+};
+
 for (const n of readdirSync(PAPERS).filter(x => x.endsWith('.html') && x !== 'index.html')) {
   const html = readFileSync(path.join(PAPERS, n), 'utf8');
   for (const sec of html.match(/<section class="bronnen">[\s\S]*?<\/section>/g) || []) {
-    for (const m of sec.matchAll(/href="(https?:\/\/[^"]+)"/g)) gelinkt.add(m[1]);
+    oogst(sec, [/href="(https?:\/\/[^"]+)"/g]);
   }
+}
+
+// /vragen/ en /nieuws/ tonen de bron bij elke bewering, met class v-bron respectievelijk
+// b-bron. Die klasse is de bronmarkering; op de klasse toetsen en niet op de tekst is de les
+// van de zes valse meldingen van deze week.
+for (const p of [path.join(ROOT, 'vragen', 'index.html'),
+                 ...(existsSync(path.join(ROOT, 'nieuws'))
+                     ? readdirSync(path.join(ROOT, 'nieuws'), { withFileTypes: true })
+                         .filter(e => e.isDirectory() && e.name !== 'concept')
+                         .map(e => path.join(ROOT, 'nieuws', e.name, 'index.html'))
+                     : []),
+                 path.join(ROOT, 'nieuws', 'index.html')]) {
+  if (!existsSync(p)) continue;
+  oogst(readFileSync(p, 'utf8'), [
+    /<a class="v-bron"[^>]*href="(https?:\/\/[^"]+)"/g,
+    /<a class="b-bron"[^>]*href="(https?:\/\/[^"]+)"/g,
+  ]);
 }
 
 if (saboteer) {
@@ -48,6 +76,31 @@ if (saboteer) {
 }
 
 const claims = JSON.parse(readFileSync(PROJ, 'utf8')).claims;
+
+// WELKE BEWERINGEN STAAN ER DAADWERKELIJK OP EEN PAGINA?
+//
+// Van de 54 leverbare beweringen worden er 36 getoond; de rest staat goedgekeurd in het
+// register zonder dat een pagina ze gebruikt. Dat onderscheid is wezenlijk voor deze poort:
+// de belofte "je kunt dit navolgen" wordt gedaan aan een LEZER, en een bewering die nergens
+// verschijnt heeft geen lezer. Haar op vindbaarheid afrekenen is een fout melden die niemand
+// kan tegenkomen — en een poort die dat doet, leer je negeren.
+//
+// De eerste richting (link zonder controledatum) geldt wél voor alles: staat er een link,
+// dan is er per definitie een pagina waar hij op staat.
+const gerenderd = new Set();
+const doorsPad = path.join(PAPERS, '_doors.json');
+if (existsSync(doorsPad)) {
+  for (const d of JSON.parse(readFileSync(doorsPad, 'utf8')).doors) {
+    if (d.publication_status !== 'publishable') continue;
+    for (const b of d.bewijs || []) gerenderd.add(b.ext_ref);
+  }
+}
+const berPad = path.join(ROOT, 'nieuws', '_berichten.json');
+if (existsSync(berPad)) {
+  for (const b of JSON.parse(readFileSync(berPad, 'utf8')).berichten || []) {
+    for (const r of (b.claim_refs || '').split(',').map(s => s.trim()).filter(Boolean)) gerenderd.add(r);
+  }
+}
 
 // Per bron-URL: is er een controledatum, en staat er een link?
 const perUrl = new Map();
@@ -63,12 +116,14 @@ const fouten = [];
 for (const [url, b] of perUrl) {
   const heeftLink = gelinkt.has(url);
   if (heeftLink && !b.nagetrokken) {
-    fouten.push(`${b.naam}: staat als directe link in een paper, maar heeft geen controledatum `
-      + `in het register — het paper belooft meer dan het register waarmaakt (${b.refs.join(', ')})`);
+    fouten.push(`${b.naam}: staat als bronlink op een pagina, maar heeft geen controledatum `
+      + `in het register — de pagina belooft meer dan het register waarmaakt (${b.refs.join(', ')})`);
   }
-  if (!heeftLink && b.nagetrokken) {
-    fouten.push(`${b.naam}: heeft een controledatum (${b.nagetrokken}) maar staat in geen enkel `
-      + `paper als directe link — de lezer kan die controle nergens navolgen (${b.refs.join(', ')})`);
+  // Alleen afrekenen op vindbaarheid wanneer de bewering ergens staat. Zie de toelichting
+  // hierboven: een bewering zonder lezer doet geen belofte.
+  if (!heeftLink && b.nagetrokken && b.refs.some(r => gerenderd.has(r))) {
+    fouten.push(`${b.naam}: heeft een controledatum (${b.nagetrokken}) maar staat op geen enkele `
+      + `pagina als bronlink — de lezer kan die controle nergens navolgen (${b.refs.join(', ')})`);
   }
 }
 
@@ -79,5 +134,11 @@ if (fouten.length) {
 }
 
 const metDatum = [...perUrl.values()].filter(b => b.nagetrokken).length;
-console.log(`nagetrokken groen — ${gelinkt.size} directe bronlinks in de papers, `
+const ongebruikt = [...perUrl.values()].filter(b => b.nagetrokken && !b.refs.some(r => gerenderd.has(r))).length;
+console.log(`nagetrokken groen — ${gelinkt.size} bronlinks op de gepubliceerde pagina's, `
   + `${metDatum} bronnen met een controledatum, en die twee dekken elkaar.`);
+// Geen stille versmalling: wat buiten de toets viel, staat er expliciet bij.
+if (ongebruikt) {
+  console.log(`  (${ongebruikt} nagetrokken bron(nen) buiten beschouwing gelaten: hun beweringen `
+    + `staan nog op geen enkele pagina.)`);
+}

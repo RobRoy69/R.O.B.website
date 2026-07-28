@@ -1,6 +1,6 @@
 {
   "bron": "agora-rob-register / claims_public",
-  "synced_at": "2026-07-28T15:04:04.485Z",
+  "synced_at": "2026-07-28T15:13:09.413Z",
   "toelichting": "Afgeleide projectie. Bewerk de DB, niet dit bestand.",
   "claims": [
     {
@@ -14,7 +14,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -28,7 +28,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -42,7 +42,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -56,7 +56,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -70,7 +70,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -84,7 +84,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -98,7 +98,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -112,7 +112,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -123,10 +123,10 @@
       "dated_soort": "brondatum",
       "bron_url": "https://journals.sagepub.com/doi/10.1177/014920639101700108",
       "bron_naam": "Jay Barney",
-      "soort": null,
+      "soort": "grondslag",
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -140,7 +140,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -154,7 +154,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -168,7 +168,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -182,7 +182,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -196,7 +196,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -210,7 +210,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -224,7 +224,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -546,7 +546,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
@@ -574,7 +574,7 @@
       "soort": null,
       "herzien_na": null,
       "in_herziening": false,
-      "nagetrokken_op": null,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     },
     {
