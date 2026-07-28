@@ -13,6 +13,7 @@
     "test:archief": "node tools/test-archief-alarm.mjs",
     "review": "node tools/review.mjs",
     "bericht": "node tools/bericht.mjs",
-    "rapport": "node tools/rapport.mjs"
+    "rapport": "node tools/rapport.mjs",
+    "pdf": "node tools/build-publiek.mjs && node tools/build-pdf.mjs"
   }
 }

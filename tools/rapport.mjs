@@ -16,7 +16,7 @@
 //
 // Draai: npm run rapport
 
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -144,8 +144,36 @@ if (proj) {
   console.log(`  gesynchroniseerd: ${proj.synced_at}`);
 }
 
+// PDF's tegenover hun pagina. Ze worden lokaal geprint (npm run pdf) en kunnen dus niet in
+// de bouwketen worden bewaakt — er staat geen Chrome op Netlify. Daarom staat de meting hier.
+//
+// Dit is geen theoretisch risico: op 2026-07-28 bleken alle vier de PDF's zeven tot negen
+// commits achter te lopen. De PDF van paper 01 was van 24 juli, de vijf feitcorrecties gingen
+// er op 25 juli in. Wie die PDF aanvroeg, kreeg de gecorrigeerde fouten alsnog toegestuurd.
+// Niets merkte het, want niets keek. Nu wel.
+console.log('\nPDF\'s');
+const paperMap = path.join(ROOT, 'whitepapers');
+const achter = [];
+for (const n of readdirSync(paperMap).filter(x => x.endsWith('.html') && x !== 'index.html')) {
+  const pdf = path.join(paperMap, 'bestand', n.replace(/\.html$/, '.pdf'));
+  if (!existsSync(pdf)) { achter.push(`${n}: geen PDF`); continue; }
+  const dHtml = statSync(path.join(paperMap, n)).mtimeMs;
+  const dPdf  = statSync(pdf).mtimeMs;
+  if (dHtml > dPdf) {
+    const dagen = Math.floor((dHtml - dPdf) / 86400000);
+    achter.push(`${n.replace(/\.html$/, '')}: pagina is nieuwer dan de PDF`
+      + (dagen ? ` (${dagen} dag${dagen === 1 ? '' : 'en'})` : ''));
+  }
+}
+if (achter.length) {
+  console.log(`  ${achter.length} van de PDF's loopt achter — draai npm run pdf`);
+  for (const a of achter) console.log(`  LET OP  ${a}`);
+} else {
+  console.log('  alle PDF\'s zijn even oud als of nieuwer dan hun pagina');
+}
+
 console.log(`\n${streep}`);
-const problemen = paginas.filter(p => p.h1 !== 1 || p.kopsprong || !p.ldOk || !p.graaf).length;
+const problemen = paginas.filter(p => p.h1 !== 1 || p.kopsprong || !p.ldOk || !p.graaf).length + achter.length;
 console.log(problemen ? `  ${problemen} pagina('s) met een aandachtspunt — zie LET OP hierboven`
                       : '  Geen aandachtspunten. Elke pagina: één h1, geldige JSON-LD, entiteitsgraaf.');
 console.log(`${streep}\n`);
