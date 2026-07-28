@@ -170,6 +170,32 @@ try {
     }
   };
   scanFns(fnDir);
+
+  // ── 7. entiteitsgraaf en llms.txt ───────────────────────────────────────────
+  // Voor 2026-07-27 stonden er VIJF losse Person-objecten voor dezelfde persoon en NUL
+  // @id-verwijzingen: voor een machine vijf mogelijke mensen. Deze poort bewaakt dat de
+  // graaf overal staat en dat de JSON-LD geldig blijft — de eerste versie van
+  // build-entiteiten brak een blok met een te gulzige regex, en dat mag niet live komen.
+  if (!existsSync(path.join(UIT, 'llms.txt'))) {
+    fouten.push('llms.txt ontbreekt in de publicatie');
+  }
+  const scanLd = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) { scanLd(p); continue; }
+      if (!e.name.endsWith('.html')) continue;
+      const h = readFileSync(p, 'utf-8');
+      const blokken = [...h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+      const rel = path.relative(UIT, p).split(path.sep).join('/');
+      if (!blokken.length) { fouten.push(`${rel} heeft geen structured data`); continue; }
+      for (const [i, b] of blokken.entries()) {
+        try { JSON.parse(b[1]); }
+        catch { fouten.push(`${rel}: JSON-LD-blok ${i + 1} is ongeldig`); }
+      }
+      if (!h.includes('"@graph"')) fouten.push(`${rel} mist de entiteitsgraaf`);
+    }
+  };
+  scanLd(UIT);
 } catch (e) {
   console.error('POORT ROOD: publicatie kon niet gelezen worden —', e.message, '(fail closed)');
   if (saboteer && existsSync(saboteurPad)) unlinkSync(saboteurPad);
