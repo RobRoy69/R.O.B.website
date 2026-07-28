@@ -119,7 +119,7 @@ zeven tot tien commits achter te lopen. Wie de PDF van paper 01 aanvroeg, kreeg 
 Semrush-toeschrijving toegestuurd die op de site al was gecorrigeerd.
 
 ```bash
-npm run pdf        # print alle vier de papers opnieuw uit publiek/, ~2 min
+npm run pdf        # bouwt de publicatie en print alle vier de papers opnieuw, ~2 min
 npm run rapport    # bevestigt: geen PDF loopt achter op zijn pagina
 ```
 
@@ -127,6 +127,19 @@ npm run rapport    # bevestigt: geen PDF loopt achter op zijn pagina
 bouwpoort: die zou elke deploy blokkeren op iets dat de build zelf niet kan repareren.
 
 **De PDF is een afgeleide van de pagina, geen tweede document.** Nooit los bijwerken.
+
+### De bouwketen
+
+Staat in `package.json`, niet in `netlify.toml` — dat bestand roept hem alleen aan. Eén
+definitie, twee aanroepers:
+
+| | |
+|---|---|
+| `npm run bouw` | de publicatie: register synchroniseren, pagina's bouwen, poorten, `publiek/` samenstellen |
+| `npm run deploy` | `bouw` plus de agentkennis en de promptfoo-prompt. Dit draait Netlify |
+
+Draai lokaal altijd `bouw` en niet losse stappen: `build-publiek` stelt `publiek/` opnieuw
+samen, dus wie hem alleen draait houdt een halve publicatie over.
 
 ## Toolkit / dependencies
 
