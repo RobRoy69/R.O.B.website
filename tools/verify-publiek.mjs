@@ -130,6 +130,42 @@ try {
     fouten.push(`whitepaper-index zegt "${geteld} whitepapers" terwijl er ${papers} zijn`);
   }
 
+  // ── 4b. "deze N stukken" en de plaats in de reeks ───────────────────────────
+  // Onder de kaarten stond "Deze drie stukken vormen één betoog" terwijl er vier waren, met
+  // een boog die er maar drie beschreef. En twee kaarten droegen nog "13 pagina's" en
+  // "10 pagina's" waar de andere twee al "Eerste/Vierde in de reeks" zeiden — een
+  // paginatelling die niemand kan narekenen en die bij elke tekstwijziging verschuift.
+  //
+  // Zelfde ziekte als de teller hierboven: een getal in proza dat ook te tellen valt. Nu
+  // wordt het geteld. En de plaats in de reeks moet bij het kaartnummer horen, want een
+  // kaart die "02" zegt en "Derde in de reeks" is erger dan geen aanduiding.
+  // Twee lijsten, want "deze vier stukken" is een hoofdtelwoord en "Vierde in de reeks" een
+  // rangtelwoord. Eerste versie vergeleek "vier" met de rangtelwoorden en meldde daardoor
+  // "zegt vier stukken terwijl er 4 zijn" — een poort die rood ging op zijn eigen grammatica.
+  const RANG   = ['', 'Eerste', 'Tweede', 'Derde', 'Vierde', 'Vijfde', 'Zesde', 'Zevende',
+                  'Achtste', 'Negende', 'Tiende'];
+  const AANTAL = ['', 'een', 'twee', 'drie', 'vier', 'vijf', 'zes', 'zeven',
+                  'acht', 'negen', 'tien'];
+  const inProza = idx.match(/Deze (\w+) stukken/);
+  if (!inProza) {
+    fouten.push('whitepaper-index mist de regel "Deze N stukken" onder de kaarten');
+  } else if (AANTAL.indexOf(inProza[1].toLowerCase()) !== papers) {
+    fouten.push(`whitepaper-index zegt "Deze ${inProza[1]} stukken" terwijl er ${papers} zijn`);
+  }
+
+  // Per kaart: het nummer bovenaan en de plaats in de reeks onderaan moeten kloppen.
+  for (const kaart of idx.match(/<a class="card"[\s\S]*?<\/a>/g) || []) {
+    const nr = (kaart.match(/<span>(\d{2})<\/span>/) || [])[1];
+    const rang = (kaart.match(/<span>(\w+) in de reeks<\/span>/) || [])[1];
+    const titel = (kaart.match(/<h2>([^<]*)<\/h2>/) || [, '?'])[1];
+    if (!nr) { fouten.push(`whitepaper-kaart "${titel}" heeft geen volgnummer`); continue; }
+    if (!rang) {
+      fouten.push(`whitepaper-kaart "${titel}" zegt niet de hoeveelste in de reeks hij is`);
+    } else if (RANG[Number(nr)] !== rang) {
+      fouten.push(`whitepaper-kaart ${nr} ("${titel}") zegt "${rang} in de reeks" — dat hoort "${RANG[Number(nr)]}" te zijn`);
+    }
+  }
+
   // ── 5. beloofde PDF's moeten bestaan ────────────────────────────────────────
   // De whitepaper-index belooft "de opgemaakte versie stuur ik je als PDF toe". Paper 04
   // ging op 2026-07-27 live ZONDER PDF en zonder downloadsectie: een bezoeker vond die
