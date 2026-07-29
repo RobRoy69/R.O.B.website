@@ -103,12 +103,26 @@ const papers = readdirSync(path.join(UIT, 'whitepapers'))
 mkdirSync(DOEL, { recursive: true });
 const werkmap = path.join(os.tmpdir(), `rob-pdf-${poort}`);
 const debugPoort = 9333 + (poort % 200);
+
+// EEN VASTE PROFIELMAP, HERGEBRUIKT. Eerste versie hing de profielmap aan de willekeurige
+// poort, dus elke draai maakte een nieuwe — en de opruiming aan het eind liep vlak na
+// browser.kill(), terwijl Chrome zijn bestanden nog vasthield. Zeven draaien lieten 208 MB
+// achter in de tijdelijke map. Nu een naam die niet meebeweegt, plus een veegbeurt vooraf op
+// wat vorige versies hebben laten liggen. Opruimen aan het begin is betrouwbaarder dan aan
+// het eind: dan is er niets meer dat de bestanden vasthoudt.
+const profiel = path.join(os.tmpdir(), 'rob-pdf-profiel');
+let opgeruimd = 0;
+for (const naam of readdirSync(os.tmpdir())) {
+  if (!/^rob-pdf-\d+/.test(naam)) continue;
+  try { rmSync(path.join(os.tmpdir(), naam), { recursive: true, force: true }); opgeruimd++; } catch {}
+}
+if (opgeruimd) console.log(`  ${opgeruimd} achtergebleven werkmap(pen) van eerdere draaien opgeruimd`);
 let gelukt = 0;
 
 // Chrome starten met een debug-poort. Eigen profiel, geen extensies, geen eerste-start-scherm.
 const browser = spawn(CHROME, [
   `--remote-debugging-port=${debugPoort}`,
-  `--user-data-dir=${werkmap}-profiel`,
+  `--user-data-dir=${profiel}`,
   '--no-first-run', '--no-default-browser-check', '--disable-extensions',
   '--disable-background-networking', '--disable-sync', '--window-position=-32000,-32000',
   'about:blank',
@@ -195,8 +209,9 @@ for (const n of papers) {
 cdp.sluit();
 browser.kill();
 server.close();
+// Alleen de PDF-werkmap weg; de profielmap blijft staan en wordt hergebruikt. Dat scheelt
+// een koude Chrome-start bij de volgende draai, en de veegbeurt bovenaan houdt hem enkelvoudig.
 try { rmSync(werkmap, { recursive: true, force: true }); } catch {}
-try { rmSync(`${werkmap}-profiel`, { recursive: true, force: true }); } catch {}
 
 console.log(`build-pdf: ${gelukt} van ${papers.length} PDF's opnieuw geprint.`);
 if (gelukt !== papers.length) process.exit(1);
