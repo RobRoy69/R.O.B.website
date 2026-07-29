@@ -65,12 +65,14 @@ export default async (request) => {
     const { html, url } = await fetchHtml(body.url);
     const { document } = parseHTML(html);
     document.location = new URL(url);
+    // Readability mag de DOM opschonen. Tel zichtbare bronlinks daarom vóór de parse.
+    const links = [...document.querySelectorAll('main a[href], article a[href]')]
+      .filter(a => /^https?:/i.test(a.href || '')).length;
     const article = new Readability(document).parse();
     if (!article?.textContent || article.textContent.trim().length < 200) return json(422, { error: 'Op deze pagina is te weinig hoofdinhoud herkenbaar.' });
     const meta = (selector) => document.querySelector(selector)?.getAttribute('content')?.trim();
     const date = meta('meta[property="article:published_time"]') || meta('meta[name="date"]') || document.querySelector('time[datetime]')?.getAttribute('datetime');
     const author = article.byline || meta('meta[name="author"]');
-    const links = [...document.querySelectorAll('main a[href], article a[href]')].filter(a => /^https?:/i.test(a.href || '')).length;
     const boundaryWords = (article.textContent.match(/\b(niet|onzeker|beperking|voorbehoud|kan|mogelijk)\b/gi) || []).length;
     const findings = [
       { label: 'Vindbaarheid', explanation: article.title ? `De hoofdinhoud heeft een herkenbare titel: “${article.title.slice(0, 120)}”.` : 'Een eenduidige titel ontbreekt.' },
@@ -86,4 +88,3 @@ export default async (request) => {
 };
 
 export const config = { path: '/api/kennisproef' };
-
