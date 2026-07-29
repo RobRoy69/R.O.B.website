@@ -1,6 +1,6 @@
 {
   "bron": "agora-rob-register / claims_public",
-  "synced_at": "2026-07-29T08:30:54.532Z",
+  "synced_at": "2026-07-29T08:35:11.032Z",
   "toelichting": "Afgeleide projectie. Bewerk de DB, niet dit bestand.",
   "claims": [
     {
@@ -757,6 +757,76 @@
       "herzien_na": null,
       "in_herziening": false,
       "nagetrokken_op": "2026-07-01",
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:056",
+      "text": "De weg tussen aanleiding en aankoop is geen trechter maar een lus tussen twee mentale toestanden: verkennen, dat het aantal opties uitbreidt, en evalueren, dat het terugbrengt. Google noemt dat gebied de messy middle.",
+      "dated": "2020-07-01",
+      "dated_precisie": "maand",
+      "dated_soort": "brondatum",
+      "bron_url": "https://www.thinkwithgoogle.com/_qs/documents/9998/Decoding_Decisions_The_Messy_Middle_of_Purchase_Behavior.pdf",
+      "bron_naam": "Google met The Behavioural Architects",
+      "soort": null,
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-28",
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:057",
+      "text": "Van de 1.200 AI-toepassingen die ISG bij bedrijven onderzocht, valt 6 procent onder inkoop. Daarmee staat inkoop zevende: sales gaat voorop met 16 procent, gevolgd door productmanagement (12), operations (10), marketing (9), corporate communications (8) en finance (7).",
+      "dated": "2025-09-01",
+      "dated_precisie": "maand",
+      "dated_soort": "brondatum",
+      "bron_url": "https://isg-one.com/docs/default-source/default-document-library/2025-isg-state-of-enterprise-ai-adoption-report.pdf",
+      "bron_naam": "ISG",
+      "soort": "meting",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-28",
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:058",
+      "text": "Bij Danfoss daalde de afhandeltijd van zakelijke klantinteracties van ongeveer negen minuten naar ongeveer een minuut, een vermindering van circa 90 procent, na invoering van geautomatiseerde orderverwerking.",
+      "dated": "2026-05-26",
+      "dated_precisie": "dag",
+      "dated_soort": "brondatum",
+      "bron_url": "https://goautonomous.io/press-releases/danfoss-in-borsen-autonomous-commerce-cuts-b2b-interaction-time-by-90/",
+      "bron_naam": "Go Autonomous over Danfoss",
+      "soort": "meting",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-28",
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:059",
+      "text": "Van de zakelijke kopers hecht een groeiend deel sterk aan bestaande relaties en blijft bij vertrouwde partners: 44 procent in de meting van 2024, 53 procent in de meting van juni 2026 onder circa 4.000 beslissers in dertien landen.",
+      "dated": "2026-06-01",
+      "dated_precisie": "maand",
+      "dated_soort": "brondatum",
+      "bron_url": "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/the-surprising-economics-of-b2b-growth-the-new-survival-threshold-and-what-it-takes-to-thrive",
+      "bron_naam": "McKinsey",
+      "soort": "meting",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": null,
+      "ring": "open"
+    },
+    {
+      "ext_ref": "claim:wp:060",
+      "text": "Yelp rapporteert over 2025 een daling van het maandelijkse bezoek op al zijn kanalen ten opzichte van 2024: app-apparaten 28,0 miljoen (min 2 procent), desktopbezoekers 37,4 miljoen (min 6 procent) en mobiele webbezoekers 59,7 miljoen (min 7 procent).",
+      "dated": "2025-12-31",
+      "dated_precisie": "dag",
+      "dated_soort": "brondatum",
+      "bron_url": "https://www.sec.gov/Archives/edgar/data/1345016/000134501626000019/yelp-20251231.htm",
+      "bron_naam": "Yelp Inc., Form 10-K FY2025 (SEC)",
+      "soort": "meting",
+      "herzien_na": null,
+      "in_herziening": false,
+      "nagetrokken_op": "2026-07-28",
       "ring": "open"
     }
   ]
