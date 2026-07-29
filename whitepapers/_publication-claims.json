@@ -1,0 +1,11 @@
+{
+  "bron": "agora-rob-register / publication_claims",
+  "snapshot_op": "2026-07-29",
+  "publicaties": [
+    {
+      "ext_ref": "rob:whitepaper:wie-heeft-de-sleutels",
+      "url": "/whitepapers/wie-heeft-de-sleutels",
+      "claim_refs": ["claim:wp:051", "claim:wp:052", "claim:wp:053", "claim:wp:054"]
+    }
+  ]
+}

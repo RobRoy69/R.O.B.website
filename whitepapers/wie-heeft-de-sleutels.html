@@ -8,12 +8,12 @@
   <meta name="keywords" content="automation bias, betekenisvolle menselijke tussenkomst, beslisrecht, stempelrecht, deskilling, SCHUFA, AVG artikel 22, AI-governance, moral crumple zone, MKB, Rob de Rooij">
   <meta name="author" content="Rob de Rooij">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
-  <link rel="canonical" href="https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels.html">
+  <link rel="canonical" href="https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels">
 
   <meta property="og:title" content="Wie heeft de sleutels? — Gezag over eigen kennis in het AI-tijdperk">
   <meta property="og:description" content="De modellen worden commodity. Schaars wordt wie bepaalt wat waar is, wat verouderd is en wat gezegd mag worden.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels.html">
+  <meta property="og:url" content="https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels">
   <meta property="og:locale" content="nl_NL">
   <meta property="og:site_name" content="R.O.B. Concepting">
   <meta property="og:image" content="https://rob-concepting.com/og-image.png">
@@ -43,7 +43,7 @@
     "dateModified": "2026-07-27",
     "author": { "@type": "Person", "name": "Rob de Rooij", "url": "https://rob-concepting.com/", "sameAs": ["https://www.linkedin.com/in/rob-concepting/"], "worksFor": { "@type": "Organization", "name": "R.O.B. Concepting" } },
     "publisher": { "@type": "Organization", "name": "R.O.B. Concepting", "url": "https://rob-concepting.com/" },
-    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels.html" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels" },
     "image": "https://rob-concepting.com/og-image.png",
     "articleSection": "Kennisgezag en AI",
     "isPartOf": { "@type": "CreativeWorkSeries", "name": "Wat AI verandert aan organisaties" },
@@ -72,7 +72,7 @@
         "@type": "ListItem",
         "position": 3,
         "name": "Wie heeft de sleutels?",
-        "item": "https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels.html"
+        "item": "https://rob-concepting.com/whitepapers/wie-heeft-de-sleutels"
       }
     ]
   }
@@ -166,6 +166,14 @@
     }
     .serie a { color: var(--purple); text-decoration: none; border-bottom: 1px solid rgba(15,168,203,.4); }
     .serie a:hover { color: var(--cyan); }
+    .ingang { background: rgba(15,168,203,.07); border-left: 3px solid var(--cyan);
+      padding: 22px 24px; margin: 0 0 34px; }
+    .ingang h2 { margin: 0 0 10px; font-size: 22px; }
+    .ingang p { margin: 8px 0; }
+    .levend { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:12px; border:1px solid var(--border); padding:18px; margin:0 0 34px; }
+    .levend b { display:block; font-family:'IBM Plex Mono',monospace; font-size:10px;
+      letter-spacing:.12em; text-transform:uppercase; color:var(--cyan); }
 
     .toc { border-left: 2px solid var(--cyan); padding: 4px 0 4px 20px; margin: 0 0 44px; }
     .toc-t {
@@ -351,7 +359,17 @@
 
       <div class="serie">
         <span class="lbl">Vierde in de reeks</span>
-        <span>Volgt op <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a>, <a href="/whitepapers/de-klinkklare-onzin.html">De klinkklare (on-)zin van je AI-agent</a> en <a href="/whitepapers/de-mens-beslist.html">De mens beslist (of niet meer?)</a></span>
+        <span>Volgt op <a href="/whitepapers/de-beste-keuze-is">De beste keuze is&hellip;</a>, <a href="/whitepapers/de-klinkklare-onzin">De klinkklare (on-)zin van je AI-agent</a> en <a href="/whitepapers/de-mens-beslist">De mens beslist (of niet meer?)</a></span>
+      </div>
+
+      <section class="ingang" aria-labelledby="relevant">
+        <h2 id="relevant">Dit is relevant als je organisatie AI gebruikt, maar niemand precies kan aanwijzen welke kennis nog geldt.</h2>
+        <p><strong>De kern in één zin:</strong> wie AI inzet zonder de eigen kennis te organiseren, versnelt ook het verkeerde antwoord.</p>
+        <p>Je hoeft het kennissysteem niet vooraf te begrijpen. Dit paper laat zien welke vier vragen een ondernemer aan iedere AI-leverancier kan stellen.</p>
+      </section>
+      <div class="levend" aria-label="Publicatiestatus">
+        <span><b>Versie</b>1.0</span><span><b>Laatst gecontroleerd</b>29 juli 2026</span>
+        <span><b>Herbeoordeling</b>29 oktober 2026</span><span><b>Status</b>Vrijgegeven met zichtbaar voorbehoud</span>
       </div>
 
       <nav class="toc" aria-label="Inhoud">
@@ -408,7 +426,7 @@
       <p class="stelling">Intelligentie is te gast; gezag woont in het huis.</p>
       <p>Uit die zin volgen vier eisen. Ze vergen geen technische kennis, en elke koper kan ze vandaag aan elke leverancier stellen. Aan de antwoorden herken je met wie je te maken hebt.</p>
       <p><strong>E&eacute;n: de kennis is expliciet vastgesteld.</strong> Er bestaat een aanwijsbare verzameling van wat de organisatie als geldig beschouwt &mdash; niet &ldquo;onze documenten&rdquo;, maar vastgestelde kennis: beoordeeld, geordend, met een datum en een eigenaar. Wat rondzweeft in mailboxen en mappen is materiaal, geen kennis. De eis aan een systeem is dat het onderscheid kent tussen wat vastgesteld is en wat toevallig ergens staat.</p>
-      <p><strong>Twee: een mens beslist wat geldig is en blijft.</strong> Niet als formaliteit, maar als werkende rol: iemand die vaststelt, herziet en intrekt &mdash; en die het systeem volgt in plaats van andersom. Een systeem dat zichzelf bijwerkt op grond van wat het onderweg tegenkomt, herschrijft de boekenkast zonder dat iemand het merkt. Het mag signaleren dat een boek veroudert; het plaatst en verwijdert niet zelf. Wie <a href="/whitepapers/de-mens-beslist.html">het derde deel van deze reeks</a> las, herkent de lat: goedkeuren is niet beslissen, en dat geldt hier onverkort.</p>
+      <p><strong>Twee: een mens beslist wat geldig is en blijft.</strong> Niet als formaliteit, maar als werkende rol: iemand die vaststelt, herziet en intrekt &mdash; en die het systeem volgt in plaats van andersom. Een systeem dat zichzelf bijwerkt op grond van wat het onderweg tegenkomt, herschrijft de boekenkast zonder dat iemand het merkt. Het mag signaleren dat een boek veroudert; het plaatst en verwijdert niet zelf. Wie <a href="/whitepapers/de-mens-beslist">het derde deel van deze reeks</a> las, herkent de lat: goedkeuren is niet beslissen, en dat geldt hier onverkort.</p>
       <p><strong>Drie: elk antwoord is herleidbaar naar zijn bron.</strong> Bij elk antwoord dat het systeem geeft, moet de vraag &ldquo;waar komt dit vandaan?&rdquo; beantwoordbaar zijn &mdash; welk vastgesteld stuk kennis, welke versie, van wanneer. Niet omdat elke klant het vraagt, maar omdat de organisatie het moet kunnen vragen op de dag dat er iets misgaat. Een antwoord zonder herkomst is een mening van de log&eacute;.</p>
       <p><strong>Vier: de kennis verhuist niet mee met de leverancier.</strong> De organisatie moet van model en van leverancier kunnen wisselen zonder dat de kennisbasis opnieuw moet worden opgebouwd &mdash; omdat die basis van haar is, in een vorm die zij beheert, buiten het systeem van de gast. Dit is de sleuteltest in zijn zuiverste vorm: wie niet weg kan, heeft geen leverancier maar een hospita.</p>
       <p>Vier eisen, &eacute;&eacute;n patroon: het denken erachter is overal hetzelfde &mdash; de kast is van het huis, de gast is te gast. Een leverancier die deze vragen soepel beantwoordt, verdient het gesprek. Een leverancier die eroverheen praat, heeft je zojuist iets belangrijks verteld.</p>
@@ -422,7 +440,7 @@
 
       <h3>Waarom de tien procent beslist</h3>
       <p>Maar het bezwaar bewijst iets anders dan het denkt. Het beschrijft &mdash; correct &mdash; de vragen waar weinig op het spel staat. Het zwijgt over de andere.</p>
-      <p>Want er is een categorie waar &ldquo;goed genoeg&rdquo; niet bestaat: het advies waar de handtekening van de organisatie onder komt. Het standpunt naar de klant. Het antwoord waar aansprakelijkheid aan hangt, of reputatie, of de relatie van twintig jaar. Voor een kennisorganisatie is die categorie niet de uitzondering op het werk &mdash; ze &iacute;s het werk; al het andere is voorbereiding. En precies daar keert elk element van het nuchtere bezwaar zich om. Dat het meestal goed gaat, is daar geen geruststelling maar het gevaar zelf: hoe vaker de log&eacute; gelijk heeft, hoe minder er wordt gecontroleerd &mdash; <a href="/whitepapers/de-mens-beslist.html">het derde deel van deze reeks</a> documenteert dat mechanisme in detail. Dat de kennis elke maand verandert, is daar geen argument tegen de kast maar h&eacute;t argument ervoor: juist wat verandert, vraagt iemand die bijhoudt wat nog geldt. En dat het gebruik stil en ongezien gebeurt, betekent daar dat niemand kan zeggen welk antwoord op welke bron rustte &mdash; tot de dag dat het moet.</p>
+      <p>Want er is een categorie waar &ldquo;goed genoeg&rdquo; niet bestaat: het advies waar de handtekening van de organisatie onder komt. Het standpunt naar de klant. Het antwoord waar aansprakelijkheid aan hangt, of reputatie, of de relatie van twintig jaar. Voor een kennisorganisatie is die categorie niet de uitzondering op het werk &mdash; ze &iacute;s het werk; al het andere is voorbereiding. En precies daar keert elk element van het nuchtere bezwaar zich om. Dat het meestal goed gaat, is daar geen geruststelling maar het gevaar zelf: hoe vaker de log&eacute; gelijk heeft, hoe minder er wordt gecontroleerd &mdash; <a href="/whitepapers/de-mens-beslist">het derde deel van deze reeks</a> documenteert dat mechanisme in detail. Dat de kennis elke maand verandert, is daar geen argument tegen de kast maar h&eacute;t argument ervoor: juist wat verandert, vraagt iemand die bijhoudt wat nog geldt. En dat het gebruik stil en ongezien gebeurt, betekent daar dat niemand kan zeggen welk antwoord op welke bron rustte &mdash; tot de dag dat het moet.</p>
       <p>De conclusie is dus geen keuze tussen losjes en streng. Het is een scheiding: weet welke vragen van de log&eacute; mogen komen, en welke uit de kast moeten komen. De organisatie die dat onderscheid niet maakt, behandelt haar familiegeheimen als briefjes en haar briefjes als familiegeheimen &mdash; en betaalt op beide fronten: bureaucratie waar snelheid kon, en risico waar gezag moest staan. De vier eisen uit het vorige hoofdstuk gelden niet voor alles. Ze gelden voor het deel waarop de organisatie afgerekend wordt. Dat deel is kleiner dan de hype suggereert, en belangrijker dan het bezwaar toegeeft.</p>
 
       <h2 id="omkering"><span class="num">04</span>De omkering: je eigenheid als besturingslogica</h2>
@@ -432,7 +450,7 @@
       <p>Begin bij een ongemakkelijke observatie: het onderscheidend vermogen van de meeste kennisorganisaties bestaat vooral als taal. De eigen aanpak, de bijzondere werkwijze, de manier waarop dit kantoor naar een casus kijkt &mdash; het staat op de website en in het verkoopverhaal, en het leeft in de hoofden van een handvol mensen. Als tekst is het marketing. Als kennis is het nergens vastgelegd. Vraag een willekeurige medewerker om de veelgeroemde eigen aanpak toe te passen op een nieuwe casus, en wat je krijgt hangt af van wie er toevallig antwoordt.</p>
       <p>Nu de omkering. Een generiek model heeft alles &mdash; behalve dat. Het kent de wet, de literatuur, de gemiddelde aanpak van de gemiddelde organisatie. Wat het per definitie niet kent, is hoe j&oacute;uw organisatie weegt, kiest en formuleert: welke vragen zij eerst stelt, welke risico&rsquo;s zij zwaarder telt, waar zij nee zegt waar anderen ja zeggen. Dat is precies het materiaal dat niet in de trainingsdata zit, omdat het nooit is opgeschreven. De organisatie die haar eigenheid vastlegt &mdash; niet als slogan maar als werkende kennis: afwegingen, criteria, werkwijze &mdash; geeft de inwisselbare motor iets wat geen concurrent kan namaken. De eigen manier van denken wordt uitvoerbaar: in de intake die de juiste vragen stelt, in de kwalificatie die weegt zoals de oprichter woog, in antwoorden die klinken naar het huis en nergens anders naar. En er is een neveneffect dat buiten dit paper valt maar vermelding verdient: dezelfde eigenschappen &mdash; vastgesteld, actueel, herleidbaar &mdash; zijn precies wat machinale selecteurs als betrouwbare bron behandelen. De buitenwereld beloont wat voor de binnenwereld gebouwd werd; <a href="#amendement">het amendement bij dit paper</a> werkt dat uit.</p>
       <p class="pull">Niet de AI is het product; de AI is de uitvoerder. Het product is de eigen kracht van de organisatie &mdash; mits vastgelegd, vastgesteld en van sleutels voorzien.</p>
-      <p>Daarmee draait de rangorde om die de markt op dit moment hanteert. Twee kantoren met dezelfde motor concurreren dan niet op de motor, en ook niet meer op wie de beste mensen toevallig aan boord heeft, maar op wiens kennis het best is georganiseerd. Dat is dezelfde conclusie waar <a href="/whitepapers/de-beste-keuze-is.html">het eerste deel van deze reeks</a> op uitkwam langs een andere weg, en ze wint hier aan urgentie: de organisatie die haar eigenheid vastlegt, maakt haar schaalbaar; de organisatie die haar in hoofden laat, huurt straks dezelfde log&eacute; als iedereen en vraagt zich af waarom alle antwoorden hetzelfde klinken.</p>
+      <p>Daarmee draait de rangorde om die de markt op dit moment hanteert. Twee kantoren met dezelfde motor concurreren dan niet op de motor, en ook niet meer op wie de beste mensen toevallig aan boord heeft, maar op wiens kennis het best is georganiseerd. Dat is dezelfde conclusie waar <a href="/whitepapers/de-beste-keuze-is">het eerste deel van deze reeks</a> op uitkwam langs een andere weg, en ze wint hier aan urgentie: de organisatie die haar eigenheid vastlegt, maakt haar schaalbaar; de organisatie die haar in hoofden laat, huurt straks dezelfde log&eacute; als iedereen en vraagt zich af waarom alle antwoorden hetzelfde klinken.</p>
 
       <h3>Slot</h3>
       <p>De race om de slimste machine is beslist, en dat is voor vrijwel iedereen goed nieuws: de winnaars verhuren hun machines voor steeds minder. De race die begint, gaat ergens anders over. Niet wie de beste log&eacute; heeft &mdash; die logeert overal. Maar wie de best georganiseerde kast heeft, en wie de sleutels beheert.</p>
@@ -446,7 +464,7 @@
       </div>
 
       <h3>Wat GEO is, ontdaan van de verkoop</h3>
-      <p>Generative Engine Optimization &mdash; GEO &mdash; is de jonge discipline die belooft wat de afkorting suggereert: zorgen dat AI-systemen een organisatie vinden, begrijpen en citeren wanneer zij hun antwoorden samenstellen. Het vraagstuk erachter is re&euml;el. <a href="/whitepapers/de-beste-keuze-is.html">Het eerste deel van deze reeks</a> documenteerde de verschuiving: wie iets zoekt, krijgt steeds vaker een antwoord in plaats van een lijst met links &mdash; en wie in dat antwoord niet voorkomt, bestaat voor die zoeker niet. De vraag hoe je in het antwoord komt, is dus legitiem, en de markt die haar beantwoordt, groeit hard.</p>
+      <p>Generative Engine Optimization &mdash; GEO &mdash; is de jonge discipline die belooft wat de afkorting suggereert: zorgen dat AI-systemen een organisatie vinden, begrijpen en citeren wanneer zij hun antwoorden samenstellen. Het vraagstuk erachter is re&euml;el. <a href="/whitepapers/de-beste-keuze-is">Het eerste deel van deze reeks</a> documenteerde de verschuiving: wie iets zoekt, krijgt steeds vaker een antwoord in plaats van een lijst met links &mdash; en wie in dat antwoord niet voorkomt, bestaat voor die zoeker niet. De vraag hoe je in het antwoord komt, is dus legitiem, en de markt die haar beantwoordt, groeit hard.</p>
       <p>Wat die markt levert, is in de kern tekst- en techniekwerk aan de buitenkant. Pagina&rsquo;s herschrijven in vraag-en-antwoordvorm. Gestructureerde gegevens toevoegen zodat machines de inhoud beter lezen. Formuleringen aanpassen zodat ze zich makkelijker laten citeren. Aanwezigheid opbouwen op de plekken die taalmodellen zwaar wegen. Niets daarvan is onzin, en een deel ervan is gewoon vakwerk. Maar het is optimalisatie van de presentatie, uitgevoerd door een externe partij, op een fundament waarnaar die partij zelden vraagt. En daarmee begint het probleem.</p>
 
       <h3>De buitenkant werkt niet zonder de binnenkant</h3>
@@ -470,12 +488,19 @@
       <section class="bronnen">
         <div class="lbl">Bronnen en verantwoording</div>
         <p class="intro">Dit paper voert twee eigen metingen aan en bouwt voor de rest op de eerdere drie delen, waar de onderbouwing per bron is nagetrokken en gedateerd. Waar dit paper naar die delen verwijst, staat het bewijs daar.</p>
+        <p class="intro"><strong>Controleer de kernclaims afzonderlijk:</strong>
+          <a href="/bewijs/claim/wp-051/">kostenontwikkeling</a>,
+          <a href="/bewijs/claim/wp-052/">prijsontwikkeling</a>,
+          <a href="/bewijs/claim/wp-053/">stil AI-gebruik</a> en
+          <a href="/bewijs/claim/wp-054/">onafhankelijke bevestiging</a>.
+          Voor een bestuurlijke samenvatting: <a href="/whitepapers/wie-heeft-de-sleutels-board-brief">Board Brief</a>.
+        </p>
 
         <h4>Waarop dit paper rust</h4>
         <ul>
-          <li><strong>De verschuiving van vindbaarheid naar aanbeveelbaarheid</strong>, en de patronen waarop AI-systemen bronnen selecteren &mdash; onderbouwd in <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a>, met gedateerde bronnen bij elke bewering. Het amendement steunt hier volledig op.</li>
-          <li><strong>Dat goedkeuren geen beslissen is</strong>, en dat controle afneemt naarmate een systeem vaker gelijk heeft &mdash; onderbouwd in <a href="/whitepapers/de-mens-beslist.html">De mens beslist (of niet meer?)</a>, met meta-analyses en veldexperimenten.</li>
-          <li><strong>Dat een publieke AI-agent namens de organisatie spreekt met de aansprakelijkheid die daarbij hoort</strong> &mdash; onderbouwd in <a href="/whitepapers/de-klinkklare-onzin.html">De klinkklare (on-)zin van je AI-agent</a>.</li>
+          <li><strong>De verschuiving van vindbaarheid naar aanbeveelbaarheid</strong>, en de patronen waarop AI-systemen bronnen selecteren &mdash; onderbouwd in <a href="/whitepapers/de-beste-keuze-is">De beste keuze is&hellip;</a>, met gedateerde bronnen bij elke bewering. Het amendement steunt hier volledig op.</li>
+          <li><strong>Dat goedkeuren geen beslissen is</strong>, en dat controle afneemt naarmate een systeem vaker gelijk heeft &mdash; onderbouwd in <a href="/whitepapers/de-mens-beslist">De mens beslist (of niet meer?)</a>, met meta-analyses en veldexperimenten.</li>
+          <li><strong>Dat een publieke AI-agent namens de organisatie spreekt met de aansprakelijkheid die daarbij hoort</strong> &mdash; onderbouwd in <a href="/whitepapers/de-klinkklare-onzin">De klinkklare (on-)zin van je AI-agent</a>.</li>
         </ul>
 
         <h4>Eigen bronnen van dit paper</h4>
@@ -491,6 +516,8 @@
         <p class="intro">Bij het natrekken bleek dat de twee Nederlandse metingen elkaar tegenspreken op het cijfer over AI-beleid. Sharp rapporteert dat <strong>97 procent</strong> van de bedrijven een AI-beleid heeft; Beeckestijn rapporteert in dezelfde maand dat <strong>de helft van de Nederlandse organisaties er juist g&eacute;&eacute;n heeft</strong>. Dat is geen nuanceverschil maar een factor twee.</p>
         <p>Op het punt waar dit paper ze voor gebruikt &mdash; dat medewerkers AI inzetten zonder het te melden &mdash; zijn ze het eens, en dat is de bewering die in hoofdstuk 3 staat. Op de vraag hoeveel bedrijven beleid hebben, is het aandeel <strong>niet vastgesteld</strong>. Een eerdere versie van dit paper stelde dat &ldquo;vrijwel elk bedrijf een AI-beleid op papier heeft&rdquo;; die zinsnede rustte op de Sharp-meting alleen en is op 27 juli 2026 verwijderd toen bleek dat de tweede bron haar weersprak.</p>
         <p>Deze tegenspraak wordt hier vermeld in plaats van weggelaten, en staat als zodanig in het register vastgelegd. Een paper dat betoogt dat elk antwoord herleidbaar moet zijn naar zijn bron, hoort te tonen waar zijn eigen bronnen het oneens zijn.</p>
+        <h4>Wijzigingslog</h4>
+        <p class="intro"><strong>29 juli 2026 — versie 1.0.</strong> Publieke status, herbeoordelingsdatum, claimpaspoorten en Board Brief toegevoegd. De inhoudelijke tegenspraak tussen de twee beleidsmetingen blijft zichtbaar.</p>
         <ul style="display:none">
         </ul>
       </section>

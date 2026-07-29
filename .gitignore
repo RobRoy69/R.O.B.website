@@ -28,3 +28,6 @@ netlify/functions/site-kennis.json
 tools/generated/
 nieuws/_berichten.json
 nieuws/concept/
+
+# Local Netlify folder
+.netlify

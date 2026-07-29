@@ -31,6 +31,8 @@ de bouwer, nooit in de HTML.
 ├── vragen/                  # AFGELEID uit de vragenpoorten — build-vragen.mjs
 ├── nieuws/                  # AFGELEID uit de berichtentabel — build-nieuws.mjs
 │   └── concept/*.md         #   hier schrijf je een bericht, dan npm run bericht
+├── kennisgezagsscan/        # Deterministische scan; antwoorden blijven lokaal
+├── kennisproef/             # Eén-URL kennisgereedheidstoets via veilige Function
 ├── media/, werk/            # Video, portret, SVG-mockups
 │
 ├── tools/                   # De bouwketen: build-* maakt, verify-* bewaakt
@@ -71,6 +73,10 @@ wordt, meet niets.
 | `RESEND_API_KEY` | Optioneel | Functions | Mailnotificatie naar Rob bij chat ≥ 3 turns. Zonder = stilzwijgend uit. |
 | `NOTIFY_EMAIL` | Optioneel | Functions | Default `contact@rob-concepting.com` (zie `netlify/functions/lib/mail.js`) |
 | `NOTIFY_FROM` | Optioneel | Functions | Default `R.O.B. Concepting <onboarding@resend.dev>`. Pas aan na Resend-domein-verificatie. |
+| `AGORA_URL` | Ja | Build | Supabase-URL van het publieke Rob-register |
+| `AGORA_PUBLISHABLE_KEY` | Ja | Build | Publishable key; alleen veilige views zijn leesbaar |
+| `SUPABASE_URL` | Alleen meten | Functions | Server-side endpoint voor vrijwillige aggregaten |
+| `SUPABASE_SERVICE_ROLE_KEY` | Alleen meten | Functions | Secret; nooit naar de browser |
 
 Alle keys "Mark as secret".
 

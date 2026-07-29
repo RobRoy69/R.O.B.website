@@ -9,7 +9,7 @@
 // beletten te deployen. Ontbreekt de projectie helemaal, dan faalt het wel — dan is er
 // niets om op terug te vallen.
 //
-// Env: AGORA_URL + AGORA_KEY. Draai: node tools/sync-register.mjs
+// Env: AGORA_URL + AGORA_PUBLISHABLE_KEY. AGORA_KEY blijft tijdelijk fallback.
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
@@ -18,7 +18,7 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const OUT  = path.join(ROOT, 'whitepapers', '_register.json');
 
 const url = process.env.AGORA_URL;
-const key = process.env.AGORA_KEY;
+const key = process.env.AGORA_PUBLISHABLE_KEY || process.env.AGORA_KEY;
 
 function bestaandeProjectie() {
   if (!existsSync(OUT)) return null;
@@ -35,7 +35,10 @@ function terugvallen(reden) {
   process.exit(0);
 }
 
-if (!url || !key) terugvallen('AGORA_URL of AGORA_KEY ontbreekt');
+if (!url || !key) terugvallen('AGORA_URL of AGORA_PUBLISHABLE_KEY ontbreekt');
+if (!process.env.AGORA_PUBLISHABLE_KEY && process.env.AGORA_KEY) {
+  console.warn('sync-register: AGORA_KEY is verouderd; gebruik AGORA_PUBLISHABLE_KEY.');
+}
 
 let rijen;
 try {

@@ -1,6 +1,6 @@
 // R.O.B. Concepting — de publieke vertaling van de registerstand.
 //
-// Drie woorden naar buiten: Klopt · Verloopt · Wacht. De volledige vorm blijft intern.
+// Drie woorden naar buiten: Bron bevestigd · Verloopt · Wacht.
 // Dat is claim:agora:017 in de praktijk: de projectie bepaalt wat mag meedoen, de
 // representatie bepaalt hoe het verschijnt — en de representatie voegt niets toe.
 //
@@ -42,7 +42,7 @@ export function status(c, vandaag = new Date()) {
   if (c.herzien_na && new Date(c.herzien_na) < vandaag) {
     return { woord: 'Verloopt', toon: 'verloopt', uitleg: 'herziening nodig' };
   }
-  return { woord: 'Klopt', toon: 'klopt', uitleg: `nagetrokken ${maandJaar(c.nagetrokken_op)}` };
+  return { woord: 'Bron bevestigd', toon: 'klopt', uitleg: `nagetrokken ${maandJaar(c.nagetrokken_op)}` };
 }
 
 // Alleen tonen wat niet vanzelf spreekt. 'meting' is de standaard en krijgt geen label.

@@ -1,0 +1,18 @@
+{
+  "versie": "1.0",
+  "schaal": ["nee", "gedeeltelijk", "ja"],
+  "vragen": [
+    {"sleutel":"Aanbeveelbaarheid","tekst":"Is expliciet vastgelegd voor welk probleem klanten jullie moeten kiezen?"},
+    {"sleutel":"Aanbeveelbaarheid","tekst":"Zijn kernbeweringen op de website gekoppeld aan controleerbare bronnen?"},
+    {"sleutel":"Aanbeveelbaarheid","tekst":"Krijgt een klant op verschillende kanalen inhoudelijk hetzelfde antwoord?"},
+    {"sleutel":"Stem","tekst":"Is vastgelegd welke toon en grenzen een AI-agent namens jullie gebruikt?"},
+    {"sleutel":"Stem","tekst":"Kan de agent duidelijk zeggen wat hij niet weet of niet mag beantwoorden?"},
+    {"sleutel":"Stem","tekst":"Wordt een antwoord herleid naar de goedgekeurde organisatiekennis?"},
+    {"sleutel":"Beslisrecht","tekst":"Is per belangrijk antwoord duidelijk wie uiteindelijk beslist?"},
+    {"sleutel":"Beslisrecht","tekst":"Heeft die persoon tijd, kennis en ruimte om een AI-advies af te wijzen?"},
+    {"sleutel":"Beslisrecht","tekst":"Worden belangrijke afwijkingen en besluiten aantoonbaar vastgelegd?"},
+    {"sleutel":"Kennisgezag","tekst":"Heeft iedere kernbewering een eigenaar en controledatum?"},
+    {"sleutel":"Kennisgezag","tekst":"Kan verouderde kennis worden ingetrokken en overal worden doorgevoerd?"},
+    {"sleutel":"Kennisgezag","tekst":"Blijft de geldige kennis beschikbaar als jullie van AI-leverancier wisselen?"}
+  ]
+}

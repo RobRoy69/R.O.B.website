@@ -310,7 +310,10 @@ try {
       for (const naam of readdirSync(map)) {
         const vol = path.join(map, naam);
         if (statSync(vol).isDirectory()) { wandel(vol, `${pre}${naam}/`); continue; }
-        if (naam.endsWith('.html')) opSchijf.add(naam === 'index.html' ? pre : `${pre}${naam}`);
+        if (naam.endsWith('.html')) {
+          const raw = naam === 'index.html' ? pre : `${pre}${naam}`;
+          opSchijf.add(raw.startsWith('/whitepapers/') ? raw.replace(/\.html$/, '') : raw);
+        }
       }
     };
     wandel(UIT, '/');

@@ -106,7 +106,7 @@ if (bewijs) {
   // heeft gecontroleerd. Ze bij naam noemen, want een aantal zonder namen doet niets.
   const st = (w) => bewijs.beweringen.filter(x => x.stand?.status === w);
   const grondslag = bewijs.beweringen.filter(x => !x.stand);
-  console.log(`  stand: ${st('Klopt').length} klopt · ${st('Verloopt').length} verloopt · `
+  console.log(`  stand: ${st('Bron bevestigd').length} bron bevestigd · ${st('Verloopt').length} verloopt · `
     + `${st('Wacht').length} wacht · ${grondslag.length} grondslag (geen houdbaarheid)`);
   for (const w of ['Verloopt', 'Wacht']) {
     if (st(w).length) {
