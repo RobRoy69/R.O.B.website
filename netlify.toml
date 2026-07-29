@@ -41,14 +41,41 @@
 # Canonieke whitepaper-URL's zijn extensionless. De eerste regel maakt oude
 # gedeelde URL's permanent canoniek; de tweede serveert het bestaande bestand.
 [[redirects]]
-  from = "/whitepapers/:slug.html"
-  to = "/whitepapers/:slug"
+  from = "/whitepapers/de-beste-keuze-is.html"
+  to = "/whitepapers/de-beste-keuze-is"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/whitepapers/de-klinkklare-onzin.html"
+  to = "/whitepapers/de-klinkklare-onzin"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/whitepapers/de-mens-beslist.html"
+  to = "/whitepapers/de-mens-beslist"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/whitepapers/wie-heeft-de-sleutels.html"
+  to = "/whitepapers/wie-heeft-de-sleutels"
   status = 301
   force = true
 
 [[redirects]]
-  from = "/whitepapers/:slug"
-  to = "/whitepapers/:slug.html"
+  from = "/whitepapers/de-beste-keuze-is"
+  to = "/whitepapers/de-beste-keuze-is.html"
+  status = 200
+[[redirects]]
+  from = "/whitepapers/de-klinkklare-onzin"
+  to = "/whitepapers/de-klinkklare-onzin.html"
+  status = 200
+[[redirects]]
+  from = "/whitepapers/de-mens-beslist"
+  to = "/whitepapers/de-mens-beslist.html"
+  status = 200
+[[redirects]]
+  from = "/whitepapers/wie-heeft-de-sleutels"
+  to = "/whitepapers/wie-heeft-de-sleutels.html"
   status = 200
 
 # ── Globale security headers ──
