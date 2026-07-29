@@ -20,7 +20,8 @@ if (!existsSync(PROJ)) {
   console.error('build-doors: whitepapers/_register.json ontbreekt — draai eerst sync-register.');
   process.exit(1);
 }
-const leverbaar = new Set(JSON.parse(readFileSync(PROJ, 'utf8')).claims.map(c => c.ext_ref));
+const projectie = JSON.parse(readFileSync(PROJ, 'utf8'));
+const leverbaar = new Set(projectie.claims.map(c => c.ext_ref));
 
 // Per deur: alle claims die het antwoord DRAGEN. Wat nog niet leverbaar is,
 // zakt automatisch naar 'kandidaat' en telt niet mee voor publicatie.
@@ -81,7 +82,7 @@ const DEUREN = [
   }
 ];
 
-const claimById = new Map(JSON.parse(readFileSync(PROJ, 'utf8')).claims.map(c => [c.ext_ref, c]));
+const claimById = new Map(projectie.claims.map(c => [c.ext_ref, c]));
 
 const doors = DEUREN.map(d => {
   const gebonden  = d.wil.filter(c => leverbaar.has(c));
@@ -118,7 +119,7 @@ const doors = DEUREN.map(d => {
 
 writeFileSync(OUT, JSON.stringify({
   bron: 'afgeleid uit whitepapers/_register.json (agora-rob-register)',
-  gebouwd_op: new Date().toISOString(),
+  gebouwd_op: projectie.synced_at,
   toelichting: 'publication_status is afgeleid uit de claimstatus, niet beweerd. Bewerk de DB, niet dit bestand.',
   doors
 }, null, 2) + '\n');

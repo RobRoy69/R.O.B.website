@@ -1,6 +1,6 @@
 {
   "bron": "afgeleid uit whitepapers/_register.json (agora-rob-register)",
-  "gebouwd_op": "2026-07-29T10:01:21.546Z",
+  "gebouwd_op": "2026-07-29T08:56:19.781Z",
   "toelichting": "publication_status is afgeleid uit de claimstatus, niet beweerd. Bewerk de DB, niet dit bestand.",
   "doors": [
     {
