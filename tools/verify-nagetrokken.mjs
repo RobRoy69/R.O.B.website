@@ -113,6 +113,46 @@ for (const c of claims) {
 }
 
 const fouten = [];
+
+// ── NATREKKEN VOOR GEBRUIK, NIET ERNA ──────────────────────────────────────────
+//
+// Deze poort komt uit de zitting van 2026-07-28. Vijf bronnen uit het werkblad zijn toen bij
+// de uitgever nagetrokken, en dat leverde bij VIER van de vijf iets op dat al gepubliceerd
+// stond:
+//   · ISG stond gedateerd op 15 september; het rapport draagt alleen "September 2025".
+//   · ISG's rangorde was afgekapt: inkoop staat zevende, niet vierde.
+//   · Yelp zou "meer dan driekwart" bezoekers hebben verloren; zijn eigen jaarverslag zegt
+//     2 tot 7 procent — een orde van grootte.
+//   · Danfoss' "ruim veertig uur naar minuten" staat in geen enkele primaire bron.
+//
+// Vier fouten in vijf bronnen die al in een gepubliceerd paper stonden. Het werkblad stelde
+// voor om elke claim VOOR gebruik na te trekken in plaats van erna; dat cijfer maakt er een
+// regel van, en deze poort maakt de regel afdwingbaar.
+//
+// DE REGEL: staat een bewering op een pagina, dan moet iemand haar bij de bron hebben gezien.
+// Geen controledatum en toch gepubliceerd is niet toegestaan — dan is de datum eronder een
+// vorm zonder inhoud.
+//
+// Dit is strenger dan de statuslogica op /bewijs/, en dat is opzet. Daar mag "Wacht" bestaan
+// voor beweringen die in het register wachten. Hier gaat het om wat de bezoeker te zien
+// krijgt, en daar is Wacht geen toestand maar een verzuim.
+// BOEKEN VALLEN HIERBUITEN, en dat is geen uitzondering maar de grens van wat deze poort kan
+// weten. Eerste versie sloeg aan op Polanyi en Nonaka: die hebben geen URL, want het zijn
+// boeken uit 1966 en 1995. "Bij de uitgever natrekken" bestaat daar niet — er is geen pagina
+// om te openen. De toets geldt dus voor bronnen MET een vindplaats online; voor de andere is
+// de eis een herleidbare naam, en die staat er.
+//
+// Geen achterdeur: een bron zonder URL levert op /vragen/ ook geen klikbare link op. Wie de
+// URL weglaat om deze poort te ontwijken, kost zichzelf de link die de lezer zoekt.
+const boeken = [];
+for (const c of claims) {
+  if (!gerenderd.has(c.ext_ref)) continue;
+  if (c.nagetrokken_op) continue;
+  if (!c.bron_url) { boeken.push(c.bron_naam || c.ext_ref); continue; }
+  fouten.push(`${c.ext_ref} staat op een pagina maar is niet bij de bron nagetrokken `
+    + `(${c.bron_naam}) — natrekken, of de bewering van de pagina halen`);
+}
+
 for (const [url, b] of perUrl) {
   const heeftLink = gelinkt.has(url);
   if (heeftLink && !b.nagetrokken) {
@@ -137,6 +177,13 @@ const metDatum = [...perUrl.values()].filter(b => b.nagetrokken).length;
 const ongebruikt = [...perUrl.values()].filter(b => b.nagetrokken && !b.refs.some(r => gerenderd.has(r))).length;
 console.log(`nagetrokken groen — ${gelinkt.size} bronlinks op de gepubliceerde pagina's, `
   + `${metDatum} bronnen met een controledatum, en die twee dekken elkaar.`);
+console.log(`  ${gerenderd.size} beweringen staan op een pagina, alle met een vindplaats online `
+  + `bij de bron nagetrokken.`);
+// Geen stille versmalling: wie buiten de toets viel, staat er bij naam bij.
+if (boeken.length) {
+  console.log(`  (buiten deze toets, want geen vindplaats online: ${boeken.join(', ')} — `
+    + `boeken, herleidbaar op naam.)`);
+}
 // Geen stille versmalling: wat buiten de toets viel, staat er expliciet bij.
 if (ongebruikt) {
   console.log(`  (${ongebruikt} nagetrokken bron(nen) buiten beschouwing gelaten: hun beweringen `
