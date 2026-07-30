@@ -1,0 +1,65 @@
+{
+  "versie": "2.0",
+  "titel": "R.O.B. Kennisgezagsscan",
+  "maximaleDuurMinuten": 5,
+  "schaal": [
+    {"waarde": 0, "label": "Nee", "uitleg": "Niet vastgelegd of niet aantoonbaar"},
+    {"waarde": 1, "label": "Gedeeltelijk", "uitleg": "Soms of informeel geregeld"},
+    {"waarde": 2, "label": "Ja", "uitleg": "Vastgelegd, gebruikt en controleerbaar"}
+  ],
+  "sleutels": [
+    {
+      "id": "aanbeveelbaarheid",
+      "label": "Aanbeveelbaarheid",
+      "vraag": "Waarop word je gekozen?",
+      "uitleg": "Of klanten en systemen helder kunnen vaststellen waarvoor jouw organisatie de juiste keuze is.",
+      "advies": "Maak eerst expliciet voor welk probleem je organisatie aantoonbaar de juiste keuze is. Koppel de belangrijkste beweringen aan bewijs en zorg dat ieder kanaal hetzelfde kernantwoord geeft.",
+      "verdieping": "/whitepapers/de-beste-keuze-is"
+    },
+    {
+      "id": "stem",
+      "label": "Stem",
+      "vraag": "Wie spreekt namens je organisatie?",
+      "uitleg": "Of mens en AI dezelfde goedgekeurde kennis, toon en grenzen gebruiken.",
+      "advies": "Leg vast wat een AI namens je organisatie mag zeggen, uit welke goedgekeurde kennis dat antwoord komt en wanneer het systeem moet stoppen of doorverwijzen.",
+      "verdieping": "/whitepapers/de-klinkklare-onzin"
+    },
+    {
+      "id": "beslisrecht",
+      "label": "Beslisrecht",
+      "vraag": "Wie beslist werkelijk?",
+      "uitleg": "Of een bevoegde mens AI-advies kan beoordelen, afwijzen en de gevolgen draagt.",
+      "advies": "Wijs per belangrijk besluit een bevoegde eigenaar aan. Geef die persoon de informatie, tijd en ruimte om af te wijken en leg betekenisvolle besluiten aantoonbaar vast.",
+      "verdieping": "/whitepapers/de-mens-beslist"
+    },
+    {
+      "id": "kennisgezag",
+      "label": "Kennisgezag",
+      "vraag": "Wie heeft de sleutels?",
+      "uitleg": "Of geldige kennis een eigenaar, bron, controledatum en intrekroute heeft.",
+      "advies": "Begin met je belangrijkste kernbeweringen. Geef iedere bewering een eigenaar, bron en controledatum en zorg dat een ingetrokken versie overal tegelijk verdwijnt.",
+      "verdieping": "/whitepapers/wie-heeft-de-sleutels"
+    }
+  ],
+  "profielen": [
+    {"id": "onbeheerd", "vanaf": 0, "tot": 20, "label": "Onbeheerd", "uitleg": "Belangrijke organisatiekennis is vooral impliciet, verspreid of persoonsafhankelijk. AI kan daardoor overtuigend klinken zonder aantoonbaar namens de organisatie te spreken."},
+    {"id": "reactief", "vanaf": 21, "tot": 40, "label": "Reactief", "uitleg": "Er zijn afspraken en bronnen, maar vooral wanneer er iets misgaat. De organisatie corrigeert achteraf in plaats van vooraf te bepalen welk antwoord geldig is."},
+    {"id": "in-opbouw", "vanaf": 41, "tot": 60, "label": "In opbouw", "uitleg": "De basis is zichtbaar, maar niet overal gelijk of aantoonbaar. Eén zwakke sleutel kan de betrouwbaarheid van de hele keten beperken."},
+    {"id": "beheerst", "vanaf": 61, "tot": 80, "label": "Beheerst", "uitleg": "De meeste verantwoordelijkheden en bronnen zijn geregeld. De volgende stap is ze consequent verbinden, controleren en hergebruiken."},
+    {"id": "aantoonbaar", "vanaf": 81, "tot": 100, "label": "Aantoonbaar", "uitleg": "De organisatie kan in hoge mate laten zien welke kennis geldig is, wie daarover beslist en wat mens en AI ermee mogen doen. Onderhoud en herbeoordeling blijven nodig."}
+  ],
+  "vragen": [
+    {"id":"aanbevelen-probleem","sleutel":"aanbeveelbaarheid","tekst":"Is expliciet vastgelegd voor welk probleem klanten jullie moeten kiezen?"},
+    {"id":"aanbevelen-bewijs","sleutel":"aanbeveelbaarheid","tekst":"Zijn de belangrijkste beweringen op de website gekoppeld aan controleerbare bronnen?"},
+    {"id":"aanbevelen-consistent","sleutel":"aanbeveelbaarheid","tekst":"Krijgt een klant via verschillende kanalen inhoudelijk hetzelfde kernantwoord?"},
+    {"id":"stem-grenzen","sleutel":"stem","tekst":"Is vastgelegd welke toon en grenzen een AI namens jullie gebruikt?"},
+    {"id":"stem-onzekerheid","sleutel":"stem","tekst":"Kan de AI duidelijk zeggen wat zij niet weet of niet mag beantwoorden?"},
+    {"id":"stem-herkomst","sleutel":"stem","tekst":"Is ieder belangrijk AI-antwoord te herleiden tot goedgekeurde organisatiekennis?"},
+    {"id":"besluit-eigenaar","sleutel":"beslisrecht","tekst":"Is bij ieder belangrijk AI-ondersteund antwoord duidelijk wie uiteindelijk beslist?"},
+    {"id":"besluit-afwijken","sleutel":"beslisrecht","tekst":"Heeft die persoon voldoende kennis, tijd en ruimte om het AI-advies af te wijzen?"},
+    {"id":"besluit-vastleggen","sleutel":"beslisrecht","tekst":"Worden belangrijke afwijkingen en besluiten aantoonbaar vastgelegd?"},
+    {"id":"gezag-eigenaar","sleutel":"kennisgezag","tekst":"Heeft iedere kernbewering een eigenaar, bron en controledatum?"},
+    {"id":"gezag-intrekken","sleutel":"kennisgezag","tekst":"Kan verouderde kennis worden ingetrokken en overal tegelijk worden doorgevoerd?"},
+    {"id":"gezag-onafhankelijk","sleutel":"kennisgezag","tekst":"Blijft de geldige kennis beschikbaar als jullie van AI-leverancier wisselen?"}
+  ]
+}

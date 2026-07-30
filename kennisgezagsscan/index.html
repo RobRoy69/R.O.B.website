@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kennisgezagsscan — R.O.B. Concepting</title>
+  <meta name="description" content="Ontdek in vijf minuten welke van vier sleutels van je organisatiekennis het kwetsbaarst is.">
+  <link rel="canonical" href="https://rob-concepting.com/kennisgezagsscan/">
+  <meta property="og:title" content="R.O.B. Kennisgezagsscan">
+  <meta property="og:description" content="Vier sleutels, twaalf vragen, één concrete eerste bouwstap.">
+  <meta property="og:url" content="https://rob-concepting.com/kennisgezagsscan/">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="./style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"R.O.B. Kennisgezagsscan","url":"https://rob-concepting.com/kennisgezagsscan/","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Een deterministische zelfscan van Aanbeveelbaarheid, Stem, Beslisrecht en Kennisgezag."}</script>
+</head>
+<body>
+  <header class="sitebar"><a href="/" aria-label="Terug naar R.O.B. Concepting">R.O.B. CONCEPTING</a><span>KENNISGEZAGSSCAN / 2.0</span></header>
+  <main>
+    <section class="hero" id="intro">
+      <p class="eyebrow">Vier sleutels. Eén zwakste schakel.</p>
+      <h1>Weet je organisatie wat nog klopt?</h1>
+      <p class="lead">Twaalf concrete vragen maken zichtbaar waar kennis kwetsbaar wordt zodra mensen en AI haar gaan gebruiken.</p>
+      <div class="facts" aria-label="Kenmerken van de scan">
+        <span>± 5 minuten</span><span>Geen account</span><span>Geen automatische opslag</span><span>Geen nieuwsbrief</span>
+      </div>
+      <button class="button button-primary" id="start" type="button">Start de scan</button>
+    </section>
+
+    <section id="scan-shell" class="scan-shell" hidden aria-labelledby="stap-titel">
+      <div class="progress-copy"><span id="stap-label">Sleutel 1 van 4</span><span id="voortgang-label">0 van 12 beantwoord</span></div>
+      <div class="progress" role="progressbar" aria-label="Voortgang" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0"><span id="progress-bar"></span></div>
+      <form id="scan" novalidate>
+        <section class="key-panel">
+          <p class="eyebrow" id="sleutel-vraag"></p>
+          <h2 id="stap-titel"></h2>
+          <p class="key-explanation" id="sleutel-uitleg"></p>
+          <div id="vragen"></div>
+          <p class="form-error" id="form-error" role="alert" hidden>Beantwoord de drie vragen om verder te gaan.</p>
+          <div class="actions">
+            <button class="button button-secondary" id="vorige" type="button">Vorige</button>
+            <button class="button button-primary" id="volgende" type="button">Volgende sleutel</button>
+          </div>
+        </section>
+      </form>
+      <p class="privacy-note">Je antwoorden blijven alleen in het geheugen van deze pagina. Sluit of vernieuw de pagina om ze te wissen.</p>
+    </section>
+
+    <section id="resultaat" class="result" hidden aria-live="polite" tabindex="-1">
+      <p class="eyebrow">Je uitkomst</p>
+      <div class="result-heading"><div><h2 id="profiel-label"></h2><p id="profiel-uitleg" class="lead"></p></div><div class="score"><strong id="totaalscore"></strong><span>totale gereedheid</span></div></div>
+      <div id="sleutel-scores" class="key-scores"></div>
+      <article class="weakest"><p class="eyebrow">Begin hier</p><h3 id="zwakste-label"></h3><p id="hoofdadvies"></p><a id="verdieping" href="/whitepapers/wie-heeft-de-sleutels">Lees de passende verdieping</a></article>
+      <div class="result-actions">
+        <button class="button button-secondary" id="print" type="button">Bewaar als PDF</button>
+        <a class="button button-primary" href="/#contact">Bespreek de eerste bouwstap</a>
+      </div>
+
+      <details class="email-panel">
+        <summary>Stuur deze uitslag naar mijn e-mail</summary>
+        <form id="email-form">
+          <div class="form-grid"><label>Naam<input name="name" autocomplete="name" maxlength="100" required></label><label>E-mailadres<input name="email" type="email" autocomplete="email" maxlength="200" required></label></div>
+          <label class="honey" aria-hidden="true">Laat dit leeg<input name="company" tabindex="-1" autocomplete="off"></label>
+          <p>Dit verstuurt alleen je uitslag. Je wordt niet ingeschreven en je antwoorden worden niet opgeslagen.</p>
+          <button class="button button-secondary" type="submit">Stuur mijn uitslag</button>
+          <p id="email-status" class="status" role="status"></p>
+        </form>
+      </details>
+
+      <div class="measure-panel">
+        <label class="consent"><input id="meet-toestemming" type="checkbox"> Deel anoniem mijn uitkomstprofiel en zwakste sleutel om de scan te verbeteren.</label>
+        <p class="privacy-note">Vrijwillig. Geen antwoorden, naam, e-mail, cookie of trackingpixel.</p>
+        <p id="meet-status" class="status" role="status"></p>
+      </div>
+      <button class="text-button" id="opnieuw" type="button">Scan opnieuw invullen</button>
+    </section>
+  </main>
+  <footer><span>R.O.B. Concepting</span><a href="/bewijs/">Bewijs</a></footer>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

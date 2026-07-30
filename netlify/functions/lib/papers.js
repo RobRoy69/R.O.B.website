@@ -15,22 +15,22 @@ export const PAPERS = {
   'de-beste-keuze-is': {
     title: 'De beste keuze is… — AI en de veranderende klantreis',
     file:  'de-beste-keuze-is.pdf',
-    page:  '/whitepapers/de-beste-keuze-is.html'
+    page:  '/whitepapers/de-beste-keuze-is'
   },
   'de-klinkklare-onzin': {
     title: 'De klinkklare (on-)zin van je AI-agent — Wat zegt jouw merk eigenlijk?',
     file:  'de-klinkklare-onzin.pdf',
-    page:  '/whitepapers/de-klinkklare-onzin.html'
+    page:  '/whitepapers/de-klinkklare-onzin'
   },
   'de-mens-beslist': {
     title: 'De mens beslist (of niet meer?) — Waarom goedkeuren geen beslissen is',
     file:  'de-mens-beslist.pdf',
-    page:  '/whitepapers/de-mens-beslist.html'
+    page:  '/whitepapers/de-mens-beslist'
   },
   'wie-heeft-de-sleutels': {
     title: 'Wie heeft de sleutels? — Gezag over eigen kennis in het AI-tijdperk',
     file:  'wie-heeft-de-sleutels.pdf',
-    page:  '/whitepapers/wie-heeft-de-sleutels.html'
+    page:  '/whitepapers/wie-heeft-de-sleutels'
   }
 };
 

@@ -297,7 +297,8 @@ ${grond(b)}
 ${deel(b, u)}
       </div>
       <div class="route">
-        De achtergrond bij dit bericht staat uitgewerkt in de whitepapers, met de bronnen erbij. <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a> is het eerste deel.
+        De achtergrond bij dit bericht staat uitgewerkt in de whitepapers, met de bronnen erbij. <a href="/whitepapers/de-beste-keuze-is">De beste keuze is&hellip;</a> is het eerste deel.<br>
+        Wil je weten waar je eigen organisatie het kwetsbaarst is? <a href="/kennisgezagsscan/">Doe de Kennisgezagsscan</a> in ongeveer vijf minuten.
       </div>
 
       <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;
@@ -346,7 +347,7 @@ ${grond(b)}
 ${deel(b, `${BASIS}/nieuws/${b.slug}/`)}
       </article>`).join('\n')}
       <div class="route">
-        Deze berichten bouwen voort op de whitepapers &mdash; daar staat het betoog uitgewerkt, met de bronnen erbij. Het leest van voren af aan: <a href="/whitepapers/de-beste-keuze-is.html">De beste keuze is&hellip;</a> is het eerste deel, <a href="/whitepapers/">hier staat de hele reeks</a>.
+        Deze berichten bouwen voort op de whitepapers &mdash; daar staat het betoog uitgewerkt, met de bronnen erbij. Het leest van voren af aan: <a href="/whitepapers/de-beste-keuze-is">De beste keuze is&hellip;</a> is het eerste deel, <a href="/whitepapers/">hier staat de hele reeks</a>.
       </div>
   </main>
 

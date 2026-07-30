@@ -36,7 +36,8 @@ const loop = (map, prefix) => {
     const vol = path.join(map, naam);
     if (statSync(vol).isDirectory()) { loop(vol, `${prefix}${naam}/`); continue; }
     if (!naam.endsWith('.html')) continue;
-    paginas.push(naam === 'index.html' ? prefix : `${prefix}${naam}`);
+    const raw = naam === 'index.html' ? prefix : `${prefix}${naam}`;
+    paginas.push(raw.startsWith('/whitepapers/') ? raw.replace(/\.html$/, '') : raw);
   }
 };
 loop(UIT, '/');

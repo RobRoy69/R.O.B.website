@@ -41,6 +41,8 @@ const PUBLIEK = [
   { soort: 'map', pad: 'media' },
   { soort: 'map', pad: 'werk' },
   { soort: 'map', pad: 'vragen' },
+  { soort: 'map', pad: 'kennisgezagsscan' },
+  { soort: 'map', pad: 'kennisproef' },
 
   // whitepapers: de pagina's en de PDF's wél, de registerprojecties NIET.
   // _register.json en _doors.json zijn build-INPUT. Ze bevatten ext_ref, ringstatus en

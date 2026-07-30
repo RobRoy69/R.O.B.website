@@ -28,6 +28,61 @@
   to = "/.netlify/functions/whitepaper-confirm"
   status = 200
 
+[[redirects]]
+  from = "/api/kennisproef"
+  to = "/.netlify/functions/kennisproef"
+  status = 200
+
+[[redirects]]
+  from = "/api/meet-signaal"
+  to = "/.netlify/functions/meet-signaal"
+  status = 200
+
+[[redirects]]
+  from = "/api/scan-result"
+  to = "/.netlify/functions/scan-result"
+  status = 200
+
+# Canonieke whitepaper-URL's zijn extensionless. De eerste regel maakt oude
+# gedeelde URL's permanent canoniek; de tweede serveert het bestaande bestand.
+[[redirects]]
+  from = "/whitepapers/de-beste-keuze-is.html"
+  to = "/whitepapers/de-beste-keuze-is"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/whitepapers/de-klinkklare-onzin.html"
+  to = "/whitepapers/de-klinkklare-onzin"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/whitepapers/de-mens-beslist.html"
+  to = "/whitepapers/de-mens-beslist"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/whitepapers/wie-heeft-de-sleutels.html"
+  to = "/whitepapers/wie-heeft-de-sleutels"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/whitepapers/de-beste-keuze-is"
+  to = "/whitepapers/de-beste-keuze-is.html"
+  status = 200
+[[redirects]]
+  from = "/whitepapers/de-klinkklare-onzin"
+  to = "/whitepapers/de-klinkklare-onzin.html"
+  status = 200
+[[redirects]]
+  from = "/whitepapers/de-mens-beslist"
+  to = "/whitepapers/de-mens-beslist.html"
+  status = 200
+[[redirects]]
+  from = "/whitepapers/wie-heeft-de-sleutels"
+  to = "/whitepapers/wie-heeft-de-sleutels.html"
+  status = 200
+
 # ── Globale security headers ──
 [[headers]]
   for = "/*"

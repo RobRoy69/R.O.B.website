@@ -37,7 +37,7 @@ const paginanaam = (url) => {
   return p;
 };
 
-const TOON = { Klopt: 'klopt', Verloopt: 'verloopt', Wacht: 'wacht' };
+const TOON = { 'Bron bevestigd': 'klopt', Verloopt: 'verloopt', Wacht: 'wacht' };
 
 const regels = b.beweringen.map(x => {
   const s = x.stand;
@@ -175,7 +175,7 @@ ${JSON.stringify(graf, null, 2).split('\n').map(l => '  ' + l).join('\n')}
         u te weten voordat u haar overneemt.</p>
       <div class="stand">
         <div><b>${b.beweringen.length}</b> beweringen</div>
-        <div><b>${tel('Klopt')}</b> nagetrokken bij de bron</div>
+        <div><b>${tel('Bron bevestigd')}</b> nagetrokken bij de bron</div>
         ${tel('Verloopt') ? `<div><b>${tel('Verloopt')}</b> aan herziening toe</div>` : ''}
         <div><b>${tel('Wacht')}</b> nog niet nagetrokken</div>
         ${grondslagen ? `<div><b>${grondslagen}</b> theoretische grondslag</div>` : ''}
@@ -196,4 +196,4 @@ ${regels}
 mkdirSync(UITMAP, { recursive: true });
 writeFileSync(path.join(UITMAP, 'index.html'), html);
 console.log(`build-bewijs-pagina: ${b.beweringen.length} beweringen naar publiek/bewijs/index.html `
-  + `(${tel('Klopt')} klopt / ${tel('Verloopt')} verloopt / ${tel('Wacht')} wacht / ${grondslagen} grondslag)`);
+  + `(${tel('Bron bevestigd')} bron bevestigd / ${tel('Verloopt')} verloopt / ${tel('Wacht')} wacht / ${grondslagen} grondslag)`);

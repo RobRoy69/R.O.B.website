@@ -45,7 +45,8 @@ const loop = (dir, rel = '') => {
     const titel = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
     const omschrijving = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
     // index.html wordt op het web als map-URL geserveerd
-    const url = '/' + r.replace(/(^|\/)index\.html$/, '$1');
+    const rawUrl = '/' + r.replace(/(^|\/)index\.html$/, '$1');
+    const url = rawUrl.startsWith('/whitepapers/') ? rawUrl.replace(/\.html$/, '') : rawUrl;
     paginas.push({ url, titel: titel.trim(), omschrijving: omschrijving.trim() });
   }
 };

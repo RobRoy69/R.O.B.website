@@ -49,7 +49,8 @@ try {
       const r = rel ? `${rel}/${e.name}` : e.name;
       if (e.isDirectory()) { loop(path.join(dir, e.name), r); continue; }
       if (!e.name.endsWith('.html')) continue;
-      gepubliceerd.push('/' + r.replace(/(^|\/)index\.html$/, '$1'));
+      const raw = '/' + r.replace(/(^|\/)index\.html$/, '$1');
+      gepubliceerd.push(raw.startsWith('/whitepapers/') ? raw.replace(/\.html$/, '') : raw);
     }
   };
   loop(UIT);

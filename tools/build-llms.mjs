@@ -24,8 +24,9 @@ const loop = (dir, rel = '') => {
     if (e.isDirectory()) { loop(path.join(dir, e.name), r); continue; }
     if (!e.name.endsWith('.html')) continue;
     const h = readFileSync(path.join(dir, e.name), 'utf-8');
+    const rawUrl = '/' + r.replace(/(^|\/)index\.html$/, '$1');
     paginas.push({
-      url: '/' + r.replace(/(^|\/)index\.html$/, '$1'),
+      url: rawUrl.startsWith('/whitepapers/') ? rawUrl.replace(/\.html$/, '') : rawUrl,
       titel: (h.match(/<title>([^<]*)<\/title>/) || [])[1]?.split('—')[0].trim() || '',
       omschrijving: (h.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '',
     });

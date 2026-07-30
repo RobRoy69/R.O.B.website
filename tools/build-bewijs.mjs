@@ -31,6 +31,7 @@ const ROOT  = path.resolve(import.meta.dirname, '..');
 const DOORS = path.join(ROOT, 'whitepapers', '_doors.json');
 const BER   = path.join(ROOT, 'nieuws', '_berichten.json');
 const PROJ  = path.join(ROOT, 'whitepapers', '_register.json');
+const REL   = path.join(ROOT, 'whitepapers', '_publication-claims.json');
 const UIT   = path.join(ROOT, 'publiek', 'bewijs.json');
 
 if (!existsSync(DOORS)) { console.error('build-bewijs: _doors.json ontbreekt.'); process.exit(1); }
@@ -41,6 +42,7 @@ const claims = new Map(JSON.parse(readFileSync(PROJ, 'utf8')).claims.map(c => [c
 const vragen = JSON.parse(readFileSync(DOORS, 'utf8')).doors
   .filter(d => d.publication_status === 'publishable' && d.mode === 'public');
 const berichten = existsSync(BER) ? (JSON.parse(readFileSync(BER, 'utf8')).berichten || []) : [];
+const publicaties = existsSync(REL) ? (JSON.parse(readFileSync(REL, 'utf8')).publicaties || []) : [];
 
 // Waar wordt elke bewering gebruikt? Dat is de omgekeerde blik: niet "welk bewijs hoort bij
 // deze pagina" maar "welke pagina's rusten op deze bewering". Precies de vraag die je moet
@@ -56,6 +58,7 @@ for (const b of berichten) {
     noteer(r, `${BASIS}/nieuws/${b.slug}/`);
   }
 }
+for (const p of publicaties) for (const ref of p.claim_refs || []) noteer(ref, `${BASIS}${p.url}`);
 
 const beweringen = [...gebruik.keys()].sort().map(ref => {
   const c = claims.get(ref);
@@ -119,6 +122,10 @@ const uitgifte = {
     samenvatting: b.samenvatting,
     gepubliceerd_op: b.gepubliceerd_op,
     rust_op: (b.claim_refs || '').split(',').map(s => s.trim()).filter(Boolean),
+  })),
+  publicaties: publicaties.map(p => ({
+    url: `${BASIS}${p.url}`,
+    rust_op: p.claim_refs,
   })),
 };
 
