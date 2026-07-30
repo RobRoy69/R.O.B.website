@@ -297,7 +297,8 @@ ${grond(b)}
 ${deel(b, u)}
       </div>
       <div class="route">
-        De achtergrond bij dit bericht staat uitgewerkt in de whitepapers, met de bronnen erbij. <a href="/whitepapers/de-beste-keuze-is">De beste keuze is&hellip;</a> is het eerste deel.
+        De achtergrond bij dit bericht staat uitgewerkt in de whitepapers, met de bronnen erbij. <a href="/whitepapers/de-beste-keuze-is">De beste keuze is&hellip;</a> is het eerste deel.<br>
+        Wil je weten waar je eigen organisatie het kwetsbaarst is? <a href="/kennisgezagsscan/">Doe de Kennisgezagsscan</a> in ongeveer vijf minuten.
       </div>
 
       <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;
