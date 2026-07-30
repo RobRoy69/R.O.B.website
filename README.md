@@ -31,7 +31,7 @@ de bouwer, nooit in de HTML.
 ├── vragen/                  # AFGELEID uit de vragenpoorten — build-vragen.mjs
 ├── nieuws/                  # AFGELEID uit de berichtentabel — build-nieuws.mjs
 │   └── concept/*.md         #   hier schrijf je een bericht, dan npm run bericht
-├── kennisgezagsscan/        # Deterministische scan; antwoorden blijven lokaal
+├── kennisgezagsscan/        # JSON-gestuurde scan; vijf profielen, antwoorden blijven lokaal
 ├── kennisproef/             # Eén-URL kennisgereedheidstoets via veilige Function
 ├── media/, werk/            # Video, portret, SVG-mockups
 │

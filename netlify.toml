@@ -38,6 +38,11 @@
   to = "/.netlify/functions/meet-signaal"
   status = 200
 
+[[redirects]]
+  from = "/api/scan-result"
+  to = "/.netlify/functions/scan-result"
+  status = 200
+
 # Canonieke whitepaper-URL's zijn extensionless. De eerste regel maakt oude
 # gedeelde URL's permanent canoniek; de tweede serveert het bestaande bestand.
 [[redirects]]
