@@ -15,7 +15,11 @@
 // Draai: node tools/test-berichtvelden.mjs
 // Exit 0 = groen, exit 1 = rood.
 
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { reeksPositie, SOORTEN, SOORT_LABEL } from './lib/reeks.mjs';
+
+const ROOT = path.resolve(import.meta.dirname, '..');
 
 let gezakt = 0;
 const toets = (naam, goed, uitleg = '') => {
@@ -110,6 +114,33 @@ console.log('\n9. de soortenlijst en zijn labels lopen niet uiteen');
   toets('elke soort heeft een label', zonderLabel.length === 0, zonderLabel.join(', '));
   toets('elk label hoort bij een soort', zonderSoort.length === 0, zonderSoort.join(', '));
   toets('"nieuws" bestaat — bericht:rob:001 draagt hem', SOORTEN.includes('nieuws'));
+}
+
+// ── 10. de sync haalt op wat de bouwer leest ──
+//
+// AANLEIDING, 31 juli. De videopost stond live zónder video. sync-berichten haalde
+// afbeelding, afbeelding_alt en video niet op uit het register; de bouwer las ze wel. Lokaal
+// viel dat niet op omdat mijn projectie met de hand was samengesteld en de velden wél had.
+// Elke build met echte sleutels gooide ze weg.
+//
+// Dat is een handmatig bijgehouden lijst die moet overeenkomen met een andere plek — precies
+// het patroon dat hier alles kapotmaakt. Je kunt hem niet afschaffen (PostgREST wil een
+// select), dus wordt hij hier vergeleken met wat de bouwer werkelijk aanraakt.
+console.log('\n10. sync-berichten haalt elk veld op dat build-nieuws leest');
+{
+  const lees = (n) => readFileSync(path.join(ROOT, 'tools', n), 'utf-8');
+  const select = (lees('sync-berichten.mjs').match(/select=([^&"']+)/) || [])[1] || '';
+  const opgehaald = new Set(select.split(','));
+
+  // Wat de bouwer van een bericht afleest. 'bewijs' hoort er niet bij: dat voegt build-nieuws
+  // zelf toe uit de claimprojectie en staat niet in de berichtentabel.
+  const gebruikt = [...new Set((lees('build-nieuws.mjs').match(/\bb\.[a-z_]+/g) || [])
+    .map(s => s.slice(2)))].filter(v => v !== 'bewijs');
+
+  const mist = gebruikt.filter(v => !opgehaald.has(v));
+  toets(`${gebruikt.length} gelezen velden, alle opgehaald`, mist.length === 0,
+        `niet in de select: ${mist.join(', ')}`);
+  toets('de select is niet leeg', opgehaald.size > 5, select);
 }
 
 console.log('\n' + '='.repeat(46));

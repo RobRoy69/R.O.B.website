@@ -36,7 +36,7 @@ if (!process.env.AGORA_PUBLISHABLE_KEY && process.env.AGORA_KEY) {
 
 let rijen;
 try {
-  const res = await fetch(`${url}/rest/v1/berichten_public?select=ext_ref,slug,titel,samenvatting,tekst,claim_refs,gepubliceerd_op,updated_at,soort,reeks,volgnummer,hoort_bij&order=gepubliceerd_op.desc`, {
+  const res = await fetch(`${url}/rest/v1/berichten_public?select=ext_ref,slug,titel,samenvatting,tekst,claim_refs,gepubliceerd_op,updated_at,soort,reeks,volgnummer,hoort_bij,afbeelding,afbeelding_alt,video&order=gepubliceerd_op.desc`, {
     headers: { apikey: key, Authorization: `Bearer ${key}` }
   });
   if (!res.ok) terugvallen(`Supabase gaf ${res.status}`);
