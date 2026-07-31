@@ -83,7 +83,12 @@
     .b h2 a:hover{text-decoration:underline;text-decoration-color:var(--cyan);
       text-underline-offset:4px}
     .b p{font-size:16px;line-height:1.65;margin-bottom:14px;max-width:66ch}
-    .b-grond{border-left:2px solid var(--cyan);padding:2px 0 2px 20px;margin-top:22px}
+    /* Vlak op vlak, gescheiden door hairline — cream ín papier. Allebei basiskleuren, dus
+       geen dubbele betekenis: de papiertreden blijven gereserveerd voor de toestand van een
+       document (geldig · verlopend · achtergebleven) en doen hier geen dienst als diepte. */
+    .b-grond{background:var(--cream);border:1px solid var(--border);
+      border-left:2px solid var(--cyan);border-radius:var(--radius);
+      padding:16px 20px;margin-top:22px}
     .b-grond-kop{font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:10px;letter-spacing:0.14em;
       text-transform:uppercase;color:var(--navy);margin-bottom:11px}
     .b-grond ul{list-style:none}
@@ -148,6 +153,15 @@
       color:var(--navy);line-height:1.6;text-transform:none;letter-spacing:0}
     .mee a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
     .foot a:hover{color:var(--navy)}
+    /* Ritme: donker openen, licht lezen, donker sluiten. De grootste sprong in levendigheid
+       die er is, en hij kost niets aan corporate karakter — dezelfde schaal, anders verdeeld.
+       Op donker mag cyaan wél tekst zijn: 6,9:1, ruim boven de vloer. */
+    .afsluiter{background:var(--dark);margin-top:46px;padding-top:40px}
+    .afsluiter .mee{color:rgba(232,228,220,.82)}
+    .afsluiter .mee a{color:var(--cyan);border-bottom-color:var(--cyan)}
+    .afsluiter .foot{color:rgba(232,228,220,.58);padding-bottom:46px}
+    .afsluiter .foot a{color:rgba(232,228,220,.58)}
+    .afsluiter .foot a:hover{color:var(--cyan)}
     @media(max-width:600px){.hero{padding:42px 22px 52px}.hero-rings{display:none}.wrap{padding:38px 22px 12px}}
   </style>
 </head>
@@ -213,11 +227,13 @@
          text-transform:uppercase"><a href="/nieuws/" style="color:var(--cyan);text-decoration:none">&larr; Alle berichten</a></p>
   </main>
 
+  <section class="afsluiter">
   <p class="mee">Nieuw werk verschijnt op deze site en op <a href="https://www.linkedin.com/in/rob-concepting/" target="_blank" rel="noopener noreferrer">LinkedIn</a>. Volg mee, of laat je leesapp het <a href="/nieuws/feed.xml">automatisch ophalen</a>.</p>
 
   <footer class="foot">
     <span>&copy; R.O.B. Concepting &middot; Rob de Rooij</span>
     <span><a href="/">rob-concepting.com</a> &middot; <a href="/whitepapers/">Whitepapers</a> &middot; <a href="/vragen/">Vragen</a> &middot; <a href="/nieuws/feed.xml">Feed</a></span>
   </footer>
+  </section>
 </body>
 </html>

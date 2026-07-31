@@ -46,7 +46,7 @@ console.log('\n2. de oordelen kloppen met de vloeren');
 // Cyaan mag tekstkleur zijn op een donker vlak. Op deze pagina's is dat de merknaam in de
 // topbalk en de datum-eyebrow in de hero — allebei op --dark. Alles daarbuiten is een fout,
 // en die lijst staat hier zodat een nieuwe uitzondering een bewuste regel is.
-const OP_DONKER = ['.tb-name span', '.tb-back', '.eyebrow'];
+const OP_DONKER = ['.tb-name span', '.tb-back', '.eyebrow', '.afsluiter'];
 
 console.log('\n3. geen cyaan als tekstkleur op licht, in de gebouwde pagina');
 {
