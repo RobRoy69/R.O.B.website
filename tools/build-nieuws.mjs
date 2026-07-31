@@ -395,7 +395,15 @@ for (const b of berichten) {
     image: b.afbeelding ? `${BASIS}${b.afbeelding}` : `${BASIS}/og-image.png`,
   }, null, 2).split('\n').map(l => '  ' + l).join('\n') + '\n  </script>\n';
 
-  const alineas = b.tekst.split(/\n\s*\n/).map(p => `      <p>${esc(p.trim())}</p>`).join('\n');
+  // EÉN REGEL, ÉÉN ALINEA. Eerst werd er op witregels gesplitst, wat prima werkte zolang de
+  // tekst zo geschreven was. De tweede post kwam met losse regels zonder witregels — vier
+  // punten onder elkaar — en die zouden als één blok van elf zinnen renderen. Twee schrijfwijzen
+  // die iets anders betekenen dan de schrijver bedoelt, is een val.
+  //
+  // Nu is de regel wat hij lijkt: een regeleinde begint een alinea, lege regels tellen niet
+  // mee. Voor tekst met witregels verandert er niets — dat is dezelfde uitkomst.
+  const alineas = b.tekst.split(/\n/).map(p => p.trim()).filter(Boolean)
+    .map(p => `      <p>${esc(p)}</p>`).join('\n');
   mkdirSync(path.join(OUTDIR, b.slug), { recursive: true });
   writeFileSync(path.join(OUTDIR, b.slug, 'index.html'),
     KOP(`${b.titel} — R.O.B. Concepting`, b.samenvatting, u, ld, b.afbeelding ? `${BASIS}${b.afbeelding}` : `${BASIS}/og-image.png`) +
