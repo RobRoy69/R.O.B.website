@@ -62,7 +62,7 @@ export const STATUS_CSS = `
     .st-klopt{color:#1a7f4b;border-color:rgba(26,127,75,.28)}
     .st-verloopt{color:#a86400;border-color:rgba(168,100,0,.32);background:rgba(217,136,0,.07)}
     .st-wacht{color:#a03a2a;border-color:rgba(160,58,42,.3);background:rgba(232,57,30,.05)}
-    .st-soort{display:inline-block;font-size:11.5px;font-style:italic;color:#6b6478;
+    .st-soort{display:inline-block;font-size:11.5px;font-style:italic;color:#7a6e85;
       margin-left:8px}`;
 
 export function statusHtml(c, esc) {
