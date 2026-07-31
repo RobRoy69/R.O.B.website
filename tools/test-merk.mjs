@@ -13,7 +13,7 @@
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { KLEUR, PAPIER, MAAT, GEMETEN, VLOER, contrast, TOEGESTANE_HEX } from './lib/merk.mjs';
+import { KLEUR, PAPIER, MAAT, GEMETEN, VLOER, contrast, TOEGESTANE_HEX, BLAD, gelezenToken } from './lib/merk.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 let gezakt = 0;
@@ -21,6 +21,24 @@ const toets = (naam, goed, uitleg = '') => {
   console.log(`  ${goed ? '✓' : '✗'} ${naam}${goed ? '' : `  — ${uitleg}`}`);
   if (!goed) gezakt++;
 };
+
+console.log('\n0. één bron: media/merk.css houdt zich aan Stylesheet v2');
+{
+  const afwijkend = Object.entries(BLAD).filter(([k, v]) => gelezenToken(k) !== v);
+  toets(`${Object.keys(BLAD).length} tokens gelijk aan het blad`, afwijkend.length === 0,
+        afwijkend.map(([k, v]) => `--${k} is ${gelezenToken(k)}, blad zegt ${v}`).join(' · '));
+  // De hairline liep op 31 juli al uiteen: 0,14 in merk.css tegen 0,12 in het blad — één dag
+  // nadat beide bestanden waren gemaakt. Daarom leest merk.mjs de waarden nu en herhaalt ze
+  // niet, en daarom toetst dit blok ze tegen de norm in plaats van tegen zichzelf.
+  // Alleen code telt. Een hex in een toelichting is documentatie — het stuk hierboven legt
+  // uit wélke waarden uiteenliepen, en dat moet je kunnen opschrijven zonder dat de poort
+  // denkt dat je een tweede palet aanlegt. Commentaar er dus af voor je telt.
+  const zonderUitleg = readFileSync(path.join(ROOT, 'tools', 'lib', 'merk.mjs'), 'utf8')
+    .split('export const BLAD')[0]
+    .replace(/\/\/[^\n]*/g, '').replace(/\/\*[\s\S]*?\*\//g, '');
+  const herhaald = zonderUitleg.match(/#[0-9a-f]{6}\b/gi) || [];
+  toets('merk.mjs definieert geen eigen hex', herhaald.length === 0, herhaald.join(' '));
+}
 
 console.log('\n1. de contrasttabel uit het blad, nagerekend uit de hex-waarden');
 for (const g of GEMETEN) {
@@ -48,10 +66,19 @@ console.log('\n2. de oordelen kloppen met de vloeren');
 // en die lijst staat hier zodat een nieuwe uitzondering een bewuste regel is.
 const OP_DONKER = ['.tb-name span', '.tb-back', '.eyebrow', '.afsluiter'];
 
+// Alle gegenereerde oppervlakken, niet alleen /nieuws/. De contrastfout van vanochtend zat
+// in build-nieuws, maar dezelfde constructie stond in build-vragen — en die viel buiten de
+// poort omdat die maar naar één bestand keek. Een poort die één pagina bewaakt, bewaakt de
+// andere niet: dat is geen dekking maar een steekproef.
+const PAGINAS = ['nieuws/index.html', 'vragen/index.html'];
+
 console.log('\n3. geen cyaan als tekstkleur op licht, in de gebouwde pagina');
-{
-  const css = readFileSync(path.join(ROOT, 'nieuws', 'index.html'), 'utf8')
-    .match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '';
+for (const pagina of PAGINAS) {
+  console.log(`  · ${pagina}`);
+  const bron = readFileSync(path.join(ROOT, pagina), 'utf8');
+  const css = (bron.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '')
+    // Inline style-attributen tellen mee: daar zat de cyaan linkkleur op /vragen/.
+    + [...bron.matchAll(/style="([^"]*)"/g)].map(m => `[inline]{${m[1]}}`).join('');
   toets('opmaak gevonden in de pagina', css.length > 500, `${css.length} tekens`);
 
   // Alleen de eigenschap `color` telt. Mijn eerste versie hier matchte ook

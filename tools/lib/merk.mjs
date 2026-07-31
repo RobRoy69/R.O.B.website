@@ -17,25 +17,55 @@
 // Het blad zegt: "Wat hier niet staat, verzin je niet — dan is er een afspraak nodig."
 
 // ── 01 Kleur: negen tokens, twee accenten ──
+//
+// DE WAARDEN STAAN HIER NIET. Ze worden gelezen uit media/merk.css, de gedeelde publieke
+// merklaag — zo staat het ook in CLAUDE.md: "er komt geen nieuwe lokale kleurschaal naast".
+// Tot vanmiddag stonden ze op twee plekken, en na één dag liep de hairline al uiteen
+// (0,14 hier, 0,12 in het blad). Eén dag is genoeg om te bewijzen dat twee exemplaren
+// altijd uiteenlopen; deze module herhaalt de waarden dus niet meer maar leidt ze af.
+//
+// Wat hier WEL staat is wat je uit een CSS-bestand niet kunt lezen: de betekenis van elke
+// kleur, de gemeten verhoudingen, de vloeren, en de regels die daaruit volgen.
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
+const MERKCSS = path.resolve(import.meta.dirname, '..', '..', 'media', 'merk.css');
+const _bron = readFileSync(MERKCSS, 'utf8');
+const _token = (naam) => {
+  const m = _bron.match(new RegExp(`--${naam}\\s*:\\s*([^;]+);`));
+  if (!m) throw new Error(`merk: token --${naam} ontbreekt in media/merk.css`);
+  return m[1].trim().replace(/\s+/g, '');
+};
+
 export const KLEUR = {
-  cream:    '#e8e4dc',              // paginabasis licht
-  navy:     '#001a4d',              // koppen en kerntekst
-  dark:     '#0d0d1a',              // donkere secties, video-ondergrond
-  screen:   '#0e1525',              // alternatief donker oppervlak
-  muted:    '#7a6e85',              // metadata, NOOIT lopende tekst
-  hairline: 'rgba(0,26,77,0.12)',   // randen en scheidingen
-  surface:  'rgba(255,255,255,0.4)',// kaart op cream
-  cyan:     '#0fa8cb',              // systeem-accent: tags, fasen, status
-  red:      '#e8391e',              // claim-accent: Weerlegd, de beslissing
+  cream:    _token('cream'),   // paginabasis licht
+  navy:     _token('navy'),    // koppen en kerntekst
+  dark:     _token('dark'),    // donkere secties, video-ondergrond
+  screen:   _token('screen'),  // alternatief donker oppervlak
+  muted:    _token('muted'),   // metadata, NOOIT lopende tekst
+  hairline: _token('border'),  // randen en scheidingen
+  cyan:     _token('cyan'),    // systeem-accent: tags, fasen, status
+  red:      _token('red'),     // claim-accent: Weerlegd, de beslissing
 };
 
 // De drie papiertreden. Levendigheid komt hieruit — uit het palet zelf — en niet uit nieuwe
 // kleuren. Vlak op vlak, gescheiden door hairline, niet door kleurverschil.
 export const PAPIER = {
-  geldig:          '#f4f1ec',
-  verlopend:       '#d5cfc6',
-  achtergebleven:  '#b9b2a8',
+  geldig:          _token('paper'),
+  verlopend:       _token('paper-aging'),
+  achtergebleven:  _token('paper-old'),
 };
+
+// Wat Stylesheet v2 opgeeft. Niet om te gebruiken — om tegen af te zetten. De toets
+// vergelijkt de gelezen waarden hiermee, zodat een wijziging in merk.css die van het blad
+// afwijkt rood wordt in plaats van stilzwijgend de norm.
+export const BLAD = {
+  cream: '#e8e4dc', navy: '#001a4d', dark: '#0d0d1a', screen: '#0e1525',
+  muted: '#7a6e85', cyan: '#0fa8cb', red: '#e8391e',
+  paper: '#f4f1ec', 'paper-aging': '#d5cfc6', 'paper-old': '#b9b2a8',
+  border: 'rgba(0,26,77,0.12)',
+};
+export const gelezenToken = _token;
 
 // ── 04 Maat en ruimte: één radius, één padding, vaste breedtes ──
 export const MAAT = {
