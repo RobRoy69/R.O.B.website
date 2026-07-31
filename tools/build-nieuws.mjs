@@ -20,11 +20,13 @@ import path from 'node:path';
 import { datumLabel } from './lib/datum.mjs';
 import { BASIS, ID } from './lib/entiteiten.mjs';
 import { statusHtml, STATUS_CSS } from './lib/status.mjs';
+import { reeksPositie, SOORT_LABEL } from './lib/reeks.mjs';
 
-const ROOT   = path.resolve(import.meta.dirname, '..');
-const BER    = path.join(ROOT, 'nieuws', '_berichten.json');
-const PROJ   = path.join(ROOT, 'whitepapers', '_register.json');
-const OUTDIR = path.join(ROOT, 'nieuws');
+const ROOT    = path.resolve(import.meta.dirname, '..');
+const BER     = path.join(ROOT, 'nieuws', '_berichten.json');
+const PROJ    = path.join(ROOT, 'whitepapers', '_register.json');
+const PAPERDIR = path.join(ROOT, 'whitepapers');
+const OUTDIR  = path.join(ROOT, 'nieuws');
 
 if (!existsSync(BER))  { console.error('build-nieuws: _berichten.json ontbreekt — draai eerst sync-berichten.'); process.exit(1); }
 if (!existsSync(PROJ)) { console.error('build-nieuws: _register.json ontbreekt — draai eerst sync-register.'); process.exit(1); }
@@ -42,6 +44,36 @@ for (const b of alle) {
     continue;
   }
   berichten.push({ ...b, bewijs: refs.map(r => claims.get(r)) });
+}
+
+// ── plaats in de reeks ──
+// Het totaal wordt hier GETELD uit wat werkelijk gepubliceerd wordt, niet uit een veld.
+// Valt een bericht weg doordat een bewering eronder is ingetrokken, dan telt het niet meer
+// mee en sluit de reeks zich — geen leesroute naar een pagina die er niet is.
+const { posities, fouten: reeksfouten } = reeksPositie(berichten);
+if (reeksfouten.length) {
+  console.error('build-nieuws: ROOD — de reeksgegevens kloppen niet:');
+  for (const f of reeksfouten) console.error('  · ' + f);
+  process.exit(1);
+}
+
+// De titel van een paper staat in het paper zelf. Hier overtypen zou een tweede exemplaar
+// zijn van iets dat al bestaat; bij de eerste hertitelde pagina lopen ze uiteen.
+const paperTitel = (slug) => {
+  const bestand = path.join(PAPERDIR, `${slug}.html`);
+  if (!existsSync(bestand)) return null;
+  const t = (readFileSync(bestand, 'utf8').match(/<title>([^<]*)<\/title>/) || [])[1];
+  return t ? t.split(' — ')[0].split(' | ')[0].trim() : null;
+};
+
+// Een 'hoort bij' die nergens heen wijst, is een gebroken belofte op de pagina zelf. De
+// schrijfstap weigert een onbekende slug al, maar die draait op een andere machine dan deze
+// build — en een paper kan hernoemd worden nadat het bericht is goedgekeurd.
+const wees = berichten.filter(b => b.hoort_bij && !paperTitel(b.hoort_bij));
+if (wees.length) {
+  console.error('build-nieuws: ROOD — bericht verwijst naar een whitepaper dat er niet is:');
+  for (const b of wees) console.error(`  · ${b.slug} → ${b.hoort_bij}`);
+  process.exit(1);
 }
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -115,6 +147,24 @@ const STIJL = `
     .b-vid .speel span{background:rgba(14,21,37,.82);color:#fff;font-family:'IBM Plex Mono',monospace;
       font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px 22px}
     .b-vid:hover .speel span{background:var(--cyan)}
+    .b-merk{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+      text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+    .b-merk b{font-weight:400;color:var(--cyan)}
+    .reeksnav{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule)}
+    .reeksnav-kop{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    .reeksnav-kop a{color:var(--cyan);text-decoration:none;
+      border-bottom:1px solid rgba(15,168,203,.35)}
+    .reeksnav-paar{display:flex;gap:14px;flex-wrap:wrap}
+    /* Op .reeksnav-paar en NIET op .reeksnav: de kopregel bevat bij 'hoort bij' een gewone
+       inline link, en die kreeg met de bredere selector de kaderopmaak van een kaart —
+       padding, rand en flex-basis rond drie woorden midden in een zin. */
+    .reeksnav-paar a{flex:1 1 220px;text-decoration:none;color:var(--purple);font-size:14.5px;
+      line-height:1.45;border:1px solid var(--border);padding:12px 15px}
+    .reeksnav-paar a:hover{border-color:var(--cyan);color:var(--cyan)}
+    .reeksnav-paar a span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;
+      letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+    .reeksnav-paar a:hover span{color:var(--cyan)}
     .b-bron{font-size:13px;white-space:nowrap;color:var(--cyan);text-decoration:none;
       border-bottom:1px solid rgba(15,168,203,.35)}
     .b-bron-los{color:var(--muted);border-bottom:1px dotted rgba(107,100,120,.5)}
@@ -256,6 +306,40 @@ const deel = (b, u) => `
           <a href="/nieuws/feed.xml">Feed</a>
         </div>`;
 
+// Het merkje boven een bericht in het overzicht: welke soort, en als het in een reeks staat
+// het hoeveelste deel. Niet meer — het overzicht is een lijst, geen leesroute.
+const merk = (b) => {
+  const p = posities.get(b.slug);
+  const soort = SOORT_LABEL[b.soort] || SOORT_LABEL.nieuws;
+  return `        <div class="b-merk">${esc(soort)}${p ? ` &middot; deel <b>${p.nummer}</b>` : ''}</div>`;
+};
+
+// De voet van een berichtpagina: waar dit stuk staat en waar je heen kunt.
+//
+// "3 delen verschenen" en niet "van de 18" — het plan zegt achttien weken, maar een totaal
+// dat vooruitloopt op wat er staat, is een belofte en geen telling. Deze zin klopt op elk
+// moment, ook als de reeks halverwege een andere vorm krijgt.
+const reeksnav = (b) => {
+  const p = posities.get(b.slug);
+  const regels = [];
+  if (b.hoort_bij) {
+    regels.push(`Hoort bij het whitepaper <a href="/whitepapers/${esc(b.hoort_bij)}">${esc(paperTitel(b.hoort_bij))}</a>`);
+  }
+  if (p) regels.push(`Deel ${p.nummer} &middot; ${p.totaal} ${p.totaal === 1 ? 'deel' : 'delen'} verschenen`);
+  if (!regels.length) return '';
+
+  const link = (ander, vorige) => `
+            <a href="/nieuws/${esc(ander.slug)}/"><span>${vorige ? '&larr; Vorige' : 'Volgende &rarr;'} &middot; deel ${ander.volgnummer}</span>${esc(ander.titel)}</a>`;
+  const paar = p && (p.vorige || p.volgende) ? `
+          <div class="reeksnav-paar">${p.vorige ? link(p.vorige, true) : ''}${p.volgende ? link(p.volgende, false) : ''}
+          </div>` : '';
+
+  return `
+        <nav class="reeksnav">
+          <div class="reeksnav-kop">${regels.join(' &middot; ')}</div>${paar}
+        </nav>`;
+};
+
 mkdirSync(OUTDIR, { recursive: true });
 
 // ── losse berichtpagina's ──
@@ -294,6 +378,7 @@ for (const b of berichten) {
 ${media(b)}
 ${alineas}
 ${grond(b)}
+${reeksnav(b)}
 ${deel(b, u)}
       </div>
       <div class="route">
@@ -340,6 +425,7 @@ ${berichten.length ? '' : `      <div class="b"><p>Er staan nog geen berichten. 
         <p style="font-size:14.5px;color:var(--muted)">Ondertussen: de <a href="/whitepapers/" style="color:var(--cyan)">whitepapers</a> en de <a href="/vragen/" style="color:var(--cyan)">vragen met onderbouwing</a>.</p></div>`}
 ${berichten.map(b => `      <article class="b">
         <div class="b-datum">${esc(nlDatum(b.gepubliceerd_op))}</div>
+${merk(b)}
         <h2><a href="/nieuws/${esc(b.slug)}/">${esc(b.titel)}</a></h2>
 ${media(b)}
         <p>${esc(b.samenvatting)}</p>

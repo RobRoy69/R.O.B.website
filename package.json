@@ -12,6 +12,7 @@
   },
   "scripts": {
     "test:scan": "node tools/test-kennisgezagsscan.mjs",
+    "test:velden": "node tools/test-berichtvelden.mjs",
     "test:kennisproef": "node tools/test-kennisproef.mjs",
     "test:agent": "node tools/build-promptfoo-prompt.mjs && npx promptfoo eval",
     "test:archief": "node tools/test-archief-alarm.mjs",
@@ -20,6 +21,6 @@
     "rapport": "node tools/rapport.mjs",
     "pdf": "npm run bouw && node tools/build-pdf.mjs",
     "bouw": "node tools/sync-register.mjs && node tools/sync-berichten.mjs && node tools/build-doors.mjs && node tools/build-vragen.mjs && node tools/build-nieuws.mjs && node tools/verify-bronnen.mjs && node tools/verify-nagetrokken.mjs && node tools/verify-lagen.mjs && node tools/build-publiek.mjs && node tools/build-claimpaspoorten.mjs && node tools/build-entiteiten.mjs && node tools/build-llms.mjs && node tools/build-bewijs.mjs && node tools/build-bewijs-pagina.mjs && node tools/build-sitemap.mjs && node tools/verify-publiek.mjs",
-    "deploy": "npm run test:scan && npm run test:kennisproef && npm run bouw && node tools/build-site-kennis.mjs && node tools/verify-agent-kennis.mjs && node tools/build-promptfoo-prompt.mjs && node tools/verify-promptfoo.mjs"
+    "deploy": "npm run test:scan && npm run test:velden && npm run test:kennisproef && npm run bouw && node tools/build-site-kennis.mjs && node tools/verify-agent-kennis.mjs && node tools/build-promptfoo-prompt.mjs && node tools/verify-promptfoo.mjs"
   }
 }
