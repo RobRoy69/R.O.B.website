@@ -324,6 +324,11 @@ try {
         const vol = path.join(map, naam);
         if (statSync(vol).isDirectory()) { wandel(vol, `${pre}${naam}/`); continue; }
         if (naam.endsWith('.html')) {
+          // Een pagina die zichzelf op noindex zet, hoort juist NIET in de sitemap. Dat is
+          // geen uitzondering op deze poort maar de andere kant ervan: de poort eist dat
+          // publicatie en sitemap elkaar dekken, en noindex zegt "dit is geen publicatie om
+          // te vinden". Afgeleid uit de pagina zelf, zodat er geen tweede lijst ontstaat.
+          if (/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(readFileSync(vol, 'utf8'))) continue;
           const raw = naam === 'index.html' ? pre : `${pre}${naam}`;
           opSchijf.add(raw.startsWith('/whitepapers/') ? raw.replace(/\.html$/, '') : raw);
         }

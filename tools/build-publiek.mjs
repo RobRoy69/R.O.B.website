@@ -44,6 +44,11 @@ const PUBLIEK = [
   { soort: 'map', pad: 'kennisgezagsscan' },
   { soort: 'map', pad: 'kennisproef' },
 
+  // Het beheerscherm. Publiek bereikbaar maar niet indexeerbaar: al het gezag zit in de
+  // functie erachter, niet in deze pagina. Zonder sessie toont hij een wachtwoordveld en
+  // verder niets — er staat geen sleutel en geen registerinhoud in.
+  { soort: 'map', pad: 'beheer' },
+
   // whitepapers: de pagina's en de PDF's wél, de registerprojecties NIET.
   // _register.json en _doors.json zijn build-INPUT. Ze bevatten ext_ref, ringstatus en
   // wachtend_op_reviewpoort — interne registerkennis, geen uitgifte. Een bewust,
