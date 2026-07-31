@@ -81,7 +81,11 @@ const paperVolgorde = () => {
       plaats: RANG.indexOf((kaart.match(/(\w+) in de reeks/) || [])[1]),
     }))
     .filter(p => p.slug && p.plaats > 0)
-    .sort((a, b) => a.plaats - b.plaats);
+    // Sorteerparameters heten hier bewust niet a en b: `b.` is in dit bestand het voorvoegsel
+    // van een BERICHT, en de veldentoets leest die toegangen uit om te controleren dat
+    // sync-berichten ze allemaal ophaalt. Een sorteervariabele b maakte daar een veld
+    // "plaats" van dat niet bestaat.
+    .sort((eerste, tweede) => eerste.plaats - tweede.plaats);
 };
 
 // Een 'hoort bij' die nergens heen wijst, is een gebroken belofte op de pagina zelf. De

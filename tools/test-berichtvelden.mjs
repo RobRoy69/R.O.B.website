@@ -132,8 +132,15 @@ console.log('\n10. sync-berichten haalt elk veld op dat build-nieuws leest');
   const select = (lees('sync-berichten.mjs').match(/select=([^&"']+)/) || [])[1] || '';
   const opgehaald = new Set(select.split(','));
 
-  // Wat de bouwer van een bericht afleest. 'bewijs' hoort er niet bij: dat voegt build-nieuws
-  // zelf toe uit de claimprojectie en staat niet in de berichtentabel.
+  // Wat de bouwer van een bericht afleest. Dit is een heuristiek op `b.` als voorvoegsel van
+  // een bericht — leesbaar en goedkoop, maar hij telt élke variabele b mee. Toen een
+  // sorteerfunctie `(a, b) => a.plaats - b.plaats` gebruikte, meldde deze toets een veld
+  // "plaats" dat niet bestaat. Dat is opgelost door de sorteervariabele te hernoemen, niet
+  // door hier een uitzondering te maken: een uitzonderingenlijst is precies wat deze toets
+  // moet voorkomen.
+  //
+  // 'bewijs' staat er wél als uitzondering: dat voegt build-nieuws zelf toe uit de
+  // claimprojectie en het is geen kolom in de berichtentabel.
   const gebruikt = [...new Set((lees('build-nieuws.mjs').match(/\bb\.[a-z_]+/g) || [])
     .map(s => s.slice(2)))].filter(v => v !== 'bewijs');
 
