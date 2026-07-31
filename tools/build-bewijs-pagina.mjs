@@ -188,10 +188,12 @@ ${JSON.stringify(graf, null, 2).split('\n').map(l => '  ' + l).join('\n')}
     <main>
 ${regels}
     </main>
+    <div class="afsluiter">
     <footer>
       <p>Hetzelfde bewijs machineleesbaar: <a href="/bewijs.json">bewijs.json</a>.
         Overnemen mag, met bronvermelding &mdash; en met de datum erbij.</p>
     </footer>
+    </div>
   </div>
 </body>
 </html>

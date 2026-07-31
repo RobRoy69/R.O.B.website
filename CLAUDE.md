@@ -106,10 +106,19 @@ gebruikt en horen niet in het register** tenzij iemand de primaire bron vindt.
 
 ## Toepassing per vlak
 
+**Het ritme geldt overal.** Vastgesteld door Rob op 2026-07-31: elke pagina opent donker,
+leest licht en sluit donker. Dat is `.afsluiter` in `media/merk.css` — één definitie, altijd
+een `<div>` en nooit een `<section>`, want een `<footer>` binnen een sectie-element verliest
+zijn `contentinfo`-landmark. Een eerdere versie van deze tabel zei dat de whitepapers
+"blijven zoals ze zijn"; dat is achterhaald.
+
+De homepage doet niet mee: die is geen schuivend document maar een applicatie met vijf panelen
+en zeven donkere vlakken. Een afsluiter onderaan zou daar niets afsluiten.
+
 | Vlak | Wat "levendiger en menselijker" hier betekent |
 |---|---|
 | `/nieuws/` | Beeld of video bij een bericht is de regel, niet de uitzondering. Ondertiteling altijd — er wordt zonder geluid gekeken. |
-| Whitepapers | Blijven zoals ze zijn: lange lijn, geen opsmuk. Hier wint precisie van warmte. |
+| Whitepapers | Lange lijn, geen opsmuk — maar wél het ritme: donker openen, licht lezen, donker sluiten. |
 | LinkedIn | Rob's persoonlijke profiel, niet de bedrijfspagina. Link in de eerste reactie, naar de eigen site. |
 | Video | Verticaal waar het voor de feed is; ondertiteld; een menselijke opening in plaats van een titelkaart. |
 | Scan en mail | Directe aanspreekvorm, korte zinnen, geen systeemtaal. |

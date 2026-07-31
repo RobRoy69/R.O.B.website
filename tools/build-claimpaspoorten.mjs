@@ -78,6 +78,12 @@ for (const ref of [...new Set(rel.flatMap((publication) => publication.claim_ref
       <dt>Gebruikt in</dt><dd>${usedIn}</dd>
     </dl></div>
   </main>
+  <div class="afsluiter">
+    <footer>
+      <p>Deze bewering staat ook in het volledige overzicht: <a href="/bewijs/">alle beweringen met hun datum en bron</a>,
+        of machineleesbaar via <a href="/bewijs.json">bewijs.json</a>.</p>
+    </footer>
+  </div>
 </body>
 </html>`);
   count += 1;

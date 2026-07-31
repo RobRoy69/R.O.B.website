@@ -79,3 +79,47 @@ select {
     height: 34px;
   }
 }
+
+/* ── Ritme: donker openen, licht lezen, donker sluiten ──────────────────────────
+   Vastgesteld 2026-07-31. Elke pagina sluit op een donker vlak, zoals hij opent.
+   Het is dezelfde schaal, anders verdeeld — het kost niets aan corporate karakter
+   en het is de grootste sprong in levendigheid die er binnen dit palet te maken is.
+
+   HIER EN NIET PER PAGINA. Deze regels stonden in twee bouwstappen apart, met
+   dezelfde waarden. Bij de derde pagina zou dat drie exemplaren zijn geweest, en
+   die lopen uiteen — dat is deze week al gebeurd met de hairline.
+
+   ALTIJD EEN <div>, NOOIT EEN <section>. Een <footer> binnen een sectie-element
+   verliest zijn contentinfo-landmark voor schermlezers. Die les is één keer betaald.
+
+   Op donker mag cyaan wél tekst zijn: 6,9:1. De cream-tinten zijn nagerekend —
+   0,82 geeft 10,3:1 en 0,58 geeft 5,6:1, allebei boven de vloer van 4,5:1. */
+.afsluiter {
+  background: var(--dark);
+  margin-top: 46px;
+  padding-top: 40px;
+}
+.afsluiter .mee,
+.afsluiter .wp-mee {
+  color: rgba(232, 228, 220, 0.82);
+}
+.afsluiter .mee a,
+.afsluiter .wp-mee a {
+  color: var(--cyan);
+  text-decoration-color: var(--cyan);
+  border-bottom-color: var(--cyan);
+}
+.afsluiter .foot,
+.afsluiter footer {
+  color: rgba(232, 228, 220, 0.58);
+  padding-bottom: 46px;
+  border-top: 0;
+}
+.afsluiter .foot a,
+.afsluiter footer a {
+  color: rgba(232, 228, 220, 0.58);
+}
+.afsluiter .foot a:hover,
+.afsluiter footer a:hover {
+  color: var(--cyan);
+}
