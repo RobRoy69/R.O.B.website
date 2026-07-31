@@ -123,20 +123,20 @@ const STIJL = `
     .tb-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
     .tb-name{font-family:${FONT.mono};font-size:12px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--papier)}
-    .tb-name span{color:var(--cyan)}
+    .tb-name span{color:var(--papier)}
     .tb-back{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:rgba(232,228,220,.58);text-decoration:none}
-    .tb-back:hover{color:var(--cyan)}
+    .tb-back:hover{color:var(--papier)}
     .hero{background:var(--dark);color:var(--papier);padding:56px 28px 66px;position:relative;overflow:hidden}
     .hero-inner{max-width:${MAAT.maxDocument};margin:0 auto;position:relative;z-index:2}
     .hero-rings{position:absolute;right:-130px;top:50%;transform:translateY(-50%);
       width:480px;height:480px;opacity:.5;pointer-events:none;z-index:1}
     .eyebrow{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
-      text-transform:uppercase;color:var(--cyan);margin-bottom:20px}
+      text-transform:uppercase;color:var(--papier);margin-bottom:20px}
     .hero h1{font-size:clamp(32px,6vw,42px);line-height:1.08;font-weight:600;
       letter-spacing:-.02em;margin-bottom:18px}
     .hero h1 strong{font-weight:600}
-    .hero-bar{width:46px;height:2px;background:var(--cyan);margin-bottom:24px}
+    .hero-bar{width:46px;height:1px;background:rgba(232,228,220,.35);margin-bottom:24px}
     .hero p{font-size:18px;font-weight:300;line-height:1.6;color:rgba(232,228,220,.80);max-width:${MAAT.maxRegel}}
     .wrap{max-width:${MAAT.maxDocument};margin:0 auto;padding:52px 28px 20px}
     .b{background:var(--papier);border:1px solid var(--border);border-radius:var(--radius);
@@ -146,7 +146,7 @@ const STIJL = `
     .b h2{font-size:clamp(22px,3vw,26px);font-weight:500;line-height:1.2;
       letter-spacing:-.01em;margin-bottom:14px;text-wrap:balance;scroll-margin-top:24px}
     .b h2 a{color:inherit;text-decoration:none}
-    .b h2 a:hover{text-decoration:underline;text-decoration-color:var(--cyan);
+    .b h2 a:hover{text-decoration:underline;text-decoration-color:var(--navy);
       text-underline-offset:4px}
     .b p{font-size:16px;line-height:1.65;margin-bottom:14px;max-width:${MAAT.maxRegel}}
     .b-grond{border-left:${MAAT.accentrand} solid var(--cyan);padding:2px 0 2px 20px;margin-top:22px}
@@ -155,7 +155,7 @@ const STIJL = `
     .b-grond ul{list-style:none}
     .b-grond li{font-size:15px;line-height:1.6;color:var(--navy);margin-bottom:11px}
     .b-datumchip{display:inline-block;font-family:${FONT.mono};font-size:11px;
-      color:var(--navy);background:rgba(15,168,203,.12);border-radius:var(--radius);
+      color:var(--navy);background:transparent;border:1px solid var(--border);border-radius:var(--radius);
       padding:1px 7px;margin-right:9px;white-space:nowrap;font-variant-numeric:tabular-nums}
     .b-media{margin:0 0 20px;line-height:0}
     .b-media img,.b-media video{width:100%;height:auto;display:block;
@@ -166,7 +166,7 @@ const STIJL = `
     .b-vid .speel span{background:rgba(13,13,26,.85);color:var(--papier);font-family:${FONT.mono};
       font-size:12px;letter-spacing:${TRACKING};text-transform:uppercase;padding:12px 22px;
       border-radius:var(--radius)}
-    .b-vid:hover .speel span{background:var(--cyan);color:var(--navy)}
+    .b-vid:hover .speel span{background:var(--navy);color:var(--papier)}
     .b-merk{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--navy);margin-bottom:10px}
     .b-merk b{font-weight:400;color:var(--navy)}
@@ -174,38 +174,38 @@ const STIJL = `
     .reeksnav-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--navy);margin-bottom:12px}
     .reeksnav-kop a{color:var(--navy);text-decoration:none;
-      border-bottom:1px solid var(--cyan)}
+      border-bottom:1px solid var(--navy)}
     .reeksnav-paar{display:flex;gap:14px;flex-wrap:wrap}
     /* Op .reeksnav-paar en NIET op .reeksnav: de kopregel bevat bij 'hoort bij' een gewone
        inline link, en die kreeg met de bredere selector de kaderopmaak van een kaart —
        padding, rand en flex-basis rond drie woorden midden in een zin. */
     .reeksnav-paar a{flex:1 1 220px;text-decoration:none;color:var(--navy);font-size:15px;
       line-height:1.45;border:1px solid var(--border);border-radius:var(--radius);padding:12px 15px}
-    .reeksnav-paar a:hover{border-color:var(--cyan)}
+    .reeksnav-paar a:hover{border-color:var(--navy)}
     .reeksnav-paar a span{display:block;font-family:${FONT.mono};font-size:10px;
       letter-spacing:${TRACKING};text-transform:uppercase;color:var(--navy);margin-bottom:5px}
     .b-bron{font-size:14px;white-space:nowrap;color:var(--navy);text-decoration:none;
-      border-bottom:1px solid var(--cyan)}
+      border-bottom:1px solid var(--navy)}
     .b-bron-los{color:var(--navy);border-bottom:1px dotted rgba(122,110,133,.5)}
-    .route{background:var(--papier);border-left:${MAAT.accentrand} solid var(--cyan);
+    .route{background:var(--papier);border-left:${MAAT.accentrand} solid var(--navy);
       border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;font-size:16px}
-    .route a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
+    .route a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--navy)}
 ${STATUS_CSS}
     .deel{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
       display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .deel-lbl{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--navy);margin-right:4px}
     .deel a{font-family:${FONT.mono};font-size:12px;letter-spacing:${TRACKING};
-      color:var(--navy);text-decoration:none;border:1px solid var(--cyan);
+      color:var(--navy);text-decoration:none;border:1px solid var(--border);
       border-radius:var(--radius);padding:6px 14px;transition:background ${'160ms'} ease-out}
-    .deel a:hover{background:rgba(15,168,203,.12)}
+    .deel a:hover{background:rgba(0,26,77,.06)}
     .foot{max-width:${MAAT.maxDocument};margin:0 auto;padding:34px 28px 56px;display:flex;
       justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:${FONT.mono};
       font-size:11px;letter-spacing:${TRACKING};text-transform:uppercase;color:var(--navy)}
     .foot a{color:var(--navy);text-decoration:none}
     .mee{max-width:${MAAT.maxDocument};margin:0 auto;padding:0 28px;font-size:15px;
       color:var(--navy);line-height:1.6;text-transform:none;letter-spacing:0}
-    .mee a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
+    .mee a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--navy)}
     .foot a:hover{color:var(--navy)}
     @media(max-width:600px){.hero{padding:42px 22px 52px}.hero-rings{display:none}.wrap{padding:38px 22px 12px}}`;
 

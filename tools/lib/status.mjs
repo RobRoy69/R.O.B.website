@@ -73,7 +73,7 @@ export const STATUS_CSS = `
     .st{display:inline-block;font-family:${FONT.mono};font-size:11px;
       letter-spacing:${TRACKING};padding:1px 7px;margin-left:8px;white-space:nowrap;
       color:${KLEUR.navy};border:1px solid transparent;border-radius:${MAAT.radius}}
-    .st-klopt{border-color:${KLEUR.cyan}}
+    .st-klopt{border-color:${KLEUR.navy}}
     .st-verloopt{border-style:dashed;border-color:${KLEUR.muted}}
     .st-wacht{border-color:transparent}
     .st-soort{display:inline-block;font-size:14px;color:${KLEUR.navy};margin-left:8px}`;

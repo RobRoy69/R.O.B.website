@@ -46,7 +46,25 @@ console.log('\n2. de oordelen kloppen met de vloeren');
 // Cyaan mag tekstkleur zijn op een donker vlak. Op deze pagina's is dat de merknaam in de
 // topbalk en de datum-eyebrow in de hero — allebei op --dark. Alles daarbuiten is een fout,
 // en die lijst staat hier zodat een nieuwe uitzondering een bewuste regel is.
-const OP_DONKER = ['.tb-name span', '.tb-back', '.eyebrow'];
+const OP_DONKER = [];
+
+// ── Eén klein cyaan element per uiting ──
+//
+// Vastgesteld in het beeldspoor op 31 juli en doorgetrokken naar de site: cyaan is niet de
+// systeemkleur die overal terugkomt, maar één klein merkteken. De opmaak had er zeventien —
+// merknaam, eyebrow, herobalk, chip-tint, elke onderlijn, elke knoprand, elke hover.
+// Zeventien accenten zijn geen accent.
+//
+// Cyaan houdt precies één rol over: de GRONDLIJN onder "Waar dit op rust". Dat is niet
+// willekeurig — §registersymbolen zegt "de cirkel is de uitspraak, de grondlijn is het
+// bewijsanker". Als er één ding op deze site cyaan mag zijn, is het de lijn die zegt
+// waarop een bewering rust.
+//
+// LET OP DE GRENS VAN DEZE REGEL. Een beeld is één kader; een webpagina schuift. Staan er
+// drie berichten op /nieuws/, dan staat die ene lijn er drie keer — één per bericht, niet
+// één per scherm. Wie het letterlijk per pagina wil, moet één plek kiezen en het hier
+// vastleggen.
+const CYAAN_ROLLEN = [':root', '.b-grond'];
 
 console.log('\n3. geen cyaan als tekstkleur op licht, in de gebouwde pagina');
 {
@@ -65,6 +83,15 @@ console.log('\n3. geen cyaan als tekstkleur op licht, in de gebouwde pagina');
     .filter(sel => !OP_DONKER.some(w => sel.includes(w)));
 
   toets('geen onbekende cyaan-tekstregel', overtreders.length === 0, overtreders.join(' · '));
+
+  // En de strengere regel eroverheen: cyaan komt maar in één rol voor, in welke vorm dan ook
+  // — tekst, rand, vlak of tint. Zeventien accenten zijn geen accent.
+  const cyaanRegels = [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)]
+    .filter(m => /--cyan\)|0fa8cb|15,\s*168,\s*203/.test(m[2]))
+    .map(m => m[1].trim())
+    .filter(sel => !CYAAN_ROLLEN.includes(sel));
+  toets(`cyaan in één rol (${CYAAN_ROLLEN.filter(r => r !== ':root').join(', ')})`,
+        cyaanRegels.length === 0, `ook in: ${cyaanRegels.join(' · ')}`);
 
   // Muted is óók geen tekstkleur — 4,2:1 op papier, 3,8:1 op cream, 4,0:1 op dark. Het blad
   // noemt hem "metadata" en geeft 3,8:1 als toegestaan op; regel 7 van zijn eigen keuring
