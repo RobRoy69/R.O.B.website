@@ -46,11 +46,14 @@ niet, dan is het te los.
 | Token | Hex | Waarvoor |
 |---|---|---|
 | `--screen` | `#0e1525` | donkere vlakken: hero, topbar, video-omlijsting |
+| `--dark` | `#0d0d1a` | primaire donkere ondergrond |
 | `--purple` | `#001a4d` | tekst en lijnen op licht (navy, ondanks de naam) |
 | `--cyan` | `#0fa8cb` | het accent: links, labels, actieve staat |
 | `--red` | `#e8391e` | het spaarzame accent: één streep, één punt, nooit een vlak |
 | `--cream` | `#e8e4dc` | paginagrond |
-| `--paper` | `#f4f2ed` | kaarten en panelen op de grond |
+| `--paper` | `#f4f1ec` | kaarten en panelen; geldig document |
+| `--paper-aging` | `#d5cfc6` | verlopend document |
+| `--paper-old` | `#b9b2a8` | achtergebleven document |
 | `--muted` | `#7a6e85` | bijschrift, metadata |
 
 **Rood is een zeldzaam accent.** Eén element per scherm, hooguit. Het is de enige kleur die
@@ -61,12 +64,11 @@ gebruiken.
 `--paper`, minder wit; grotere regelafstand; ruimte om een kop. De schaal is al warm — cream
 en paper zijn geen wit, en dat is met opzet.
 
-### Let op: de schaal staat op drie plekken en loopt al uiteen
+### Eén publieke bron voor de schaal
 
-`index.html`, `tools/build-nieuws.mjs` en `kennisgezagsscan/` definiëren hem alle drie apart,
-en `--muted` is in de tweede al `#6b6478` in plaats van `#7a6e85`. Dat is dezelfde fout als
-een handmatig bijgehouden publicatielijst, alleen dan in hex. **Bovenstaande tabel is de
-bron** tot er één gedeeld bestand is; wijk je ervan af, dan repareer je eerst de drift.
+`media/merk.css` is de gedeelde publieke merklaag. Pagina-eigen CSS regelt alleen layout en
+functionaliteit. Wie een kleur of logo-uitvoering nodig heeft, gebruikt die laag en de
+goedgekeurde bestanden in `media/logo/`; er komt geen nieuwe lokale kleurschaal naast.
 
 ---
 

@@ -1,0 +1,70 @@
+/* Homepage-uitzonderingen binnen Publicatiecontract v1.3. */
+#s-landing::before,
+.beeldscherm::before,
+.beeldscherm::after { background: none; }
+
+#s-landing::after,
+.play-btn,
+.dn-btn,
+.tool-card,
+.vid-wrap,
+.sd-panel,
+.rm-panel,
+.cred-card,
+.cred-portrait,
+.tip,
+.rob-chat,
+.rob-msg,
+.rob-input,
+.vid-modal,
+.wp-link { box-shadow: none; }
+
+.cta-rob,
+.vid-wrap,
+.vid-end-close-btn,
+.sd-panel,
+.sd-block-body code,
+.rm-panel,
+.rm-item,
+.cred-card,
+.cred-linkedin,
+.wp-link,
+.tool-card,
+.tip,
+.rob-chat,
+.rob-msg,
+.rob-input,
+.rob-send,
+.vid-modal { border-radius: 2px; }
+
+.play-btn,
+.play-btn::before,
+.play-btn::after,
+.play-outer-ring,
+.dn-btn,
+.dn-dot,
+.pli-dot,
+.vid-play-btn,
+.sd-close,
+.cred-portrait,
+.cred-bullet,
+.vid-overlay-close { border-radius: 50%; }
+
+.landing-logo img { display: block; width: min(360px, 72vw); height: auto; }
+.hdr-brand > img { display: block; width: auto; height: 40px; }
+.landing-logo-rob,
+.play-label,
+.dn-btn-label,
+.cred-rob { font-weight: 600; }
+
+.play-btn,
+.play-btn:hover,
+.play-btn:active,
+.vid-wrap:hover .vid-play-btn,
+.sd-close:hover,
+.rm-item:hover,
+.cred-linkedin:hover,
+.wp-link:hover { transform: none; }
+
+#vid-end-bar { background: var(--dark); }
+.vid-lbl { display: none; }

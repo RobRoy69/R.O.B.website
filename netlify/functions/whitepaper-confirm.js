@@ -195,19 +195,19 @@ ${SITE}`;
       <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#0fa8cb;margin-bottom:10px;">R.O.B. Concepting</div>
       <div style="font-size:21px;color:#ffffff;line-height:1.3;">${escapeHtml(paper.title)}</div>
     </div>
-    <div style="background:#f4f2ed;padding:30px 28px;border:1px solid rgba(0,26,77,.12);border-top:0;">
+    <div style="background:#f4f1ec;padding:30px 28px;border:1px solid rgba(0,26,77,.12);border-top:0;">
       <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">Hallo ${escapeHtml(firstName)},</p>
       <p style="margin:0 0 24px;font-size:16px;line-height:1.65;">Bevestigd — hier is de whitepaper. Veel leesplezier.</p>
       <p style="margin:0 0 24px;">
         <a href="${pdfUrl}" style="display:inline-block;background:#0fa8cb;color:#0e1525;text-decoration:none;padding:13px 24px;font-size:14px;font-weight:600;letter-spacing:.03em;">Download de PDF &rarr;</a>
       </p>
-      <p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:#6b6478;">
+      <p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:#7a6e85;">
         Liever online lezen? Dat kan <a href="${pageUrl}" style="color:#0fa8cb;">op de site</a>.
       </p>
       <p style="margin:0 0 6px;font-size:16px;line-height:1.65;">Ik hoor het graag als er iets in blijft haken — een reactie op deze mail komt gewoon bij me aan.</p>
       <p style="margin:22px 0 0;font-size:16px;line-height:1.65;">Met vriendelijke groet,<br>Rob de Rooij</p>
-      <p style="margin:22px 0 0;padding-top:18px;border-top:1px solid rgba(0,26,77,.08);font-size:12px;color:#6b6478;">
-        R.O.B. Concepting &middot; <a href="${SITE}" style="color:#6b6478;">rob-concepting.com</a><br>
+      <p style="margin:22px 0 0;padding-top:18px;border-top:1px solid rgba(0,26,77,.08);font-size:12px;color:#7a6e85;">
+        R.O.B. Concepting &middot; <a href="${SITE}" style="color:#7a6e85;">rob-concepting.com</a><br>
         Je gegevens gebruik ik alleen om je deze whitepaper te sturen. Geen nieuwsbrief, geen doorverkoop.
       </p>
     </div>

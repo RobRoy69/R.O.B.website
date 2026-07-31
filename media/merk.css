@@ -1,0 +1,81 @@
+/* R.O.B. Concepting — publieke merklaag, afgeleid van Stylesheet v2 (31 juli 2026). */
+:root {
+  --cream: #e8e4dc;
+  --paper: #f4f1ec;
+  --paper-aging: #d5cfc6;
+  --paper-old: #b9b2a8;
+  --navy: #001a4d;
+  --purple: #001a4d;
+  --ink: #001a4d;
+  --dark: #0d0d1a;
+  --screen: #0e1525;
+  --muted: #7a6e85;
+  --cyan: #0fa8cb;
+  --red: #e8391e;
+  --white: #f4f1ec;
+  --line: rgba(0, 26, 77, 0.14);
+  --border: rgba(0, 26, 77, 0.14);
+  --rule: rgba(0, 26, 77, 0.08);
+}
+
+html,
+body,
+button,
+input,
+textarea,
+select {
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+.rob-lockup {
+  display: block;
+  width: auto;
+  height: 40px;
+}
+
+.rob-lockup-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.rob-meta {
+  font-family: "IBM Plex Mono", monospace;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Ook metadata haalt op licht de vaste 4,5:1-contrastvloer. */
+.serie .lbl,
+.ingang .lbl,
+.scan-cta .lbl,
+.toc-title,
+.toc .num,
+.sec-label,
+.levend b,
+.b-datum,
+.b-grond-kop,
+.b-merk,
+.reeksnav-kop,
+.v-nr,
+.v-grond-kop,
+.bw-id {
+  color: var(--ink);
+}
+
+.b-bron,
+.v-bron,
+.mee a,
+.wp-mee a {
+  color: var(--ink);
+  text-decoration-color: var(--cyan);
+}
+
+@media (max-width: 520px) {
+  .rob-lockup {
+    height: 34px;
+  }
+}
