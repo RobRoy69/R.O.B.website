@@ -107,12 +107,15 @@
     .reeksnav-kop a{color:var(--cyan);text-decoration:none;
       border-bottom:1px solid rgba(15,168,203,.35)}
     .reeksnav-paar{display:flex;gap:14px;flex-wrap:wrap}
-    .reeksnav a{flex:1 1 220px;text-decoration:none;color:var(--purple);font-size:14.5px;
+    /* Op .reeksnav-paar en NIET op .reeksnav: de kopregel bevat bij 'hoort bij' een gewone
+       inline link, en die kreeg met de bredere selector de kaderopmaak van een kaart —
+       padding, rand en flex-basis rond drie woorden midden in een zin. */
+    .reeksnav-paar a{flex:1 1 220px;text-decoration:none;color:var(--purple);font-size:14.5px;
       line-height:1.45;border:1px solid var(--border);padding:12px 15px}
-    .reeksnav a:hover{border-color:var(--cyan);color:var(--cyan)}
-    .reeksnav a span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;
+    .reeksnav-paar a:hover{border-color:var(--cyan);color:var(--cyan)}
+    .reeksnav-paar a span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;
       letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
-    .reeksnav a:hover span{color:var(--cyan)}
+    .reeksnav-paar a:hover span{color:var(--cyan)}
     .b-bron{font-size:13px;white-space:nowrap;color:var(--cyan);text-decoration:none;
       border-bottom:1px solid rgba(15,168,203,.35)}
     .b-bron-los{color:var(--muted);border-bottom:1px dotted rgba(107,100,120,.5)}
