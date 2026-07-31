@@ -312,7 +312,7 @@ const media = (b) => {
         <figure class="b-media">
           <video controls preload="metadata"${b.afbeelding ? ` poster="${esc(b.afbeelding)}"` : ''}>
             <source src="${esc(b.video)}" type="video/mp4">${heeftVtt ? `
-            <track kind="captions" src="${esc(vttPad)}" srclang="nl" label="Nederlands" default>` : ''}
+            <track kind="captions" src="${esc(vttPad)}" srclang="nl" label="Nederlands">` : ''}
             Je browser kan deze video niet weergeven.
           </video>${b.afbeelding_alt ? `
           <figcaption>${esc(b.afbeelding_alt)}</figcaption>` : ''}
@@ -493,7 +493,7 @@ writeFileSync(path.join(OUTDIR, 'feed.xml'),
 ${berichten.map(b => `    <item>
       <title>${esc(b.titel)}</title>
       <link>${BASIS}/nieuws/${b.slug}/</link>
-      <guid isPermaLink="true">${BASIS}/nieuws/${b.slug}/</guid>
+      <guid isPermaLink="false">${esc(b.ext_ref)}</guid>
       <pubDate>${rfc(b.gepubliceerd_op)}</pubDate>
       <description>${esc(b.samenvatting)}</description>
     </item>`).join('\n')}
