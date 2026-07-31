@@ -48,7 +48,7 @@ select {
   text-transform: uppercase;
 }
 
-/* Mono-labels op een lichte ondergrond zijn metadata, geen cyaan tekst. */
+/* Ook metadata haalt op licht de vaste 4,5:1-contrastvloer. */
 .serie .lbl,
 .ingang .lbl,
 .scan-cta .lbl,
@@ -63,7 +63,7 @@ select {
 .v-nr,
 .v-grond-kop,
 .bw-id {
-  color: var(--muted);
+  color: var(--ink);
 }
 
 .b-bron,
