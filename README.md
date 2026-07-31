@@ -38,7 +38,9 @@ over wat de bezoeker ziet.
 │   └── concept/*.md         #   hier schrijf je een bericht, dan npm run bericht
 ├── kennisgezagsscan/        # JSON-gestuurde scan; vijf profielen, antwoorden blijven lokaal
 ├── kennisproef/             # Eén-URL kennisgereedheidstoets via veilige Function
-├── media/, werk/            # Video, portret, SVG-mockups
+├── media/, werk/            # Video, portret, SVG-mockups, logo (media/ is geheel publiek)
+├── merk/                    # Het merk-kit: stylesheet v2, publicatiecontract, logo-naslag
+│                            #   NIET publiek — naslag/ bevat wat bewust niet geleverd wordt
 │
 ├── tools/                   # De bouwketen: build-* maakt, verify-* bewaakt
 │   ├── build-publiek.mjs    #   stelt publiek/ samen uit een INSLUITLIJST

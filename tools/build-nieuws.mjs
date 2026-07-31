@@ -21,7 +21,7 @@ import { datumLabel } from './lib/datum.mjs';
 import { BASIS, ID } from './lib/entiteiten.mjs';
 import { statusHtml, STATUS_CSS } from './lib/status.mjs';
 import { reeksPositie, SOORT_LABEL } from './lib/reeks.mjs';
-import { KLEUR, PAPIER, MAAT, FONT } from './lib/merk.mjs';
+import { KLEUR, PAPIER, MAAT, FONT, TRACKING } from './lib/merk.mjs';
 
 const ROOT    = path.resolve(import.meta.dirname, '..');
 const BER     = path.join(ROOT, 'nieuws', '_berichten.json');
@@ -121,27 +121,27 @@ const STIJL = `
     .topbar{background:var(--screen);padding:16px 28px;display:flex;align-items:center;
       justify-content:space-between;gap:20px;flex-wrap:wrap}
     .tb-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-    .tb-name{font-family:${FONT.mono};font-size:12px;letter-spacing:.16em;
-      text-transform:uppercase;color:#fff}
+    .tb-name{font-family:${FONT.mono};font-size:12px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:var(--papier)}
     .tb-name span{color:var(--cyan)}
-    .tb-back{font-family:${FONT.mono};font-size:11px;letter-spacing:.12em;
-      text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none}
+    .tb-back{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:rgba(232,228,220,.58);text-decoration:none}
     .tb-back:hover{color:var(--cyan)}
-    .hero{background:var(--dark);color:#fff;padding:56px 28px 66px;position:relative;overflow:hidden}
+    .hero{background:var(--dark);color:var(--papier);padding:56px 28px 66px;position:relative;overflow:hidden}
     .hero-inner{max-width:${MAAT.maxDocument};margin:0 auto;position:relative;z-index:2}
     .hero-rings{position:absolute;right:-130px;top:50%;transform:translateY(-50%);
       width:480px;height:480px;opacity:.5;pointer-events:none;z-index:1}
-    .eyebrow{font-family:${FONT.mono};font-size:11px;letter-spacing:.22em;
+    .eyebrow{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--cyan);margin-bottom:20px}
     .hero h1{font-size:clamp(32px,6vw,42px);line-height:1.08;font-weight:600;
       letter-spacing:-.02em;margin-bottom:18px}
     .hero h1 strong{font-weight:600}
     .hero-bar{width:46px;height:2px;background:var(--cyan);margin-bottom:24px}
-    .hero p{font-size:18px;font-weight:300;line-height:1.6;color:rgba(255,255,255,.78);max-width:${MAAT.maxRegel}}
+    .hero p{font-size:18px;font-weight:300;line-height:1.6;color:rgba(232,228,220,.80);max-width:${MAAT.maxRegel}}
     .wrap{max-width:${MAAT.maxDocument};margin:0 auto;padding:52px 28px 20px}
     .b{background:var(--papier);border:1px solid var(--border);border-radius:var(--radius);
       padding:${MAAT.cardPadding};margin-bottom:20px}
-    .b-datum{font-family:${FONT.mono};font-size:11px;letter-spacing:.14em;
+    .b-datum{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--muted);margin-bottom:12px}
     .b h2{font-size:clamp(22px,3vw,26px);font-weight:500;line-height:1.2;
       letter-spacing:-.01em;margin-bottom:14px;text-wrap:balance;scroll-margin-top:24px}
@@ -150,7 +150,7 @@ const STIJL = `
       text-underline-offset:4px}
     .b p{font-size:16px;line-height:1.65;margin-bottom:14px;max-width:${MAAT.maxRegel}}
     .b-grond{border-left:${MAAT.accentrand} solid var(--cyan);padding:2px 0 2px 20px;margin-top:22px}
-    .b-grond-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:.18em;
+    .b-grond-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--muted);margin-bottom:11px}
     .b-grond ul{list-style:none}
     .b-grond li{font-size:15px;line-height:1.6;color:var(--navy);margin-bottom:11px}
@@ -163,15 +163,15 @@ const STIJL = `
     .b-media figcaption{font-size:13px;color:var(--muted);line-height:1.5;padding-top:8px}
     .b-vid{position:relative;display:block}
     .b-vid .speel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-    .b-vid .speel span{background:rgba(13,13,26,.85);color:#fff;font-family:${FONT.mono};
-      font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px 22px;
+    .b-vid .speel span{background:rgba(13,13,26,.85);color:var(--papier);font-family:${FONT.mono};
+      font-size:12px;letter-spacing:${TRACKING};text-transform:uppercase;padding:12px 22px;
       border-radius:var(--radius)}
     .b-vid:hover .speel span{background:var(--cyan);color:var(--navy)}
-    .b-merk{font-family:${FONT.mono};font-size:11px;letter-spacing:.14em;
+    .b-merk{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--muted);margin-bottom:10px}
     .b-merk b{font-weight:400;color:var(--navy)}
     .reeksnav{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule)}
-    .reeksnav-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:.18em;
+    .reeksnav-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--muted);margin-bottom:12px}
     .reeksnav-kop a{color:var(--navy);text-decoration:none;
       border-bottom:1px solid var(--cyan)}
@@ -183,7 +183,7 @@ const STIJL = `
       line-height:1.45;border:1px solid var(--border);border-radius:var(--radius);padding:12px 15px}
     .reeksnav-paar a:hover{border-color:var(--cyan)}
     .reeksnav-paar a span{display:block;font-family:${FONT.mono};font-size:10px;
-      letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+      letter-spacing:${TRACKING};text-transform:uppercase;color:var(--muted);margin-bottom:5px}
     .b-bron{font-size:14px;white-space:nowrap;color:var(--navy);text-decoration:none;
       border-bottom:1px solid var(--cyan)}
     .b-bron-los{color:var(--muted);border-bottom:1px dotted rgba(122,110,133,.5)}
@@ -193,15 +193,15 @@ const STIJL = `
 ${STATUS_CSS}
     .deel{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
       display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .deel-lbl{font-family:${FONT.mono};font-size:10px;letter-spacing:.18em;
+    .deel-lbl{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--muted);margin-right:4px}
-    .deel a{font-family:${FONT.mono};font-size:12px;letter-spacing:.08em;
+    .deel a{font-family:${FONT.mono};font-size:12px;letter-spacing:${TRACKING};
       color:var(--navy);text-decoration:none;border:1px solid var(--cyan);
       border-radius:var(--radius);padding:6px 14px;transition:background ${'160ms'} ease-out}
     .deel a:hover{background:rgba(15,168,203,.12)}
     .foot{max-width:${MAAT.maxDocument};margin:0 auto;padding:34px 28px 56px;display:flex;
       justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:${FONT.mono};
-      font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+      font-size:11px;letter-spacing:${TRACKING};text-transform:uppercase;color:var(--muted)}
     .foot a{color:var(--muted);text-decoration:none}
     .mee{max-width:${MAAT.maxDocument};margin:0 auto;padding:0 28px;font-size:15px;
       color:var(--navy);line-height:1.6;text-transform:none;letter-spacing:0}
@@ -403,7 +403,7 @@ ${deel(b, u)}
         Wil je weten waar je eigen organisatie het kwetsbaarst is? <a href="/kennisgezagsscan/">Doe de Kennisgezagsscan</a> in ongeveer vijf minuten.
       </div>
 
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:${TRACKING};
          text-transform:uppercase"><a href="/nieuws/" style="color:var(--cyan);text-decoration:none">&larr; Alle berichten</a></p>
   </main>
 

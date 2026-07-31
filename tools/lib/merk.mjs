@@ -1,8 +1,12 @@
 // R.O.B. Concepting — het merk, één keer vastgelegd.
 //
-// BRON: "Brandstyle publicaties · v1 · 31 juli 2026". Dat blad is leidend voor alles wat op
-// rob-concepting.com en daarbuiten gepubliceerd wordt. De leesbare weergave staat in
-// merk/brandstyle-publicaties-v1.md; dit bestand is de machineleesbare kant ervan.
+// BRON: "R.O.B. Concepting — Stylesheet v2" (31 juli 2026), het leidende blad uit het
+// merk-kit in merk/. De norm staat daar ook in tekstvorm: merk/PUBLICATIECONTRACT.md.
+// Dit bestand is de machineleesbare kant ervan.
+//
+// De kleurwaarden zijn ongewijzigd ten opzichte van het eerste blad van dezelfde dag; v2
+// hernoemt alleen de papiertreden tot volwaardige tokens en scherpt de letters en de ruimte
+// aan. Bij tegenspraak met een werkcontract of extern onderzoek geldt de stylesheet.
 //
 // WAAROM DIT BESTAAT. De kleurschaal stond op drie plekken apart gedefinieerd — index.html,
 // build-nieuws.mjs en kennisgezagsscan — en liep al uiteen: muted was #7a6e85 op de ene plek
@@ -49,6 +53,34 @@ export const FONT = {
   sans: `'DM Sans', system-ui, -apple-system, sans-serif`,
   mono: `'IBM Plex Mono', 'Courier New', monospace`,
 };
+
+// Eén tracking-waarde voor mono, en geen andere. v2 zegt het bij 'meta' met zoveel woorden:
+// "de enige tracking-waarde". De opmaak had er vijf (.12em .14em .16em .18em .22em) — dat
+// leest als vijf verschillende labelsoorten waar er één is.
+export const TRACKING = '0.14em';
+
+// Op donker is de tekstkleur cream of papier, niet wit. Wit staat niet in de negen tokens,
+// en de contrasttabel meet dan ook papier-op-dark (17,1:1) en niet wit-op-dark. Het scheelt
+// weinig op het scherm en alles in navolgbaarheid: één palet, geen uitzondering.
+export const TEKST_OP_DONKER = PAPIER.geldig;
+
+// ── De keuringslijst uit v2 ──
+// Tien regels, elk met de toets erbij. Vier ervan zijn op een webpagina machinaal te
+// controleren en staan in test-merk.mjs; de zes andere gaan over bewegend beeld en foto en
+// horen in de werkbank.
+export const KEURING_WEB = [
+  'Elke hex komt uit de negen tokens',
+  'Geen linear-gradient of radial-gradient',
+  'Geen font-style italic',
+  'Geen font-weight boven 600',
+];
+
+// De negen tokens, plat, voor de hex-controle. Doorzichtige varianten van navy en cyaan
+// gelden als dezelfde kleur — een lijn op 12 procent is geen tiende kleur.
+export const TOEGESTANE_HEX = [
+  KLEUR.cream, KLEUR.navy, KLEUR.dark, KLEUR.screen, KLEUR.muted,
+  PAPIER.geldig, PAPIER.verlopend, PAPIER.achtergebleven, KLEUR.cyan, KLEUR.red,
+].map(h => h.toLowerCase());
 
 // ── 02 Contrast: gemeten, niet geschat ──
 //

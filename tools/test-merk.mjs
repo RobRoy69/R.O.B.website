@@ -13,7 +13,7 @@
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { KLEUR, PAPIER, MAAT, GEMETEN, VLOER, contrast } from './lib/merk.mjs';
+import { KLEUR, PAPIER, MAAT, GEMETEN, VLOER, contrast, TOEGESTANE_HEX } from './lib/merk.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 let gezakt = 0;
@@ -81,6 +81,39 @@ console.log('\n4. de maten uit het blad staan in de pagina');
         !/border-radius:\s*(?!var\()(?:[3-9]|[1-9]\d)/.test(html));
   toets('geen verdwenen drift-waarden', !html.includes('#6b6478') && !html.includes('#f4f2ed'),
         'oude muted of oud papier staat er nog in');
+}
+
+// ── 5. de keuringslijst uit Stylesheet v2 ──
+//
+// Tien regels staan er; deze vier zijn op een webpagina machinaal te toetsen. De zes andere
+// gaan over bewegend beeld en foto — bandbreedtes per formaat, laagoverlap, bronresolutie,
+// leestijd — en horen in de werkbank, niet hier. Ze staan bewust NIET stil overgeslagen:
+// wie ze hier zoekt, leest in KEURING_WEB waarom er vier zijn.
+console.log('\n5. de keuring, voor zover een webpagina hem kan afleggen');
+{
+  const html = readFileSync(path.join(ROOT, 'nieuws', 'index.html'), 'utf8');
+  // %23 is een # in een data-URI (het favicon). Zonder deze stap glipt elke kleur daarin door.
+  const genormaliseerd = html.replace(/%23/g, '#');
+
+  const hexen = [...new Set((genormaliseerd.match(/#[0-9a-fA-F]{6}\b/g) || []).map(h => h.toLowerCase()))];
+  const vreemd = hexen.filter(h => !TOEGESTANE_HEX.includes(h));
+  toets(`elke hex komt uit de negen tokens (${hexen.length} gevonden)`,
+        vreemd.length === 0, `buiten het palet: ${vreemd.join(', ')}`);
+
+  toets('geen gradient', !/(linear|radial|conic)-gradient/i.test(html));
+  toets('geen cursief', !/font-style:\s*italic/i.test(html));
+
+  const gewichten = [...new Set((html.match(/font-weight:\s*(\d{3})/g) || [])
+    .map(m => Number(m.match(/\d{3}/)[0])))];
+  toets(`geen gewicht boven 600 (${gewichten.sort().join(', ')})`,
+        gewichten.every(g => g <= 600), `te zwaar: ${gewichten.filter(g => g > 600).join(', ')}`);
+
+  // v2 noemt 0.14em bij 'meta' expliciet "de enige tracking-waarde". Negatieve waarden zijn
+  // geen tracking maar optische correctie op display-tekst en vallen er dus buiten.
+  const trackings = [...new Set((html.match(/letter-spacing:\s*([-.\d]+em)/g) || [])
+    .map(m => m.split(':')[1].trim()))].filter(v => !v.startsWith('-'));
+  toets(`één positieve tracking-waarde (${trackings.join(', ')})`,
+        trackings.length === 1 && trackings[0] === '0.14em', 'v2 kent er maar één');
 }
 
 console.log('\n' + '='.repeat(46));
