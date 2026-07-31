@@ -259,14 +259,14 @@ ${extraLd}  <style>${STIJL}
   </header>
 `;
 
-const VOET = `  <section class="afsluiter">
+const VOET = `  <div class="afsluiter">
   <p class="mee">Nieuw werk verschijnt op deze site en op <a href="https://www.linkedin.com/in/rob-concepting/" target="_blank" rel="noopener noreferrer">LinkedIn</a>. Volg mee, of laat je leesapp het <a href="/nieuws/feed.xml">automatisch ophalen</a>.</p>
 
   <footer class="foot">
     <span>&copy; R.O.B. Concepting &middot; Rob de Rooij</span>
     <span><a href="/">rob-concepting.com</a> &middot; <a href="/whitepapers/">Whitepapers</a> &middot; <a href="/vragen/">Vragen</a> &middot; <a href="/nieuws/feed.xml">Feed</a></span>
   </footer>
-  </section>
+  </div>
 </body>
 </html>
 `;
