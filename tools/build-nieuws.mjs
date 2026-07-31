@@ -21,6 +21,7 @@ import { datumLabel } from './lib/datum.mjs';
 import { BASIS, ID } from './lib/entiteiten.mjs';
 import { statusHtml, STATUS_CSS } from './lib/status.mjs';
 import { reeksPositie, SOORT_LABEL } from './lib/reeks.mjs';
+import { KLEUR, PAPIER, MAAT, FONT, TRACKING } from './lib/merk.mjs';
 
 const ROOT    = path.resolve(import.meta.dirname, '..');
 const BER     = path.join(ROOT, 'nieuws', '_berichten.json');
@@ -93,103 +94,119 @@ if (taalfouten.length) {
   process.exit(1);
 }
 
+// De opmaak leest de kleuren, maten en letters uit lib/merk.mjs. Dat bestand is de
+// machineleesbare kant van "Brandstyle publicaties v1"; hier staat geen enkele hex meer.
+//
+// DRIE DINGEN DIE HIERMEE ZIJN RECHTGEZET, en waarom ze fout waren:
+//
+// · CYAAN WAS EEN TEKSTKLEUR. Datumlabels, bronlinks en de routelink stonden in cyaan op het
+//   lichte vlak: 2,5:1 gemeten, waar 4,5:1 de vloer is. Op donker haalt cyaan 6,9:1 en daar
+//   mag hij blijven. Op licht is tekst navy; cyaan doet nog wel de onderlijn, want een lijn
+//   is geen tekst.
+// · TWEE ACCENTEN OP ÉÉN PAGINA. De herobalk en de routekaart stonden in rood terwijl de
+//   labels cyaan waren. Het blad staat één accent per uiting toe. Cyaan is hier het
+//   systeemaccent; rood is gereserveerd voor de status Weerlegd en komt dus alleen op de
+//   pagina als een bewering werkelijk is tegengesproken.
+// · DE ONDERBOUWING STOND IN MUTED. Muted is metadata (3,8:1). "Waar dit op rust" is de
+//   inhoud van deze site, geen bijschrift — die staat nu in navy.
 const STIJL = `
-    :root{--cream:#e8e4dc;--paper:#f4f2ed;--purple:#001a4d;--cyan:#0fa8cb;--red:#e8391e;
-      --screen:#0e1525;--muted:#6b6478;--border:rgba(0,26,77,.12);--rule:rgba(0,26,77,.08)}
+    :root{--cream:${KLEUR.cream};--papier:${PAPIER.geldig};--navy:${KLEUR.navy};
+      --cyan:${KLEUR.cyan};--red:${KLEUR.red};--dark:${KLEUR.dark};--screen:${KLEUR.screen};
+      --muted:${KLEUR.muted};--border:${KLEUR.hairline};--rule:rgba(0,26,77,.08);
+      --radius:${MAAT.radius}}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{font-family:'DM Sans',system-ui,sans-serif;background:var(--cream);color:var(--purple);
-      line-height:1.7;-webkit-font-smoothing:antialiased}
+    body{font-family:${FONT.sans};background:var(--cream);color:var(--navy);
+      font-size:16px;font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased}
     .topbar{background:var(--screen);padding:16px 28px;display:flex;align-items:center;
       justify-content:space-between;gap:20px;flex-wrap:wrap}
     .tb-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-    .tb-name{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;
-      text-transform:uppercase;color:#fff}
+    .tb-name{font-family:${FONT.mono};font-size:12px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:var(--papier)}
     .tb-name span{color:var(--cyan)}
-    .tb-back{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;
-      text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none}
+    .tb-back{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:rgba(232,228,220,.58);text-decoration:none}
     .tb-back:hover{color:var(--cyan)}
-    .hero{background:var(--screen);color:#fff;padding:56px 28px 66px;position:relative;overflow:hidden}
-    .hero-inner{max-width:820px;margin:0 auto;position:relative;z-index:2}
+    .hero{background:var(--dark);color:var(--papier);padding:56px 28px 66px;position:relative;overflow:hidden}
+    .hero-inner{max-width:${MAAT.maxDocument};margin:0 auto;position:relative;z-index:2}
     .hero-rings{position:absolute;right:-130px;top:50%;transform:translateY(-50%);
       width:480px;height:480px;opacity:.5;pointer-events:none;z-index:1}
-    .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;
+    .eyebrow{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--cyan);margin-bottom:20px}
-    .hero h1{font-size:clamp(33px,6vw,54px);line-height:1.07;font-weight:400;
+    .hero h1{font-size:clamp(32px,6vw,42px);line-height:1.08;font-weight:600;
       letter-spacing:-.02em;margin-bottom:18px}
     .hero h1 strong{font-weight:600}
-    .hero-bar{width:46px;height:2px;background:var(--red);margin-bottom:24px}
-    .hero p{font-size:clamp(16px,2.2vw,19px);font-weight:300;color:rgba(255,255,255,.72);max-width:44em}
-    .wrap{max-width:820px;margin:0 auto;padding:52px 28px 20px}
-    .b{background:var(--paper);border:1px solid var(--border);padding:30px clamp(22px,4vw,42px);
-      margin-bottom:20px}
-    .b-datum{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
-      text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
-    .b h2{font-size:clamp(21px,3vw,28px);font-weight:500;line-height:1.22;
+    .hero-bar{width:46px;height:2px;background:var(--cyan);margin-bottom:24px}
+    .hero p{font-size:18px;font-weight:300;line-height:1.6;color:rgba(232,228,220,.80);max-width:${MAAT.maxRegel}}
+    .wrap{max-width:${MAAT.maxDocument};margin:0 auto;padding:52px 28px 20px}
+    .b{background:var(--papier);border:1px solid var(--border);border-radius:var(--radius);
+      padding:${MAAT.cardPadding};margin-bottom:20px}
+    .b-datum{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:var(--navy);margin-bottom:12px}
+    .b h2{font-size:clamp(22px,3vw,26px);font-weight:500;line-height:1.2;
       letter-spacing:-.01em;margin-bottom:14px;text-wrap:balance;scroll-margin-top:24px}
     .b h2 a{color:inherit;text-decoration:none}
-    .b h2 a:hover{color:var(--cyan)}
-    .b p{font-size:16.5px;margin-bottom:14px}
-    .b-grond{border-left:2px solid var(--cyan);padding:2px 0 2px 20px;margin-top:22px}
-    .b-grond-kop{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
-      text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+    .b h2 a:hover{text-decoration:underline;text-decoration-color:var(--cyan);
+      text-underline-offset:4px}
+    .b p{font-size:16px;line-height:1.65;margin-bottom:14px;max-width:${MAAT.maxRegel}}
+    .b-grond{border-left:${MAAT.accentrand} solid var(--cyan);padding:2px 0 2px 20px;margin-top:22px}
+    .b-grond-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:var(--navy);margin-bottom:11px}
     .b-grond ul{list-style:none}
-    .b-grond li{font-size:14.5px;line-height:1.6;color:var(--muted);margin-bottom:11px}
-    .b-datumchip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;
-      color:var(--purple);background:rgba(15,168,203,.1);padding:1px 7px;margin-right:9px;
-      white-space:nowrap;font-variant-numeric:tabular-nums}
+    .b-grond li{font-size:15px;line-height:1.6;color:var(--navy);margin-bottom:11px}
+    .b-datumchip{display:inline-block;font-family:${FONT.mono};font-size:11px;
+      color:var(--navy);background:rgba(15,168,203,.12);border-radius:var(--radius);
+      padding:1px 7px;margin-right:9px;white-space:nowrap;font-variant-numeric:tabular-nums}
     .b-media{margin:0 0 20px;line-height:0}
-    .b-media img,.b-media video{width:100%;height:auto;display:block;border:1px solid var(--border)}
-    .b-media figcaption{font-size:13px;color:var(--muted);line-height:1.5;padding-top:8px;
-      font-style:italic}
+    .b-media img,.b-media video{width:100%;height:auto;display:block;
+      border:1px solid var(--border);border-radius:var(--radius)}
+    .b-media figcaption{font-size:13px;color:var(--navy);line-height:1.5;padding-top:8px}
     .b-vid{position:relative;display:block}
     .b-vid .speel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-    .b-vid .speel span{background:rgba(14,21,37,.82);color:#fff;font-family:'IBM Plex Mono',monospace;
-      font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px 22px}
-    .b-vid:hover .speel span{background:var(--cyan)}
-    .b-merk{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
-      text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-    .b-merk b{font-weight:400;color:var(--cyan)}
+    .b-vid .speel span{background:rgba(13,13,26,.85);color:var(--papier);font-family:${FONT.mono};
+      font-size:12px;letter-spacing:${TRACKING};text-transform:uppercase;padding:12px 22px;
+      border-radius:var(--radius)}
+    .b-vid:hover .speel span{background:var(--cyan);color:var(--navy)}
+    .b-merk{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:var(--navy);margin-bottom:10px}
+    .b-merk b{font-weight:400;color:var(--navy)}
     .reeksnav{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule)}
-    .reeksnav-kop{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
-      text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-    .reeksnav-kop a{color:var(--cyan);text-decoration:none;
-      border-bottom:1px solid rgba(15,168,203,.35)}
+    .reeksnav-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:var(--navy);margin-bottom:12px}
+    .reeksnav-kop a{color:var(--navy);text-decoration:none;
+      border-bottom:1px solid var(--cyan)}
     .reeksnav-paar{display:flex;gap:14px;flex-wrap:wrap}
     /* Op .reeksnav-paar en NIET op .reeksnav: de kopregel bevat bij 'hoort bij' een gewone
        inline link, en die kreeg met de bredere selector de kaderopmaak van een kaart —
        padding, rand en flex-basis rond drie woorden midden in een zin. */
-    .reeksnav-paar a{flex:1 1 220px;text-decoration:none;color:var(--purple);font-size:14.5px;
-      line-height:1.45;border:1px solid var(--border);padding:12px 15px}
-    .reeksnav-paar a:hover{border-color:var(--cyan);color:var(--cyan)}
-    .reeksnav-paar a span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;
-      letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
-    .reeksnav-paar a:hover span{color:var(--cyan)}
-    .b-bron{font-size:13px;white-space:nowrap;color:var(--cyan);text-decoration:none;
-      border-bottom:1px solid rgba(15,168,203,.35)}
-    .b-bron-los{color:var(--muted);border-bottom:1px dotted rgba(107,100,120,.5)}
-    .instap a:hover{border-bottom-color:var(--cyan)}
-    .route{background:var(--paper);border-left:3px solid var(--red);padding:16px 20px;
-      margin-bottom:20px;font-size:15px}
-    .route a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(15,168,203,.4)}
+    .reeksnav-paar a{flex:1 1 220px;text-decoration:none;color:var(--navy);font-size:15px;
+      line-height:1.45;border:1px solid var(--border);border-radius:var(--radius);padding:12px 15px}
+    .reeksnav-paar a:hover{border-color:var(--cyan)}
+    .reeksnav-paar a span{display:block;font-family:${FONT.mono};font-size:10px;
+      letter-spacing:${TRACKING};text-transform:uppercase;color:var(--navy);margin-bottom:5px}
+    .b-bron{font-size:14px;white-space:nowrap;color:var(--navy);text-decoration:none;
+      border-bottom:1px solid var(--cyan)}
+    .b-bron-los{color:var(--navy);border-bottom:1px dotted rgba(122,110,133,.5)}
+    .route{background:var(--papier);border-left:${MAAT.accentrand} solid var(--cyan);
+      border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;font-size:16px}
+    .route a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
 ${STATUS_CSS}
     .deel{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
       display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .deel-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
-      text-transform:uppercase;color:var(--muted);margin-right:4px}
-    .deel a{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.08em;
-      color:var(--cyan);text-decoration:none;border:1px solid rgba(15,168,203,.35);
-      padding:6px 14px;transition:background .15s,color .15s}
-    .deel a:hover{background:var(--cyan);color:#fff}
-    .foot{max-width:820px;margin:0 auto;padding:34px 28px 56px;display:flex;
-      justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;
-      font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-    .foot a{color:var(--muted);text-decoration:none}
-    .mee{max-width:820px;margin:0 auto;padding:0 28px;font-size:14.5px;color:var(--muted);
-      line-height:1.6;text-transform:none;letter-spacing:0}
-    .mee a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(15,168,203,.35)}
-    .mee a:hover{border-bottom-color:var(--cyan)}
-    .foot a:hover{color:var(--cyan)}
+    .deel-lbl{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
+      text-transform:uppercase;color:var(--navy);margin-right:4px}
+    .deel a{font-family:${FONT.mono};font-size:12px;letter-spacing:${TRACKING};
+      color:var(--navy);text-decoration:none;border:1px solid var(--cyan);
+      border-radius:var(--radius);padding:6px 14px;transition:background ${'160ms'} ease-out}
+    .deel a:hover{background:rgba(15,168,203,.12)}
+    .foot{max-width:${MAAT.maxDocument};margin:0 auto;padding:34px 28px 56px;display:flex;
+      justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:${FONT.mono};
+      font-size:11px;letter-spacing:${TRACKING};text-transform:uppercase;color:var(--navy)}
+    .foot a{color:var(--navy);text-decoration:none}
+    .mee{max-width:${MAAT.maxDocument};margin:0 auto;padding:0 28px;font-size:15px;
+      color:var(--navy);line-height:1.6;text-transform:none;letter-spacing:0}
+    .mee a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
+    .foot a:hover{color:var(--navy)}
     @media(max-width:600px){.hero{padding:42px 22px 52px}.hero-rings{display:none}.wrap{padding:38px 22px 12px}}`;
 
 const KOP = (titel, omschr, canon, extraLd = '', ogBeeld = `${BASIS}/og-image.png`) => `<!DOCTYPE html>
@@ -386,7 +403,7 @@ ${deel(b, u)}
         Wil je weten waar je eigen organisatie het kwetsbaarst is? <a href="/kennisgezagsscan/">Doe de Kennisgezagsscan</a> in ongeveer vijf minuten.
       </div>
 
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:${TRACKING};
          text-transform:uppercase"><a href="/nieuws/" style="color:var(--cyan);text-decoration:none">&larr; Alle berichten</a></p>
   </main>
 
@@ -422,7 +439,7 @@ writeFileSync(path.join(OUTDIR, 'index.html'),
 
   <main class="wrap">
 ${berichten.length ? '' : `      <div class="b"><p>Er staan nog geen berichten. Het eerste volgt binnenkort.</p>
-        <p style="font-size:14.5px;color:var(--muted)">Ondertussen: de <a href="/whitepapers/" style="color:var(--cyan)">whitepapers</a> en de <a href="/vragen/" style="color:var(--cyan)">vragen met onderbouwing</a>.</p></div>`}
+        <p style="font-size:14.5px;color:var(--navy)">Ondertussen: de <a href="/whitepapers/" style="color:var(--cyan)">whitepapers</a> en de <a href="/vragen/" style="color:var(--cyan)">vragen met onderbouwing</a>.</p></div>`}
 ${berichten.map(b => `      <article class="b">
         <div class="b-datum">${esc(nlDatum(b.gepubliceerd_op))}</div>
 ${merk(b)}

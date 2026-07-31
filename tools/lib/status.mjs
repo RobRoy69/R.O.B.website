@@ -55,15 +55,28 @@ const SOORT_LABEL = {
 export const soortLabel = (c) => SOORT_LABEL[c.soort] || '';
 
 // Gedeelde stijl, zodat /vragen/ en /nieuws/ er niet uit elkaar gaan lopen.
+//
+// DE LIJN DRAAGT DE STAND, NIET DE KLEUR. Stylesheet v2 §registersymbolen kent drie tekens
+// en geen vierde: doorgetrokken is "klopt", gestippeld is "verloopt", geen lijn is "wacht".
+// "De cirkel is de uitspraak, de grondlijn is het bewijsanker."
+//
+// Wat hier stond, deed het anders en fout. Groen #1a7f4b, oranje #a86400 en rood #a03a2a —
+// drie kleuren die in geen enkel merkdocument voorkomen, met een rode tint achter "Wacht".
+// Rood betekent in dit systeem één ding: Weerlegd, het bewijs spreekt de uitspraak tegen.
+// Een bewering die alleen nog niet is nagetrokken, is niet tegengesproken. Die kreeg hier
+// dus de zwaarste kleur die het merk heeft, voor de lichtste toestand die er is.
+//
+// De soortaanduiding stond cursief. v2 verbiedt cursief: nadruk komt uit gewicht.
+import { KLEUR, MAAT, FONT, TRACKING } from './merk.mjs';
+
 export const STATUS_CSS = `
-    .st{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
-      letter-spacing:.08em;padding:1px 7px;margin-left:8px;white-space:nowrap;
-      border:1px solid transparent}
-    .st-klopt{color:#1a7f4b;border-color:rgba(26,127,75,.28)}
-    .st-verloopt{color:#a86400;border-color:rgba(168,100,0,.32);background:rgba(217,136,0,.07)}
-    .st-wacht{color:#a03a2a;border-color:rgba(160,58,42,.3);background:rgba(232,57,30,.05)}
-    .st-soort{display:inline-block;font-size:11.5px;font-style:italic;color:#6b6478;
-      margin-left:8px}`;
+    .st{display:inline-block;font-family:${FONT.mono};font-size:11px;
+      letter-spacing:${TRACKING};padding:1px 7px;margin-left:8px;white-space:nowrap;
+      color:${KLEUR.navy};border:1px solid transparent;border-radius:${MAAT.radius}}
+    .st-klopt{border-color:${KLEUR.cyan}}
+    .st-verloopt{border-style:dashed;border-color:${KLEUR.muted}}
+    .st-wacht{border-color:transparent}
+    .st-soort{display:inline-block;font-size:14px;color:${KLEUR.navy};margin-left:8px}`;
 
 export function statusHtml(c, esc) {
   const s = status(c);
