@@ -130,6 +130,19 @@ console.log('\n9. intrekken haalt werkelijk offline');
   toets('alleen mappen met precies één index.html', /inhoud\[0\] === 'index\.html'/.test(bn));
 }
 
+console.log('\n10. bewaren houdt de identiteit vast en toetst de beweringen');
+{
+  const f = readFileSync(path.join(ROOT, 'netlify', 'functions', 'beheer.js'), 'utf-8');
+  const h = readFileSync(path.join(ROOT, 'beheer', 'index.html'), 'utf-8');
+  // Zoeken op slug maakte van een slug-wijziging een tweede record; de sleutel is ext_ref.
+  toets('de server zoekt op ext_ref', /bestaand\.find\(b => b\.ext_ref === ref\)/.test(f));
+  toets('het scherm stuurt ext_ref mee', /ext_ref:\s*staat\.bewerkt/.test(h));
+  toets('een bezette slug wordt geweigerd', /is al van \$\{bezetteSlug\.ext_ref\}/.test(f));
+  // Een tikfout in een verwijzing gaf een goedgekeurd bericht dat nooit verscheen: de bouw
+  // slaat het stil over en de bouwhaak meldt netjes dat hij is gestart.
+  toets('onbekende beweringen worden geweigerd', /onbekende bewering\(en\)/.test(f));
+}
+
 console.log('\n7. de publicatie kent het scherm, de sitemap niet');
 {
   const pub = readFileSync(path.join(ROOT, 'tools', 'build-publiek.mjs'), 'utf8');

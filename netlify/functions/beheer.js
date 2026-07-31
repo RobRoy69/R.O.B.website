@@ -166,14 +166,37 @@ export default async (req) => {
       const bezet = new Map(bestaand.filter(b => b.reeks && b.volgnummer)
         .map(b => [`${b.reeks}#${b.volgnummer}`, b.slug]));
       const { fouten, waarde } = keur(body.bericht || {}, bezet);
+
+      // De beweringen waar dit bericht op rust moeten BESTAAN. bericht.mjs controleert dat al
+      // sinds de eerste versie; deze ingang deed het niet. Gevolg van dat gat: een tikfout
+      // wordt bewaard, het bericht wordt vrijgegeven, de bouw start netjes — en build-nieuws
+      // slaat het bericht stil over omdat de bewering niet in de projectie zit. Dan staat er
+      // een goedgekeurd bericht dat nooit verschijnt en niemand die weet waarom.
+      const refs = (waarde.claim_refs || '').split(',').map(s => s.trim()).filter(Boolean);
+      if (refs.length) {
+        const bekend = new Set((await db('claims?select=ext_ref')).map(c => c.ext_ref));
+        const onbekend = refs.filter(r => !bekend.has(r));
+        if (onbekend.length) fouten.push(`onbekende bewering(en): ${onbekend.join(', ')}`);
+      }
       if (fouten.length) return json({ fout: fouten.join(' · '), fouten }, 422, origin);
 
-      const al = bestaand.find(b => b.slug === waarde.slug);
+      // IDENTITEIT HANGT AAN ext_ref, NIET AAN DE SLUG. Zocht eerst op slug; wie bij het
+      // bewerken de slug veranderde, kreeg daardoor een TWEEDE record en liet het origineel
+      // onaangeroerd achter. De slug is een webadres en mag wijzigen; de sleutel niet.
+      const ref = String((body.bericht || {}).ext_ref || '').trim();
+      const al = ref ? bestaand.find(b => b.ext_ref === ref) : bestaand.find(b => b.slug === waarde.slug);
+
+      // En de nieuwe slug mag niet van een ánder bericht zijn.
+      const bezetteSlug = bestaand.find(b => b.slug === waarde.slug && (!al || b.ext_ref !== al.ext_ref));
+      if (bezetteSlug) {
+        return json({ fout: `Het webadres "${waarde.slug}" is al van ${bezetteSlug.ext_ref}.` }, 409, origin);
+      }
+
       if (al && al.review_status === 'approved') {
         return json({ fout: 'Dit bericht is al vrijgegeven. Trek het eerst in als je het wilt wijzigen.' }, 409, origin);
       }
       if (al) {
-        const [rij] = await db(`berichten?slug=eq.${encodeURIComponent(waarde.slug)}&select=${VELDEN}`,
+        const [rij] = await db(`berichten?ext_ref=eq.${encodeURIComponent(al.ext_ref)}&select=${VELDEN}`,
           { method: 'PATCH', body: JSON.stringify(waarde) });
         return json({ bericht: rij, gedaan: 'bijgewerkt' }, 200, origin);
       }

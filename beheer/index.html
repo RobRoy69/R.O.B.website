@@ -150,6 +150,10 @@
 
   function velden() {
     return {
+      // ext_ref meesturen: de identiteit van een bericht hangt daaraan en niet aan de slug.
+      // Zonder dit veld zocht de server op slug, en dan maakte een slug-wijziging een tweede
+      // record terwijl het origineel bleef staan.
+      ext_ref: staat.bewerkt || undefined,
       titel: $('f-titel').value, slug: $('f-slug').value, samenvatting: $('f-samenvatting').value,
       tekst: $('f-tekst').value, soort: $('f-soort').value, reeks: $('f-reeks').value,
       volgnummer: $('f-volgnummer').value, hoort_bij: $('f-hoortbij').value,
