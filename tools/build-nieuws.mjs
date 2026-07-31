@@ -131,10 +131,10 @@ if (taalfouten.length) {
 // · DE ONDERBOUWING STOND IN MUTED. Muted is metadata (3,8:1). "Waar dit op rust" is de
 //   inhoud van deze site, geen bijschrift — die staat nu in navy.
 const STIJL = `
-    :root{--cream:${KLEUR.cream};--papier:${PAPIER.geldig};--navy:${KLEUR.navy};
-      --cyan:${KLEUR.cyan};--red:${KLEUR.red};--dark:${KLEUR.dark};--screen:${KLEUR.screen};
-      --muted:${KLEUR.muted};--border:${KLEUR.hairline};--rule:rgba(0,26,77,.08);
-      --radius:${MAAT.radius}}
+    /* Geen paletregel meer. Die staat in media/merk.css, en deze pagina laadt hem. Hier
+       stond hij nog een tweede keer — wel afgeleid uit dezelfde bron via lib/merk.mjs, maar
+       toch een eigen uitgifte op de pagina. Alleen wat pagina-eigen is blijft staan. */
+    :root{--radius:${MAAT.radius}}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:${FONT.sans};background:var(--cream);color:var(--navy);
@@ -143,12 +143,12 @@ const STIJL = `
       justify-content:space-between;gap:20px;flex-wrap:wrap}
     .tb-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
     .tb-name{font-family:${FONT.mono};font-size:12px;letter-spacing:${TRACKING};
-      text-transform:uppercase;color:var(--papier)}
+      text-transform:uppercase;color:var(--paper)}
     .tb-name span{color:var(--cyan)}
     .tb-back{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:rgba(232,228,220,.58);text-decoration:none}
     .tb-back:hover{color:var(--cyan)}
-    .hero{background:var(--dark);color:var(--papier);padding:56px 28px 66px;position:relative;overflow:hidden}
+    .hero{background:var(--dark);color:var(--paper);padding:56px 28px 66px;position:relative;overflow:hidden}
     .hero-inner{max-width:${MAAT.maxDocument};margin:0 auto;position:relative;z-index:2}
     .hero-rings{position:absolute;right:-130px;top:50%;transform:translateY(-50%);
       width:480px;height:480px;opacity:.5;pointer-events:none;z-index:1}
@@ -160,7 +160,7 @@ const STIJL = `
     .hero-bar{width:46px;height:2px;background:var(--cyan);margin-bottom:24px}
     .hero p{font-size:18px;font-weight:300;line-height:1.6;color:rgba(232,228,220,.80);max-width:${MAAT.maxRegel}}
     .wrap{max-width:${MAAT.maxDocument};margin:0 auto;padding:52px 28px 20px}
-    .b{background:var(--papier);border:1px solid var(--border);border-radius:var(--radius);
+    .b{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);
       padding:${MAAT.cardPadding};margin-bottom:20px}
     .b-datum{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
       text-transform:uppercase;color:var(--navy);margin-bottom:12px}
@@ -189,7 +189,7 @@ const STIJL = `
     .b-media figcaption{font-size:13px;color:var(--navy);line-height:1.5;padding-top:8px}
     .b-vid{position:relative;display:block}
     .b-vid .speel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-    .b-vid .speel span{background:rgba(13,13,26,.85);color:var(--papier);font-family:${FONT.mono};
+    .b-vid .speel span{background:rgba(13,13,26,.85);color:var(--paper);font-family:${FONT.mono};
       font-size:12px;letter-spacing:${TRACKING};text-transform:uppercase;padding:12px 22px;
       border-radius:var(--radius)}
     .b-vid:hover .speel span{background:var(--cyan);color:var(--navy)}
@@ -213,7 +213,7 @@ const STIJL = `
     .b-bron{font-size:14px;white-space:nowrap;color:var(--navy);text-decoration:none;
       border-bottom:1px solid var(--cyan)}
     .b-bron-los{color:var(--navy);border-bottom:1px dotted rgba(122,110,133,.5)}
-    .route{background:var(--papier);border-left:${MAAT.accentrand} solid var(--cyan);
+    .route{background:var(--paper);border-left:${MAAT.accentrand} solid var(--cyan);
       border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;font-size:16px}
     .route a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
 ${STATUS_CSS}

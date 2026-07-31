@@ -80,16 +80,9 @@
   </script>
   <style>
     /* ── Variables ── */
-    :root {
-      --cream:   #e8e4dc;
-      --purple:  #001a4d;
-      --cyan:    #0fa8cb;
-      --red:     #e8391e;
-      --dark:    #0d0d1a;
-      --screen:  #0e1525;
-      --muted:   #7a6e85;
-      --border:  rgba(0,26,77,0.1);
-    }
+    /* Het palet stond hier apart, met --border op rgba(0,26,77,0.1) — een DERDE waarde voor de
+       hairline, naast 0,12 in het blad en 0,14 elders. Drie exemplaren van één lijn.
+       De kleuren komen nu uit media/merk.css, die deze pagina hierboven al laadt. */
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; background: var(--cream); }

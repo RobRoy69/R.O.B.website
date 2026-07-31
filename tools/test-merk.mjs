@@ -95,13 +95,22 @@ const kleurUit = (waarde, achter) => {
 // in build-nieuws, maar dezelfde constructie stond in build-vragen — en die viel buiten de
 // poort omdat die maar naar één bestand keek. Een poort die één pagina bewaakt, bewaakt de
 // andere niet: dat is geen dekking maar een steekproef.
-const PAGINAS = ['nieuws/index.html', 'vragen/index.html'];
+const PAGINAS = ['nieuws/index.html', 'vragen/index.html', 'publiek/bewijs/index.html'];
 
 console.log('\n3. geen cyaan als tekstkleur op licht, in de gebouwde pagina');
 for (const pagina of PAGINAS) {
   console.log(`  · ${pagina}`);
   const bron = readFileSync(path.join(ROOT, pagina), 'utf8');
-  const css = (bron.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '')
+
+  // De gedeelde merklaag telt mee, en wel VÓÓR de pagina-eigen opmaak — dat is ook de
+  // volgorde waarin de browser hem laadt. Zonder deze stap meet de toets iets anders dan er
+  // op het scherm staat: sinds de pagina's hun eigen palet niet meer meedragen, staan regels
+  // als `.bw-id{color:var(--ink)}` alleen nog in merk.css. De toets meldde .bw-id daardoor
+  // als cyaan terwijl de browser navy toont — een bevinding over een kleur die niemand ziet.
+  const merklaag = bron.includes('/media/merk.css')
+    ? readFileSync(path.join(ROOT, 'media', 'merk.css'), 'utf8') : '';
+  const css = merklaag
+    + (bron.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '')
     // Inline style-attributen tellen mee: daar zat de cyaan linkkleur op /vragen/.
     + [...bron.matchAll(/style="([^"]*)"/g)].map(m => `[inline]{${m[1]}}`).join('');
   toets('opmaak gevonden in de pagina', css.length > 500, `${css.length} tekens`);
@@ -110,8 +119,36 @@ for (const pagina of PAGINAS) {
   // tussen de vorige `}` en de volgende `{` staat — inclusief een toelichtingsblok — en dan
   // heet het donkere vlak niet `.afsluiter` maar `/* Ritme: ... */ .afsluiter`. Gevolg: geen
   // enkele afstammeling wordt als "op donker" herkend en de hele meting kantelt.
-  const regels = [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^}]*)\}/g)]
-    .map(m => ({ sel: m[1].trim().split('\n').pop().trim(), body: m[2] }));
+  // @media print eruit. Deze toets meet het SCHERM; de printregels zetten alles op donkere
+  // inkt omdat browsers zonder achtergronden printen. Zonder deze stap las de toets die
+  // regels als altijd-geldend — ze staan achteraan, dus ze wonnen — en meldde de hele
+  // donkere afsluiter als navy-op-dark, 1,2:1. Een bevinding over een toestand die alleen
+  // op papier bestaat, en daar juist klopt.
+  const zonderPrint = (bron) => {
+    let uit = '', i = 0;
+    while (i < bron.length) {
+      const start = bron.indexOf('@media print', i);
+      if (start < 0) { uit += bron.slice(i); break; }
+      uit += bron.slice(i, start);
+      let j = bron.indexOf('{', start), diepte = 0;
+      for (; j < bron.length; j++) {
+        if (bron[j] === '{') diepte++;
+        else if (bron[j] === '}' && --diepte === 0) { j++; break; }
+      }
+      i = j;
+    }
+    return uit;
+  };
+
+  // De HELE selectorlijst, niet alleen de laatste regel ervan. Dat laatste was een noodgreep
+  // tegen commentaar dat vóór de selector staat — maar commentaar wordt nu al gestript, en de
+  // noodgreep sloeg in de merklaag de halve lijst weg: bij
+  //     .afsluiter .mee,
+  //     .afsluiter .wp-mee { … }
+  // bleef alleen de tweede over, en dus dacht de toets dat .mee in de afsluiter geen eigen
+  // regel had. Uitkomst: hij meldde de hele donkere voet als navy-op-dark.
+  const regels = [...zonderPrint(css.replace(/\/\*[\s\S]*?\*\//g, '')).matchAll(/([^{}]+)\{([^}]*)\}/g)]
+    .map(m => ({ sel: m[1].trim().replace(/\s*\n\s*/g, ' '), body: m[2] }));
 
   // Welke vlakken zijn donker? Afgeleid uit de opmaak — en welke tekst dáárin staat, uit de
   // echte DOM. Selector-tekst alleen kan afstamming niet bepalen: .eyebrow zegt niet dat hij
@@ -122,14 +159,31 @@ for (const pagina of PAGINAS) {
   // Per element de LAATSTE regel die een eigenschap zet — dat benadert de cascade. Zonder
   // deze stap sloeg de toets alarm op `.foot{color:navy}` terwijl `.afsluiter .foot` die
   // regel op elke pagina overschrijft: een melding over een kleur die nergens zichtbaar is.
+  // SPECIFICITEIT, niet alleen volgorde. Een eerdere versie nam simpelweg de laatste regel
+  // die paste. Dat ging goed zolang alle opmaak in de pagina zelf stond, maar zodra de
+  // gedeelde merklaag meetelt — die de browser vóór de pagina laadt — klopt het niet meer:
+  // `.afsluiter .mee` uit de merklaag wint van `.mee` uit de pagina, ook al staat die later.
+  // De toets meldde daardoor de hele donkere voet als navy-op-dark terwijl de browser gewoon
+  // cream toonde. Een poort die dat doet, leer je negeren.
+  const gewicht = (sel) => {
+    const s = sel.replace(/::[a-z-]+/g, '');
+    return (s.match(/#[\w-]+/g) || []).length * 100
+         + (s.match(/\.[\w-]+|\[[^\]]+\]|:[a-z-]+(\([^)]*\))?/g) || []).length * 10
+         + (s.match(/(^|[\s>+~])[a-z]+[\w-]*/gi) || []).length;
+  };
+
   const gezet = (el, eig) => {
-    let laatste = null;
-    for (const r of regels) {
+    let laatste = null, best = -1;
+    for (const [volgnr, r] of regels.entries()) {
       if (r.sel.startsWith(':root') || r.sel.startsWith('[inline]')) continue;
       const m = r.body.match(new RegExp(`(?:^|[;{\\s])${eig}:\\s*([^;]+)`));
       if (!m) continue;
       for (const sel of r.sel.split(',')) {
-        try { if (el.matches(sel.trim())) laatste = m[1].trim(); } catch {}
+        try {
+          if (!el.matches(sel.trim())) continue;
+          const score = gewicht(sel.trim()) * 10000 + volgnr; // gelijk gewicht → later wint
+          if (score >= best) { best = score; laatste = m[1].trim(); }
+        } catch {}
       }
     }
     const inline = el.getAttribute && el.getAttribute('style');
