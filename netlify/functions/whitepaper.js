@@ -97,18 +97,18 @@ ${SITE}`;
       <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#0fa8cb;margin-bottom:10px;">R.O.B. Concepting</div>
       <div style="font-size:20px;color:#ffffff;line-height:1.3;">Nog één klik</div>
     </div>
-    <div style="background:#f4f2ed;padding:30px 28px;border:1px solid rgba(0,26,77,.12);border-top:0;">
+    <div style="background:#f4f1ec;padding:30px 28px;border:1px solid rgba(0,26,77,.12);border-top:0;">
       <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">Hallo ${escapeHtml(firstName)},</p>
       <p style="margin:0 0 24px;font-size:16px;line-height:1.65;">Je vroeg <strong>${escapeHtml(paper.title)}</strong> aan. Bevestig even dat dit e-mailadres van jou is, dan stuur ik de PDF direct toe.</p>
       <p style="margin:0 0 24px;">
         <a href="${confirmUrl}" style="display:inline-block;background:#0fa8cb;color:#0e1525;text-decoration:none;padding:13px 24px;font-size:14px;font-weight:600;letter-spacing:.03em;">Ja, stuur mij de whitepaper &rarr;</a>
       </p>
-      <p style="margin:0 0 24px;font-size:13.5px;line-height:1.6;color:#6b6478;">De link werkt zeven dagen. Werkt de knop niet? Kopieer dan deze regel naar je browser:<br>
-        <span style="word-break:break-all;color:#6b6478;">${confirmUrl}</span>
+      <p style="margin:0 0 24px;font-size:13.5px;line-height:1.6;color:#7a6e85;">De link werkt zeven dagen. Werkt de knop niet? Kopieer dan deze regel naar je browser:<br>
+        <span style="word-break:break-all;color:#7a6e85;">${confirmUrl}</span>
       </p>
-      <p style="margin:22px 0 0;padding-top:18px;border-top:1px solid rgba(0,26,77,.08);font-size:12.5px;line-height:1.6;color:#6b6478;">
+      <p style="margin:22px 0 0;padding-top:18px;border-top:1px solid rgba(0,26,77,.08);font-size:12.5px;line-height:1.6;color:#7a6e85;">
         Heb je deze aanvraag niet gedaan? Dan hoef je niets te doen — zonder klik gebeurt er niets en bewaar ik je gegevens niet.<br><br>
-        R.O.B. Concepting &middot; <a href="${SITE}" style="color:#6b6478;">rob-concepting.com</a>
+        R.O.B. Concepting &middot; <a href="${SITE}" style="color:#7a6e85;">rob-concepting.com</a>
       </p>
     </div>
   </div>

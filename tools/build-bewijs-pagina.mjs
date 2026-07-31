@@ -111,18 +111,20 @@ const html = `<!DOCTYPE html>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230e1525'/><circle cx='16' cy='16' r='12' fill='none' stroke='%230fa8cb' stroke-width='1.5'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230fa8cb' stroke-width='1' opacity='.5'/><circle cx='16' cy='16' r='3' fill='%23e8391e'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <script type="application/ld+json">
 ${JSON.stringify(graf, null, 2).split('\n').map(l => '  ' + l).join('\n')}
   </script>
   <style>
-    :root{--navy:#001a4d;--purple:#2d1b4e;--red:#e8391e;--cyan:#0fa8cb;
-      --ink:#1a1428;--grijs:#6b6478;--rand:rgba(0,26,77,.13);--bg:#fbfaf8}
+    :root{--navy:#001a4d;--purple:#001a4d;--red:#e8391e;--cyan:#0fa8cb;
+      --ink:#001a4d;--grijs:#7a6e85;--rand:rgba(0,26,77,.14);--bg:#e8e4dc;--paper:#f4f1ec}
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;
       font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased}
     .wrap{max-width:820px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
-    header{padding:52px 0 0}
+    header{padding:34px 0 0}
+    .merk{display:inline-block;margin-bottom:28px}
+    .merk img{display:block;width:auto;height:40px}
     .terug{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
       text-transform:uppercase;color:var(--grijs);text-decoration:none}
     .terug:hover{color:var(--red)}
@@ -137,7 +139,7 @@ ${JSON.stringify(graf, null, 2).split('\n').map(l => '  ' + l).join('\n')}
     .stand b{font-weight:500;color:var(--navy)}
     main{padding:22px 0 60px}
     .bw{padding:26px 0;border-bottom:1px solid var(--rand)}
-    .bw:target{background:rgba(15,168,203,.06);box-shadow:-14px 0 0 rgba(15,168,203,.06),14px 0 0 rgba(15,168,203,.06)}
+    .bw:target{background:var(--paper);border-left:3px solid var(--cyan);padding-left:14px}
     .bw-kop{display:flex;align-items:center;flex-wrap:wrap;gap:2px;margin-bottom:9px}
     .bw-id{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;
       color:var(--cyan)}
@@ -152,21 +154,23 @@ ${JSON.stringify(graf, null, 2).split('\n').map(l => '  ' + l).join('\n')}
     .st{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
       letter-spacing:.08em;padding:1px 7px;margin-left:8px;white-space:nowrap;
       border:1px solid transparent}
-    .st-klopt{color:#1a7f4b;border-color:rgba(26,127,75,.28)}
-    .st-verloopt{color:#a86400;border-color:rgba(168,100,0,.32);background:rgba(217,136,0,.07)}
-    .st-wacht{color:#a03a2a;border-color:rgba(160,58,42,.3);background:rgba(232,57,30,.05)}
-    .st-soort{display:inline-block;font-size:11.5px;font-style:italic;color:var(--grijs);
+    .st-klopt{color:var(--navy);border-color:var(--cyan)}
+    .st-verloopt{color:var(--navy);border-color:var(--navy);border-style:dashed}
+    .st-wacht{color:var(--red);border-color:var(--red)}
+    .st-soort{display:inline-block;font-size:11.5px;font-style:normal;color:var(--grijs);
       margin-left:8px}
     footer{border-top:1px solid var(--rand);padding:26px 0 46px;font-size:13px;color:var(--grijs)}
     footer a{color:var(--navy)}
     @media(max-width:560px){.bw-meta{grid-template-columns:1fr;gap:2px}
       .bw-meta dt{padding-top:9px}}
   </style>
+  <link rel="stylesheet" href="/media/merk.css">
 </head>
 <body>
   <div class="wrap">
     <header>
-      <a class="terug" href="/">&larr; R.O.B. Concepting</a>
+      <a class="merk" href="/" aria-label="Terug naar R.O.B. Concepting"><img src="/media/logo/logo-rob-lengte-wit-transparant.png" width="601" height="118" alt="R.O.B. Concepting"></a>
+      <div><a class="terug" href="/">&larr; Terug naar de site</a></div>
       <h1>Het bewijs</h1>
       <p class="inleiding">Alles wat op deze site als feit staat, staat hier met de datum waarop het
         is vastgesteld, de bron waar het vandaan komt en de pagina&rsquo;s die erop rusten.</p>
