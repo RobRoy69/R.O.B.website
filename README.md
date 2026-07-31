@@ -38,6 +38,8 @@ over wat de bezoeker ziet.
 │   └── concept/*.md         #   hier schrijf je een bericht, dan npm run bericht
 ├── kennisgezagsscan/        # JSON-gestuurde scan; vijf profielen, antwoorden blijven lokaal
 ├── kennisproef/             # Eén-URL kennisgereedheidstoets via veilige Function
+├── beheer/                  # Berichten schrijven en vrijgeven zonder terminal
+│                            #   noindex; al het gezag zit in netlify/functions/beheer.js
 ├── media/, werk/            # Video, portret, SVG-mockups, logo (media/ is geheel publiek)
 ├── merk/                    # Het merk-kit: stylesheet v2, publicatiecontract, logo-naslag
 │                            #   NIET publiek — naslag/ bevat wat bewust niet geleverd wordt
@@ -83,7 +85,9 @@ wordt, meet niets.
 | `AGORA_URL` | Ja | Build | Supabase-URL van het publieke Rob-register |
 | `AGORA_PUBLISHABLE_KEY` | Ja | Build | Publishable key; alleen veilige views zijn leesbaar |
 | `SUPABASE_URL` | Alleen meten | Functions | Server-side endpoint voor vrijwillige aggregaten |
-| `SUPABASE_SERVICE_ROLE_KEY` | Alleen meten | Functions | Secret; nooit naar de browser |
+| `SUPABASE_SERVICE_ROLE_KEY` | Ja | Functions | Secret; nooit naar de browser. Nodig voor `/beheer/` |
+| `BEHEER_WACHTWOORD` | Voor `/beheer/` | Functions | Minimaal 12 tekens. Zonder deze var is het scherm dicht, niet open. Wijzigen verbreekt alle openstaande sessies. |
+| `NETLIFY_BUILD_HOOK` | Voor `/beheer/` | Functions | Build hook-URL van deze site. Zonder deze var wordt een bericht wél vrijgegeven maar níét gepubliceerd — het scherm zegt dat er dan bij. |
 
 Alle keys "Mark as secret".
 

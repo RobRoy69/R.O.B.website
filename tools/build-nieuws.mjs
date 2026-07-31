@@ -15,7 +15,7 @@
 //
 // Draai: node tools/build-nieuws.mjs   (na sync-berichten en sync-register)
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { datumLabel } from './lib/datum.mjs';
 import { BASIS, ID } from './lib/entiteiten.mjs';
@@ -468,6 +468,30 @@ ${papers}
   </main>
 
 ` + VOET);
+}
+
+// ── wat niet meer publiceerbaar is, gaat weg ──
+//
+// Deze stap schreef alleen wat er WEL is. Een bericht dat werd ingetrokken — of dat wegviel
+// doordat een bewering eronder niet meer leverbaar is — hield daardoor zijn map, en
+// build-publiek kopieert alles onder nieuws/. Gevolg: de pagina bleef online terwijl het
+// register zei dat hij dat niet mocht zijn, en hij bleef in de sitemap staan.
+//
+// Dat is de ergste vorm van drift die deze site kent: de publicatie zegt iets anders dan het
+// register. Publiceren is daarom vanaf hier tweezijdig — schrijven wat er is, én weghalen wat
+// er niet meer is.
+const levend = new Set(berichten.map(b => b.slug));
+for (const naam of readdirSync(OUTDIR, { withFileTypes: true })) {
+  if (!naam.isDirectory() || naam.name === 'concept' || levend.has(naam.name)) continue;
+  const map = path.join(OUTDIR, naam.name);
+  // Alleen mappen die deze stap zelf gemaakt kan hebben: precies één index.html erin.
+  const inhoud = readdirSync(map);
+  if (inhoud.length === 1 && inhoud[0] === 'index.html') {
+    rmSync(map, { recursive: true, force: true });
+    console.log(`  · ${naam.name} verwijderd — niet langer publiceerbaar`);
+  } else {
+    console.warn(`  · ${naam.name} staat er nog maar is geen berichtmap — met rust gelaten`);
+  }
 }
 
 // ── overzicht ──
