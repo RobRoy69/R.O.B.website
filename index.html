@@ -2722,10 +2722,9 @@ function buildVerkenningSVG() {
   msgHistory.forEach(m => {
     const isUser = m.role === 'user';
     const label = isUser ? 'JIJ' : 'R.O.B.';
-    const labelColor = isUser ? '#e8391e' : '#0fa8cb';
     const lines = wrapTextLines(m.content, 64);
     const blockH = 26 + lines.length * 22 + 20;
-    blocks.push({ y, label, labelColor, lines, isUser, blockH });
+    blocks.push({ y, label, lines, isUser, blockH });
     y += blockH;
   });
 
@@ -2733,14 +2732,14 @@ function buildVerkenningSVG() {
 
   const blocksSvg = blocks.map(b => {
     const lineSvg = b.lines.map((line, i) =>
-      `<text x="${PAD_X + 14}" y="${b.y + 22 + i * 22}" font-size="13" font-weight="400" fill="${b.isUser ? '#001a4d' : '#001a4d'}" fill-opacity="0.88">${svgEscape(line)}</text>`
+      `<text x="${PAD_X + 14}" y="${b.y + 22 + i * 22}" font-size="13" font-weight="400" fill="#001a4d">${svgEscape(line)}</text>`
     ).join('\n      ');
     const bgColor = b.isUser ? 'rgba(232,57,30,0.05)' : 'rgba(15,168,203,0.05)';
     const borderColor = b.isUser ? 'rgba(232,57,30,0.18)' : 'rgba(15,168,203,0.18)';
     return `
     <g>
-      <rect x="${PAD_X}" y="${b.y - 18}" width="${W - PAD_X * 2}" height="${b.blockH - 6}" fill="${bgColor}" stroke="${borderColor}" stroke-width="1" rx="6"/>
-      <text x="${PAD_X + 14}" y="${b.y - 2}" font-family="IBM Plex Mono, monospace" font-size="9" font-weight="500" fill="${b.labelColor}" letter-spacing="2">${b.label}</text>
+      <rect x="${PAD_X}" y="${b.y - 18}" width="${W - PAD_X * 2}" height="${b.blockH - 6}" fill="${bgColor}" stroke="${borderColor}" stroke-width="1" rx="2"/>
+      <text x="${PAD_X + 14}" y="${b.y - 2}" font-family="IBM Plex Mono, monospace" font-size="9" font-weight="500" fill="#001a4d" letter-spacing="0.14em">${b.label}</text>
       ${lineSvg}
     </g>`;
   }).join('\n');
@@ -2749,44 +2748,21 @@ function buildVerkenningSVG() {
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${totalH}" width="${W}" height="${totalH}" font-family="DM Sans, Helvetica, Arial, sans-serif">
   <rect width="${W}" height="${totalH}" fill="#e8e4dc"/>
 
-  <!-- Background geometry -->
-  <radialGradient id="bgA" cx="80%" cy="6%" r="35%">
-    <stop offset="0%" stop-color="#0fa8cb" stop-opacity="0.08"/>
-    <stop offset="100%" stop-color="#e8e4dc" stop-opacity="0"/>
-  </radialGradient>
-  <rect width="${W}" height="${totalH}" fill="url(#bgA)"/>
-
-  <!-- Header -->
-  <g transform="translate(${PAD_X}, 64)">
-    <text x="0" y="0" font-size="28" font-weight="800" fill="#001a4d" letter-spacing="3">R.O.B.</text>
-    <text x="138" y="0" font-size="13" font-weight="500" fill="#0fa8cb" letter-spacing="4.5">CONCEPTING</text>
-    <!-- 3-circle icon -->
-    <g transform="translate(0, 22)">
-      <line x1="18" y1="18" x2="142" y2="18" stroke="#9ba5b5" stroke-width="1" opacity="0.5"/>
-      <circle cx="18"  cy="18" r="15"  fill="none" stroke="#9ba5b5" stroke-width="1.2" opacity="0.55"/>
-      <circle cx="18"  cy="18" r="8.5" fill="none" stroke="#9ba5b5" stroke-width="1" opacity="0.45"/>
-      <circle cx="18"  cy="18" r="3"   fill="#0fa8cb"/>
-      <circle cx="80"  cy="18" r="15"  fill="none" stroke="#0fa8cb" stroke-width="1.5"/>
-      <circle cx="80"  cy="18" r="8.5" fill="none" stroke="#0fa8cb" stroke-width="1" opacity="0.7"/>
-      <circle cx="80"  cy="18" r="3"   fill="#e8391e"/>
-      <circle cx="142" cy="18" r="15"  fill="none" stroke="#9ba5b5" stroke-width="1.2" opacity="0.55"/>
-      <circle cx="142" cy="18" r="8.5" fill="none" stroke="#9ba5b5" stroke-width="1" opacity="0.45"/>
-      <circle cx="142" cy="18" r="3"   fill="#001a4d"/>
-    </g>
-  </g>
+  <!-- Goedgekeurd horizontaal lockup voor lichte ondergrond -->
+  <image href="https://rob-concepting.com/media/logo/logo-rob-lengte-wit-transparant.png" x="${PAD_X}" y="48" width="180" height="35.34" preserveAspectRatio="xMinYMid meet"/>
 
   <!-- Right top -->
   <g transform="translate(${W - PAD_X}, 64)" text-anchor="end" font-family="IBM Plex Mono, monospace">
-    <text y="0" font-size="11" font-weight="500" fill="#001a4d" fill-opacity="0.55" letter-spacing="3">JE VERKENNING</text>
-    <text y="20" font-size="11" font-weight="400" fill="#001a4d" fill-opacity="0.4" letter-spacing="2">${svgEscape(dateNL)} &middot; #${sessionId}</text>
+    <text y="0" font-size="11" font-weight="500" fill="#001a4d" letter-spacing="0.14em">JE VERKENNING</text>
+    <text y="20" font-size="11" font-weight="400" fill="#001a4d" letter-spacing="0.14em">${svgEscape(dateNL)} &#183; #${sessionId}</text>
   </g>
 
   <!-- Title -->
-  <text x="${PAD_X}" y="190" font-size="36" font-weight="700" fill="#001a4d" letter-spacing="-0.5">Wat we besproken hebben</text>
+  <text x="${PAD_X}" y="190" font-size="36" font-weight="600" fill="#001a4d" letter-spacing="-0.5">Wat we besproken hebben</text>
   <line x1="${PAD_X}" y1="218" x2="${PAD_X + 36}" y2="218" stroke="#0fa8cb" stroke-width="2"/>
 
   <!-- Subtitle -->
-  <text x="${PAD_X}" y="252" font-size="13" font-weight="400" fill="#001a4d" fill-opacity="0.65">Een momentopname van de verkenning met R.O.B.</text>
+  <text x="${PAD_X}" y="252" font-size="13" font-weight="400" fill="#001a4d">Een momentopname van de verkenning met R.O.B.</text>
 
   <!-- Conversation blocks -->
 ${blocksSvg}
@@ -2794,12 +2770,12 @@ ${blocksSvg}
   <!-- Footer -->
   <g transform="translate(${PAD_X}, ${totalH - 100})">
     <line x1="0" y1="0" x2="${W - PAD_X * 2}" y2="0" stroke="#001a4d" stroke-opacity="0.12" stroke-width="1"/>
-    <text x="0" y="32" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="500" fill="#001a4d" fill-opacity="0.65" letter-spacing="2.5">VOLGENDE STAP</text>
-    <text x="0" y="58" font-size="14" font-weight="500" fill="#001a4d" fill-opacity="0.88">Stuur via het contactformulier op rob-concepting.com met deze schets &mdash; dan reageert Rob persoonlijk.</text>
+    <text x="0" y="32" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="500" fill="#001a4d" letter-spacing="0.14em">VOLGENDE STAP</text>
+    <text x="0" y="58" font-size="14" font-weight="500" fill="#001a4d">Stuur via het contactformulier op rob-concepting.com met deze schets &#8212; dan reageert Rob persoonlijk.</text>
   </g>
 
   <!-- Bottom URL -->
-  <text x="${W / 2}" y="${totalH - 24}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="500" fill="#001a4d" fill-opacity="0.5" letter-spacing="2">rob-concepting.com</text>
+  <text x="${W / 2}" y="${totalH - 24}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="500" fill="#001a4d" letter-spacing="0.14em">rob-concepting.com</text>
 </svg>`;
 }
 

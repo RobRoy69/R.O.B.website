@@ -62,6 +62,29 @@ for (const relative of ['kennisgezagsscan/style.css', 'kennisproef/style.css']) 
   if (/font-weight\s*:\s*(?:[7-9]00|bold)\b/i.test(css)) errors.push(`${relative}: gewicht boven 600`);
 }
 
+const homepageSource = readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const verkenningStart = homepageSource.indexOf('function buildVerkenningSVG()');
+const verkenningEnd = homepageSource.indexOf('function downloadVerkenning()', verkenningStart);
+const verkenningSvg = verkenningStart >= 0 && verkenningEnd > verkenningStart
+  ? homepageSource.slice(verkenningStart, verkenningEnd)
+  : '';
+if (!verkenningSvg) {
+  errors.push('downloadbare verkenning-SVG ontbreekt');
+} else {
+  if (!verkenningSvg.includes('logo-rob-lengte-wit-transparant.png')) {
+    errors.push('verkenning-SVG gebruikt geen goedgekeurd lockup');
+  }
+  if (/(?:linear|radial)-gradient|<(?:linear|radial)Gradient/i.test(verkenningSvg)) {
+    errors.push('verkenning-SVG bevat een gradient');
+  }
+  if (/font-weight=["'](?:[7-9]00|bold)["']/i.test(verkenningSvg)) {
+    errors.push('verkenning-SVG gebruikt een gewicht boven 600');
+  }
+  if (/\brx=["'](?:[3-9]|[1-9]\d)/i.test(verkenningSvg)) {
+    errors.push('verkenning-SVG gebruikt een radius boven 2px');
+  }
+}
+
 if (errors.length) {
   console.error(`verify-merk: ROOD — ${errors.length} bevinding(en):`);
   for (const error of errors) console.error(`  · ${error}`);
