@@ -3,5 +3,6 @@ Allow: /
 Disallow: /.netlify/
 Disallow: /whitepapers/bestand/
 Disallow: /whitepapers/bevestig
+Disallow: /beheer/
 
 Sitemap: https://rob-concepting.com/sitemap.xml

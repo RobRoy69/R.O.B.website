@@ -36,6 +36,9 @@ const loop = (map, prefix) => {
     const vol = path.join(map, naam);
     if (statSync(vol).isDirectory()) { loop(vol, `${prefix}${naam}/`); continue; }
     if (!naam.endsWith('.html')) continue;
+    // Een pagina die zichzelf op noindex zet, hoort niet in de sitemap. Afgeleid uit de
+    // pagina zelf en niet uit een lijst hier: anders moet iemand twee plekken gelijk houden.
+    if (/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(readFileSync(vol, 'utf8'))) continue;
     const raw = naam === 'index.html' ? prefix : `${prefix}${naam}`;
     paginas.push(raw.startsWith('/whitepapers/') ? raw.replace(/\.html$/, '') : raw);
   }

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Berichten beheren — R.O.B. Concepting</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="same-origin">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/media/merk.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',system-ui,sans-serif;background:var(--cream);color:var(--navy);
+      font-size:16px;font-weight:300;line-height:1.65}
+    .topbar{background:var(--dark);padding:14px 28px;display:flex;align-items:center;
+      justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .topbar img{height:26px;width:auto;display:block}
+    .tb-r{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;
+      text-transform:uppercase;color:rgba(232,228,220,.58);display:flex;gap:16px;align-items:center}
+    .tb-r button{font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--cyan);
+      background:none;border:0;cursor:pointer;padding:0}
+    main{max-width:880px;margin:0 auto;padding:38px 28px 60px}
+    h1{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.06;margin-bottom:8px}
+    .lead{font-size:18px;font-weight:300;line-height:1.4;margin-bottom:28px;max-width:60ch}
+    .kaart{background:var(--paper);border:1px solid var(--border);border-radius:2px;
+      padding:22px;margin-bottom:16px}
+    .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;
+      text-transform:uppercase;color:var(--navy);display:block;margin-bottom:6px}
+    input,select,textarea{font-family:inherit;font-size:16px;font-weight:300;color:var(--navy);
+      width:100%;background:var(--cream);border:1px solid var(--border);border-radius:2px;
+      padding:9px 11px}
+    textarea{line-height:1.6;resize:vertical}
+    .rij{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+    .rij>div{flex:1 1 180px}
+    .knop{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;
+      text-transform:uppercase;color:var(--navy);background:none;border:1px solid var(--cyan);
+      border-radius:2px;padding:8px 16px;cursor:pointer}
+    .knop:hover{background:rgba(15,168,203,.12)}
+    .knop[disabled]{opacity:.5;cursor:default}
+    .knop-uit{border-color:var(--border)}
+    .knoppen{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .st{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;
+      text-transform:uppercase;border:1px solid transparent;border-radius:2px;padding:1px 7px}
+    .st-open{border-color:var(--muted);border-style:dashed}
+    .st-vrij{border-color:var(--cyan)}
+    .b-kop{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+    .b-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;
+      text-transform:uppercase;color:var(--navy);margin-bottom:8px}
+    h2{font-size:19px;font-weight:500;letter-spacing:-.01em;line-height:1.3}
+    .melding{border-left:2px solid var(--cyan);background:var(--paper);border-radius:2px;
+      padding:12px 16px;margin-bottom:16px;font-size:15px}
+    .melding-fout{border-left-color:var(--red)}
+    .voet{background:var(--dark);margin-top:46px;padding:26px 28px;
+      font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;
+      text-transform:uppercase;color:rgba(232,228,220,.58)}
+    .voet a{color:var(--cyan)}
+    .verborgen{display:none}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <img src="/media/logo/logo-rob-lengte-donker-transparant.png" alt="R.O.B. Concepting" width="589" height="117">
+    <div class="tb-r"><span id="wie">niet aangemeld</span><button id="afmelden" class="verborgen" type="button">Afmelden</button></div>
+  </header>
+
+  <main>
+    <h1>Berichten beheren</h1>
+    <p class="lead" id="lead">Schrijven en vrijgeven zonder terminal. De registersleutel blijft op de server; deze pagina stuurt alleen verzoeken.</p>
+
+    <div id="melding" class="verborgen"></div>
+
+    <section id="aanmeldblok" class="kaart">
+      <label class="lbl" for="wachtwoord">Wachtwoord</label>
+      <input id="wachtwoord" type="password" autocomplete="current-password">
+      <div class="knoppen"><button class="knop" id="aanmelden" type="button">Aanmelden</button></div>
+    </section>
+
+    <section id="werkblok" class="verborgen">
+      <div class="kaart">
+        <div class="b-kop"><h2 id="vorm-kop">Nieuw bericht</h2><span class="st st-open" id="vorm-status">nieuw</span></div>
+        <div class="rij" style="margin-top:16px">
+          <div><label class="lbl" for="f-titel">Titel</label><input id="f-titel"></div>
+        </div>
+        <div class="rij">
+          <div><label class="lbl" for="f-slug">Webadres (slug)</label><input id="f-slug" placeholder="het-probleem-is-niet-te-weinig-weten"></div>
+          <div><label class="lbl" for="f-datum">Publicatiedatum</label><input id="f-datum" type="date"></div>
+        </div>
+        <div class="rij">
+          <div><label class="lbl" for="f-samenvatting">Samenvatting</label><textarea id="f-samenvatting" rows="3"></textarea></div>
+        </div>
+        <div class="rij">
+          <div><label class="lbl" for="f-tekst">Tekst</label><textarea id="f-tekst" rows="12" placeholder="Een lege regel maakt een nieuwe alinea."></textarea></div>
+        </div>
+        <div class="rij">
+          <div><label class="lbl" for="f-soort">Soort</label><select id="f-soort"></select></div>
+          <div><label class="lbl" for="f-reeks">Reeks</label><input id="f-reeks" placeholder="whitepaperreeks"></div>
+          <div><label class="lbl" for="f-volgnummer">Deel</label><input id="f-volgnummer" inputmode="numeric"></div>
+          <div><label class="lbl" for="f-hoortbij">Hoort bij</label><select id="f-hoortbij"></select></div>
+        </div>
+        <div class="rij">
+          <div><label class="lbl" for="f-claims">Waar dit op rust</label><input id="f-claims" placeholder="claim:wp:051, claim:wp:053"></div>
+        </div>
+        <div class="rij">
+          <div><label class="lbl" for="f-video">Video</label><input id="f-video" placeholder="/media/nieuws/....mp4"></div>
+          <div><label class="lbl" for="f-afbeelding">Beeld</label><input id="f-afbeelding" placeholder="/media/nieuws/....jpg"></div>
+        </div>
+        <div class="rij">
+          <div><label class="lbl" for="f-alt">Onderschrift bij het beeld</label><input id="f-alt"></div>
+        </div>
+        <div class="knoppen">
+          <button class="knop" id="bewaren" type="button">Bewaren</button>
+          <button class="knop knop-uit" id="leegmaken" type="button">Leegmaken</button>
+        </div>
+      </div>
+
+      <h2 style="margin:28px 0 12px">In het register</h2>
+      <div id="lijst"></div>
+    </section>
+  </main>
+
+  <footer class="voet">R.O.B. Concepting &middot; beheer &middot; <a href="/nieuws/">naar de nieuwspagina</a></footer>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var staat = { berichten: [], soorten: [], papers: [], bewerkt: null };
+
+  function meld(tekst, fout) {
+    var m = $('melding');
+    m.className = 'melding' + (fout ? ' melding-fout' : '');
+    m.textContent = tekst;
+    m.classList.remove('verborgen');
+    if (!tekst) m.classList.add('verborgen');
+  }
+
+  function stuur(body) {
+    return fetch('/api/beheer', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin', body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) throw new Error(j.fout || ('verzoek mislukte (' + r.status + ')'));
+        return j;
+      });
+    });
+  }
+
+  function velden() {
+    return {
+      titel: $('f-titel').value, slug: $('f-slug').value, samenvatting: $('f-samenvatting').value,
+      tekst: $('f-tekst').value, soort: $('f-soort').value, reeks: $('f-reeks').value,
+      volgnummer: $('f-volgnummer').value, hoort_bij: $('f-hoortbij').value,
+      claim_refs: $('f-claims').value, video: $('f-video').value,
+      afbeelding: $('f-afbeelding').value, afbeelding_alt: $('f-alt').value,
+      gepubliceerd_op: $('f-datum').value
+    };
+  }
+
+  function vul(b) {
+    staat.bewerkt = b ? b.ext_ref : null;
+    var v = b || {};
+    $('f-titel').value = v.titel || ''; $('f-slug').value = v.slug || '';
+    $('f-samenvatting').value = v.samenvatting || ''; $('f-tekst').value = v.tekst || '';
+    $('f-soort').value = v.soort || 'nieuws'; $('f-reeks').value = v.reeks || '';
+    $('f-volgnummer').value = v.volgnummer || ''; $('f-hoortbij').value = v.hoort_bij || '';
+    $('f-claims').value = v.claim_refs || ''; $('f-video').value = v.video || '';
+    $('f-afbeelding').value = v.afbeelding || ''; $('f-alt').value = v.afbeelding_alt || '';
+    $('f-datum').value = (v.gepubliceerd_op || '').slice(0, 10);
+    $('vorm-kop').textContent = b ? 'Bewerken: ' + b.slug : 'Nieuw bericht';
+    $('vorm-status').textContent = b ? (b.review_status === 'approved' ? 'vrijgegeven' : 'wacht op vrijgave') : 'nieuw';
+    $('vorm-status').className = 'st ' + (b && b.review_status === 'approved' ? 'st-vrij' : 'st-open');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function keuzes(select, waarden, leeg) {
+    select.textContent = '';
+    if (leeg) select.appendChild(new Option('— geen —', ''));
+    waarden.forEach(function (w) { select.appendChild(new Option(w, w)); });
+  }
+
+  function regel(b) {
+    var kaart = document.createElement('div'); kaart.className = 'kaart';
+    var meta = document.createElement('div'); meta.className = 'b-meta';
+    meta.textContent = (b.gepubliceerd_op || '').slice(0, 10) + ' · ' + b.ext_ref +
+      (b.reeks ? ' · ' + b.reeks + ' deel ' + b.volgnummer : '') +
+      (b.video ? ' · met video' : '');
+    var kop = document.createElement('div'); kop.className = 'b-kop';
+    var h = document.createElement('h2'); h.textContent = b.titel;
+    var st = document.createElement('span');
+    var vrij = b.review_status === 'approved';
+    st.className = 'st ' + (vrij ? 'st-vrij' : 'st-open');
+    st.textContent = vrij ? 'vrijgegeven' : 'wacht op vrijgave';
+    kop.appendChild(h); kop.appendChild(st);
+
+    var p = document.createElement('p'); p.style.marginTop = '8px'; p.textContent = b.samenvatting;
+    var kn = document.createElement('div'); kn.className = 'knoppen';
+
+    var bew = document.createElement('button'); bew.className = 'knop knop-uit';
+    bew.type = 'button'; bew.textContent = 'Bewerken';
+    bew.onclick = function () { vul(b); };
+    kn.appendChild(bew);
+
+    if (vrij) {
+      var trek = document.createElement('button'); trek.className = 'knop knop-uit';
+      trek.type = 'button'; trek.textContent = 'Intrekken';
+      trek.onclick = function () {
+        stuur({ actie: 'intrekken', ext_ref: b.ext_ref })
+          .then(function () { meld('Ingetrokken. Hij verdwijnt bij de eerstvolgende bouw.'); laden(); })
+          .catch(function (e) { meld(e.message, true); });
+      };
+      kn.appendChild(trek);
+      var kijk = document.createElement('a'); kijk.className = 'knop knop-uit';
+      kijk.href = '/nieuws/' + b.slug + '/'; kijk.textContent = 'Bekijken';
+      kijk.style.textDecoration = 'none'; kn.appendChild(kijk);
+    } else {
+      var geef = document.createElement('button'); geef.className = 'knop';
+      geef.type = 'button'; geef.textContent = 'Vrijgeven';
+      geef.onclick = function () {
+        var bevestiging = window.prompt(
+          'Vrijgeven publiceert dit bericht bij de eerstvolgende bouw.\n\n' +
+          'Typ de slug over om te bevestigen:', '');
+        if (bevestiging === null) return;
+        stuur({ actie: 'vrijgeven', ext_ref: b.ext_ref, bevestiging: bevestiging })
+          .then(function (r) {
+            meld(r.bouw && r.bouw.gestart
+              ? 'Vrijgegeven. De bouw is gestart; over een paar minuten staat hij online.'
+              : 'Vrijgegeven. Let op: er is geen bouw gestart (' + ((r.bouw && r.bouw.reden) || 'onbekend') + ').',
+              !(r.bouw && r.bouw.gestart));
+            laden();
+          })
+          .catch(function (e) { meld(e.message, true); });
+      };
+      kn.appendChild(geef);
+    }
+
+    kaart.appendChild(meta); kaart.appendChild(kop); kaart.appendChild(p); kaart.appendChild(kn);
+    return kaart;
+  }
+
+  function laden() {
+    return stuur({ actie: 'lijst' }).then(function (r) {
+      staat.berichten = r.berichten || [];
+      staat.soorten = r.soorten || [];
+      staat.papers = r.papers || [];
+      keuzes($('f-soort'), staat.soorten, false);
+      keuzes($('f-hoortbij'), staat.papers, true);
+      if (staat.bewerkt) {
+        var b = staat.berichten.filter(function (x) { return x.ext_ref === staat.bewerkt; })[0];
+        $('f-soort').value = (b && b.soort) || 'nieuws';
+        $('f-hoortbij').value = (b && b.hoort_bij) || '';
+      }
+      var lijst = $('lijst'); lijst.textContent = '';
+      staat.berichten.forEach(function (b) { lijst.appendChild(regel(b)); });
+      $('aanmeldblok').classList.add('verborgen');
+      $('werkblok').classList.remove('verborgen');
+      $('wie').textContent = 'aangemeld';
+      $('afmelden').classList.remove('verborgen');
+    });
+  }
+
+  $('aanmelden').onclick = function () {
+    stuur({ actie: 'aanmelden', wachtwoord: $('wachtwoord').value })
+      .then(function () { $('wachtwoord').value = ''; meld(''); return laden(); })
+      .catch(function (e) { meld(e.message, true); });
+  };
+  $('wachtwoord').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') $('aanmelden').click();
+  });
+
+  $('afmelden').onclick = function () {
+    stuur({ actie: 'afmelden' }).then(function () { location.reload(); });
+  };
+
+  $('bewaren').onclick = function () {
+    stuur({ actie: 'bewaren', bericht: velden() })
+      .then(function (r) {
+        meld('Bericht ' + r.gedaan + '. Het staat op wacht op vrijgave — er is nog niets openbaar.');
+        staat.bewerkt = r.bericht && r.bericht.ext_ref;
+        return laden();
+      })
+      .catch(function (e) { meld(e.message, true); });
+  };
+
+  $('leegmaken').onclick = function () { vul(null); meld(''); };
+
+  // Stil proberen of er al een sessie is; zo niet, dan blijft het aanmeldblok staan.
+  laden().catch(function () {});
+})();
+</script>
+</body>
+</html>
