@@ -160,8 +160,16 @@ for (const pagina of PAGINAS) {
     if (!voor) continue;
     const v = contrast(voor, grond);
     if (v < VLOER.tekst) {
-      const naam = `${el.tagName.toLowerCase()}${el.className ? '.' + String(el.className).split(' ')[0] : ''}`;
-      laag.set(naam, `${naam} → ${v}:1 (${voor} op ${grond})`);
+      // De melding moet aanwijzen WELK element, niet alleen welke kleur. Een bevinding die
+      // je niet kunt terugvinden, kost meer tijd dan hij bespaart: bij de eerste rode CI-run
+      // stond er alleen "a → 2,5:1" en dat kan overal zitten. Nu staat het pad erbij.
+      const pad = [];
+      for (let n = el; n && n.tagName && n.tagName !== 'BODY'; n = n.parentElement) {
+        pad.unshift(n.tagName.toLowerCase() + (n.className ? '.' + String(n.className).trim().split(/\s+/).join('.') : ''));
+      }
+      const naam = pad.join(' > ');
+      const tekst = (el.textContent || '').trim().slice(0, 40);
+      laag.set(naam, `${naam} → ${v}:1 (${voor} op ${grond}) "${tekst}"`);
     }
   }
 
