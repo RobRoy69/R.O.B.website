@@ -97,6 +97,39 @@ console.log('\n6. de pagina zelf draagt geen gezag en geen geheim');
         /Kijk in de functielogs/.test(f) && !/e\.message\s*\}\)/.test(f.split('catch (e)').pop()));
 }
 
+console.log('\n8. de rem knijpt werkelijk af');
+{
+  const { makeRateLimiter } = await import('../netlify/functions/lib/papers.js');
+  const rem = makeRateLimiter({ windowMs: 600_000, max: 5 });
+  const uitslag = [];
+  for (let i = 0; i < 7; i++) uitslag.push(rem('1.2.3.4').ok);
+  toets('de eerste vijf komen door', uitslag.slice(0, 5).every(Boolean));
+  toets('de zesde wordt geblokt', uitslag[5] === false);
+
+  // De fout die hier zat: makeRateLimiter geeft een OBJECT terug, en `if (!remmen(ip))` is
+  // op een object nooit waar. De rem stond er wél, maar deed niets — op het ene punt in de
+  // hele site waar wachtwoorden geraden kunnen worden.
+  const f = readFileSync(path.join(ROOT, 'netlify', 'functions', 'beheer.js'), 'utf-8');
+  toets('beheer.js leest .ok uit', /remmen\([^)]*\)[\s\S]{0,80}?\.ok/.test(f),
+        'de terugkeerwaarde zelf toetsen betekent: nooit blokkeren');
+  toets('een object is inderdaad altijd waar', !!{ ok: false } === true);
+}
+
+console.log('\n9. intrekken haalt werkelijk offline');
+{
+  const f = readFileSync(path.join(ROOT, 'netlify', 'functions', 'beheer.js'), 'utf-8');
+  // Bouwen ná het intrekken, niet alleen ná het vrijgeven: er moet iets wég.
+  toets('intrekken vraagt ook een bouw aan',
+        !/naar === 'approved'\s*\?\s*await bouwAanvragen\(\)/.test(f),
+        'intrekken sloeg de bouw over — dan blijft de pagina staan');
+
+  const bn = readFileSync(path.join(ROOT, 'tools', 'build-nieuws.mjs'), 'utf-8');
+  toets('de bouw ruimt verdwenen berichtmappen op', /niet langer publiceerbaar/.test(bn),
+        'zonder opruimen blijft een ingetrokken bericht online, want build-publiek kopieert alles onder nieuws/');
+  toets('concept/ wordt met rust gelaten', /name === 'concept'/.test(bn));
+  toets('alleen mappen met precies één index.html', /inhoud\[0\] === 'index\.html'/.test(bn));
+}
+
 console.log('\n7. de publicatie kent het scherm, de sitemap niet');
 {
   const pub = readFileSync(path.join(ROOT, 'tools', 'build-publiek.mjs'), 'utf8');

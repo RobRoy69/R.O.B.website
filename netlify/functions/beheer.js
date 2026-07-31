@@ -120,8 +120,18 @@ export default async (req) => {
     if (!wachtwoordGezet()) {
       return json({ fout: 'Het beheerscherm is niet ingericht: BEHEER_WACHTWOORD ontbreekt of is korter dan twaalf tekens.' }, 503, origin);
     }
-    if (!remmen(clientIp(req))) {
-      return json({ fout: 'Te veel pogingen. Probeer het over tien minuten opnieuw.' }, 429, origin);
+    // .ok uitlezen, niet de terugkeerwaarde zelf. makeRateLimiter geeft een OBJECT terug
+    // ({ ok, retryAfter }) en een object is altijd waar — `if (!remmen(ip))` was dus nooit
+    // waar en de rem stond in werkelijkheid uit. Op een aanmeldpunt betekent dat: onbeperkt
+    // wachtwoorden raden, precies het ene ding dat deze functie moet tegenhouden.
+    // whitepaper.js deed het al goed; dit was een fout in de navolging, en hij was onzichtbaar
+    // omdat de rem er wél stond.
+    const rem = remmen(clientIp(req));
+    if (!rem.ok) {
+      const minuten = Math.max(1, Math.ceil((rem.retryAfter || 600) / 60));
+      return new Response(JSON.stringify({ fout: `Te veel pogingen. Probeer het over ${minuten} minuten opnieuw.` }),
+        { status: 429, headers: { 'Content-Type': 'application/json',
+                                  'Retry-After': String(rem.retryAfter || 600) } });
     }
     if (!wachtwoordKlopt(body.wachtwoord)) {
       return json({ fout: 'Wachtwoord klopt niet.' }, 401, origin);
@@ -201,7 +211,12 @@ export default async (req) => {
         notitie: rij.titel,
       }) });
 
-      const bouw = naar === 'approved' ? await bouwAanvragen() : { gestart: false, reden: 'niet nodig' };
+      // INTREKKEN VRAAGT ÓÓK EEN BOUW. Eerst sloeg dit over "want er hoeft niets bij" — maar
+      // intrekken betekent dat er iets WEG moet, en zonder bouw blijft de pagina staan. Een
+      // ingetrokken bericht dat online blijft is erger dan een dat nooit verscheen: het
+      // register zegt dan iets anders dan de site, en dat is precies de toestand waar deze
+      // hele onderneming tegen is.
+      const bouw = await bouwAanvragen();
       return json({ ok: true, status: naar, bouw }, 200, origin);
     }
 
