@@ -123,3 +123,37 @@ select {
 .afsluiter footer a:hover {
   color: var(--cyan);
 }
+
+/* De band loopt over de volle breedte; de INHOUD erbinnen wordt begrensd. Zonder deze
+   regel begon de tekst van een losstaande voet tegen de rand van het scherm — dat gebeurde
+   op de bewijspaspoorten en de board-brief, waar de voet geen eigen kolom had. Pagina's die
+   hun voet al in een eigen kolom zetten (.foot, .mee) houden die: daar is max-width al gezet
+   en 100% van 880 blijft 880. */
+.afsluiter > footer,
+.afsluiter > p {
+  max-width: var(--kolom, 880px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--kolom-pad, clamp(20px, 5vw, 40px));
+  padding-right: var(--kolom-pad, clamp(20px, 5vw, 40px));
+}
+
+/* Een link in een lopende voettekst moet te zien zijn. In de losstaande voeten kreeg hij
+   dezelfde cream-tint als de tekst eromheen: niet te onderscheiden zonder erop te wijzen.
+   Op donker haalt cyaan 6,9:1, ruim boven de vloer.
+   De mono-navigatierij (.foot) houdt de rustige cream met cyaan bij hover — daar is élk
+   item een link en zou alles-cyaan schreeuwen. */
+.afsluiter > footer a {
+  color: var(--cyan);
+  text-decoration-color: var(--cyan);
+}
+
+/* Pagina's met een andere PAGINAKOLOM zeggen dat zelf: :root{--kolom:760px;--kolom-pad:24px}.
+   De bewijspaspoorten doen dat, want die lezen op 760.
+
+   De voet lijnt uit met de PAGINAKOLOM, niet met de binnenkant van een kaart. Op de
+   board-brief staat de tekst in een sheet met een eigen inspringing van 54px; die volgen
+   zou betekenen dat elk kaartje zijn eigen voetuitlijning krijgt. Een voet is een
+   pagina-element en hoort bij de pagina.
+
+   Gemeten op de gerenderde pagina, niet geschat — dit is aan de markup niet te zien. */
