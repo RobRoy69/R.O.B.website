@@ -90,7 +90,12 @@ console.log('\n6. de pagina zelf draagt geen gezag en geen geheim');
 
   const f = readFileSync(path.join(ROOT, 'netlify', 'functions', 'beheer.js'), 'utf8');
   toets('vrijgeven vraagt een bevestiging', /bevestiging/.test(f));
-  toets('vrijgeven schrijft een journaalregel', /bericht_acties/.test(f));
+  toets('vrijgeven schrijft een journaalregel', /bericht_acties|bericht_status_zetten/.test(f));
+  // Status en spoor mogen niet los van elkaar kunnen mislukken.
+  toets('status en journaal in één transactie', f.includes('rpc/bericht_status_zetten'),
+        'twee losse schrijfacties laten een goedgekeurd bericht zonder spoor achter');
+  toets('geen losse PATCH op de status meer',
+        !/berichten\?ext_ref=eq[\s\S]{0,120}?PATCH[\s\S]{0,80}?review_status/.test(f));
   toets('bewaren zet nooit approved', !/review_status:\s*['"]approved['"]/.test(
         f.split("actie === 'vrijgeven'")[0]));
   toets('de foutmelding lekt de registerfout niet',

@@ -218,20 +218,20 @@ export default async (req) => {
       }
 
       const naar = actie === 'vrijgeven' ? 'approved' : 'needs-review';
-      await db(`berichten?ext_ref=eq.${encodeURIComponent(ref)}`,
-        { method: 'PATCH', body: JSON.stringify({ review_status: naar, updated_at: new Date().toISOString() }) });
 
-      // Het journaal. review_actions en transformations hangen allebei aan claim_id (NOT
-      // NULL): voor beweringen is vastgelegd wie wat wanneer vrijgaf, voor berichten was er
-      // niets. Een bericht kon van needs-review naar approved zonder enig spoor — op een site
-      // die van anderen eist dat correcties zichtbaar zijn. Daarvoor is bericht_acties
-      // aangelegd, en deze regel vult hem.
-      await db('bericht_acties', { method: 'POST', body: JSON.stringify({
-        bericht_ref: ref,
-        actie: actie === 'vrijgeven' ? 'vrijgegeven' : 'ingetrokken',
-        van_status: rij.review_status, naar_status: naar,
-        actor: 'rob', via: 'beheerscherm',
-        notitie: rij.titel,
+      // STATUS EN JOURNAAL IN ÉÉN TRANSACTIE. Eerst waren dit twee losse schrijfacties: eerst
+      // de status, dan het spoor. Faalde de tweede — een storing, een timeout — dan stond het
+      // bericht al op approved zonder dat iemand kon zien wie het had vrijgegeven. Precies wat
+      // deze lus belooft niet te doen.
+      //
+      // Het journaal zelf bestond trouwens niet: review_actions en transformations hangen
+      // allebei aan claim_id (NOT NULL), dus voor beweringen was vastgelegd wie wat wanneer
+      // vrijgaf en voor berichten niets. bericht_acties vult dat gat; deze functie schrijft
+      // beide of geen van beide.
+      await db('rpc/bericht_status_zetten', { method: 'POST', body: JSON.stringify({
+        p_ref: ref, p_naar: naar,
+        p_actie: actie === 'vrijgeven' ? 'vrijgegeven' : 'ingetrokken',
+        p_actor: 'rob', p_via: 'beheerscherm', p_notitie: rij.titel,
       }) });
 
       // INTREKKEN VRAAGT ÓÓK EEN BOUW. Eerst sloeg dit over "want er hoeft niets bij" — maar
