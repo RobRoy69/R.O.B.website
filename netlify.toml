@@ -109,3 +109,11 @@
   for = "/og-image.png"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+# De post stond twintig minuten live op een adres dat niet bij zijn titel paste.
+# Kort, maar hij stond al in de sitemap en de feed — dus een 301 en geen stilte.
+[[redirects]]
+  from = "/nieuws/niet-te-weinig-weten/"
+  to = "/nieuws/het-probleem-is-niet-te-weinig-weten/"
+  status = 301
+  force = true

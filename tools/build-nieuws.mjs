@@ -298,10 +298,21 @@ const media = (b) => {
           <figcaption>Deze video opent bij YouTube. Op deze pagina staat geen ingebedde speler, zodat er geen code van derden meelaadt.</figcaption>
         </figure>`;
     }
+    // ONDERTITELING WORDT GEVONDEN, NIET GEMELD. Ligt er naast de mp4 een .vtt met dezelfde
+    // naam, dan komt die er als spoor bij. Geen veld in het register en geen vinkje dat
+    // iemand moet zetten: het bestand ís de aanwijzing. Zet je er later een neer, dan
+    // verschijnt het spoor bij de eerstvolgende build.
+    //
+    // De video heeft de ondertiteling al ingebrand — dat is voor wie zonder geluid kijkt.
+    // Het spoor is voor wie de tekst nodig heeft in plaats van ziet: een schermlezer, of
+    // iemand die hem wil doorzoeken. Dat zijn twee verschillende dingen.
+    const vttPad = b.video.replace(/\.mp4$/, '.vtt');
+    const heeftVtt = vttPad !== b.video && existsSync(path.join(ROOT, vttPad.replace(/^\//, '')));
     return `
         <figure class="b-media">
           <video controls preload="metadata"${b.afbeelding ? ` poster="${esc(b.afbeelding)}"` : ''}>
-            <source src="${esc(b.video)}" type="video/mp4">
+            <source src="${esc(b.video)}" type="video/mp4">${heeftVtt ? `
+            <track kind="captions" src="${esc(vttPad)}" srclang="nl" label="Nederlands">` : ''}
             Je browser kan deze video niet weergeven.
           </video>${b.afbeelding_alt ? `
           <figcaption>${esc(b.afbeelding_alt)}</figcaption>` : ''}
@@ -482,7 +493,7 @@ writeFileSync(path.join(OUTDIR, 'feed.xml'),
 ${berichten.map(b => `    <item>
       <title>${esc(b.titel)}</title>
       <link>${BASIS}/nieuws/${b.slug}/</link>
-      <guid isPermaLink="true">${BASIS}/nieuws/${b.slug}/</guid>
+      <guid isPermaLink="false">${esc(b.ext_ref)}</guid>
       <pubDate>${rfc(b.gepubliceerd_op)}</pubDate>
       <description>${esc(b.samenvatting)}</description>
     </item>`).join('\n')}
