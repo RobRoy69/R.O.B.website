@@ -142,7 +142,7 @@ const STIJL = `
     .b{background:var(--papier);border:1px solid var(--border);border-radius:var(--radius);
       padding:${MAAT.cardPadding};margin-bottom:20px}
     .b-datum{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
-      text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+      text-transform:uppercase;color:var(--navy);margin-bottom:12px}
     .b h2{font-size:clamp(22px,3vw,26px);font-weight:500;line-height:1.2;
       letter-spacing:-.01em;margin-bottom:14px;text-wrap:balance;scroll-margin-top:24px}
     .b h2 a{color:inherit;text-decoration:none}
@@ -151,7 +151,7 @@ const STIJL = `
     .b p{font-size:16px;line-height:1.65;margin-bottom:14px;max-width:${MAAT.maxRegel}}
     .b-grond{border-left:${MAAT.accentrand} solid var(--cyan);padding:2px 0 2px 20px;margin-top:22px}
     .b-grond-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
-      text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+      text-transform:uppercase;color:var(--navy);margin-bottom:11px}
     .b-grond ul{list-style:none}
     .b-grond li{font-size:15px;line-height:1.6;color:var(--navy);margin-bottom:11px}
     .b-datumchip{display:inline-block;font-family:${FONT.mono};font-size:11px;
@@ -160,7 +160,7 @@ const STIJL = `
     .b-media{margin:0 0 20px;line-height:0}
     .b-media img,.b-media video{width:100%;height:auto;display:block;
       border:1px solid var(--border);border-radius:var(--radius)}
-    .b-media figcaption{font-size:13px;color:var(--muted);line-height:1.5;padding-top:8px}
+    .b-media figcaption{font-size:13px;color:var(--navy);line-height:1.5;padding-top:8px}
     .b-vid{position:relative;display:block}
     .b-vid .speel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
     .b-vid .speel span{background:rgba(13,13,26,.85);color:var(--papier);font-family:${FONT.mono};
@@ -168,11 +168,11 @@ const STIJL = `
       border-radius:var(--radius)}
     .b-vid:hover .speel span{background:var(--cyan);color:var(--navy)}
     .b-merk{font-family:${FONT.mono};font-size:11px;letter-spacing:${TRACKING};
-      text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+      text-transform:uppercase;color:var(--navy);margin-bottom:10px}
     .b-merk b{font-weight:400;color:var(--navy)}
     .reeksnav{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule)}
     .reeksnav-kop{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
-      text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+      text-transform:uppercase;color:var(--navy);margin-bottom:12px}
     .reeksnav-kop a{color:var(--navy);text-decoration:none;
       border-bottom:1px solid var(--cyan)}
     .reeksnav-paar{display:flex;gap:14px;flex-wrap:wrap}
@@ -183,10 +183,10 @@ const STIJL = `
       line-height:1.45;border:1px solid var(--border);border-radius:var(--radius);padding:12px 15px}
     .reeksnav-paar a:hover{border-color:var(--cyan)}
     .reeksnav-paar a span{display:block;font-family:${FONT.mono};font-size:10px;
-      letter-spacing:${TRACKING};text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+      letter-spacing:${TRACKING};text-transform:uppercase;color:var(--navy);margin-bottom:5px}
     .b-bron{font-size:14px;white-space:nowrap;color:var(--navy);text-decoration:none;
       border-bottom:1px solid var(--cyan)}
-    .b-bron-los{color:var(--muted);border-bottom:1px dotted rgba(122,110,133,.5)}
+    .b-bron-los{color:var(--navy);border-bottom:1px dotted rgba(122,110,133,.5)}
     .route{background:var(--papier);border-left:${MAAT.accentrand} solid var(--cyan);
       border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;font-size:16px}
     .route a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
@@ -194,15 +194,15 @@ ${STATUS_CSS}
     .deel{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
       display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .deel-lbl{font-family:${FONT.mono};font-size:10px;letter-spacing:${TRACKING};
-      text-transform:uppercase;color:var(--muted);margin-right:4px}
+      text-transform:uppercase;color:var(--navy);margin-right:4px}
     .deel a{font-family:${FONT.mono};font-size:12px;letter-spacing:${TRACKING};
       color:var(--navy);text-decoration:none;border:1px solid var(--cyan);
       border-radius:var(--radius);padding:6px 14px;transition:background ${'160ms'} ease-out}
     .deel a:hover{background:rgba(15,168,203,.12)}
     .foot{max-width:${MAAT.maxDocument};margin:0 auto;padding:34px 28px 56px;display:flex;
       justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:${FONT.mono};
-      font-size:11px;letter-spacing:${TRACKING};text-transform:uppercase;color:var(--muted)}
-    .foot a{color:var(--muted);text-decoration:none}
+      font-size:11px;letter-spacing:${TRACKING};text-transform:uppercase;color:var(--navy)}
+    .foot a{color:var(--navy);text-decoration:none}
     .mee{max-width:${MAAT.maxDocument};margin:0 auto;padding:0 28px;font-size:15px;
       color:var(--navy);line-height:1.6;text-transform:none;letter-spacing:0}
     .mee a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
@@ -439,7 +439,7 @@ writeFileSync(path.join(OUTDIR, 'index.html'),
 
   <main class="wrap">
 ${berichten.length ? '' : `      <div class="b"><p>Er staan nog geen berichten. Het eerste volgt binnenkort.</p>
-        <p style="font-size:14.5px;color:var(--muted)">Ondertussen: de <a href="/whitepapers/" style="color:var(--cyan)">whitepapers</a> en de <a href="/vragen/" style="color:var(--cyan)">vragen met onderbouwing</a>.</p></div>`}
+        <p style="font-size:14.5px;color:var(--navy)">Ondertussen: de <a href="/whitepapers/" style="color:var(--cyan)">whitepapers</a> en de <a href="/vragen/" style="color:var(--cyan)">vragen met onderbouwing</a>.</p></div>`}
 ${berichten.map(b => `      <article class="b">
         <div class="b-datum">${esc(nlDatum(b.gepubliceerd_op))}</div>
 ${merk(b)}

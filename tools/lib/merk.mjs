@@ -124,4 +124,21 @@ export const GEMETEN = [
 // 2. MUTED IS ALLEEN METADATA. 3,8:1 op cream haalt de vloer voor lopende tekst niet. Een
 //    onderbouwing is geen metadata: die is de inhoud, en die staat in navy.
 export const TEKST_OP_LICHT = KLEUR.navy;
-export const METADATA_OP_LICHT = KLEUR.muted;
+
+// ── En de regel die het blad met zichzelf in tegenspraak brengt ──
+//
+// Het blad noemt muted "metadata, nooit lopende tekst" en geeft 3,8:1 op cream op als
+// toegestaan voor metadata. Maar regel 7 van zijn EIGEN keuringslijst luidt: "Contrast van
+// tekst op ondergrond boven 4,5:1", zonder uitzondering voor metadata. WCAG kent die
+// uitzondering ook niet — de grens ligt bij tekstgrootte (24px, of 18,66px vet), niet bij de
+// rol van de tekst. Muted haalt het nergens: 4,2:1 op papier, 3,8:1 op cream, 4,0:1 op dark.
+//
+// De strengere regel wint, want die staat als TOETS in het blad en de andere als toelichting.
+// Gevolg: op deze site is muted geen tekstkleur. De hiërarchie in labels komt uit wat het
+// blad er zelf voor geeft — mono, 11px, 0,14em, uppercase — en niet uit een lichtere kleur.
+// "Nadruk komt uit gewicht" geldt dan ook de andere kant op.
+//
+// Dit is de plek waar dat besluit staat. Wil iemand muted terug als tekstkleur, dan is dat
+// een wijziging aan het blad en niet aan deze regel.
+export const MUTED_IS_GEEN_TEKSTKLEUR = true;
+export const METADATA_OP_LICHT = KLEUR.navy;

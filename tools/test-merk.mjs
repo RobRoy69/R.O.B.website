@@ -65,6 +65,14 @@ console.log('\n3. geen cyaan als tekstkleur op licht, in de gebouwde pagina');
     .filter(sel => !OP_DONKER.some(w => sel.includes(w)));
 
   toets('geen onbekende cyaan-tekstregel', overtreders.length === 0, overtreders.join(' · '));
+
+  // Muted is óók geen tekstkleur — 4,2:1 op papier, 3,8:1 op cream, 4,0:1 op dark. Het blad
+  // noemt hem "metadata" en geeft 3,8:1 als toegestaan op; regel 7 van zijn eigen keuring
+  // zegt 4,5:1 zonder uitzondering. De toets, niet de toelichting. Als lijnkleur mag hij wel.
+  const mutedTekst = regels
+    .filter(r => /(^|[;{\s])color:\s*var\(--muted\)/.test(r))
+    .map(r => r.split('{')[0].trim());
+  toets('geen muted als tekstkleur', mutedTekst.length === 0, mutedTekst.join(' · '));
   toets('de oude bronlink-regel is weg', !/\.b-bron\{[^}]*color:\s*var\(--cyan\)/.test(css));
   toets('de oude datumregel is weg', !/\.b-datum\{[^}]*color:\s*var\(--cyan\)/.test(css));
 }

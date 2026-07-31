@@ -75,8 +75,8 @@ export const STATUS_CSS = `
       color:${KLEUR.navy};border:1px solid transparent;border-radius:${MAAT.radius}}
     .st-klopt{border-color:${KLEUR.cyan}}
     .st-verloopt{border-style:dashed;border-color:${KLEUR.muted}}
-    .st-wacht{border-color:transparent;color:${KLEUR.muted}}
-    .st-soort{display:inline-block;font-size:14px;color:${KLEUR.muted};margin-left:8px}`;
+    .st-wacht{border-color:transparent}
+    .st-soort{display:inline-block;font-size:14px;color:${KLEUR.navy};margin-left:8px}`;
 
 export function statusHtml(c, esc) {
   const s = status(c);
