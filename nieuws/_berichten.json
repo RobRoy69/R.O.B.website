@@ -1,0 +1,34 @@
+{
+  "bron": "agora-rob-register / berichten_public",
+  "synced_at": "2026-07-29T08:56:20.243Z",
+  "toelichting": "Afgeleide projectie. Bewerk de DB, niet dit bestand. Staat in git zodat een build zonder registersleutels — CI en elke deploy preview — de werkelijke pagina toont in plaats van een lege.",
+  "berichten": [
+    {
+      "ext_ref": "bericht:rob:002",
+      "slug": "niet-te-weinig-weten",
+      "titel": "Het probleem is niet dat je bedrijf te weinig weet",
+      "samenvatting": "Er verandert één ding en op vier plekken wordt het aangepast. Op de vijfde niet. Dat was jarenlang een ongemak; nu antwoordt AI namens je bedrijf ook op basis van die vijfde plek. Het begin van een reeks van achttien weken.",
+      "tekst": "Je bedrijf weet veel.\n\nHet zit in mensen. In documenten. In offertes. Op de website. Dan verandert er één ding — een prijs, een afspraak, een specificatie — en op vier plekken wordt het aangepast.\n\nOp de vijfde niet.\n\nDat was jarenlang een ongemak. Iemand ontdekte het, iemand corrigeerde het, en het kostte een telefoontje.\n\nEn nu laat je ook AI namens je bedrijf antwoorden. Sneller dan ooit, op basis van alles wat er staat. Ook op basis van die vijfde plek.\n\nHet probleem is niet dat je bedrijf te weinig weet. Het probleem is dat het niet altijd kan aantonen welke kennis gebruikt mag worden. Dat is geen archiefprobleem. Het is een gezagsprobleem: wie bepaalde dat dit nog geldig is, en wie mag het tegenhouden?\n\nDaarvoor zijn vier dingen nodig. Waarom je wordt aanbevolen. Wie namens je spreekt. Wie werkelijk beslist. En wie het gezag over je kennis houdt.\n\nDe komende achttien weken werk ik die vier uit. Elke bewering met een bron en een datum, elke correctie zichtbaar.\n\nNiet meer informatie. Wel weten wat je verantwoord kunt gebruiken.",
+      "claim_refs": "",
+      "afbeelding": null,
+      "afbeelding_alt": "Rob de Rooij legt uit waarom het probleem niet is wat je bedrijf weet, maar wat het kan aantonen. De video is ondertiteld.",
+      "video": "/media/nieuws/niet-te-weinig-weten.mp4",
+      "soort": "uit-de-reeks",
+      "reeks": "whitepaperreeks",
+      "volgnummer": 1,
+      "hoort_bij": null,
+      "gepubliceerd_op": "2026-08-04",
+      "updated_at": "2026-07-31T10:44:09.084Z"
+    },
+    {
+      "ext_ref": "bericht:rob:001",
+      "slug": "wie-heeft-de-sleutels",
+      "titel": "Wie heeft de sleutels van je eigen kennis?",
+      "samenvatting": "Het vierde whitepaper staat online, met een amendement over wat de markt GEO noemt. De kern: de modellen worden commodity, en wat schaars wordt is het gezag over de kennis die ze te verwerken krijgen.",
+      "tekst": "Er staat een nieuw whitepaper online, en het gaat over een vraag die in de drukte over modellen nauwelijks wordt gesteld.\n\nDe prijs van kunstmatige intelligentie stort in. Voor dezelfde prestatie die eind 2022 nog twintig dollar per miljoen verwerkte teksteenheden kostte, betaalde een afnemer twee jaar later zeven dollarcent. Dat is ruim 280 keer minder, in twee jaar. En de modellen van de verschillende aanbieders groeien naar elkaar toe.\n\nEen technologie die iedereen kan afnemen, onderscheidt niemand. Toch kopen kennisorganisaties op dit moment vooral technologie: een chatbot, een tool, een transformatietraject. Ze kopen daarmee het antwoord op de verkeerde vraag.\n\nDe vraag die ertoe doet is niet welk model je gebruikt. Het is wie er zeggenschap heeft over wat dat model namens jou beweert. Wie bepaalt wat waar is, wat verouderd is, en wat gezegd mag worden.\n\nHet paper vertelt dat aan de hand van een logé. Een briljante logé, die alles in huis mag lezen en overal over mag meepraten — maar die nooit zelf een boek in de kast zet, er nooit een uit haalt, en nooit een sleutel krijgt. Daaruit volgen vier eisen die je vandaag aan elke AI-leverancier kunt stellen, zonder één technische term.\n\nEr zit een amendement bij, over wat de markt GEO noemt. De korte versie: wat daar wordt verkocht is grotendeels een bijproduct van gezag over eigen kennis. Wie zijn teksten laat optimaliseren terwijl zijn kennisbasis niet is vastgesteld, poetst de etalage van een winkel zonder voorraadbeheer. Eerst de kast, dan de etalage.\n\nEn één cijfer dat het geheel scherp maakt: bijna de helft van de Nederlandse medewerkers gebruikte eind 2025 AI-hulpmiddelen zonder dit te melden. Het gebeurt dus al, grotendeels buiten elk kader.",
+      "claim_refs": "claim:wp:051,claim:wp:053",
+      "gepubliceerd_op": "2026-07-27",
+      "updated_at": "2026-07-28T07:33:57.79305+00:00"
+    }
+  ]
+}
