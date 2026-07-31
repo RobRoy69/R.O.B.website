@@ -15,8 +15,13 @@ daaruit `publiek/` samen en dát is de publicatiemap. Pagina's die uit het claim
 (`/vragen/`, `/nieuws/`, `/bewijs/`) worden gegenereerd — die bewerk je in het register of in
 de bouwer, nooit in de HTML.
 
+Hoe er uit deze repo gepubliceerd wordt — toon, kleurschaal, wat wel en niet als beeld —
+staat niet hier maar in **`CLAUDE.md`**. Dit bestand gaat over de machinerie; dat bestand
+over wat de bezoeker ziet.
+
 ```
 /                            ← bron
+├── CLAUDE.md                # Werkregels voor publicatiemateriaal: toon, kleurschaal, bronnen
 ├── index.html               # Landing + transitie + 5-pane interface (geheel inline)
 ├── netlify.toml             # Roept npm run deploy aan + security- en cache-headers
 ├── package.json             # De bouwketen (bouw/deploy/pdf/rapport) + Function-deps
