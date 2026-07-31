@@ -451,7 +451,7 @@ writeFileSync(path.join(OUTDIR, 'index.html'),
 
   <main class="wrap">
 ${berichten.length ? '' : `      <div class="b"><p>Er staan nog geen berichten. Het eerste volgt binnenkort.</p>
-        <p style="font-size:14.5px;color:var(--navy)">Ondertussen: de <a href="/whitepapers/" style="color:var(--cyan)">whitepapers</a> en de <a href="/vragen/" style="color:var(--cyan)">vragen met onderbouwing</a>.</p></div>`}
+        <p style="font-size:15px">Ondertussen: de <a href="/whitepapers/" class="b-bron">whitepapers</a> en de <a href="/vragen/" class="b-bron">vragen met onderbouwing</a>.</p></div>`}
 ${berichten.map(b => `      <article class="b">
         <div class="b-datum">${esc(nlDatum(b.gepubliceerd_op))}</div>
 ${merk(b)}
