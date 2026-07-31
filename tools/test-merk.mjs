@@ -11,7 +11,7 @@
 // Draai: node tools/test-merk.mjs
 // Exit 0 = groen, exit 1 = rood.
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { parseHTML } from 'linkedom';
 import { KLEUR, PAPIER, MAAT, GEMETEN, VLOER, contrast, TOEGESTANE_HEX, BLAD, gelezenToken } from './lib/merk.mjs';
@@ -222,6 +222,50 @@ console.log('\n5. de keuring, voor zover een webpagina hem kan afleggen');
     .map(m => m.split(':')[1].trim()))].filter(v => !v.startsWith('-'));
   toets(`één positieve tracking-waarde (${trackings.join(', ')})`,
         trackings.length === 1 && trackings[0] === '0.14em', 'v2 kent er maar één');
+}
+
+// ── 6. het ritme, op elke gepubliceerde pagina ──
+//
+// Donker openen, licht lezen, donker sluiten. Vier pagina's hadden dat en vijftien niet; nu
+// is het een eigenschap van de publicatie in plaats van van een paar bouwstappen.
+//
+// ÉÉN UITZONDERING, en die staat hier met de reden erbij. De homepage is geen schuivend
+// document maar een applicatie met vijf panelen en zeven donkere vlakken; een afsluiter
+// onderaan zou daar niets afsluiten. Wordt deze lijst ooit langer dan één, dan is het geen
+// uitzondering meer maar een tweede regel — en dan hoort hij in CLAUDE.md, niet hier.
+const GEEN_AFSLUITER = ['index.html'];
+
+console.log('\n6. elke gepubliceerde pagina sluit donker af');
+{
+  const pub = path.join(ROOT, 'publiek');
+  const paginas = [];
+  const loop = (map, pre = '') => {
+    for (const naam of readdirSync(map)) {
+      const vol = path.join(map, naam);
+      if (statSync(vol).isDirectory()) { loop(vol, `${pre}${naam}/`); continue; }
+      if (naam.endsWith('.html')) paginas.push([`${pre}${naam}`, readFileSync(vol, 'utf8')]);
+    }
+  };
+  if (existsSync(pub)) loop(pub);
+
+  toets('er is een publicatie om te toetsen', paginas.length > 5, `${paginas.length} pagina's`);
+  const zonder = paginas
+    .filter(([, h]) => !/class="afsluiter"/.test(h.split('</head>')[1] || ''))
+    .map(([n]) => n)
+    .filter(n => !GEEN_AFSLUITER.includes(n));
+  toets(`${paginas.length - zonder.length - GEEN_AFSLUITER.length} van ${paginas.length} pagina's, plus ${GEEN_AFSLUITER.length} met reden uitgezonderd`,
+        zonder.length === 0, `zonder afsluiter: ${zonder.join(', ')}`);
+
+  // De opmaak hoort in de gedeelde laag te staan en niet per bouwstap. Stond eerst dubbel.
+  const merkcss = readFileSync(path.join(ROOT, 'media', 'merk.css'), 'utf8');
+  toets('de afsluiter staat in de merklaag', /\.afsluiter\s*\{/.test(merkcss));
+  const dubbel = ['build-nieuws.mjs', 'build-vragen.mjs']
+    .filter(f => /\.afsluiter\s*\{/.test(readFileSync(path.join(ROOT, 'tools', f), 'utf8')));
+  toets('en nergens anders', dubbel.length === 0, `ook nog in: ${dubbel.join(', ')}`);
+
+  // Een <footer> binnen een <section> verliest zijn contentinfo-landmark. Die les is betaald.
+  const secties = paginas.filter(([, h]) => /<section[^>]*class="afsluiter"/.test(h)).map(([n]) => n);
+  toets('de afsluiter is altijd een div', secties.length === 0, secties.join(', '));
 }
 
 console.log('\n' + '='.repeat(46));

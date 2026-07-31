@@ -188,6 +188,11 @@ ${JSON.stringify(graf, null, 2).split('\n').map(l => '  ' + l).join('\n')}
     <main>
 ${regels}
     </main>
+  </div>
+  <!-- BUITEN .wrap. Daarbinnen werd de donkere band 820 pixels breed met cream ernaast:
+       een streep in het midden in plaats van een afsluiting. De band loopt over de volle
+       breedte, de inhoud erbinnen wordt begrensd. -->
+  <div class="afsluiter">
     <footer>
       <p>Hetzelfde bewijs machineleesbaar: <a href="/bewijs.json">bewijs.json</a>.
         Overnemen mag, met bronvermelding &mdash; en met de datum erbij.</p>

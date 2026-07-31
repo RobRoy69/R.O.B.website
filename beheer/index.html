@@ -52,10 +52,10 @@
     .melding{border-left:2px solid var(--cyan);background:var(--paper);border-radius:2px;
       padding:12px 16px;margin-bottom:16px;font-size:15px}
     .melding-fout{border-left-color:var(--red)}
-    .voet{background:var(--dark);margin-top:46px;padding:26px 28px;
-      font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;
-      text-transform:uppercase;color:rgba(232,228,220,.58)}
-    .voet a{color:var(--cyan)}
+    /* Kleur en donkere grond komen uit .afsluiter in de gedeelde merklaag; hier alleen
+       de opmaak die deze voet eigen is. Stond eerst dubbel. */
+    .voet{padding:26px 28px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+      letter-spacing:0.14em;text-transform:uppercase}
     .verborgen{display:none}
   </style>
 </head>
@@ -120,7 +120,7 @@
     </section>
   </main>
 
-  <footer class="voet">R.O.B. Concepting &middot; beheer &middot; <a href="/nieuws/">naar de nieuwspagina</a></footer>
+  <div class="afsluiter"><footer class="voet">R.O.B. Concepting &middot; beheer &middot; <a href="/nieuws/">naar de nieuwspagina</a></footer></div>
 
 <script>
 (function () {

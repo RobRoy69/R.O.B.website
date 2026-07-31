@@ -52,6 +52,7 @@ for (const ref of [...new Set(rel.flatMap((publication) => publication.claim_ref
   <script type="application/ld+json">${structuredData}</script>
   <style>
     body { margin: 0; background: var(--cream); color: var(--ink); font: 17px/1.65 "DM Sans", Arial, sans-serif; }
+    :root{--kolom:760px;--kolom-pad:24px}
     main { max-width: 760px; margin: auto; padding: 42px 24px 56px; }
     .brand { display: inline-block; margin-bottom: 28px; }
     .brand img { display: block; width: auto; height: 40px; }
@@ -78,6 +79,12 @@ for (const ref of [...new Set(rel.flatMap((publication) => publication.claim_ref
       <dt>Gebruikt in</dt><dd>${usedIn}</dd>
     </dl></div>
   </main>
+  <div class="afsluiter">
+    <footer>
+      <p>Deze bewering staat ook in het volledige overzicht: <a href="/bewijs/">alle beweringen met hun datum en bron</a>,
+        of machineleesbaar via <a href="/bewijs.json">bewijs.json</a>.</p>
+    </footer>
+  </div>
 </body>
 </html>`);
   count += 1;
