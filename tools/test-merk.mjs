@@ -13,6 +13,7 @@
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import { parseHTML } from 'linkedom';
 import { KLEUR, PAPIER, MAAT, GEMETEN, VLOER, contrast, TOEGESTANE_HEX, BLAD, gelezenToken } from './lib/merk.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -61,10 +62,34 @@ console.log('\n2. de oordelen kloppen met de vloeren');
 
 // ── de poort op wat er werkelijk gegenereerd wordt ──
 //
-// Cyaan mag tekstkleur zijn op een donker vlak. Op deze pagina's is dat de merknaam in de
-// topbalk en de datum-eyebrow in de hero — allebei op --dark. Alles daarbuiten is een fout,
-// en die lijst staat hier zodat een nieuwe uitzondering een bewuste regel is.
-const OP_DONKER = ['.tb-name span', '.tb-back', '.eyebrow', '.afsluiter'];
+// EERST STOND HIER EEN LIJST met selectors die "op donker" staan, met de hand bijgehouden.
+// Dat is dezelfde fout als een handmatig bijgehouden publicatielijst, alleen in CSS: hij
+// klopt tot iemand een vlak toevoegt. Op 31 juli gebeurde dat meteen — ik zette de links in
+// .slot-in van cyaan naar navy omdat "cyaan geen tekstkleur is", zonder te zien dat .slot-in
+// een dónkere achtergrond heeft. Resultaat: navy op dark, 1,2:1, onleesbaar. De poort zweeg,
+// want .slot-in stond niet op het lijstje.
+//
+// Nu leidt hij af wélke vlakken donker zijn: elke regel die background op --dark of --screen
+// zet, maakt zichzelf en alles eronder donker. Daarna wordt per tekstkleur de verhouding
+// tegen de júiste ondergrond uitgerekend. Dat werkt in beide richtingen — te licht op licht
+// én te donker op donker — en er valt niets meer te vergeten.
+const HEX = { cyan: KLEUR.cyan, navy: KLEUR.navy, muted: KLEUR.muted, red: KLEUR.red,
+              cream: KLEUR.cream, dark: KLEUR.dark, screen: KLEUR.screen,
+              paper: PAPIER.geldig, papier: PAPIER.geldig };
+
+/** Kleurwaarde uit een CSS-waarde halen: var(--x), #hex, of rgba over een bekende grond. */
+const kleurUit = (waarde, achter) => {
+  const v = waarde.match(/var\(--([a-z-]+)\)/);
+  if (v) return HEX[v[1]] ?? null;
+  const h = waarde.match(/#[0-9a-f]{6}\b/i);
+  if (h) return h[0].toLowerCase();
+  const r = waarde.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+))?/i);
+  if (!r) return null;
+  const a = r[4] === undefined ? 1 : Number(r[4]);
+  const b = (achter || KLEUR.cream).replace('#', '').match(/.{2}/g).map(x => parseInt(x, 16));
+  return '#' + [1, 2, 3].map(i => Math.round(a * Number(r[i]) + (1 - a) * b[i - 1])
+    .toString(16).padStart(2, '0')).join('');
+};
 
 // Alle gegenereerde oppervlakken, niet alleen /nieuws/. De contrastfout van vanochtend zat
 // in build-nieuws, maar dezelfde constructie stond in build-vragen — en die viel buiten de
@@ -81,27 +106,67 @@ for (const pagina of PAGINAS) {
     + [...bron.matchAll(/style="([^"]*)"/g)].map(m => `[inline]{${m[1]}}`).join('');
   toets('opmaak gevonden in de pagina', css.length > 500, `${css.length} tekens`);
 
-  // Alleen de eigenschap `color` telt. Mijn eerste versie hier matchte ook
-  // `border-color` en `text-decoration-color` — een lijn in cyaan is toegestaan, tekst niet,
-  // en dat verschil is precies waar deze poort over gaat. De grens vóór het woord vangt dat.
-  const CYAAN_TEKST = /(^|[;{\s])color:\s*var\(--cyan\)/;
-  const regels = css.split('}').map(r => r.trim()).filter(Boolean);
-  const overtreders = regels
-    .filter(r => CYAAN_TEKST.test(r))
-    .map(r => r.split('{')[0].trim())
-    .filter(sel => !OP_DONKER.some(w => sel.includes(w)));
+  // Commentaar eruit vóór het parsen. Zonder deze stap slurpt de selector-match alles wat
+  // tussen de vorige `}` en de volgende `{` staat — inclusief een toelichtingsblok — en dan
+  // heet het donkere vlak niet `.afsluiter` maar `/* Ritme: ... */ .afsluiter`. Gevolg: geen
+  // enkele afstammeling wordt als "op donker" herkend en de hele meting kantelt.
+  const regels = [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^}]*)\}/g)]
+    .map(m => ({ sel: m[1].trim().split('\n').pop().trim(), body: m[2] }));
 
-  toets('geen onbekende cyaan-tekstregel', overtreders.length === 0, overtreders.join(' · '));
+  // Welke vlakken zijn donker? Afgeleid uit de opmaak — en welke tekst dáárin staat, uit de
+  // echte DOM. Selector-tekst alleen kan afstamming niet bepalen: .eyebrow zegt niet dat hij
+  // in .hero staat, en een inline style zegt helemaal niets. Daarom wordt de pagina hier
+  // werkelijk geparseerd. linkedom staat al in de dependencies voor de kennisproef.
+  const { document } = parseHTML(bron);
 
-  // Muted is óók geen tekstkleur — 4,2:1 op papier, 3,8:1 op cream, 4,0:1 op dark. Het blad
-  // noemt hem "metadata" en geeft 3,8:1 als toegestaan op; regel 7 van zijn eigen keuring
-  // zegt 4,5:1 zonder uitzondering. De toets, niet de toelichting. Als lijnkleur mag hij wel.
-  const mutedTekst = regels
-    .filter(r => /(^|[;{\s])color:\s*var\(--muted\)/.test(r))
-    .map(r => r.split('{')[0].trim());
-  toets('geen muted als tekstkleur', mutedTekst.length === 0, mutedTekst.join(' · '));
-  toets('de oude bronlink-regel is weg', !/\.b-bron\{[^}]*color:\s*var\(--cyan\)/.test(css));
-  toets('de oude datumregel is weg', !/\.b-datum\{[^}]*color:\s*var\(--cyan\)/.test(css));
+  // Per element de LAATSTE regel die een eigenschap zet — dat benadert de cascade. Zonder
+  // deze stap sloeg de toets alarm op `.foot{color:navy}` terwijl `.afsluiter .foot` die
+  // regel op elke pagina overschrijft: een melding over een kleur die nergens zichtbaar is.
+  const gezet = (el, eig) => {
+    let laatste = null;
+    for (const r of regels) {
+      if (r.sel.startsWith(':root') || r.sel.startsWith('[inline]')) continue;
+      const m = r.body.match(new RegExp(`(?:^|[;{\\s])${eig}:\\s*([^;]+)`));
+      if (!m) continue;
+      for (const sel of r.sel.split(',')) {
+        try { if (el.matches(sel.trim())) laatste = m[1].trim(); } catch {}
+      }
+    }
+    const inline = el.getAttribute && el.getAttribute('style');
+    const im = inline && inline.match(new RegExp(`(?:^|[;\\s])${eig}:\\s*([^;]+)`));
+    return im ? im[1].trim() : laatste;
+  };
+
+  // Donker is niet "staat er dark in" maar "de opgeloste kleur is donker". De datumchip heeft
+  // background rgba(15,168,203,.12) — cyaan op 12 procent, dus lichter dan het papier
+  // eronder. Een tekstmatch op "rgba(15," zou hem donker noemen; de luminantie weet beter.
+  const grondVan = (el) => {
+    for (let n = el; n && n.tagName; n = n.parentElement) {
+      const bg = gezet(n, 'background(?:-color)?');
+      if (!bg || /transparent|none/.test(bg)) continue;
+      const opgelost = kleurUit(bg, PAPIER.geldig);
+      if (opgelost) return opgelost;
+    }
+    return PAPIER.geldig;
+  };
+
+  const laag = new Map();
+  for (const el of document.querySelectorAll('body *')) {
+    if (!el.textContent || !el.textContent.trim()) continue;
+    const kleur = gezet(el, 'color');
+    if (!kleur) continue;
+    const grond = grondVan(el);
+    const voor = kleurUit(kleur, grond);
+    if (!voor) continue;
+    const v = contrast(voor, grond);
+    if (v < VLOER.tekst) {
+      const naam = `${el.tagName.toLowerCase()}${el.className ? '.' + String(el.className).split(' ')[0] : ''}`;
+      laag.set(naam, `${naam} → ${v}:1 (${voor} op ${grond})`);
+    }
+  }
+
+  toets(`elke tekstkleur haalt ${VLOER.tekst}:1 op zijn eigen ondergrond`,
+        laag.size === 0, [...laag.values()].join(' · '));
 }
 
 console.log('\n4. de maten uit het blad staan in de pagina');
