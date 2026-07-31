@@ -157,3 +157,25 @@ select {
    pagina-element en hoort bij de pagina.
 
    Gemeten op de gerenderde pagina, niet geschat — dit is aan de markup niet te zien. */
+
+/* Op papier. Browsers printen standaard ZONDER achtergronden: de donkere band valt dan weg
+   en wat overblijft is cream-op-wit — vrijwel onzichtbaar. Dat raakt vooral de board-brief,
+   die expliciet om te printen is gemaakt en waar de twee vervolgstappen in de voet staan.
+   Op papier is de afsluiter dus geen band maar een streep, met gewone donkere tekst. */
+@media print {
+  .afsluiter {
+    background: transparent;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .afsluiter .mee,
+  .afsluiter .wp-mee,
+  .afsluiter .foot,
+  .afsluiter footer,
+  .afsluiter .foot a,
+  .afsluiter footer a,
+  .afsluiter > footer a {
+    color: var(--ink);
+  }
+}
