@@ -67,6 +67,23 @@ const paperTitel = (slug) => {
   return t ? t.split(' — ')[0].split(' | ')[0].trim() : null;
 };
 
+// De vier papers, in de volgorde waarin ze een reeks vormen. Die volgorde staat op de
+// whitepaperpagina zelf — met een nummer én een rangtelwoord per kaart, en verify-publiek
+// bewaakt al dat die twee bij elkaar horen. Hier overtypen zou een vijfde plek maken waar de
+// volgorde staat; dan klopt hij tot iemand een paper toevoegt.
+const paperVolgorde = () => {
+  const idx = path.join(PAPERDIR, 'index.html');
+  if (!existsSync(idx)) return [];
+  const RANG = ['', 'Eerste', 'Tweede', 'Derde', 'Vierde', 'Vijfde', 'Zesde'];
+  return (readFileSync(idx, 'utf8').match(/<a class="card"[\s\S]*?<\/a>/g) || [])
+    .map(kaart => ({
+      slug: (kaart.match(/href="\/whitepapers\/([^"]+)/) || [])[1],
+      plaats: RANG.indexOf((kaart.match(/(\w+) in de reeks/) || [])[1]),
+    }))
+    .filter(p => p.slug && p.plaats > 0)
+    .sort((a, b) => a.plaats - b.plaats);
+};
+
 // Een 'hoort bij' die nergens heen wijst, is een gebroken belofte op de pagina zelf. De
 // schrijfstap weigert een onbekende slug al, maar die draait op een andere machine dan deze
 // build — en een paper kan hernoemd worden nadat het bericht is goedgekeurd.
@@ -404,6 +421,18 @@ for (const b of berichten) {
   // mee. Voor tekst met witregels verandert er niets — dat is dezelfde uitkomst.
   const alineas = b.tekst.split(/\n/).map(p => p.trim()).filter(Boolean)
     .map(p => `      <p>${esc(p)}</p>`).join('\n');
+
+  // De weg naar de papers. Er stond één link, naar deel één — terwijl de openingspost vier
+  // dingen opsomt die precies de vier papers zijn. Wie dat leest wil ze kunnen aanklikken.
+  //
+  // De volgorde en de titels komen uit de whitepaperpagina en uit de papers zelf; het aantal
+  // wordt geteld. Er staat hier dus geen enkele papernaam, geen volgorde en geen "vier".
+  const volgorde = paperVolgorde();
+  const AANTAL = ['', 'Eén', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes'];
+  const papers = volgorde.length
+    ? `        ${AANTAL[volgorde.length] || volgorde.length} stukken werken dit uit, met de bronnen erbij:
+        ${volgorde.map(p => `<a href="/whitepapers/${esc(p.slug)}">${esc(paperTitel(p.slug))}</a>`).join(' &middot;\n        ')}.<br>`
+    : '';
   mkdirSync(path.join(OUTDIR, b.slug), { recursive: true });
   writeFileSync(path.join(OUTDIR, b.slug, 'index.html'),
     KOP(`${b.titel} — R.O.B. Concepting`, b.samenvatting, u, ld, b.afbeelding ? `${BASIS}${b.afbeelding}` : `${BASIS}/og-image.png`) +
@@ -430,7 +459,7 @@ ${reeksnav(b)}
 ${deel(b, u)}
       </div>
       <div class="route">
-        De achtergrond bij dit bericht staat uitgewerkt in de whitepapers, met de bronnen erbij. <a href="/whitepapers/de-beste-keuze-is">De beste keuze is&hellip;</a> is het eerste deel.<br>
+${papers}
         Wil je weten waar je eigen organisatie het kwetsbaarst is? <a href="/kennisgezagsscan/">Doe de Kennisgezagsscan</a> in ongeveer vijf minuten.
       </div>
 
