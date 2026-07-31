@@ -94,22 +94,22 @@ if (taalfouten.length) {
 }
 
 const STIJL = `
-    :root{--cream:#e8e4dc;--paper:#f4f2ed;--purple:#001a4d;--cyan:#0fa8cb;--red:#e8391e;
-      --screen:#0e1525;--muted:#6b6478;--border:rgba(0,26,77,.12);--rule:rgba(0,26,77,.08)}
+    :root{--cream:#e8e4dc;--paper:#f4f1ec;--purple:#001a4d;--cyan:#0fa8cb;--red:#e8391e;
+      --dark:#0d0d1a;--screen:#0e1525;--muted:#7a6e85;--border:rgba(0,26,77,.14);--rule:rgba(0,26,77,.08)}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans',system-ui,sans-serif;background:var(--cream);color:var(--purple);
       line-height:1.7;-webkit-font-smoothing:antialiased}
-    .topbar{background:var(--screen);padding:16px 28px;display:flex;align-items:center;
+    .topbar{background:var(--dark);padding:14px 28px;display:flex;align-items:center;
       justify-content:space-between;gap:20px;flex-wrap:wrap}
     .tb-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
     .tb-name{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;
-      text-transform:uppercase;color:#fff}
+      text-transform:uppercase;color:var(--paper)}
     .tb-name span{color:var(--cyan)}
     .tb-back{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;
       text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none}
     .tb-back:hover{color:var(--cyan)}
-    .hero{background:var(--screen);color:#fff;padding:56px 28px 66px;position:relative;overflow:hidden}
+    .hero{background:var(--dark);color:var(--paper);padding:56px 28px 66px;position:relative;overflow:hidden}
     .hero-inner{max-width:820px;margin:0 auto;position:relative;z-index:2}
     .hero-rings{position:absolute;right:-130px;top:50%;transform:translateY(-50%);
       width:480px;height:480px;opacity:.5;pointer-events:none;z-index:1}
@@ -119,7 +119,7 @@ const STIJL = `
       letter-spacing:-.02em;margin-bottom:18px}
     .hero h1 strong{font-weight:600}
     .hero-bar{width:46px;height:2px;background:var(--red);margin-bottom:24px}
-    .hero p{font-size:clamp(16px,2.2vw,19px);font-weight:300;color:rgba(255,255,255,.72);max-width:44em}
+    .hero p{font-size:clamp(16px,2.2vw,19px);font-weight:300;color:rgba(244,241,236,.82);max-width:44em}
     .wrap{max-width:820px;margin:0 auto;padding:52px 28px 20px}
     .b{background:var(--paper);border:1px solid var(--border);padding:30px clamp(22px,4vw,42px);
       margin-bottom:20px}
@@ -134,17 +134,17 @@ const STIJL = `
     .b-grond-kop{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
       text-transform:uppercase;color:var(--muted);margin-bottom:11px}
     .b-grond ul{list-style:none}
-    .b-grond li{font-size:14.5px;line-height:1.6;color:var(--muted);margin-bottom:11px}
+    .b-grond li{font-size:14.5px;line-height:1.6;color:var(--purple);margin-bottom:11px}
     .b-datumchip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;
       color:var(--purple);background:rgba(15,168,203,.1);padding:1px 7px;margin-right:9px;
       white-space:nowrap;font-variant-numeric:tabular-nums}
     .b-media{margin:0 0 20px;line-height:0}
     .b-media img,.b-media video{width:100%;height:auto;display:block;border:1px solid var(--border)}
     .b-media figcaption{font-size:13px;color:var(--muted);line-height:1.5;padding-top:8px;
-      font-style:italic}
+      font-style:normal}
     .b-vid{position:relative;display:block}
     .b-vid .speel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-    .b-vid .speel span{background:rgba(14,21,37,.82);color:#fff;font-family:'IBM Plex Mono',monospace;
+    .b-vid .speel span{background:rgba(13,13,26,.9);color:var(--paper);font-family:'IBM Plex Mono',monospace;
       font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px 22px}
     .b-vid:hover .speel span{background:var(--cyan)}
     .b-merk{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
@@ -180,7 +180,7 @@ ${STATUS_CSS}
     .deel a{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.08em;
       color:var(--cyan);text-decoration:none;border:1px solid rgba(15,168,203,.35);
       padding:6px 14px;transition:background .15s,color .15s}
-    .deel a:hover{background:var(--cyan);color:#fff}
+    .deel a:hover{background:var(--dark);color:var(--paper)}
     .foot{max-width:820px;margin:0 auto;padding:34px 28px 56px;display:flex;
       justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;
       font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -214,19 +214,15 @@ const KOP = (titel, omschr, canon, extraLd = '', ogBeeld = `${BASIS}/og-image.pn
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230e1525'/><circle cx='16' cy='16' r='12' fill='none' stroke='%230fa8cb' stroke-width='1.5'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230fa8cb' stroke-width='1' opacity='.5'/><circle cx='16' cy='16' r='3' fill='%23e8391e'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 ${extraLd}  <style>${STIJL}
   </style>
+  <link rel="stylesheet" href="/media/merk.css">
 </head>
 <body>
   <header class="topbar">
-    <a class="tb-brand" href="/">
-      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
-        <circle cx="16" cy="16" r="12" fill="none" stroke="#0fa8cb" stroke-width="1.5"/>
-        <circle cx="16" cy="16" r="7" fill="none" stroke="#0fa8cb" stroke-width="1" opacity=".5"/>
-        <circle cx="16" cy="16" r="3" fill="#e8391e"/>
-      </svg>
-      <span class="tb-name">R.O.B. <span>Concepting</span></span>
+    <a class="tb-brand" href="/" aria-label="Terug naar R.O.B. Concepting">
+      <img class="rob-lockup" src="/media/logo/logo-rob-lengte-donker-transparant.png" width="589" height="117" alt="R.O.B. Concepting">
     </a>
     <a class="tb-back" href="/">&larr; Terug naar de site</a>
   </header>
