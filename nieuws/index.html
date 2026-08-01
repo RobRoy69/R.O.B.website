@@ -51,10 +51,10 @@
   }
   </script>
   <style>
-    :root{--cream:#e8e4dc;--papier:#f4f1ec;--navy:#001a4d;
-      --cyan:#0fa8cb;--red:#e8391e;--dark:#0d0d1a;--screen:#0e1525;
-      --muted:#7a6e85;--border:rgba(0,26,77,0.12);--rule:rgba(0,26,77,.08);
-      --radius:2px}
+    /* Geen paletregel meer. Die staat in media/merk.css, en deze pagina laadt hem. Hier
+       stond hij nog een tweede keer — wel afgeleid uit dezelfde bron via lib/merk.mjs, maar
+       toch een eigen uitgifte op de pagina. Alleen wat pagina-eigen is blijft staan. */
+    :root{--radius:2px}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans', system-ui, -apple-system, sans-serif;background:var(--cream);color:var(--navy);
@@ -63,12 +63,12 @@
       justify-content:space-between;gap:20px;flex-wrap:wrap}
     .tb-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
     .tb-name{font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:12px;letter-spacing:0.14em;
-      text-transform:uppercase;color:var(--papier)}
+      text-transform:uppercase;color:var(--paper)}
     .tb-name span{color:var(--cyan)}
     .tb-back{font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:11px;letter-spacing:0.14em;
       text-transform:uppercase;color:rgba(232,228,220,.58);text-decoration:none}
     .tb-back:hover{color:var(--cyan)}
-    .hero{background:var(--dark);color:var(--papier);padding:56px 28px 66px;position:relative;overflow:hidden}
+    .hero{background:var(--dark);color:var(--paper);padding:56px 28px 66px;position:relative;overflow:hidden}
     .hero-inner{max-width:880px;margin:0 auto;position:relative;z-index:2}
     .hero-rings{position:absolute;right:-130px;top:50%;transform:translateY(-50%);
       width:480px;height:480px;opacity:.5;pointer-events:none;z-index:1}
@@ -80,7 +80,7 @@
     .hero-bar{width:46px;height:2px;background:var(--cyan);margin-bottom:24px}
     .hero p{font-size:18px;font-weight:300;line-height:1.6;color:rgba(232,228,220,.80);max-width:66ch}
     .wrap{max-width:880px;margin:0 auto;padding:52px 28px 20px}
-    .b{background:var(--papier);border:1px solid var(--border);border-radius:var(--radius);
+    .b{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);
       padding:22px;margin-bottom:20px}
     .b-datum{font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:11px;letter-spacing:0.14em;
       text-transform:uppercase;color:var(--navy);margin-bottom:12px}
@@ -109,7 +109,7 @@
     .b-media figcaption{font-size:13px;color:var(--navy);line-height:1.5;padding-top:8px}
     .b-vid{position:relative;display:block}
     .b-vid .speel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-    .b-vid .speel span{background:rgba(13,13,26,.85);color:var(--papier);font-family:'IBM Plex Mono', 'Courier New', monospace;
+    .b-vid .speel span{background:rgba(13,13,26,.85);color:var(--paper);font-family:'IBM Plex Mono', 'Courier New', monospace;
       font-size:12px;letter-spacing:0.14em;text-transform:uppercase;padding:12px 22px;
       border-radius:var(--radius)}
     .b-vid:hover .speel span{background:var(--cyan);color:var(--navy)}
@@ -133,7 +133,7 @@
     .b-bron{font-size:14px;white-space:nowrap;color:var(--navy);text-decoration:none;
       border-bottom:1px solid var(--cyan)}
     .b-bron-los{color:var(--navy);border-bottom:1px dotted rgba(122,110,133,.5)}
-    .route{background:var(--papier);border-left:2px solid var(--cyan);
+    .route{background:var(--paper);border-left:2px solid var(--cyan);
       border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;font-size:16px}
     .route a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--cyan)}
 

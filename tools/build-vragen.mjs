@@ -145,8 +145,6 @@ ${JSON.stringify(faq, null, 2).split('\n').map(l => '  ' + l).join('\n')}
   </script>
 
   <style>
-    :root{--cream:#e8e4dc;--paper:#f4f1ec;--purple:#001a4d;--cyan:#0fa8cb;--red:#e8391e;
-      --dark:#0d0d1a;--screen:#0e1525;--muted:#7a6e85;--border:rgba(0,26,77,.14);--rule:rgba(0,26,77,.08)}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans',system-ui,sans-serif;background:var(--cream);color:var(--purple);
