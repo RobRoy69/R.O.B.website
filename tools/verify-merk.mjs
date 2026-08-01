@@ -4,6 +4,11 @@ import path from 'node:path';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const PUBLIC = path.join(ROOT, 'publiek');
 const errors = [];
+const faviconTag = '<link rel="icon" href="/favicon.svg" type="image/svg+xml">';
+
+if (!existsSync(path.join(PUBLIC, 'favicon.svg'))) {
+  errors.push('gedeeld favicon ontbreekt: favicon.svg');
+}
 
 const approvedLogos = new Map([
   ['logo-rob-donker-transparant.png', [539, 458]],
@@ -50,6 +55,10 @@ else walk(PUBLIC);
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
   const relative = path.relative(PUBLIC, file).replaceAll('\\', '/');
+  const iconLinks = html.match(/<link\b[^>]*\brel=["'](?:shortcut\s+)?icon["'][^>]*>/gi) || [];
+  if (iconLinks.length !== 1 || !html.includes(faviconTag)) {
+    errors.push(`${relative}: gebruikt niet exact één gedeeld favicon`);
+  }
   if (!html.includes('/media/merk.css')) errors.push(`${relative}: gedeelde merklaag ontbreekt`);
   if (!/\/media\/logo\/logo-rob-(?:lengte-)?(?:donker|wit)-transparant\.png/.test(html)) {
     errors.push(`${relative}: goedgekeurd R.O.B.-lockup ontbreekt`);
