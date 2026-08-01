@@ -48,6 +48,13 @@
   to = "/.netlify/functions/scan-result"
   status = 200
 
+# Korte campagnelink; de volledige naam blijft de canonical.
+[[redirects]]
+  from = "/scan/"
+  to = "/kennisgezagsscan/"
+  status = 301
+  force = true
+
 # Canonieke whitepaper-URL's zijn extensionless. De eerste regel maakt oude
 # gedeelde URL's permanent canoniek; de tweede serveert het bestaande bestand.
 [[redirects]]

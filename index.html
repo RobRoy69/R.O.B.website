@@ -215,7 +215,7 @@
     .play-outer-ring {
       position: relative; width: 220px; height: 220px;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 44px;
+      margin-bottom: 24px;
     }
     .play-outer-ring::before {
       content: '';
@@ -236,6 +236,16 @@
       color: rgba(0,26,77,0.78);
       margin-bottom: 52px; margin-top: -12px;
     }
+
+    .landing-scan-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--navy);
+      text-decoration: none; border-bottom: 1px solid rgba(0,26,77,0.28);
+      padding: 7px 2px; transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .landing-scan-link:hover { color: var(--red); border-color: var(--red); }
+    .landing-scan-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 5px; }
 
 
     /* ════════════════════════════════
@@ -1666,6 +1676,8 @@
       </button>
     </div>
 
+    <a class="landing-scan-link" href="/kennisgezagsscan/">Ontdek je zwakste schakel &rarr;</a>
+
 
   </div>
 </div>
@@ -2204,68 +2216,55 @@
     <div class="sd-bar"></div>
 
     <p class="sd-intro">
-      R.O.B. praat over visie, systeem en merk als geheel.
-      In plaats van dat te beweren, laat ik zien hoe ik het zelf doe.
-      &Eacute;&eacute;n HTML-bestand, twee Functions, een MP4, zes SVG-mockups. Geen framework, geen build-step, geen externe componentenbibliotheek.
+      R.O.B. praat over visie, systeem en merk als geheel. Deze site laat dat niet alleen zien:
+      zij verbindt begrijpelijke uitleg, controleerbaar bewijs en menselijke beoordeling in
+      &eacute;&eacute;n publieke kennisketen.
     </p>
 
     <div class="sd-block">
-      <div class="sd-block-label">01 &middot; Structuur</div>
-      <div class="sd-block-title">Drie schermen, &eacute;&eacute;n verhaal</div>
+      <div class="sd-block-label">01 &middot; Publieke kennis</div>
+      <div class="sd-block-title">Eerst herkennen, daarna verdiepen</div>
       <div class="sd-block-body">
-        Landing &rarr; micro-transitie &rarr; hoofdinterface. Elk scherm heeft &eacute;&eacute;n functie:
-        binnenhalen, het ritueel inluiden, presenteren. De interface zelf is een diamond-nav met
-        vijf knoppen waarvan R.O.B. de centrale is &mdash; alles leidt naar de chat. Deep-links via
-        <code>#over</code>, <code>#visie</code>, <code>#werk</code>, <code>#middel</code> en <code>#rob</code>.
+        Vragen en nieuws beginnen bij een herkenbaar bedrijfsprobleem. Whitepapers brengen de
+        verdieping. De Kennisgezagsscan vertaalt het geheel naar de eigen organisatie, zonder dat
+        een bezoeker eerst de achterliggende architectuur hoeft te begrijpen.
       </div>
     </div>
 
     <div class="sd-block">
-      <div class="sd-block-label">02 &middot; R.O.B.'s AI</div>
-      <div class="sd-block-title">Een Netlify Function als persoonlijkheid</div>
+      <div class="sd-block-label">02 &middot; Bewijs en actualiteit</div>
+      <div class="sd-block-title">Een bewering staat nooit alleen</div>
       <div class="sd-block-body">
-        De chat draait op <code>claude-haiku-4-5</code> via een serverless proxy.
-        De persona zit in een system-prompt: max 3 zinnen, geen markdown, lees of de bezoeker verkent of al weet, redirect naar mail of WhatsApp via de knop.
-        Streaming-respons via Server-Sent Events &mdash; je ziet R.O.B. zinnen bouwen, geen wachttijd.
-        Rate-limit: 12 calls per 60 sec per IP. History-cap: 12 berichten frontend, 20 server.
+        Publieke kernbeweringen hebben een bron, datum en zichtbare status. <em>Bron bevestigd</em>
+        zegt dat de bron de uitspraak draagt; actualiteit en voorbehoud blijven afzonderlijk
+        zichtbaar. Verandert een claim, dan toont de kennislaag welke pagina&rsquo;s erop rusten.
       </div>
     </div>
 
     <div class="sd-block">
-      <div class="sd-block-label">03 &middot; WhatsApp zonder nummer in HTML</div>
-      <div class="sd-block-title">Privacy via redirect-Function</div>
+      <div class="sd-block-label">03 &middot; Menselijke beoordeling</div>
+      <div class="sd-block-title">AI formuleert, een mens stelt vast</div>
       <div class="sd-block-body">
-        De WhatsApp-knop wijst naar <code>/.netlify/functions/whatsapp</code>.
-        Die Function leest het nummer uit een env-var en redirect 302 naar <code>wa.me</code>.
-        Het nummer staat nergens in de publieke HTML of de Git-repo &mdash; alleen in Netlify's environment.
+        Agora bewaart claims, bronnen, besluiten en geldigheid. Een model mag helpen formuleren,
+        maar keurt geen claim goed en verandert geen bronstatus. Rob houdt het finale oordeel over
+        wat namens R.O.B. wordt gepubliceerd.
       </div>
     </div>
 
     <div class="sd-block">
-      <div class="sd-block-label">04 &middot; Mail-notificaties</div>
-      <div class="sd-block-title">Rob krijgt een seintje bij elke verkenning</div>
+      <div class="sd-block-label">04 &middot; Mensen en machines</div>
+      <div class="sd-block-title">Dezelfde kennis, meerdere bruikbare vormen</div>
       <div class="sd-block-body">
-        Na 3 uitwisselingen stuurt de chat-Function de samenvatting naar Rob's inbox via Resend.
-        Geen dashboard, geen tracking-cookies &mdash; gewoon: dit speelde er, lees terug, reageer.
-        Fire-and-forget, faalt stil als de mail-service even hapert. De chat zelf werkt onafhankelijk.
-      </div>
-    </div>
-
-    <div class="sd-block">
-      <div class="sd-block-label">05 &middot; Code</div>
-      <div class="sd-block-title">Wat hier draait, samengevat</div>
-      <div class="sd-block-body">
-        Ongeveer 2200 regels HTML/CSS/JS in &eacute;&eacute;n bestand. Twee Functions van samen 200 regels.
-        Geen npm-dependencies behalve de Anthropic API. Auto-deploy bij elke push naar
-        GitHub, SSL via Let's Encrypt, DNS via Netlify, security-headers in <code>netlify.toml</code>.
-        Vier contactkanalen (chat, mail, LinkedIn, WhatsApp), elk met een eigen rol.
+        Mensen lezen pagina&rsquo;s en claimpaspoorten. Systemen krijgen dezelfde vrijgegeven kennis
+        via gestructureerde uitgifte. Scanantwoorden en gebruikssignalen blijven daarbuiten: zij
+        kunnen een nieuw besluit uitlokken, maar wijzigen nooit automatisch wat als geldig geldt.
       </div>
     </div>
 
     <p class="sd-footer">
-      Concepting in praktijk &mdash; deze site is zijn eigen case study.
+      Concepting in praktijk &mdash; deze site is haar eigen bewijsstuk.
       <br>
-      Wil je iets soortgelijks voor je eigen onderneming? <a href="#rob" id="sd-go-rob">Open R.O.B.</a>
+      Begin bij <a href="/kennisgezagsscan/">je zwakste schakel</a>, of <a href="#rob" id="sd-go-rob">bespreek wat past</a>.
     </p>
   </div>
 </div>
