@@ -97,20 +97,33 @@ const kleurUit = (waarde, achter) => {
 // andere niet: dat is geen dekking maar een steekproef.
 const PAGINAS = ['nieuws/index.html', 'vragen/index.html', 'publiek/bewijs/index.html'];
 
+const overgeslagen = [];
+
 console.log('\n3. geen cyaan als tekstkleur op licht, in de gebouwde pagina');
 for (const pagina of PAGINAS) {
   console.log(`  · ${pagina}`);
-  const bron = readFileSync(path.join(ROOT, pagina), 'utf8');
+  const volPad = path.join(ROOT, pagina);
+  // Sommige oppervlakken bestaan alleen in de publicatie, en publiek/ staat in .gitignore.
+  // Zonder deze regel stierf `node tools/test-merk.mjs` op een verse checkout met ENOENT —
+  // hij werkte alleen doordat npm run deploy toevallig eerst bouwt. Overslaan mag, maar dan
+  // wél hardop: een toets die stil minder controleert dan hij belooft, is de ergste soort.
+  if (!existsSync(volPad)) {
+    console.log(`    overgeslagen — ${pagina} bestaat niet; draai eerst npm run bouw`);
+    overgeslagen.push(pagina);
+    continue;
+  }
+  const bron = readFileSync(volPad, 'utf8');
 
-  // De gedeelde merklaag telt mee, en wel VÓÓR de pagina-eigen opmaak — dat is ook de
-  // volgorde waarin de browser hem laadt. Zonder deze stap meet de toets iets anders dan er
-  // op het scherm staat: sinds de pagina's hun eigen palet niet meer meedragen, staan regels
-  // als `.bw-id{color:var(--ink)}` alleen nog in merk.css. De toets meldde .bw-id daardoor
-  // als cyaan terwijl de browser navy toont — een bevinding over een kleur die niemand ziet.
+  // De gedeelde merklaag telt mee, en wel IN DE VOLGORDE WAARIN DE BROWSER HEM LAADT.
+  // Elke gegenereerde pagina zet <link href="/media/merk.css"> ná zijn eigen <style>, dus de
+  // merklaag komt LATER en wint bij gelijk gewicht. Mijn eerste versie zette hem ervóór —
+  // dan worden gelijkwaardige regels precies omgekeerd opgelost, en meet de toets iets
+  // anders dan er op het scherm staat. Dat is geen detail: een poort die de verkeerde kant
+  // op resolvet, keurt juist de regressies goed die hij moet vangen.
   const merklaag = bron.includes('/media/merk.css')
     ? readFileSync(path.join(ROOT, 'media', 'merk.css'), 'utf8') : '';
-  const css = merklaag
-    + (bron.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '')
+  const css = (bron.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '')
+    + merklaag
     // Inline style-attributen tellen mee: daar zat de cyaan linkkleur op /vragen/.
     + [...bron.matchAll(/style="([^"]*)"/g)].map(m => `[inline]{${m[1]}}`).join('');
   toets('opmaak gevonden in de pagina', css.length > 500, `${css.length} tekens`);
@@ -230,6 +243,16 @@ for (const pagina of PAGINAS) {
   toets(`elke tekstkleur haalt ${VLOER.tekst}:1 op zijn eigen ondergrond`,
         laag.size === 0, [...laag.values()].join(' · '));
 }
+
+// Overslaan mag, maar niet stilzwijgend. Zonder deze regel kan de toets in de toekomst
+// nul pagina's controleren en toch groen melden — dat is de vorm van dekking die je pas
+// ontdekt als er iets fout is gegaan.
+if (overgeslagen.length) {
+  console.log(`  · ${overgeslagen.length} van ${PAGINAS.length} oppervlakken NIET gecontroleerd (${overgeslagen.join(', ')})`);
+}
+toets(`${PAGINAS.length - overgeslagen.length} van ${PAGINAS.length} oppervlakken werkelijk gemeten`,
+      PAGINAS.length - overgeslagen.length > 0,
+      'geen enkele pagina gecontroleerd — draai eerst npm run bouw');
 
 console.log('\n4. de maten uit het blad staan in de pagina');
 {
