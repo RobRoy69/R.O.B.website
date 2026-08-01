@@ -28,6 +28,26 @@ export function wachtwoordGezet() {
   return typeof w === 'string' && w.length >= 12;
 }
 
+/**
+ * Waaróm het scherm dicht is. "Ontbreekt of is te kort" was één melding voor drie oorzaken,
+ * en dan sta je te gissen tussen een verkeerde scope, een typefout in de naam en een te kort
+ * wachtwoord. Dit onderscheidt ze zonder de waarde prijs te geven: aanwezigheid en de vraag
+ * of hij lang genoeg is, meer niet.
+ */
+export function waaromDicht() {
+  const w = process.env.BEHEER_WACHTWOORD;
+  if (w === undefined) {
+    return 'BEHEER_WACHTWOORD komt niet aan bij de functie. Controleer de naam en of de scope op Functions staat; na een wijziging is één nieuwe deploy nodig.';
+  }
+  if (typeof w !== 'string' || w.trim() === '') {
+    return 'BEHEER_WACHTWOORD is er wel maar is leeg.';
+  }
+  if (w.length < 12) {
+    return `BEHEER_WACHTWOORD is er wel maar telt ${w.length} tekens; er zijn er minstens twaalf nodig.`;
+  }
+  return '';
+}
+
 function sleutel() {
   const w = process.env.BEHEER_WACHTWOORD;
   if (!w) return null;

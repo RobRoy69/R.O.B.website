@@ -22,7 +22,7 @@ import { SOORTEN } from '../../tools/lib/reeks.mjs';
 import { PAPERS, json, makeRateLimiter, clientIp } from './lib/papers.js';
 import {
   wachtwoordGezet, wachtwoordKlopt, maakSessie, sessieGeldig,
-  leesCookie, zetCookie, COOKIE, SESSIE_MS,
+  leesCookie, zetCookie, COOKIE, SESSIE_MS, waaromDicht,
 } from './lib/beheer-sessie.js';
 
 const VELDEN = 'ext_ref,slug,titel,samenvatting,tekst,claim_refs,review_status,soort,reeks,' +
@@ -118,7 +118,7 @@ export default async (req) => {
   // ── aanmelden ──
   if (actie === 'aanmelden') {
     if (!wachtwoordGezet()) {
-      return json({ fout: 'Het beheerscherm is niet ingericht: BEHEER_WACHTWOORD ontbreekt of is korter dan twaalf tekens.' }, 503, origin);
+      return json({ fout: `Het beheerscherm is niet ingericht. ${waaromDicht()}` }, 503, origin);
     }
     // .ok uitlezen, niet de terugkeerwaarde zelf. makeRateLimiter geeft een OBJECT terug
     // ({ ok, retryAfter }) en een object is altijd waar — `if (!remmen(ip))` was dus nooit
