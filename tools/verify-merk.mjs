@@ -30,6 +30,11 @@ for (const [name, expected] of approvedLogos) {
   }
 }
 
+const pdfBuilder = readFileSync(path.join(ROOT, 'tools', 'build-pdf.mjs'), 'utf8');
+if (!/querySelectorAll\('img\.rob-lockup'\)[\s\S]*?logo-rob-lengte-wit-transparant\.png[\s\S]*?image\.decode\(\)/.test(pdfBuilder)) {
+  errors.push('PDF-builder wisselt niet gecontroleerd naar het definitieve logo voor lichte ondergrond');
+}
+
 const htmlFiles = [];
 const walk = (directory) => {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
