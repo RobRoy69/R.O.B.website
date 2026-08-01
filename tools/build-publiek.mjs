@@ -31,6 +31,7 @@ const UIT  = path.join(ROOT, 'publiek');
 const PUBLIEK = [
   { soort: 'bestand', pad: 'index.html' },
   { soort: 'bestand', pad: 'robots.txt' },
+  { soort: 'bestand', pad: 'favicon.svg' },
   // sitemap.xml staat hier BEWUST NIET: build-sitemap.mjs schrijft hem rechtstreeks in de
   // publicatie, afgeleid uit wat er werkelijk staat. Tot 2026-07-28 lag er ook een
   // handgeschreven exemplaar in de repo dat hier werd gekopieerd en daarna weer overschreven

@@ -26,6 +26,7 @@ over wat de bezoeker ziet.
 ├── netlify.toml             # Roept npm run deploy aan + security- en cache-headers
 ├── package.json             # De bouwketen (bouw/deploy/pdf/rapport) + Function-deps
 ├── robots.txt               # SEO. sitemap.xml staat hier NIET: die wordt afgeleid
+├── favicon.svg              # Gedeeld R.O.B.-favicon voor alle gebouwde HTML-pagina's
 ├── og-image.svg/.png        # Social preview (1200×630)
 ├── promptfoo.config.yaml    # Dev: persona-regressietests (deployt niet mee)
 │
