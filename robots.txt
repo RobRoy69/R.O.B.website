@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /ervaring/
 Allow: /
 Disallow: /.netlify/
 Disallow: /whitepapers/bestand/

@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "id": "POC-WHOA-001",
+    "version": "2.1.0",
+    "fictional": true,
+    "publicSafe": true,
+    "checkedAt": "2026-08-01",
+    "notice": "Alle casusgegevens en bedragen zijn synthetisch. De demonstratie is geen juridisch advies en voorspelt geen uitkomst."
+  },
+  "case": {
+    "company": "Kompas Horeca Groep B.V.",
+    "sector": "Horeca",
+    "employees": 18,
+    "situation": "De onderneming draait operationeel door, maar historische schulden en aflopende betaalruimte bedreigen de continuïteit.",
+    "opening": "Ik weet het echt niet meer. Het bedrijf draait, maar ik krijg de schulden niet meer ingehaald.",
+    "revealLayers": [
+      {
+        "id": "operatie",
+        "title": "De kern lijkt nog te werken",
+        "summary": "De lopende exploitatie is de afgelopen drie maanden vóór rente en aflossing positief.",
+        "fields": ["operationele_kern", "medewerkers", "omzetritme"]
+      },
+      {
+        "id": "druk",
+        "title": "De schulden drukken sneller dan de operatie kan herstellen",
+        "summary": "Belasting-, huur- en handelsverplichtingen hebben de beschikbare betaalruimte teruggebracht tot een beperkte periode.",
+        "fields": ["historische_schuld", "betaalruimte", "crediteuren"]
+      },
+      {
+        "id": "blokkade",
+        "title": "Vrijwillige overeenstemming is niet bereikt",
+        "summary": "Een eerste voorstel kreeg brede interesse, maar niet genoeg medewerking om vrijwillig uitvoerbaar te worden.",
+        "fields": ["vrijwillig_voorstel", "blokkade", "ontbrekend"]
+      }
+    ],
+    "fields": {
+      "operationele_kern": { "label": "Operationele kern", "value": "Voorlopig positief vóór historische schuldendienst", "source": "ondernemer", "status": "aangeleverd", "version": 1 },
+      "medewerkers": { "label": "Medewerkers", "value": "18", "source": "ondernemer", "status": "aangeleverd", "version": 1 },
+      "omzetritme": { "label": "Omzetritme", "value": "Stabiel over de laatste twaalf weken", "source": "document", "status": "bron-bevestigd", "version": 1 },
+      "historische_schuld": { "label": "Historische schulden", "value": "€312.000 — synthetisch", "source": "document", "status": "bron-bevestigd", "version": 1 },
+      "betaalruimte": { "label": "Betaalruimte", "value": "Indicatief 19 dagen — synthetisch", "source": "systeemafleiding", "status": "onzeker", "version": 1 },
+      "crediteuren": { "label": "Betrokken groepen", "value": "Belastingdienst, verhuurder, handelscrediteuren en financier", "source": "document", "status": "aangeleverd", "version": 1 },
+      "vrijwillig_voorstel": { "label": "Vrijwillig voorstel", "value": "Besproken, nog niet door alle betrokken partijen gedragen", "source": "accountant", "status": "aangeleverd", "version": 1 },
+      "blokkade": { "label": "Blokkade", "value": "Eén concurrente schuldeiser stemt vooralsnog niet in", "source": "accountant", "status": "onzeker", "version": 1 },
+      "ontbrekend": { "label": "Nog nodig", "value": "Gevalideerde prognose, rangorde, reorganisatie- en liquidatiewaarde", "source": "systeemafleiding", "status": "ontbreekt", "version": 1 },
+      "financiering": { "label": "Nieuwe financiering", "value": "Niet als noodzakelijke voorwaarde vastgesteld", "source": "expert", "status": "expert-bevestigd", "version": 2 },
+      "route": { "label": "Voorbereidingsroute", "value": "WHOA-kandidaat", "source": "expert", "status": "expert-bevestigd", "version": 1 }
+    },
+    "accountant": {
+      "observation": "De continuïteitsveronderstelling vraagt een onderbouwde scenariovergelijking; de huidige informatie is daarvoor nog niet compleet.",
+      "documents": [
+        { "name": "Kolommenbalans", "status": "bron-bevestigd" },
+        { "name": "Dertienweeks liquiditeitsbeeld", "status": "onzeker" },
+        { "name": "Volledige crediteurenlijst", "status": "aangeleverd" },
+        { "name": "Waarderingsonderbouwing", "status": "ontbreekt" }
+      ]
+    },
+    "expert": {
+      "aiInference": "Nieuwe financiering is noodzakelijk om de onderneming levensvatbaar te maken.",
+      "correction": "Dat volgt nog niet uit de stukken. De route moet eerst aantonen dat de kern zonder afgedwongen nieuw krediet kan voortbestaan.",
+      "decision": "Er is voldoende grond om een WHOA-voorbereidingsroute te openen, onder voorbehoud van waardering, klassenindeling en juridische toetsing."
+    },
+    "whoa": {
+      "procedure": "Besloten procedure — voorlopige keuze, juridisch te bevestigen",
+      "classes": [
+        { "name": "Financier met zekerheid", "amount": "€30.000", "status": "Voorlopig ingedeeld" },
+        { "name": "Preferente schuldeiser", "amount": "€146.000", "status": "Voorlopig ingedeeld" },
+        { "name": "Concurrente schuldeisers", "amount": "€136.000", "status": "Voorlopig ingedeeld" }
+      ],
+      "values": {
+        "reorganization": "€520.000 — synthetische werkhypothese",
+        "liquidation": "€180.000 — synthetische werkhypothese"
+      },
+      "phases": [
+        { "id": "voorbereiding-akkoord", "label": "Voorbereiding", "owner": "Onderneming + adviseurs", "items": ["Informatieset sluiten", "Scenario en aanbod uitwerken", "Besloten/openbaar juridisch bevestigen"] },
+        { "id": "klassen-en-waardering", "label": "Klassen en waarde", "owner": "Expert + advocaat", "items": ["Rechten en rang vaststellen", "Reorganisatie- en liquidatiewaarde onderbouwen", "Voorlopige klassen toetsen"] },
+        { "id": "stemming", "label": "Stemming", "owner": "Onderneming + advocaat", "items": ["Stemgerechtigden informeren", "Uitslag per klasse vastleggen", "Bezwaren en afwijkingen documenteren"] },
+        { "id": "homologatie", "label": "Homologatie", "owner": "Advocaat + rechtbank", "items": ["Alleen indien nodig verzoek indienen", "Afwijzingsgronden toetsen", "Uitspraak registreren zonder uitkomst te voorspellen"] },
+        { "id": "uitvoering", "label": "Uitvoering", "owner": "Onderneming + regie", "items": ["Afspraken uitvoeren", "Afwijkingen bewaken", "Besluiten en actualiteit bijhouden"] }
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "rule-whoa-purpose",
+      "statement": "De WHOA kan worden gebruikt om schulden te herstructureren wanneer niet alle schuldeisers vrijwillig instemmen.",
+      "allowedWording": "WHOA is een mogelijke voorbereidingsroute; passendheid en uitkomst vragen professionele en juridische beoordeling.",
+      "source": "Rechtspraak — WHOA-procedure",
+      "sourceUrl": "https://www.rechtspraak.nl/onderwerpen/whoa/procedure",
+      "checkedAt": "2026-08-01",
+      "status": "bron-bevestigd"
+    },
+    {
+      "id": "rule-whoa-vote",
+      "statement": "De stemming vindt per klasse plaats; voor homologatie is ten minste één instemmende klasse nodig die twee derde van de schuldenlast in die klasse vertegenwoordigt.",
+      "allowedWording": "Twee derde gaat over vertegenwoordigde schuldenwaarde binnen een klasse, niet over het aantal schuldeisers.",
+      "source": "Rechtspraak — WHOA-procedure",
+      "sourceUrl": "https://www.rechtspraak.nl/onderwerpen/whoa/procedure",
+      "checkedAt": "2026-08-01",
+      "status": "bron-bevestigd"
+    },
+    {
+      "id": "rule-whoa-court",
+      "statement": "Voor verzoeken aan de rechtbank is een advocaat verplicht; de rechtbank beslist over homologatie.",
+      "allowedWording": "Max-OS bereidt en ordent, maar vervangt advocaat, deskundige, observator of rechtbank niet.",
+      "source": "Rechtspraak — WHOA-procedure",
+      "sourceUrl": "https://www.rechtspraak.nl/onderwerpen/whoa/procedure",
+      "checkedAt": "2026-08-01",
+      "status": "bron-bevestigd"
+    }
+  ],
+  "implementation": {
+    "monthlyInvestment": 3000,
+    "months": 6,
+    "deliveries": [
+      "Maand 1 — gecontroleerde ingang en dossiercontract",
+      "Maand 2 — bronnen, rollen en toestemming",
+      "Maand 3 — expertpoort en besluitlog",
+      "Maand 4 — WHOA-werkruimte en scenario's",
+      "Maand 5 — partner- en bestuursprojecties",
+      "Maand 6 — praktijktest, beveiliging en overdracht"
+    ]
+  }
+}
