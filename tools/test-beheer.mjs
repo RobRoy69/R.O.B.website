@@ -31,6 +31,25 @@ console.log('\n1. zonder wachtwoord is het scherm dicht, niet open');
   toets('geen env-var → geen sessie geldig', sessie.sessieGeldig('van.alles') === false);
 }
 
+console.log('\n1b. de diagnose wijst de oorzaak aan, en niet drie tegelijk');
+{
+  // De omgeving gaat als argument mee, want op WINDOWS is process.env hoofdletterongevoelig
+  // en op LINUX niet. De fout die hier het meest toe doet — een variabele die
+  // `Beheer_Wachtwoord` heet — bestaat op deze machine dus niet en op Netlify wél. Zonder
+  // die ingang zou deze toets slagen om de verkeerde reden.
+  const d = (env) => sessie.waaromDicht(env);
+  toets('niets gezet → naam of scope', /Controleer de naam/.test(d({})));
+  toets('Beheer_Wachtwoord → hoofdletters', /hoofdlettergevoelig/.test(
+        d({ Beheer_Wachtwoord: 'een-voldoende-lang-woord' })), d({ Beheer_Wachtwoord: 'x' }));
+  toets('beheer_wachtwoord → hoofdletters', /hoofdlettergevoelig/.test(
+        d({ beheer_wachtwoord: 'een-voldoende-lang-woord' })));
+  toets('leeg → leeg', /is leeg/.test(d({ BEHEER_WACHTWOORD: '' })));
+  toets('te kort → telt N tekens', /telt 6 tekens/.test(d({ BEHEER_WACHTWOORD: 'kortpw' })));
+  toets('goed → geen bezwaar', d({ BEHEER_WACHTWOORD: 'een-voldoende-lang-woord' }) === '');
+  toets('de waarde gaat nooit mee naar buiten',
+        !d({ Beheer_Wachtwoord: 'geheimpje-van-twaalf' }).includes('geheimpje'));
+}
+
 console.log('\n2. een te kort wachtwoord telt niet als ingericht');
 {
   process.env.BEHEER_WACHTWOORD = 'kort';

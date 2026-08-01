@@ -34,9 +34,23 @@ export function wachtwoordGezet() {
  * wachtwoord. Dit onderscheidt ze zonder de waarde prijs te geven: aanwezigheid en de vraag
  * of hij lang genoeg is, meer niet.
  */
-export function waaromDicht() {
-  const w = process.env.BEHEER_WACHTWOORD;
+// De omgeving komt als argument binnen, met process.env als standaard. Niet uit netheid:
+// op WINDOWS is process.env hoofdletterongevoelig en op LINUX niet. De fout die dit moet
+// aanwijzen — een variabele die `Beheer_Wachtwoord` heet — bestaat op de ontwikkelmachine
+// dus niet en op Netlify wél. Zonder deze ingang slaagt de toets hier om de verkeerde reden.
+export function waaromDicht(omgeving = process.env) {
+  const w = omgeving.BEHEER_WACHTWOORD;
   if (w === undefined) {
+    // BIJNA-GOEDE NAAM AANWIJZEN. Op 31 juli stond de variabele er als `Beheer_Wachtwoord`.
+    // Omgevingsvariabelen zijn hoofdlettergevoelig op Linux, dus de functie zag niets — en de
+    // melding zei alleen "komt niet aan", wat je naar de scopes stuurt terwijl die klopten.
+    // Een naam die alleen in hoofdletters verschilt, is de meest waarschijnlijke oorzaak en
+    // de goedkoopste om te noemen. Alleen de naam gaat naar buiten, nooit de waarde.
+    const bijna = Object.keys(omgeving)
+      .find(k => k !== 'BEHEER_WACHTWOORD' && k.toUpperCase() === 'BEHEER_WACHTWOORD');
+    if (bijna) {
+      return `Er staat een variabele "${bijna}" — omgevingsvariabelen zijn hoofdlettergevoelig. Hernoem hem naar BEHEER_WACHTWOORD en deploy opnieuw.`;
+    }
     return 'BEHEER_WACHTWOORD komt niet aan bij de functie. Controleer de naam en of de scope op Functions staat; na een wijziging is één nieuwe deploy nodig.';
   }
   if (typeof w !== 'string' || w.trim() === '') {
