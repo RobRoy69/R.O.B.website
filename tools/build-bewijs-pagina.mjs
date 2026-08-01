@@ -172,9 +172,9 @@ ${JSON.stringify(graf, null, 2).split('\n').map(l => '  ' + l).join('\n')}
       <h1>Het bewijs</h1>
       <p class="inleiding">Alles wat op deze site als feit staat, staat hier met de datum waarop het
         is vastgesteld, de bron waar het vandaan komt en de pagina&rsquo;s die erop rusten.</p>
-      <p class="inleiding">Ook wat nog niet is nagetrokken. Een bewering die als
-        <b>Wacht</b> staat, is niet minder waar &mdash; ze is niet gecontroleerd, en dat hoort
-        u te weten voordat u haar overneemt.</p>
+      <p class="inleiding">Ook wat nog niet is nagetrokken. <b>Wacht</b> betekent dat een
+        bewering nog niet voor publieke uitgifte is gecontroleerd. Het is geen oordeel over
+        waarheid, maar wel een grens: neem haar niet over als vastgestelde R.O.B.-kennis.</p>
       <div class="stand">
         <div><b>${b.beweringen.length}</b> beweringen</div>
         <div><b>${tel('Bron bevestigd')}</b> nagetrokken bij de bron</div>

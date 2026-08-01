@@ -176,6 +176,25 @@ for (const n of papers) {
     }
     await wacht(1200);
 
+    // De schermheader staat op donker en gebruikt daarom het witte woordmerk. De PDF wordt
+    // op licht papier gezet. CSS `content: url(...)` bleek door Chrome bij het printen van
+    // een <img> te worden genegeerd, waardoor R.O.B. wit-op-wit verdween. Wissel de bron dus
+    // expliciet en wacht op decode voordat de afdruk wordt gemaakt.
+    const logo = await inTab('Runtime.evaluate', {
+      expression: `(async () => {
+        const logos = [...document.querySelectorAll('img.rob-lockup')];
+        if (!logos.length) return false;
+        for (const image of logos) {
+          image.src = '/media/logo/logo-rob-lengte-wit-transparant.png';
+          await image.decode();
+        }
+        return logos.every(image => image.complete && image.naturalWidth === 601 && image.naturalHeight === 118);
+      })()`,
+      awaitPromise: true,
+      returnByValue: true,
+    });
+    if (!logo?.result?.value) throw new Error('printlogo voor lichte ondergrond kon niet worden geladen');
+
     ({ data } = await inTab('Page.printToPDF', {
       printBackground: true,
       preferCSSPageSize: false,
