@@ -42,6 +42,10 @@ const loop = (dir, rel = '') => {
     if (e.isDirectory()) { loop(path.join(dir, e.name), r); continue; }
     if (!e.name.endsWith('.html')) continue;
     const html = readFileSync(path.join(dir, e.name), 'utf-8');
+    // De agent kent publieke vindbare pagina's. noindex-oppervlakken (beheer, previews en
+    // demonstraties) worden niet door de site zelf geadverteerd en horen dus ook niet in
+    // zijn feitelijke pagina-inventaris.
+    if (/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(html)) continue;
     const titel = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
     const omschrijving = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
     // index.html wordt op het web als map-URL geserveerd

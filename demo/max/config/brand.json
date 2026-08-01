@@ -1,0 +1,24 @@
+{
+  "id": "max",
+  "name": "Max Finance & Legal",
+  "shortName": "Max",
+  "workName": "Max Work",
+  "descriptor": "Bedrijfsherstel & overnames",
+  "makerLabel": "Conceptuele systeemdemonstratie",
+  "tokens": {
+    "screen": "#0b1d31",
+    "ink": "#102238",
+    "paper": "#fffdf9",
+    "surface": "#f5efe5",
+    "accent": "#9a5700",
+    "signal": "#a5362a",
+    "muted": "#6d655c",
+    "border": "#cbbca5"
+  },
+  "source": {
+    "label": "Publieke Max-website",
+    "url": "https://www.maxfinancelegal.nl/",
+    "checkedAt": "2026-08-01",
+    "status": "Afgeleide demotekst - nog niet door Max vastgesteld"
+  }
+}

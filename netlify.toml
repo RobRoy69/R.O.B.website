@@ -122,6 +122,14 @@
   [headers.values]
     Cache-Control = "public, max-age=86400"
 
+# Demo-oppervlakken zijn gecontroleerde previews, geen publieke R.O.B.-pagina's.
+# De HTML draagt dezelfde grens; de header borgt hem ook voor bots die meta-tags missen.
+[[headers]]
+  for = "/demo/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Cache-Control = "no-store"
+
 # De post stond twintig minuten live op een adres dat niet bij zijn titel paste.
 # Kort, maar hij stond al in de sitemap en de feed — dus een 301 en geen stilte.
 [[redirects]]

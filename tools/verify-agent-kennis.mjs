@@ -49,6 +49,8 @@ try {
       const r = rel ? `${rel}/${e.name}` : e.name;
       if (e.isDirectory()) { loop(path.join(dir, e.name), r); continue; }
       if (!e.name.endsWith('.html')) continue;
+      const html = readFileSync(path.join(dir, e.name), 'utf-8');
+      if (/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(html)) continue;
       const raw = '/' + r.replace(/(^|\/)index\.html$/, '$1');
       gepubliceerd.push(raw.startsWith('/whitepapers/') ? raw.replace(/\.html$/, '') : raw);
     }

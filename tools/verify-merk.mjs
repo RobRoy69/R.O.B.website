@@ -50,6 +50,10 @@ else walk(PUBLIC);
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
   const relative = path.relative(PUBLIC, file).replaceAll('\\', '/');
+  // Klantdemonstraties hebben hun eigen gecontroleerde merkconfiguratie en poort.
+  // Ze expliciet markeren is veiliger dan op een padnaam vertrouwen. Zonder deze grens
+  // zou de R.O.B.-poort een R.O.B.-logo in ieder klantmerk afdwingen.
+  if (/<meta[^>]+name=["']brand-scope["'][^>]+external-demo/i.test(html)) continue;
   if (!html.includes('/media/merk.css')) errors.push(`${relative}: gedeelde merklaag ontbreekt`);
   if (!/\/media\/logo\/logo-rob-(?:lengte-)?(?:donker|wit)-transparant\.png/.test(html)) {
     errors.push(`${relative}: goedgekeurd R.O.B.-lockup ontbreekt`);
@@ -96,4 +100,8 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`verify-merk: groen — ${htmlFiles.length} pagina's gebruiken één merklaag en een goedgekeurd lockup.`);
+const scopedHtmlFiles = htmlFiles.filter((file) => {
+  const html = readFileSync(file, 'utf8');
+  return !/<meta[^>]+name=["']brand-scope["'][^>]+external-demo/i.test(html);
+});
+console.log(`verify-merk: groen — ${scopedHtmlFiles.length} R.O.B.-pagina's gebruiken één merklaag en een goedgekeurd lockup.`);

@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "id": "DEMO-HORECA-001",
+    "type": "demonstratie",
+    "fictional": true,
+    "updatedAt": "2026-08-01",
+    "adviceStatus": "Geen inhoudelijk advies"
+  },
+  "case": {
+    "company": "Eetcafe De Kompaszaal B.V.",
+    "sector": "Horeca",
+    "employees": 18,
+    "situation": "Acute liquiditeitsdruk, terwijl de onderneming operationeel nog perspectief lijkt te hebben.",
+    "monthlyRevenue": 115000,
+    "overdueReceivable": 48000,
+    "taxArrears": 82000,
+    "cashDays": 12
+  },
+  "publicGate": {
+    "recognition": "De onderneming draait door, maar de betaalruimte wordt snel kleiner.",
+    "missing": [
+      "Actueel saldo en betalingen voor de komende veertien dagen",
+      "Status van de openstaande klantvordering",
+      "Laatst ontvangen bericht van de Belastingdienst"
+    ],
+    "firstAid": "Dit lijkt een situatie waarbij Max mogelijk kan helpen. Voor een inhoudelijke beoordeling is een specialist nodig.",
+    "handoff": "Vertrouwelijke overdracht voorbereiden",
+    "rejection": "Wanneer de situatie niet aansluit, zegt de poort dat eerlijk en routeert zij niet commercieel door."
+  },
+  "referralGate": {
+    "referrerRole": "Accountant",
+    "reason": "De liquiditeitsdruk neemt toe en de ondernemer mist een betrouwbare dertig-dagenblik.",
+    "professionalObservation": "De lopende exploitatie is niet direct het enige probleem; timing en opeenstapeling van verplichtingen vragen snelle beoordeling.",
+    "urgency": "Menselijke beoordeling binnen een werkdag gewenst",
+    "documents": [
+      { "name": "Kolommenbalans", "status": "Aanwezig" },
+      { "name": "Liquiditeitsprognose", "status": "Ontbreekt" },
+      { "name": "Correspondentie Belastingdienst", "status": "Aanwezig" }
+    ],
+    "consent": "Toestemming voor overdracht vastgelegd",
+    "feedback": "Accountant ontvangt alleen afgesproken processtatus"
+  },
+  "expertDossier": {
+    "facts": [
+      "Achttien medewerkers",
+      "Openstaande klantvordering van EUR 48.000",
+      "Belastingachterstand van EUR 82.000",
+      "Indicatief twaalf dagen betaalruimte"
+    ],
+    "statements": [
+      "Ondernemer verwacht de klantvordering op korte termijn",
+      "Accountant ziet nog operationeel perspectief"
+    ],
+    "missing": [
+      "Dertig-dagen-liquiditeitsprognose",
+      "Volledige crediteurenlijst",
+      "Juridische status van de klantvordering"
+    ],
+    "firstReportStatus": "Feitelijke overdracht gereed"
+  },
+  "expertWorkspace": {
+    "expertMatch": {
+      "name": "Frank van Meenen",
+      "discipline": "Herstructurering",
+      "reason": "De casus vraagt eerst om financiele triage, schuldeisersoverzicht en beoordeling van continuiteit.",
+      "status": "Voorgesteld - expert bevestigt zelf"
+    },
+    "toolkit": [
+      "Dertig-dagen-liquiditeitsanalyse",
+      "Probleem- en urgentievalidatie",
+      "Crediteuren- en verplichtingenkaart",
+      "Continuiteitsscenario's",
+      "Route- en dossiercheck"
+    ],
+    "analysisSupport": [
+      "Onderscheid structureel tekort van tijdelijk timingprobleem",
+      "Toets welke verplichtingen de handelingsruimte direct raken",
+      "Breng ontbrekende feiten voor scenariovergelijking in beeld"
+    ],
+    "proposalDraft": {
+      "title": "Interne trajectopzet",
+      "status": "Concept - niet vrijgegeven",
+      "scope": "Eerste diagnosefase, liquiditeitsbeeld en routebesluit",
+      "owner": "Te bepalen door behandelend expert"
+    },
+    "statusFlow": [
+      "Systeem bereidt voor",
+      "Expert onderzoekt en corrigeert",
+      "Expert bekrachtigt",
+      "Professionele uitkomst"
+    ]
+  },
+  "claims": [
+    {
+      "statement": "Max combineert financieel en juridisch advies onder een dak.",
+      "source": "Publieke Max-website",
+      "sourceUrl": "https://www.maxfinancelegal.nl/",
+      "sourceDate": "2026-08-01",
+      "owner": "Max Finance & Legal",
+      "status": "Klopt",
+      "reviewAt": "Bij wijziging dienstenaanbod",
+      "surfaces": ["Publieke ingang", "Klantpoort", "Partnerpoort"]
+    },
+    {
+      "statement": "Persoonlijk contact binnen vierentwintig uur is voor dit dossier gegarandeerd.",
+      "source": "Geen dekkende vastgestelde bron",
+      "sourceUrl": "",
+      "sourceDate": "2026-08-01",
+      "owner": "Nog toe te wijzen",
+      "status": "Wacht",
+      "reviewAt": "Voor publieke uitgifte",
+      "surfaces": ["Klantpoort", "Bevestigingsbericht"]
+    }
+  ],
+  "management": {
+    "period": "Fictieve voorbeeldperiode",
+    "newSituations": 14,
+    "routes": {
+      "zwaarWeer": 8,
+      "overname": 4,
+      "outsideScope": 2
+    },
+    "suitableHandoffs": 9,
+    "openExpertReviews": 3,
+    "uncoveredKnowledgeQuestions": 2
+  },
+  "implementation": {
+    "investmentMonthly": 3000,
+    "months": 6,
+    "timeline": [
+      { "month": 1, "usable": "Eerste verbeterde publieke route en expertprofielen" },
+      { "month": 2, "usable": "Eerste herleidbare kennisroute" },
+      { "month": 3, "usable": "Vraaggestuurde publieke projectie" },
+      { "month": 4, "usable": "Vertrouwelijke klantintake en feitelijke overdracht" },
+      { "month": 5, "usable": "Eerste verwijzersingang en expertwerkplaats" },
+      { "month": 6, "usable": "Geteste praktijkversie" }
+    ]
+  }
+}

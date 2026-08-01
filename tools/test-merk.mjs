@@ -320,7 +320,13 @@ console.log('\n6. elke gepubliceerde pagina sluit donker af');
     for (const naam of readdirSync(map)) {
       const vol = path.join(map, naam);
       if (statSync(vol).isDirectory()) { loop(vol, `${pre}${naam}/`); continue; }
-      if (naam.endsWith('.html')) paginas.push([`${pre}${naam}`, readFileSync(vol, 'utf8')]);
+      if (naam.endsWith('.html')) {
+        const html = readFileSync(vol, 'utf8');
+        // Externe merkdemonstraties sluiten volgens hun eigen UI-grammatica. De expliciete
+        // scope voorkomt dat hun padnaam als impliciete uitzondering gaat functioneren.
+        if (/<meta[^>]+name=["']brand-scope["'][^>]+external-demo/i.test(html)) continue;
+        paginas.push([`${pre}${naam}`, html]);
+      }
     }
   };
   if (existsSync(pub)) loop(pub);

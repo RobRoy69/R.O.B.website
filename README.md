@@ -38,6 +38,7 @@ over wat de bezoeker ziet.
 │   └── concept/*.md         #   hier schrijf je een bericht, dan npm run bericht
 ├── kennisgezagsscan/        # JSON-gestuurde scan; vijf profielen, antwoorden blijven lokaal
 ├── kennisproef/             # Eén-URL kennisgereedheidstoets via veilige Function
+├── demo/                    # Herbruikbare noindex demo-engine + losse merk/casuspakketten
 ├── beheer/                  # Berichten schrijven en vrijgeven zonder terminal
 │                            #   noindex; al het gezag zit in netlify/functions/beheer.js
 ├── media/, werk/            # Video, portret, SVG-mockups, logo (media/ is geheel publiek)

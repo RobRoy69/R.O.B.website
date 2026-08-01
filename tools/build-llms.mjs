@@ -24,6 +24,9 @@ const loop = (dir, rel = '') => {
     if (e.isDirectory()) { loop(path.join(dir, e.name), r); continue; }
     if (!e.name.endsWith('.html')) continue;
     const h = readFileSync(path.join(dir, e.name), 'utf-8');
+    // noindex betekent ook: niet actief aan AI-crawlers presenteren. De sitemap hanteert
+    // dezelfde bronregel; zo kan een beheer- of demo-oppervlak niet via llms.txt uitlekken.
+    if (/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(h)) continue;
     const rawUrl = '/' + r.replace(/(^|\/)index\.html$/, '$1');
     paginas.push({
       url: rawUrl.startsWith('/whitepapers/') ? rawUrl.replace(/\.html$/, '') : rawUrl,

@@ -44,6 +44,11 @@ const PUBLIEK = [
   { soort: 'map', pad: 'kennisgezagsscan' },
   { soort: 'map', pad: 'kennisproef' },
 
+  // Afgeschermde, herbruikbare demo-engine met losse merk- en casuspakketten. De pagina's
+  // dragen zelf noindex en worden daardoor niet opgenomen in sitemap, llms.txt of agentkennis.
+  // Er is geen live datalaag of externe runtime nodig.
+  { soort: 'map', pad: 'demo' },
+
   // Het beheerscherm. Publiek bereikbaar maar niet indexeerbaar: al het gezag zit in de
   // functie erachter, niet in deze pagina. Zonder sessie toont hij een wachtwoordveld en
   // verder niets — er staat geen sleutel en geen registerinhoud in.

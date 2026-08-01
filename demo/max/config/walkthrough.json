@@ -1,0 +1,260 @@
+{
+  "meta": {
+    "language": "nl",
+    "startPrompt": "Welke situatie wilt u onderzoeken?",
+    "startButton": "Start de Max-demonstratie",
+    "demoStatus": "DEMONSTRATIE - fictieve casus - geen inhoudelijk advies",
+    "help": "Gebruik /max, /zwaarweer, /verwijzer, /expert, /bewijs, /leiding of /bouw",
+    "unknownCommand": "Dit commando hoort niet bij deze demonstratie. De huidige stap blijft staan."
+  },
+  "profiles": {
+    "public": { "label": "Publieke ingang", "task": "Herkenning en vertrouwen", "density": "calm" },
+    "client": { "label": "Klantpoort", "task": "Opvangen en begeleiden", "density": "guided" },
+    "partner": { "label": "Partnerpoort", "task": "Volledig en correct overdragen", "density": "compact" },
+    "expert": { "label": "Expertportal", "task": "Onderzoeken en beslissen", "density": "dense" },
+    "governance": { "label": "Bewijslaag", "task": "Herleidbaarheid en begrenzing", "density": "document" },
+    "leadership": { "label": "Leiding", "task": "Overzien en bijsturen", "density": "signal" },
+    "build": { "label": "Bouwroute", "task": "Beslissen over uitvoering", "density": "contrast" }
+  },
+  "chapters": [
+    {
+      "id": "max",
+      "command": "/max",
+      "navLabel": "Ingang",
+      "profile": "public",
+      "status": "REPRESENTATIEVE DEMONSTRATIE",
+      "eyebrow": "Van website naar werksysteem",
+      "title": "De website wordt de eerste zichtbare laag.",
+      "question": "Waarom is alleen een nieuwe website niet genoeg?",
+      "blocks": [
+        {
+          "type": "state-grid",
+          "items": [
+            { "label": "Nu", "title": "Expertise is aanwezig", "text": "De website presenteert diensten, maar kennis, overdracht en professioneel werk staan nog naast elkaar." },
+            { "label": "Gericht", "title": "De vraag bepaalt de ingang", "text": "Inhoud, taal en vervolgstap vormen zich rond de situatie en de gebruiker." },
+            { "label": "Aangezet", "title": "De route werkt door", "text": "Intake, expertwerk, bewijs en meting gebruiken dezelfde gecontroleerde kern." }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "principle",
+          "text": "Max heeft geen gebrek aan expertise. De winst zit in het als een systeem laten werken van vindbaarheid, kennis, overdracht en professioneel oordeel."
+        }
+      ]
+    },
+    {
+      "id": "zwaarweer",
+      "command": "/zwaarweer",
+      "navLabel": "Klantpoort",
+      "profile": "client",
+      "status": "REPRESENTATIEVE DEMONSTRATIE",
+      "eyebrow": "Opvangen zonder expert te spelen",
+      "title": "Eerst veilig herkennen en overdragen.",
+      "question": "Hoe vangt Max een urgente, nog onvolledige situatie op?",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            { "title": "Opvangen", "text": "De bezoeker merkt dat de situatie wordt herkend zonder dat al een diagnose wordt gesuggereerd." },
+            { "title": "Aanvullen", "text": "Alleen informatie verzamelen die nodig is voor aansluiting, urgentie en overdracht." },
+            { "title": "Eerste hulp", "textPath": "publicGate.firstAid" },
+            { "title": "Overdragen of afwijzen", "text": "Naar de juiste menselijke vervolgstap, of eerlijk buiten het huis plaatsen." }
+          ]
+        },
+        {
+          "type": "data-list",
+          "title": "Nog nodig voor een zuivere overdracht",
+          "path": "publicGate.missing"
+        },
+        {
+          "type": "action",
+          "labelPath": "publicGate.handoff",
+          "note": "De poort geeft geen diagnose, scenario, oplossing of voorstel."
+        }
+      ]
+    },
+    {
+      "id": "verwijzer",
+      "command": "/verwijzer",
+      "navLabel": "Partnerpoort",
+      "profile": "partner",
+      "status": "REPRESENTATIEVE DEMONSTRATIE",
+      "eyebrow": "Professionele context toevoegen",
+      "title": "De verwijzer maakt de overdracht sterker.",
+      "question": "Wat voegt de accountant of advocaat toe?",
+      "blocks": [
+        {
+          "type": "field-grid",
+          "fields": [
+            { "label": "Rol", "path": "referralGate.referrerRole" },
+            { "label": "Reden", "path": "referralGate.reason" },
+            { "label": "Observatie", "path": "referralGate.professionalObservation" },
+            { "label": "Urgentie", "path": "referralGate.urgency" },
+            { "label": "Toestemming", "path": "referralGate.consent" },
+            { "label": "Terugkoppeling", "path": "referralGate.feedback" }
+          ]
+        },
+        {
+          "type": "document-list",
+          "title": "Dossierstukken",
+          "path": "referralGate.documents"
+        },
+        {
+          "type": "callout",
+          "tone": "boundary",
+          "text": "De ondernemer beschrijft wat hij ervaart. De verwijzer voegt professionele context toe. Beide poorten bereiden de overdracht voor; het expertwerk begint pas daarna."
+        }
+      ]
+    },
+    {
+      "id": "expert",
+      "command": "/expert",
+      "navLabel": "Expertportal",
+      "profile": "expert",
+      "status": "REPRESENTATIEVE DEMONSTRATIE",
+      "eyebrow": "De professionele werkplaats",
+      "title": "De juiste expert krijgt de juiste werkbank.",
+      "question": "Hoe komen dossier, expert en instrumentarium samen?",
+      "blocks": [
+        {
+          "type": "tabs",
+          "items": [
+            {
+              "label": "Overdracht",
+              "title": "Feiten, uitspraken en ontbrekende informatie",
+              "fields": [
+                { "label": "Status", "path": "expertDossier.firstReportStatus" },
+                { "label": "Feiten", "path": "expertDossier.facts" },
+                { "label": "Nog nodig", "path": "expertDossier.missing" }
+              ]
+            },
+            {
+              "label": "Expertmatch",
+              "title": "Voorgestelde discipline en expert",
+              "fields": [
+                { "label": "Expert", "path": "expertWorkspace.expertMatch.name" },
+                { "label": "Discipline", "path": "expertWorkspace.expertMatch.discipline" },
+                { "label": "Waarom", "path": "expertWorkspace.expertMatch.reason" },
+                { "label": "Bevoegdheid", "path": "expertWorkspace.expertMatch.status" }
+              ]
+            },
+            {
+              "label": "Instrumentarium",
+              "title": "Alleen gereedschap dat bij deze casus past",
+              "fields": [
+                { "label": "Geselecteerd", "path": "expertWorkspace.toolkit" }
+              ]
+            },
+            {
+              "label": "Onderzoek",
+              "title": "Ondersteuning voor professioneel oordeel",
+              "fields": [
+                { "label": "Onderzoekslijnen", "path": "expertWorkspace.analysisSupport" }
+              ]
+            },
+            {
+              "label": "Voorbereiding",
+              "title": "Interne voorstelopzet - nog niet vrijgegeven",
+              "fields": [
+                { "label": "Werkstuk", "path": "expertWorkspace.proposalDraft.title" },
+                { "label": "Status", "path": "expertWorkspace.proposalDraft.status" },
+                { "label": "Reikwijdte", "path": "expertWorkspace.proposalDraft.scope" },
+                { "label": "Eigenaar", "path": "expertWorkspace.proposalDraft.owner" }
+              ]
+            }
+          ]
+        },
+        { "type": "status-flow", "path": "expertWorkspace.statusFlow" },
+        {
+          "type": "callout",
+          "tone": "principle",
+          "text": "De intake draagt over. De expertportal stelt de juiste werkbank samen. De expert onderzoekt, beoordeelt en beslist."
+        }
+      ]
+    },
+    {
+      "id": "bewijs",
+      "command": "/bewijs",
+      "navLabel": "Bewijs",
+      "profile": "governance",
+      "status": "BESTAAND FUNDAMENT",
+      "eyebrow": "Herleidbaar tot de bron",
+      "title": "Een antwoord mag ook wachten.",
+      "question": "Waarom is dit geen gewone chatbot of nieuw CMS?",
+      "blocks": [
+        { "type": "claims", "path": "claims" },
+        {
+          "type": "callout",
+          "tone": "boundary",
+          "text": "Niet alles wat gevonden, geschreven of logisch klinkt, mag direct worden gebruikt."
+        }
+      ]
+    },
+    {
+      "id": "leiding",
+      "command": "/leiding",
+      "navLabel": "Leiding",
+      "profile": "leadership",
+      "status": "REPRESENTATIEVE DEMONSTRATIE",
+      "eyebrow": "Van verkeer naar bestuurbare instroom",
+      "title": "Grip op wat binnenkomt en wat stokt.",
+      "question": "Welke grip ontstaat voor Max?",
+      "blocks": [
+        {
+          "type": "metrics",
+          "periodPath": "management.period",
+          "items": [
+            { "label": "Nieuwe situaties", "path": "management.newSituations" },
+            { "label": "Passende overdrachten", "path": "management.suitableHandoffs" },
+            { "label": "Open expertbeoordelingen", "path": "management.openExpertReviews" },
+            { "label": "Kennisvragen zonder dekking", "path": "management.uncoveredKnowledgeQuestions" }
+          ]
+        },
+        {
+          "type": "distribution",
+          "title": "Routeverdeling",
+          "path": "management.routes",
+          "labels": { "zwaarWeer": "Zwaar weer", "overname": "Overname", "outsideScope": "Buiten scope" }
+        },
+        {
+          "type": "callout",
+          "tone": "principle",
+          "text": "Max ziet niet alleen hoeveel er binnenkomt, maar ook wat bruikbaar is, waar kennis ontbreekt en waar professioneel handelen nodig is."
+        }
+      ]
+    },
+    {
+      "id": "bouw",
+      "command": "/bouw",
+      "navLabel": "Uitvoering",
+      "profile": "build",
+      "status": "ONDERDEEL VAN MAX-IMPLEMENTATIE",
+      "eyebrow": "Demo en uitvoering uit elkaar houden",
+      "title": "De samenhang is zichtbaar. Nu moet zij eigen worden.",
+      "question": "Wat bewijst de demo en wat vraagt zes maanden werk?",
+      "blocks": [
+        {
+          "type": "comparison",
+          "leftLabel": "Vandaag zichtbaar",
+          "rightLabel": "Zes maanden voor Max",
+          "items": [
+            { "left": "Een gelabelde fictieve casus", "right": "Echte bronnen en praktijksituaties" },
+            { "left": "Een browserroute", "right": "Vernieuwde publieke ingangen" },
+            { "left": "Gerepresenteerde overdracht", "right": "Beveiligde intake, rollen en rechten" },
+            { "left": "Een samengestelde expertwerkplaats", "right": "Expertmatching, instrumentarium en workflows" },
+            { "left": "Twee claimpaspoorten", "right": "Beheerde kennis, reviews en geldigheid" },
+            { "left": "Voorbeeldindicatoren", "right": "Betrouwbare meting en managementgebruik" }
+          ]
+        },
+        { "type": "timeline", "path": "implementation.timeline" },
+        {
+          "type": "price",
+          "amountPath": "implementation.investmentMonthly",
+          "monthsPath": "implementation.months",
+          "label": "Eerste gecontroleerde werkfase",
+          "note": "Iedere maand komt een bruikbaar deel beschikbaar."
+        }
+      ]
+    }
+  ]
+}
