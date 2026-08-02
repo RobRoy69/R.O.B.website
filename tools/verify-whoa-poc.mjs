@@ -88,6 +88,12 @@ if (!js.includes("{ id: 'max-intake', label: 'Eerste intake'") || !js.includes('
 if (!js.includes('Agora · herkomstlaag') || !js.includes('Door Danny bevestigd') || !js.includes('Door AI herkend')) {
   errors.push('de eerste Max-intake maakt Agora-herkomst en status niet aantoonbaar');
 }
+if (!js.includes("{ id: 'max-management', label: 'Management'") || !js.includes('Tijdskritiek · hoog') || !js.includes('Potentie · onderzoeken')) {
+  errors.push('het Max Management AI-scherm ontbreekt of vermengt urgentie en potentie');
+}
+if (!js.includes('Urgentie is geen levensvatbaarheid') || !js.includes("record('management_signal_assigned', 'frank-bedrijfsherstel')")) {
+  errors.push('Agora-signaallogica of de menselijke toewijzing aan Frank ontbreekt');
+}
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }

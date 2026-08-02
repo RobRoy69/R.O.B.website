@@ -8,6 +8,7 @@
     { id: 'chat', label: 'Neutrale chat', detail: 'herkennen' },
     { id: 'max', label: 'Max', detail: 'veilig landen' },
     { id: 'max-intake', label: 'Eerste intake', detail: 'rust en houvast' },
+    { id: 'max-management', label: 'Management', detail: 'signaleren en toewijzen' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
@@ -73,6 +74,9 @@
     maxIntakeStep: 0,
     maxIntakeAnswers: {},
     maxIntakeSubmitted: false,
+    managementSignalCreatedAt: null,
+    managementSignalOpened: false,
+    managementSignalAssigned: false,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -131,7 +135,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -470,7 +474,7 @@
         <section class="max-intake-ai" aria-label="Kalmerende AI-intake">
           <div class="max-ai-log" role="log" aria-live="polite">
             ${renderMaxIntakeTranscript()}
-            ${state.maxIntakeSubmitted ? `<div class="max-ai-line receipt"><span>Max AI</span><p>Je eerste intake is ontvangen. Je hoeft nu niets meer te doen. Max beoordeelt alleen of menselijke opvolging zinvol is.</p></div>` : ''}
+            ${state.maxIntakeSubmitted ? `<div class="max-ai-line receipt"><span>Max AI</span><p>Je eerste intake is ontvangen. Je hoeft nu niets meer te doen. Max beoordeelt alleen of menselijke opvolging zinvol is.</p><button type="button" id="open-max-management">Demonstratie: bekijk de interne opvolging <span aria-hidden="true">→</span></button></div>` : ''}
           </div>
           ${!state.maxIntakeSubmitted && currentQuestion ? `<div class="max-ai-question">
             <span>Max AI vraagt</span><h2>${escapeHtml(currentQuestion.prompt)}</h2>
@@ -481,6 +485,66 @@
         </section>
       </main>
       <dialog class="lineage-dialog" id="intake-lineage"><button type="button" id="close-intake-lineage" aria-label="Sluit herkomst">×</button><span>Agora · herkomstlaag</span><h2>Waarom dit overzicht aantoonbaar blijft</h2><ul><li>Een antwoord wordt pas bevestigd nadat Danny zelf kiest.</li><li>AI-herkenning blijft afzonderlijk gemarkeerd.</li><li>Iedere wijziging bewaart actor, moment en vorige status.</li><li>Deze eerste intake bevat nog geen expertbesluit.</li></ul></dialog>
+    </section>`;
+  };
+
+  const managementSignalTime = () => {
+    const value = state.managementSignalCreatedAt ? new Date(state.managementSignalCreatedAt) : null;
+    if (!value || Number.isNaN(value.getTime())) return 'zojuist';
+    return value.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const renderMaxManagement = () => {
+    const answers = state.maxIntakeAnswers || {};
+    const urgent = answers.urgent ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[1], answers.urgent) : 'Nog niet bevestigd';
+    const operation = answers.operatie ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[2], answers.operatie) : 'Nog niet bevestigd';
+    const help = answers.hulp ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[3], answers.hulp) : 'Nog niet bevestigd';
+    const opened = state.managementSignalOpened;
+    const assigned = state.managementSignalAssigned;
+    return `<section class="management-screen" aria-labelledby="management-title">
+      <header class="management-header">
+        <div class="management-brand"><strong>MAX<span>OS</span></strong><small>Management AI</small></div>
+        <div class="management-user"><span>Werkruimte</span><strong>Directie</strong><i aria-hidden="true">DR</i></div>
+      </header>
+      <div class="management-shell">
+        <nav class="management-nav" aria-label="Managementonderdelen">
+          <button type="button" class="active" aria-label="Signalen"><span aria-hidden="true">◇</span><small>1</small></button>
+          <button type="button" aria-label="Dossiers" disabled><span aria-hidden="true">▤</span></button>
+          <button type="button" aria-label="Experts" disabled><span aria-hidden="true">◎</span></button>
+        </nav>
+        <main class="management-main">
+          <header class="management-titlebar"><div><span>Vandaag · ${escapeHtml(managementSignalTime())}</span><h1 id="management-title">Signalen die aandacht vragen</h1><p>AI ordent. Management bepaalt of en door wie een intake wordt opgevolgd.</p></div><div class="management-count"><strong>1</strong><span>nieuw</span></div></header>
+          <div class="management-grid ${opened ? 'is-open' : ''}">
+            <section class="signal-inbox" aria-label="Nieuwe signalen">
+              <button type="button" class="management-signal ${opened ? 'selected' : ''}" id="open-management-signal" aria-expanded="${opened}">
+                <span class="signal-pulse" aria-hidden="true"></span>
+                <span class="signal-copy"><small>Eerste intake · Danny</small><strong>Betaaldruk terwijl de operatie nog draait</strong><span>Ontvangen ${escapeHtml(managementSignalTime())}</span></span>
+                <span class="signal-tags"><i class="urgent">Tijdskritiek · hoog</i><i class="potential">Potentie · onderzoeken</i></span>
+                <span class="signal-arrow" aria-hidden="true">→</span>
+              </button>
+              <p class="signal-boundary">De kleur geeft prioriteit en onderzoeksrichting aan. Niet de uitkomst.</p>
+            </section>
+            ${opened ? `<section class="signal-detail" aria-label="Geopend intakesignaal">
+              <header><div><span>AI-intakesamenvatting</span><h2>Danny vraagt om regie voordat de situatie verder escaleert.</h2></div><button type="button" id="close-management-signal" aria-label="Sluit signaal">×</button></header>
+              <div class="signal-assessment">
+                <article class="urgent"><span>Tijdskritiek</span><strong>Hoog</strong><p>${escapeHtml(urgent)}</p><small>Door Danny bevestigd</small></article>
+                <article class="potential"><span>Continuïteitspotentieel</span><strong>Te onderzoeken</strong><p>${escapeHtml(operation)}</p><small>AI-signaal · geen expertoordeel</small></article>
+              </div>
+              <div class="signal-columns">
+                <article><span>Hulpvraag</span><p>${escapeHtml(help)}</p><small>Door Danny bevestigd</small></article>
+                <article><span>Nog nodig</span><p>Actuele cijfers, schuldenoverzicht en menselijke beoordeling.</p><small>Ontbreekt</small></article>
+              </div>
+              <button type="button" class="management-lineage" id="show-management-lineage"><span aria-hidden="true">◎</span> Waarom geeft Agora dit signaal zo weer?</button>
+              <footer class="management-actions">
+                <div><span>Voorgestelde expertise</span><strong>Frank · bedrijfsherstel</strong><small>AI-voorstel, nog niet toegewezen</small></div>
+                <button type="button" id="assign-management-signal" ${assigned ? 'disabled' : ''}>${assigned ? 'Toegewezen aan Frank' : 'Zet door naar Frank'} <span aria-hidden="true">→</span></button>
+              </footer>
+              ${assigned ? `<div class="assignment-receipt" role="status"><span>Toewijzing vastgelegd</span><p>Frank ontvangt in deze demonstratie een signaal. Er is nog geen overeenkomst, documenttoegang of accountantstoestemming.</p></div>` : ''}
+            </section>` : `<section class="signal-zero"><span aria-hidden="true">◇</span><h2>Open het nieuwe signaal</h2><p>Bekijk wat AI heeft herkend, wat Danny heeft bevestigd en wat nog door een mens moet worden beoordeeld.</p></section>`}
+          </div>
+        </main>
+      </div>
+      <dialog class="lineage-dialog management-lineage-dialog" id="management-lineage"><button type="button" id="close-management-lineage" aria-label="Sluit Agora-uitleg">×</button><span>Agora · signaallogica</span><h2>Urgentie is geen levensvatbaarheid</h2><ul><li><strong>Tijdskritiek · hoog</strong> rust op Danny’s bevestigde druk van vandaag.</li><li><strong>Potentie · onderzoeken</strong> rust op zijn verklaring dat klanten en omzet nog bestaan.</li><li>AI koppelt deze signalen, maar mag geen haalbaarheid of route vaststellen.</li><li>De toewijzing aan Frank wordt als afzonderlijk menselijk besluit vastgelegd.</li></ul></dialog>
     </section>`;
   };
 
@@ -637,6 +701,7 @@
     chat: renderChat,
     max: renderMaxLanding,
     'max-intake': renderMaxIntake,
+    'max-management': renderMaxManagement,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
     accountant: renderAccountant,
@@ -655,7 +720,9 @@
     app.classList.toggle('max-entry-mode', isMaxEntry);
     const isMaxIntake = state.current === 'max-intake';
     app.classList.toggle('max-intake-mode', isMaxIntake);
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isMaxManagement = state.current === 'max-management';
+    app.classList.toggle('max-management-mode', isMaxManagement);
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -899,13 +966,40 @@
     document.querySelector('#submit-max-intake')?.addEventListener('click', () => {
       if ((state.maxIntakeStep || 0) < MAX_INTAKE_QUESTIONS.length) return;
       state.maxIntakeSubmitted = true;
+      state.managementSignalCreatedAt = new Date().toISOString();
       record('max_intake_submitted', 'management-review-pending');
+      saveSession();
+      render();
+    });
+    document.querySelector('#open-max-management')?.addEventListener('click', () => {
+      if (!state.maxIntakeSubmitted) return;
+      record('management_projection_requested', 'presenter-transition');
+      unlockAndGo('max-management');
+    });
+    document.querySelector('#open-management-signal')?.addEventListener('click', () => {
+      state.managementSignalOpened = true;
+      record('management_signal_opened', 'first-intake');
+      saveSession();
+      render();
+    });
+    document.querySelector('#close-management-signal')?.addEventListener('click', () => {
+      state.managementSignalOpened = false;
+      saveSession();
+      render();
+    });
+    document.querySelector('#assign-management-signal')?.addEventListener('click', () => {
+      if (!state.managementSignalOpened || state.managementSignalAssigned) return;
+      state.managementSignalAssigned = true;
+      record('management_signal_assigned', 'frank-bedrijfsherstel');
       saveSession();
       render();
     });
     const lineageDialog = document.querySelector('#intake-lineage');
     document.querySelector('#show-intake-lineage')?.addEventListener('click', () => lineageDialog?.showModal());
     document.querySelector('#close-intake-lineage')?.addEventListener('click', () => lineageDialog?.close());
+    const managementLineageDialog = document.querySelector('#management-lineage');
+    document.querySelector('#show-management-lineage')?.addEventListener('click', () => managementLineageDialog?.showModal());
+    document.querySelector('#close-management-lineage')?.addEventListener('click', () => managementLineageDialog?.close());
 
     const aiStartForm = document.querySelector('#ai-start-form');
     const aiStartInput = document.querySelector('#ai-start-input');
