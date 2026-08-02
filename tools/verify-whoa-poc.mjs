@@ -94,6 +94,9 @@ if (!js.includes("{ id: 'max-management', label: 'Management'") || !js.includes(
 if (!js.includes('Urgentie is geen levensvatbaarheid') || !js.includes("record('management_signal_assigned', 'frank-bedrijfsherstel')")) {
   errors.push('Agora-signaallogica of de menselijke toewijzing aan Frank ontbreekt');
 }
+if (!js.includes('Vraag Management AI') || !js.includes('Wat ontbreekt nog?') || !js.includes('Ik neem geen expertbesluit')) {
+  errors.push('de contextbewuste Management AI-ingang of haar beslisgrens ontbreekt');
+}
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }

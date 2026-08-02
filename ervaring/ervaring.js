@@ -77,6 +77,8 @@
     managementSignalCreatedAt: null,
     managementSignalOpened: false,
     managementSignalAssigned: false,
+    managementAiOpen: false,
+    managementAiMessages: [],
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -494,6 +496,37 @@
     return value.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const managementAiAnswer = (prompt = '') => {
+    const normalized = prompt.toLowerCase();
+    if (normalized.includes('ontbreekt')) return 'Voor een menselijke beoordeling ontbreken nog actuele cijfers, een schuldenoverzicht en controle op de directe tijdsdruk.';
+    if (normalized.includes('frank')) return 'Frank wordt voorgesteld vanwege bedrijfsherstel. Dat is een AI-voorstel; management bepaalt de toewijzing en Frank beoordeelt de inhoud opnieuw.';
+    if (normalized.includes('aandacht') || normalized.includes('samen')) return 'De directe betaaldruk vraagt aandacht. Dat klanten en omzet nog bestaan is alleen een aanwijzing om verder te onderzoeken, geen oordeel over levensvatbaarheid.';
+    if (normalized.includes('status') || normalized.includes('agora') || normalized.includes('bron')) return 'Agora houdt bevestigde uitspraken, AI-afleidingen, ontbrekende gegevens en menselijke besluiten afzonderlijk zichtbaar.';
+    return 'Ik kan deze intake ordenen en ontbrekende informatie aanwijzen. Een expert bepaalt pas na controle wat haalbaar en passend is.';
+  };
+
+  const renderManagementAi = () => {
+    if (!state.managementAiOpen) return '';
+    const messages = state.managementAiMessages || [];
+    return `<aside class="management-ai-panel" aria-label="Management AI-chat">
+      <header><div><span>Contextassistent</span><h2>Management AI</h2></div><button type="button" id="close-management-ai" aria-label="Sluit Management AI">×</button></header>
+      <div class="management-ai-log" role="log" aria-live="polite">
+        <div class="management-ai-message assistant"><span>AI</span><p>Ik kan het signaal toelichten en ontbrekende informatie aanwijzen. Ik neem geen expertbesluit.</p></div>
+        ${messages.map((message) => `<div class="management-ai-message ${message.role}"><span>${message.role === 'user' ? 'Management' : 'AI'}</span><p>${escapeHtml(message.content)}</p></div>`).join('')}
+      </div>
+      <div class="management-ai-actions" aria-label="Snelle managementvragen">
+        <button type="button" data-management-ai-prompt="Vat samen wat nu aandacht vraagt">Wat vraagt nu aandacht?</button>
+        <button type="button" data-management-ai-prompt="Welke informatie ontbreekt nog?">Wat ontbreekt nog?</button>
+        <button type="button" data-management-ai-prompt="Waarom wordt Frank voorgesteld?">Waarom Frank?</button>
+      </div>
+      <form class="management-ai-form" id="management-ai-form">
+        <label class="sr-only" for="management-ai-input">Vraag over dit signaal</label>
+        <input id="management-ai-input" maxlength="240" placeholder="Vraag iets over dit signaal">
+        <button type="submit" aria-label="Verstuur vraag">→</button>
+      </form>
+    </aside>`;
+  };
+
   const renderMaxManagement = () => {
     const answers = state.maxIntakeAnswers || {};
     const urgent = answers.urgent ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[1], answers.urgent) : 'Nog niet bevestigd';
@@ -544,6 +577,8 @@
           </div>
         </main>
       </div>
+      <button type="button" class="management-ai-launch" id="open-management-ai" aria-expanded="${Boolean(state.managementAiOpen)}"><span aria-hidden="true">✦</span><span><small>Beschikbaar in dit scherm</small><strong>Vraag Management AI</strong></span></button>
+      ${renderManagementAi()}
       <dialog class="lineage-dialog management-lineage-dialog" id="management-lineage"><button type="button" id="close-management-lineage" aria-label="Sluit Agora-uitleg">×</button><span>Agora · signaallogica</span><h2>Urgentie is geen levensvatbaarheid</h2><ul><li><strong>Tijdskritiek · hoog</strong> rust op Danny’s bevestigde druk van vandaag.</li><li><strong>Potentie · onderzoeken</strong> rust op zijn verklaring dat klanten en omzet nog bestaan.</li><li>AI koppelt deze signalen, maar mag geen haalbaarheid of route vaststellen.</li><li>De toewijzing aan Frank wordt als afzonderlijk menselijk besluit vastgelegd.</li></ul></dialog>
     </section>`;
   };
@@ -993,6 +1028,33 @@
       record('management_signal_assigned', 'frank-bedrijfsherstel');
       saveSession();
       render();
+    });
+    document.querySelector('#open-management-ai')?.addEventListener('click', () => {
+      state.managementAiOpen = !state.managementAiOpen;
+      saveSession();
+      render();
+    });
+    document.querySelector('#close-management-ai')?.addEventListener('click', () => {
+      state.managementAiOpen = false;
+      saveSession();
+      render();
+    });
+    const askManagementAi = (prompt) => {
+      const question = String(prompt || '').trim().slice(0, 240);
+      if (!question) return;
+      state.managementAiMessages = [
+        ...(state.managementAiMessages || []),
+        { role: 'user', content: question },
+        { role: 'assistant', content: managementAiAnswer(question) }
+      ].slice(-8);
+      record('management_ai_question', 'context-only');
+      saveSession();
+      render();
+    };
+    document.querySelectorAll('[data-management-ai-prompt]').forEach((button) => button.addEventListener('click', () => askManagementAi(button.dataset.managementAiPrompt)));
+    document.querySelector('#management-ai-form')?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      askManagementAi(document.querySelector('#management-ai-input')?.value);
     });
     const lineageDialog = document.querySelector('#intake-lineage');
     document.querySelector('#show-intake-lineage')?.addEventListener('click', () => lineageDialog?.showModal());
