@@ -82,6 +82,12 @@ if (!js.includes('zegt dat hij dit traject niet kan trekken') || !js.includes('S
 if (!js.includes("{ id: 'max', label: 'Max'") || !js.includes('U hoeft dit niet alleen uit te zoeken.') || !js.includes('Nog niets gedeeld')) {
   errors.push('de gecontroleerde Max-ingang ontbreekt of maakt de overdrachtsgrens niet zichtbaar');
 }
+if (!js.includes("{ id: 'max-intake', label: 'Eerste intake'") || !js.includes('MAX_INTAKE_QUESTIONS') || !js.includes('Verstuur eerste intake naar Max')) {
+  errors.push('de gesprekgestuurde eerste Max-intake ontbreekt of heeft geen expliciete verzending');
+}
+if (!js.includes('Agora · herkomstlaag') || !js.includes('Door Danny bevestigd') || !js.includes('Door AI herkend')) {
+  errors.push('de eerste Max-intake maakt Agora-herkomst en status niet aantoonbaar');
+}
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }

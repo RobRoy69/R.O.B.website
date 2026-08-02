@@ -7,6 +7,7 @@
   const ROUTE = [
     { id: 'chat', label: 'Neutrale chat', detail: 'herkennen' },
     { id: 'max', label: 'Max', detail: 'veilig landen' },
+    { id: 'max-intake', label: 'Eerste intake', detail: 'rust en houvast' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
@@ -69,6 +70,9 @@
     intakeReady: false,
     chatDemoComplete: false,
     chatDemoStep: 0,
+    maxIntakeStep: 0,
+    maxIntakeAnswers: {},
+    maxIntakeSubmitted: false,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -127,7 +131,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', max: 'ondernemer', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -368,12 +372,117 @@
           </article>
         </div>
         <div class="max-entry-actions">
-          <button type="button" disabled>Bekijk wat ik kan delen <span aria-hidden="true">→</span></button>
+          <button type="button" id="open-max-intake">Start eerste intake <span aria-hidden="true">→</span></button>
           <a href="https://www.maxfinancelegal.nl/" target="_blank" rel="noopener noreferrer">Eerst naar de officiële website <span aria-hidden="true">↗</span></a>
-          <p>Volgende scherm: expliciete overdracht. Wordt na goedkeuring van deze Max-ingang ontworpen.</p>
+          <p>De intake blijft in deze demonstratiesessie totdat Danny haar zelf afrondt.</p>
         </div>
       </main>
     </section>`;
+
+  const MAX_INTAKE_QUESTIONS = [
+    {
+      id: 'samenvatting',
+      prompt: 'Mag ik de drie signalen uit je vorige gesprek gebruiken als begin van deze eerste intake?',
+      options: [
+        ['ja', 'Ja, gebruik de samenvatting'],
+        ['nee', 'Nee, begin opnieuw']
+      ],
+      response: (value) => value === 'ja'
+        ? 'Dank je. Ik neem alleen die drie signalen mee. Ze blijven herkenbaar als jouw informatie.'
+        : 'Prima. Dan beginnen we hier opnieuw en neem ik niets uit het vorige gesprek over.'
+    },
+    {
+      id: 'urgent',
+      prompt: 'Wat geeft vandaag de meeste druk?',
+      options: [
+        ['belasting', 'Belastingdienst of deurwaarder'],
+        ['leveranciers', 'Leveranciers stoppen of dreigen'],
+        ['vastelasten', 'Salarissen, huur of andere vaste lasten'],
+        ['onbekend', 'Ik weet niet wat eerst moet']
+      ],
+      response: () => 'Duidelijk. We beginnen alleen daar. De rest hoeft nu nog niet tegelijk.'
+    },
+    {
+      id: 'operatie',
+      prompt: 'Wat lukt binnen het bedrijf op dit moment nog wel?',
+      options: [
+        ['draait', 'Klanten bedienen en omzet maken'],
+        ['werk-geen-geld', 'Er is werk, maar geen betaalruimte'],
+        ['valt-stil', 'Ook de dagelijkse operatie valt stil'],
+        ['onbekend', 'Dat kan ik niet goed overzien']
+      ],
+      response: () => 'Goed dat je dit aangeeft. Dit is een signaal, nog geen oordeel over de levensvatbaarheid.'
+    },
+    {
+      id: 'hulp',
+      prompt: 'Wat zou je op dit moment het meeste helpen?',
+      options: [
+        ['rust', 'Eerst overzicht en rust'],
+        ['regie', 'Iemand die het geheel regisseert'],
+        ['haalbaarheid', 'Beoordelen wat nog haalbaar is'],
+        ['onbekend', 'Ik weet het nog niet']
+      ],
+      response: () => 'Dat is voldoende voor een eerste beoordeling. Je hoeft nu nog geen documenten aan te leveren.'
+    }
+  ];
+
+  const maxIntakeAnswerLabel = (question, value) => question.options.find(([id]) => id === value)?.[1] || value;
+
+  const renderMaxIntakeTranscript = () => {
+    const answers = state.maxIntakeAnswers || {};
+    const parts = [`<div class="max-ai-line"><span>Max AI</span><p>Goed dat je er bent, Danny. We doen dit stap voor stap. Je hoeft nu nog niets te bewijzen of compleet te maken.</p></div>`];
+    for (let index = 0; index < Math.min(state.maxIntakeStep || 0, MAX_INTAKE_QUESTIONS.length); index += 1) {
+      const question = MAX_INTAKE_QUESTIONS[index];
+      const value = answers[question.id];
+      if (!value) continue;
+      parts.push(`<div class="max-ai-line"><span>Max AI</span><p>${escapeHtml(question.prompt)}</p></div>`);
+      parts.push(`<div class="max-ai-line user"><span>Danny</span><p>${escapeHtml(maxIntakeAnswerLabel(question, value))}</p></div>`);
+      parts.push(`<div class="max-ai-line"><span>Max AI</span><p>${escapeHtml(question.response(value))}</p></div>`);
+    }
+    return parts.join('');
+  };
+
+  const renderMaxIntake = () => {
+    const answers = state.maxIntakeAnswers || {};
+    const step = Math.min(state.maxIntakeStep || 0, MAX_INTAKE_QUESTIONS.length);
+    const currentQuestion = MAX_INTAKE_QUESTIONS[step];
+    const summaryUsed = answers.samenvatting === 'ja';
+    const summarySkipped = answers.samenvatting === 'nee';
+    const overviewRows = [
+      ['Eerdere chatsignalen', summaryUsed ? 'Door Danny vrijgegeven' : summarySkipped ? 'Niet overgenomen' : 'AI-herkend · nog bevestigen', summaryUsed ? 'confirmed' : summarySkipped ? 'withheld' : 'candidate'],
+      ['Druk van vandaag', answers.urgent ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[1], answers.urgent) : 'Nog onbekend', answers.urgent ? 'confirmed' : 'unknown'],
+      ['Wat nog functioneert', answers.operatie ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[2], answers.operatie) : 'Nog onbekend', answers.operatie ? 'confirmed' : 'unknown'],
+      ['Gewenste hulp', answers.hulp ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[3], answers.hulp) : 'Nog onbekend', answers.hulp ? 'confirmed' : 'unknown']
+    ];
+    return `<section class="max-intake-screen" aria-labelledby="max-intake-title">
+      <header class="max-entry-header">
+        <div class="max-wordmark" aria-label="Max Finance & Legal, Bedrijfsherstel"><strong>Max Finance <span>&amp;</span> Legal</strong><small>Bedrijfsherstel</small></div>
+        <span class="max-entry-security"><i aria-hidden="true"></i>${state.maxIntakeSubmitted ? 'Eerste intake ontvangen' : 'Nog niet verzonden'}</span>
+      </header>
+      <main class="max-intake-layout">
+        <aside class="max-intake-overview" aria-label="Door Danny opgebouwd overzicht">
+          <div class="max-intake-progress"><span>Eerste intake</span><strong>${step} van ${MAX_INTAKE_QUESTIONS.length}</strong><i style="--progress:${step / MAX_INTAKE_QUESTIONS.length * 100}%"></i></div>
+          <h1 id="max-intake-title">Jouw overzicht</h1>
+          <p>Alleen bevestigde antwoorden worden onderdeel van deze eerste intake.</p>
+          <div class="max-overview-list">${overviewRows.map(([label, value, status]) => `<article class="${status}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><small>${status === 'confirmed' ? 'Door Danny bevestigd' : status === 'candidate' ? 'Door AI herkend' : status === 'withheld' ? 'Niet vrijgegeven' : 'Geen gegeven'}</small></article>`).join('')}</div>
+          <button class="agora-trace" type="button" id="show-intake-lineage"><span aria-hidden="true">◎</span> Toon herkomst en status</button>
+        </aside>
+        <section class="max-intake-ai" aria-label="Kalmerende AI-intake">
+          <div class="max-ai-log" role="log" aria-live="polite">
+            ${renderMaxIntakeTranscript()}
+            ${state.maxIntakeSubmitted ? `<div class="max-ai-line receipt"><span>Max AI</span><p>Je eerste intake is ontvangen. Je hoeft nu niets meer te doen. Max beoordeelt alleen of menselijke opvolging zinvol is.</p></div>` : ''}
+          </div>
+          ${!state.maxIntakeSubmitted && currentQuestion ? `<div class="max-ai-question">
+            <span>Max AI vraagt</span><h2>${escapeHtml(currentQuestion.prompt)}</h2>
+            <div class="max-intake-options">${currentQuestion.options.map(([value, label]) => `<button type="button" data-intake-answer="${escapeHtml(value)}">${escapeHtml(label)}</button>`).join('')}</div>
+            <p>Je kunt altijd stoppen. Er wordt nog niets naar een expert gestuurd.</p>
+          </div>` : ''}
+          ${!state.maxIntakeSubmitted && !currentQuestion ? `<div class="max-intake-ready"><span>Eerste overzicht gereed</span><h2>Dit is genoeg voor een eerste menselijke beoordeling.</h2><p>Er worden nog geen documenten, accountantsgegevens of juridische conclusies toegevoegd.</p><button type="button" id="submit-max-intake">Verstuur eerste intake naar Max <span aria-hidden="true">→</span></button></div>` : ''}
+        </section>
+      </main>
+      <dialog class="lineage-dialog" id="intake-lineage"><button type="button" id="close-intake-lineage" aria-label="Sluit herkomst">×</button><span>Agora · herkomstlaag</span><h2>Waarom dit overzicht aantoonbaar blijft</h2><ul><li>Een antwoord wordt pas bevestigd nadat Danny zelf kiest.</li><li>AI-herkenning blijft afzonderlijk gemarkeerd.</li><li>Iedere wijziging bewaart actor, moment en vorige status.</li><li>Deze eerste intake bevat nog geen expertbesluit.</li></ul></dialog>
+    </section>`;
+  };
 
   const renderEntrepreneur = () => {
     const visibleLayers = pack.case.revealLayers.slice(0, state.revealCount);
@@ -527,6 +636,7 @@
   const renderers = {
     chat: renderChat,
     max: renderMaxLanding,
+    'max-intake': renderMaxIntake,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
     accountant: renderAccountant,
@@ -543,7 +653,9 @@
     app.classList.toggle('ai-chat-start', isAiChat);
     const isMaxEntry = state.current === 'max';
     app.classList.toggle('max-entry-mode', isMaxEntry);
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isMaxIntake = state.current === 'max-intake';
+    app.classList.toggle('max-intake-mode', isMaxIntake);
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -770,6 +882,30 @@
     document.querySelectorAll('[data-command]').forEach((button) => button.addEventListener('click', () => handleCommand(button.dataset.command)));
     const maxButton = document.querySelector('#open-max-landing');
     if (maxButton) maxButton.onclick = openMaxLanding;
+    document.querySelector('#open-max-intake')?.addEventListener('click', () => {
+      record('max_intake_opened', 'first-intake');
+      unlockAndGo('max-intake');
+    });
+    document.querySelectorAll('[data-intake-answer]').forEach((button) => button.addEventListener('click', () => {
+      const question = MAX_INTAKE_QUESTIONS[state.maxIntakeStep || 0];
+      if (!question || state.maxIntakeSubmitted) return;
+      button.disabled = true;
+      state.maxIntakeAnswers = { ...(state.maxIntakeAnswers || {}), [question.id]: button.dataset.intakeAnswer };
+      state.maxIntakeStep = (state.maxIntakeStep || 0) + 1;
+      record('max_intake_answer_confirmed', question.id);
+      saveSession();
+      setTimeout(render, 280);
+    }));
+    document.querySelector('#submit-max-intake')?.addEventListener('click', () => {
+      if ((state.maxIntakeStep || 0) < MAX_INTAKE_QUESTIONS.length) return;
+      state.maxIntakeSubmitted = true;
+      record('max_intake_submitted', 'management-review-pending');
+      saveSession();
+      render();
+    });
+    const lineageDialog = document.querySelector('#intake-lineage');
+    document.querySelector('#show-intake-lineage')?.addEventListener('click', () => lineageDialog?.showModal());
+    document.querySelector('#close-intake-lineage')?.addEventListener('click', () => lineageDialog?.close());
 
     const aiStartForm = document.querySelector('#ai-start-form');
     const aiStartInput = document.querySelector('#ai-start-input');
