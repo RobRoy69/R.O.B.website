@@ -230,19 +230,19 @@
     },
     {
       role: 'assistant',
-      content: 'Heb je iemand die samen met jou naar het totaal kijkt, bijvoorbeeld je accountant? En zijn er al afspraken met schuldeisers geprobeerd?'
+      content: 'Heb je je accountant al om hulp gevraagd?'
     },
     {
       role: 'user',
-      content: 'Mijn accountant heeft geprobeerd afspraken te maken. Een aantal wil meewerken, maar niet iedereen. Ik zie eerlijk gezegd niet meer wat er nog kan.'
+      content: 'Ja. Hij wil de cijfers nog wel aanleveren, maar zegt dat hij dit traject niet kan trekken. Er staan ook facturen bij hem open. Hij waarschuwt voor faillissement en mogelijke aansprakelijkheid. Sindsdien raak ik helemaal in paniek.'
     },
     {
       role: 'assistant',
-      content: 'Ik hoor drie dingen: het bedrijf werkt nog, de schulden nemen alle ruimte weg en de vrijwillige afspraken hebben het probleem niet opgelost. Ik kan niet beoordelen welke oplossing juridisch en financieel haalbaar is. Daarvoor moeten de cijfers, schuldeisers en alternatieven samen worden onderzocht.'
+      content: 'Je hebt dus wel om hulp gevraagd, maar nog niemand gevonden die het geheel met je kan overzien en de volgende stap organiseert. Het bedrijf draait nog, terwijl de schulden alle betaalruimte wegnemen en de waarschuwingen de druk verder verhogen. Ik kan niet beoordelen welke oplossing juridisch en financieel haalbaar is. Daarvoor moeten de cijfers, schulden, risico’s en alternatieven samen worden onderzocht.'
     },
     {
       role: 'search',
-      query: 'specialist voor een bedrijf dat nog draait, maar vastloopt door schulden en mislukte betalingsafspraken'
+      query: 'specialist voor een bedrijf dat nog draait, schulden niet kan betalen en geen crisisbegeleiding krijgt van de accountant'
     },
     {
       role: 'assistant',
@@ -258,9 +258,9 @@
         <h2>Max Finance &amp; Legal</h2>
         <p>Experthuis voor ondernemingen in zwaar weer.</p>
         <ul>
-          <li>De operationele kern lijkt nog actief</li>
+          <li>Het bedrijf heeft nog werk en omzet</li>
           <li>De schulden drukken de betaalruimte</li>
-          <li>Vrijwillige overeenstemming is nog niet bereikt</li>
+          <li>De accountant levert cijfers, maar trekt het hersteltraject niet</li>
           <li>De passende route moet nog worden vastgesteld</li>
         </ul>
         <div class="max-recommendation-actions">
@@ -354,7 +354,7 @@
             <ul>
               <li>Het bedrijf bedient nog klanten en maakt omzet</li>
               <li>De schulden nemen de beschikbare betaalruimte weg</li>
-              <li>Vrijwillige afspraken hebben nog geen oplossing gebracht</li>
+              <li>De accountant levert cijfers, maar trekt het hersteltraject niet</li>
             </ul>
             <p>Herkomst: uitspraken van Danny in deze demonstratiesessie.</p>
           </article>

@@ -76,6 +76,9 @@ if (!js.includes('https://www.maxfinancelegal.nl/')) {
 if (!js.includes("role: 'search'") || !js.includes('Passende expertise zoeken') || !js.includes('Passende specialist gevonden')) {
   errors.push('scherm 2 mist de zichtbare AI-zoekfase vóór de aanbeveling');
 }
+if (!js.includes('zegt dat hij dit traject niet kan trekken') || !js.includes('Sindsdien raak ik helemaal in paniek')) {
+  errors.push('de chat verbeeldt de begrensde accountantshulp en oplopende paniek niet');
+}
 if (!js.includes("{ id: 'max', label: 'Max'") || !js.includes('U hoeft dit niet alleen uit te zoeken.') || !js.includes('Nog niets gedeeld')) {
   errors.push('de gecontroleerde Max-ingang ontbreekt of maakt de overdrachtsgrens niet zichtbaar');
 }
