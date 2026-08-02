@@ -30,6 +30,7 @@
 
   let pack;
   let state;
+  let chatDemoRunning = false;
 
   const escapeHtml = (value = '') => String(value)
     .replaceAll('&', '&amp;')
@@ -65,6 +66,7 @@
     caseStarted: false,
     openingSent: false,
     intakeReady: false,
+    chatDemoComplete: false,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -188,9 +190,61 @@
 
   const renderChatMessages = () => state.messages.map((message) => `
     <div class="chat-line ${message.role === 'user' ? 'user' : ''}">
-      <span class="chat-who">${message.role === 'user' ? 'Ondernemer' : 'AI-ingang'}</span>
+      <span class="chat-who">${message.role === 'user' ? 'Danny' : 'AI'}</span>
       <div class="chat-text">${escapeHtml(message.content)}</div>
     </div>`).join('');
+
+  const CHAT_DEMO = [
+    {
+      role: 'assistant',
+      content: 'Dat klinkt zwaar. Ik denk graag met je mee. Kun je aangeven wat de kern van de problemen is?'
+    },
+    {
+      role: 'user',
+      content: 'Ik heb schulden en ik krijg ze gewoon niet meer betaald. Elke dag komt er iets nieuws bij en ik weet niet meer waar ik moet beginnen.'
+    },
+    {
+      role: 'assistant',
+      content: 'Dat is veel om tegelijk te dragen. Lukt het bedrijf zelf nog wel om klanten te bedienen en omzet te maken?'
+    },
+    {
+      role: 'user',
+      content: 'Ja, we hebben genoeg werk. Maar alles wat binnenkomt verdwijnt meteen en de achterstanden worden alleen maar groter.'
+    },
+    {
+      role: 'assistant',
+      content: 'Heb je iemand die samen met jou naar het totaal kijkt, bijvoorbeeld je accountant? En zijn er al afspraken met schuldeisers geprobeerd?'
+    },
+    {
+      role: 'user',
+      content: 'Mijn accountant heeft geprobeerd afspraken te maken. Een aantal wil meewerken, maar niet iedereen. Ik zie eerlijk gezegd niet meer wat er nog kan.'
+    },
+    {
+      role: 'assistant',
+      content: 'Ik hoor drie dingen: het bedrijf werkt nog, de schulden nemen alle ruimte weg en de vrijwillige afspraken hebben het probleem niet opgelost. Ik kan niet beoordelen welke oplossing juridisch en financieel haalbaar is. Daarvoor moeten de cijfers, schuldeisers en alternatieven samen worden onderzocht.'
+    },
+    {
+      role: 'assistant',
+      content: 'Max Finance & Legal is gespecialiseerd in ondernemingen in zwaar weer. Zij kunnen de onderneming, schuldenpositie en haalbare oplossingen onderzoeken. Pas daarna kan een expert bepalen welke route passend is.'
+    }
+  ];
+
+  const maxRecommendation = () => `
+    <article class="max-recommendation" id="max-recommendation">
+      <div class="max-recommendation-mark" aria-hidden="true">M</div>
+      <div>
+        <span class="max-recommendation-label">Aanbevolen vervolgstap</span>
+        <h2>Max Finance &amp; Legal</h2>
+        <p>Experthuis voor ondernemingen in zwaar weer.</p>
+        <ul>
+          <li>De operationele kern lijkt nog actief</li>
+          <li>De schulden drukken de betaalruimte</li>
+          <li>Vrijwillige overeenstemming is nog niet bereikt</li>
+          <li>De passende route moet nog worden vastgesteld</li>
+        </ul>
+        <a href="https://www.maxfinancelegal.nl/" target="_blank" rel="noopener noreferrer">Bekijk Max Finance &amp; Legal <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>`;
 
   const renderChat = () => {
     const started = state.caseStarted;
@@ -227,22 +281,26 @@
       </section>`;
     }
 
-    return `<section class="screen neutral-shell">
-      ${pageHead(
-        started ? 'Er wordt geluisterd' : 'Nog geen route gekozen',
-        started ? 'Eerst begrijpen wat er werkelijk speelt.' : 'Een gesprek vóór een systeem.',
-        started ? 'Max-OS verzamelt alleen wat nodig is om de situatie veilig te ordenen.' : 'De omgeving kent nog geen bedrijf, probleem of oplossing.',
-        'De AI mag signalen herkennen en vragen stellen. Zij stelt geen diagnose en kiest geen juridische route.'
-      )}
-      <div class="chat-window">
-        <div class="chat-log" id="neutral-chat-log" role="log" aria-live="polite">${renderChatMessages()}</div>
-        ${started && !ready ? `<form class="chat-entry" id="neutral-chat-form">
-          <input id="neutral-chat-input" maxlength="700" aria-label="Vertel wat er speelt" placeholder="${escapeHtml(pack.case.opening)}">
-          <button type="submit">Orden</button>
-        </form>` : ''}
+    return `<section class="ai-chat-conversation" aria-label="Gesprek over de onderneming">
+      <div class="ai-conversation-shell">
+        <div class="ai-conversation-head"><span class="ai-status-dot" aria-hidden="true"></span><span>AI Chat</span></div>
+        <div class="ai-conversation-log" id="neutral-chat-log" role="log" aria-live="off">
+          ${renderChatMessages()}
+          ${state.chatDemoComplete ? maxRecommendation() : ''}
+        </div>
+        <p class="sr-only" id="chat-announcer" aria-live="polite"></p>
+        <form class="ai-composer ai-conversation-composer" id="neutral-chat-form" autocomplete="off">
+          <label class="sr-only" for="neutral-chat-input">Bericht aan AI</label>
+          <textarea id="neutral-chat-input" rows="2" maxlength="700" placeholder="${state.chatDemoComplete ? 'Dit gesprek is afgerond' : 'Danny antwoordt…'}" ${state.chatDemoComplete ? 'disabled' : ''}></textarea>
+          <div class="ai-composer-tools">
+            <div class="ai-composer-left"><button class="ai-tool-button" type="button" aria-label="Bijlage toevoegen" disabled>+</button><span class="ai-mode">Chat</span></div>
+            <button class="ai-send-button" type="submit" aria-label="Verstuur bericht" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></svg>
+            </button>
+          </div>
+        </form>
+        <p class="ai-chat-note">Gesimuleerde demonstratie. Een specialist stelt de passende route vast.</p>
       </div>
-      ${ready ? `<div class="action-row"><button class="primary-button" type="button" data-command="/intake">Open het gevormde dossier</button></div>
-        <p class="inline-status">Reactiemodus: ${escapeHtml(state.aiMode === 'live' ? 'gecontroleerd AI-antwoord' : 'vaste veilige terugval')}</p>` : ''}
     </section>`;
   };
 
@@ -414,15 +472,96 @@
 
   const render = () => {
     document.querySelector('#poc-shell-title')?.remove();
-    const isAiStart = state.current === 'chat' && !state.caseStarted;
-    app.classList.toggle('ai-chat-start', isAiStart);
-    document.title = isAiStart ? 'AI Chat' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isAiChat = state.current === 'chat';
+    app.classList.toggle('ai-chat-start', isAiChat);
+    document.title = isAiChat ? 'AI Chat' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
     screen.innerHTML = (renderers[state.current] || renderChat)();
     bindScreenActions();
   };
+
+  const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+  const typeInto = async (element, text, millisecondsPerCharacter) => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      element.textContent = text;
+      return;
+    }
+    for (const character of text) {
+      element.textContent += character;
+      await wait(millisecondsPerCharacter);
+    }
+  };
+
+  const typeIntoComposer = async (element, text) => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      element.value = text;
+      return;
+    }
+    for (const character of text) {
+      element.value += character;
+      await wait(27);
+    }
+  };
+
+  const appendChatMessage = async (message) => {
+    const log = document.querySelector('#neutral-chat-log');
+    if (!log) return;
+    const line = document.createElement('div');
+    line.className = `chat-line ${message.role === 'user' ? 'user' : ''}`;
+    const who = document.createElement('span');
+    who.className = 'chat-who';
+    who.textContent = message.role === 'user' ? 'Danny' : 'AI';
+    const text = document.createElement('div');
+    text.className = 'chat-text is-typing';
+    line.append(who, text);
+    log.append(line);
+    line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    await typeInto(text, message.content, message.role === 'user' ? 25 : 34);
+    text.classList.remove('is-typing');
+    state.messages.push(message);
+    saveSession();
+    const announcer = document.querySelector('#chat-announcer');
+    if (announcer) announcer.textContent = `${who.textContent}: ${message.content}`;
+  };
+
+  const runChatDemo = async () => {
+    if (chatDemoRunning || state.chatDemoComplete || state.current !== 'chat') return;
+    chatDemoRunning = true;
+    const firstScriptIndex = Math.max(0, state.messages.length - 1);
+    const input = document.querySelector('#neutral-chat-input');
+    try {
+      for (let index = firstScriptIndex; index < CHAT_DEMO.length; index += 1) {
+        const message = CHAT_DEMO[index];
+        await wait(message.role === 'assistant' ? 900 : 1200);
+        if (message.role === 'user' && input) {
+          input.value = '';
+          await typeIntoComposer(input, message.content);
+          await wait(550);
+          input.value = '';
+        }
+        await appendChatMessage(message);
+      }
+      await wait(1200);
+      state.chatDemoComplete = true;
+      state.intakeReady = true;
+      state.aiMode = 'scripted-preview';
+      record('max_recommendation_shown', 'maxfinancelegal.nl');
+      saveSession();
+      const log = document.querySelector('#neutral-chat-log');
+      log?.insertAdjacentHTML('beforeend', maxRecommendation());
+      document.querySelector('#max-recommendation')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (input) input.placeholder = 'Dit gesprek is afgerond';
+    } finally {
+      chatDemoRunning = false;
+    }
+  };
+
+  const isDistressOpening = (message) => /\b(probleem|problemen|schuld|schulden|betalen|zwaar\s*weer|loopt?\s+vast|gaat\s+niet)\b/i.test(message);
 
   const safeFallback = () => ({
     reflection: 'Je bedrijf lijkt operationeel nog te draaien, terwijl oudere verplichtingen de betaalruimte steeds verder beperken.',
@@ -537,11 +676,18 @@
         handleCommand(message);
         return;
       }
+      if (!isDistressOpening(message)) {
+        aiStartInput.setAttribute('aria-invalid', 'true');
+        aiStartInput.placeholder = 'Vertel in je eigen woorden wat er met je bedrijf speelt';
+        setTimeout(() => aiStartInput.removeAttribute('aria-invalid'), 1400);
+        return;
+      }
       state.caseStarted = true;
-      state.messages = [];
+      state.messages = [{ role: 'user', content: message }];
+      state.openingSent = true;
       record('case_route_started', 'natuurlijke-ai-ingang');
       saveSession();
-      requestFirstReflection(message, event.submitter);
+      render();
     });
 
     document.querySelector('#neutral-chat-form')?.addEventListener('submit', (event) => {
@@ -613,6 +759,10 @@
       saveSession();
       render();
     }));
+
+    if (state.current === 'chat' && state.caseStarted && !state.chatDemoComplete) {
+      setTimeout(runChatDemo, 250);
+    }
   }
 
   commandForm.addEventListener('submit', (event) => {

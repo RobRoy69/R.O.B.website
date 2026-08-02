@@ -67,6 +67,17 @@ if (!js.includes('Wat kan ik voor je doen Danny?') || !js.includes('id="ai-start
 if (!js.includes("record('case_route_started', 'natuurlijke-ai-ingang')")) {
   errors.push('natuurlijke invoer op scherm 1 start de klantreis niet');
 }
+if (!js.includes('const isDistressOpening') || !js.includes('CHAT_DEMO')) {
+  errors.push('scherm 2 mist de robuuste probleemtrigger of de deterministische chat');
+}
+if (!js.includes('https://www.maxfinancelegal.nl/')) {
+  errors.push('scherm 2 verwijst niet naar de officiële Max Finance & Legal-pagina');
+}
+const chatDemoStart = js.indexOf('const CHAT_DEMO');
+const chatDemoEnd = js.indexOf('const maxRecommendation');
+if (/\bwhoa\b/i.test(js.slice(chatDemoStart, chatDemoEnd))) {
+  errors.push('de eerste AI-chat speelt de WHOA-route te vroeg uit');
+}
 if (!css.includes('.ai-chat-start > .afsluiter { display: none; }') || !css.includes('.ai-chat-start .poc-topbar')) {
   errors.push('scherm 1 verbergt presentator- en R.O.B./Max-chrome niet volledig');
 }
