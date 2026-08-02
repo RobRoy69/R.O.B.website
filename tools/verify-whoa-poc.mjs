@@ -73,6 +73,9 @@ if (!js.includes('const isDistressOpening') || !js.includes('CHAT_DEMO')) {
 if (!js.includes('https://www.maxfinancelegal.nl/')) {
   errors.push('scherm 2 verwijst niet naar de officiële Max Finance & Legal-pagina');
 }
+if (!js.includes("role: 'search'") || !js.includes('Passende expertise zoeken') || !js.includes('Passende specialist gevonden')) {
+  errors.push('scherm 2 mist de zichtbare AI-zoekfase vóór de aanbeveling');
+}
 const chatDemoStart = js.indexOf('const CHAT_DEMO');
 const chatDemoEnd = js.indexOf('const maxRecommendation');
 if (/\bwhoa\b/i.test(js.slice(chatDemoStart, chatDemoEnd))) {

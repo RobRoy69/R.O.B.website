@@ -67,6 +67,7 @@
     openingSent: false,
     intakeReady: false,
     chatDemoComplete: false,
+    chatDemoStep: 0,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -188,11 +189,24 @@
       ${boundary ? `<p class="boundary-note">${escapeHtml(boundary)}</p>` : ''}
     </header>`;
 
-  const renderChatMessages = () => state.messages.map((message) => `
-    <div class="chat-line ${message.role === 'user' ? 'user' : ''}">
+  const searchExperience = (query = '', complete = false) => `
+    <article class="ai-search-experience ${complete ? 'is-complete' : ''}" aria-label="AI zoekt passende expertise">
+      <div class="ai-search-heading"><span class="ai-search-symbol" aria-hidden="true"></span><span>Passende expertise zoeken</span></div>
+      <div class="ai-search-query"><span>Zoekvraag</span><p data-search-query>${escapeHtml(query)}</p></div>
+      <ol class="ai-search-steps">
+        <li class="${complete ? 'done' : ''}" data-search-step="0">Situatie vertalen naar benodigde expertise</li>
+        <li class="${complete ? 'done' : ''}" data-search-step="1">Financiële en juridische begeleiding vergelijken</li>
+        <li class="${complete ? 'done' : ''}" data-search-step="2">Passende specialist gevonden</li>
+      </ol>
+    </article>`;
+
+  const renderChatMessages = () => state.messages.map((message) => {
+    if (message.role === 'search') return searchExperience(message.query, true);
+    return `<div class="chat-line ${message.role === 'user' ? 'user' : ''}">
       <span class="chat-who">${message.role === 'user' ? 'Danny' : 'AI'}</span>
       <div class="chat-text">${escapeHtml(message.content)}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   const CHAT_DEMO = [
     {
@@ -222,6 +236,10 @@
     {
       role: 'assistant',
       content: 'Ik hoor drie dingen: het bedrijf werkt nog, de schulden nemen alle ruimte weg en de vrijwillige afspraken hebben het probleem niet opgelost. Ik kan niet beoordelen welke oplossing juridisch en financieel haalbaar is. Daarvoor moeten de cijfers, schuldeisers en alternatieven samen worden onderzocht.'
+    },
+    {
+      role: 'search',
+      query: 'specialist voor een bedrijf dat nog draait, maar vastloopt door schulden en mislukte betalingsafspraken'
     },
     {
       role: 'assistant',
@@ -504,7 +522,7 @@
     }
     for (const character of text) {
       element.value += character;
-      await wait(27);
+      await wait(36);
     }
   };
 
@@ -517,11 +535,12 @@
     who.className = 'chat-who';
     who.textContent = message.role === 'user' ? 'Danny' : 'AI';
     const text = document.createElement('div');
-    text.className = 'chat-text is-typing';
+    text.className = `chat-text ${message.role === 'assistant' ? 'is-typing' : ''}`;
     line.append(who, text);
     log.append(line);
     line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    await typeInto(text, message.content, message.role === 'user' ? 25 : 34);
+    if (message.role === 'user') text.textContent = message.content;
+    else await typeInto(text, message.content, 43);
     text.classList.remove('is-typing');
     state.messages.push(message);
     saveSession();
@@ -529,15 +548,45 @@
     if (announcer) announcer.textContent = `${who.textContent}: ${message.content}`;
   };
 
+  const appendSearchExperience = async (message) => {
+    const log = document.querySelector('#neutral-chat-log');
+    if (!log) return;
+    log.insertAdjacentHTML('beforeend', searchExperience('', false));
+    const experience = log.querySelector('.ai-search-experience:not(.is-complete)');
+    const query = experience?.querySelector('[data-search-query]');
+    experience?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (query) await typeInto(query, message.query, 32);
+    for (let index = 0; index < 3; index += 1) {
+      const step = experience?.querySelector(`[data-search-step="${index}"]`);
+      step?.classList.add('active');
+      await wait(1150);
+      step?.classList.remove('active');
+      step?.classList.add('done');
+    }
+    experience?.classList.add('is-complete');
+    state.messages.push(message);
+    saveSession();
+    const announcer = document.querySelector('#chat-announcer');
+    if (announcer) announcer.textContent = 'Passende specialist gevonden.';
+  };
+
   const runChatDemo = async () => {
     if (chatDemoRunning || state.chatDemoComplete || state.current !== 'chat') return;
     chatDemoRunning = true;
-    const firstScriptIndex = Math.max(0, state.messages.length - 1);
+    const firstScriptIndex = Number.isInteger(state.chatDemoStep)
+      ? Math.max(0, state.chatDemoStep)
+      : Math.max(0, state.messages.length - 1);
     const input = document.querySelector('#neutral-chat-input');
     try {
       for (let index = firstScriptIndex; index < CHAT_DEMO.length; index += 1) {
         const message = CHAT_DEMO[index];
-        await wait(message.role === 'assistant' ? 900 : 1200);
+        await wait(message.role === 'assistant' ? 1300 : 1500);
+        if (message.role === 'search') {
+          await appendSearchExperience(message);
+          state.chatDemoStep = index + 1;
+          saveSession();
+          continue;
+        }
         if (message.role === 'user' && input) {
           input.value = '';
           await typeIntoComposer(input, message.content);
@@ -545,6 +594,8 @@
           input.value = '';
         }
         await appendChatMessage(message);
+        state.chatDemoStep = index + 1;
+        saveSession();
       }
       await wait(1200);
       state.chatDemoComplete = true;
@@ -685,6 +736,8 @@
       state.caseStarted = true;
       state.messages = [{ role: 'user', content: message }];
       state.openingSent = true;
+      state.chatDemoStep = 0;
+      state.chatDemoComplete = false;
       record('case_route_started', 'natuurlijke-ai-ingang');
       saveSession();
       render();

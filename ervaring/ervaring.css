@@ -72,6 +72,25 @@ button { cursor: pointer; }
 .ai-conversation-composer textarea:disabled { opacity: .45; }
 .ai-conversation-composer .ai-send-button:disabled { opacity: .38; cursor: default; }
 
+.ai-search-experience { width: min(650px, 100%); padding: 19px 21px; border: 1px solid rgba(255,255,255,.11); border-radius: 15px; background: rgba(43,43,41,.56); color: #f0efea; }
+.ai-search-heading { display: flex; align-items: center; gap: 10px; color: rgba(240,239,234,.72); font-size: 13px; }
+.ai-search-symbol { position: relative; width: 15px; height: 15px; border: 1px solid #0fa8cb; border-radius: 50%; }
+.ai-search-symbol::after { content: ""; position: absolute; right: -4px; bottom: -3px; width: 6px; height: 1px; background: #0fa8cb; transform: rotate(45deg); transform-origin: left center; }
+.ai-search-experience:not(.is-complete) .ai-search-symbol { animation: search-pulse 1.2s ease-in-out infinite; }
+@keyframes search-pulse { 50% { box-shadow: 0 0 0 5px rgba(15,168,203,.1); } }
+.ai-search-query { margin-top: 15px; padding: 12px 14px; border-left: 2px solid #0fa8cb; background: rgba(15,168,203,.055); }
+.ai-search-query > span { color: #0fa8cb; font-family: "IBM Plex Mono", monospace; font-size: 8px; letter-spacing: .12em; text-transform: uppercase; }
+.ai-search-query p { min-height: 1.45em; margin: 5px 0 0; color: rgba(240,239,234,.86); font-family: "IBM Plex Mono", monospace; font-size: 11px; line-height: 1.55; }
+.ai-search-query p:empty::after { content: "Zoekvraag formuleren…"; color: rgba(240,239,234,.3); }
+.ai-search-steps { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.ai-search-steps li { position: relative; padding-left: 23px; color: rgba(240,239,234,.35); font-size: 11px; line-height: 1.4; transition: color .25s ease; }
+.ai-search-steps li::before { content: ""; position: absolute; left: 2px; top: .38em; width: 7px; height: 7px; border: 1px solid rgba(240,239,234,.24); border-radius: 50%; }
+.ai-search-steps li.active { color: #e8e7e2; }
+.ai-search-steps li.active::before { border-color: #0fa8cb; border-top-color: transparent; animation: search-spin .75s linear infinite; }
+.ai-search-steps li.done { color: rgba(240,239,234,.66); }
+.ai-search-steps li.done::before { content: "✓"; top: -.05em; width: auto; height: auto; border: 0; color: #0fa8cb; font-size: 12px; }
+@keyframes search-spin { to { transform: rotate(360deg); } }
+
 .max-recommendation { width: min(650px, 100%); margin-top: 10px; padding: 24px; display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 18px; border: 1px solid rgba(15,168,203,.38); border-radius: 18px; background: linear-gradient(145deg, rgba(15,168,203,.1), rgba(43,43,41,.9) 46%); color: #f0efea; animation: recommendation-in .55s ease both; }
 @keyframes recommendation-in { from { opacity: 0; transform: translateY(10px); } }
 .max-recommendation-mark { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid rgba(15,168,203,.55); border-radius: 50%; color: #0fa8cb; font-size: 18px; font-weight: 600; }
@@ -231,6 +250,7 @@ button { cursor: pointer; }
   .ai-conversation-log .chat-line { width: 92%; }
   .ai-conversation-log .chat-text { font-size: 15px; }
   .ai-conversation-composer { min-height: 104px; border-radius: 19px; }
+  .ai-search-experience { padding: 17px; }
   .max-recommendation { grid-template-columns: 1fr; padding: 20px; }
   .poc-topbar { min-height: 58px; padding: 10px 14px; }
   .poc-brand { font-size: 13px; }
