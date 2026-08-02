@@ -6,6 +6,7 @@
   const API_URL = '/api/poc-intake';
   const ROUTE = [
     { id: 'chat', label: 'Neutrale chat', detail: 'herkennen' },
+    { id: 'max', label: 'Max', detail: 'veilig landen' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
@@ -126,7 +127,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -134,6 +135,8 @@
     saveSession();
     setPath(id, replace);
     render();
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.querySelector('#poc-main')?.scrollTo?.({ top: 0, left: 0, behavior: 'instant' });
     document.querySelector('#poc-main')?.focus({ preventScroll: true });
     return true;
   };
@@ -260,7 +263,10 @@
           <li>Vrijwillige overeenstemming is nog niet bereikt</li>
           <li>De passende route moet nog worden vastgesteld</li>
         </ul>
-        <a href="https://www.maxfinancelegal.nl/" target="_blank" rel="noopener noreferrer">Bekijk Max Finance &amp; Legal <span aria-hidden="true">↗</span></a>
+        <div class="max-recommendation-actions">
+          <button type="button" id="open-max-landing">Laat Max meekijken <span aria-hidden="true">→</span></button>
+          <a href="https://www.maxfinancelegal.nl/" target="_blank" rel="noopener noreferrer">Bekijk website <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </article>`;
 
@@ -326,6 +332,48 @@
     const field = pack.case.fields[id];
     return `<tr><th>${escapeHtml(field.label)}</th><td>${escapeHtml(field.value)}</td><td><span class="status-pill ${statusClass(field.status)}">${escapeHtml(statusLabel(field.status))}</span></td></tr>`;
   }).join('');
+
+  const renderMaxLanding = () => `
+    <section class="max-entry-screen" aria-labelledby="max-entry-title">
+      <header class="max-entry-header">
+        <div class="max-wordmark" aria-label="Max Finance & Legal, Bedrijfsherstel">
+          <strong>Max Finance <span>&amp;</span> Legal</strong>
+          <small>Bedrijfsherstel</small>
+        </div>
+        <span class="max-entry-security"><i aria-hidden="true"></i>Nog niets gedeeld</span>
+      </header>
+      <main class="max-entry-main">
+        <div class="max-entry-copy">
+          <span class="max-entry-eyebrow">Vertrouwelijke verkenning</span>
+          <h1 id="max-entry-title">U hoeft dit niet alleen uit te zoeken.</h1>
+          <p>De AI heeft Danny’s verhaal geordend, maar niets doorgestuurd. Hieronder staat wat zij heeft herkend. Danny bepaalt zelf wat Max straks mag ontvangen.</p>
+        </div>
+        <div class="max-entry-grid">
+          <article class="max-signal-panel">
+            <span>Herkend in het gesprek</span>
+            <ul>
+              <li>Het bedrijf bedient nog klanten en maakt omzet</li>
+              <li>De schulden nemen de beschikbare betaalruimte weg</li>
+              <li>Vrijwillige afspraken hebben nog geen oplossing gebracht</li>
+            </ul>
+            <p>Herkomst: uitspraken van Danny in deze demonstratiesessie.</p>
+          </article>
+          <article class="max-open-panel">
+            <span>Nog niet vastgesteld</span>
+            <ul>
+              <li>Of de onderneming voldoende levensvatbaar is</li>
+              <li>Welke financiële en juridische opties haalbaar zijn</li>
+              <li>Welke route uiteindelijk passend is</li>
+            </ul>
+          </article>
+        </div>
+        <div class="max-entry-actions">
+          <button type="button" disabled>Bekijk wat ik kan delen <span aria-hidden="true">→</span></button>
+          <a href="https://www.maxfinancelegal.nl/" target="_blank" rel="noopener noreferrer">Eerst naar de officiële website <span aria-hidden="true">↗</span></a>
+          <p>Volgende scherm: expliciete overdracht. Wordt na goedkeuring van deze Max-ingang ontworpen.</p>
+        </div>
+      </main>
+    </section>`;
 
   const renderEntrepreneur = () => {
     const visibleLayers = pack.case.revealLayers.slice(0, state.revealCount);
@@ -478,6 +526,7 @@
 
   const renderers = {
     chat: renderChat,
+    max: renderMaxLanding,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
     accountant: renderAccountant,
@@ -492,7 +541,9 @@
     document.querySelector('#poc-shell-title')?.remove();
     const isAiChat = state.current === 'chat';
     app.classList.toggle('ai-chat-start', isAiChat);
-    document.title = isAiChat ? 'AI Chat' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isMaxEntry = state.current === 'max';
+    app.classList.toggle('max-entry-mode', isMaxEntry);
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -570,6 +621,11 @@
     if (announcer) announcer.textContent = 'Passende specialist gevonden.';
   };
 
+  const openMaxLanding = () => {
+    record('max_recommendation_accepted', 'controlled-entry');
+    unlockAndGo('max');
+  };
+
   const runChatDemo = async () => {
     if (chatDemoRunning || state.chatDemoComplete || state.current !== 'chat') return;
     chatDemoRunning = true;
@@ -605,6 +661,8 @@
       saveSession();
       const log = document.querySelector('#neutral-chat-log');
       log?.insertAdjacentHTML('beforeend', maxRecommendation());
+      const maxButton = document.querySelector('#open-max-landing');
+      if (maxButton) maxButton.onclick = openMaxLanding;
       document.querySelector('#max-recommendation')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       if (input) input.placeholder = 'Dit gesprek is afgerond';
     } finally {
@@ -710,6 +768,8 @@
 
   function bindScreenActions() {
     document.querySelectorAll('[data-command]').forEach((button) => button.addEventListener('click', () => handleCommand(button.dataset.command)));
+    const maxButton = document.querySelector('#open-max-landing');
+    if (maxButton) maxButton.onclick = openMaxLanding;
 
     const aiStartForm = document.querySelector('#ai-start-form');
     const aiStartInput = document.querySelector('#ai-start-input');

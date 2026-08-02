@@ -100,6 +100,48 @@ button { cursor: pointer; }
 .max-recommendation ul { margin: 17px 0; padding-left: 18px; color: rgba(240,239,234,.72); font-size: 13px; line-height: 1.65; }
 .max-recommendation a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid #0fa8cb; border-radius: 9px; color: #e9faff; text-decoration: none; font-size: 13px; }
 .max-recommendation a:hover, .max-recommendation a:focus-visible { background: #0fa8cb; color: #111; }
+.max-recommendation-actions { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.max-recommendation-actions button { padding: 10px 13px; border: 1px solid #0fa8cb; border-radius: 9px; background: #0fa8cb; color: #111; font-size: 13px; }
+.max-recommendation-actions button:hover, .max-recommendation-actions button:focus-visible { background: #e9faff; border-color: #e9faff; }
+.max-recommendation-actions a { border-color: rgba(240,239,234,.2); color: rgba(240,239,234,.72); }
+
+/* Scherm 3: gecontroleerde landing bij Max, herkenbaar aan de officiële
+   marineblauw-gouden identiteit zonder de externe website te kopiëren. */
+.poc-app.max-entry-mode { display: block; min-height: 100vh; background: #09192a; }
+.max-entry-mode .poc-topbar,
+.max-entry-mode .poc-rail,
+.max-entry-mode .evidence-rail,
+.max-entry-mode > .afsluiter { display: none; }
+.max-entry-mode .poc-layout { display: block; min-height: 100vh; }
+.max-entry-mode .poc-main { min-height: 100vh; overflow: auto; background: #09192a; color: #f5f3ee; }
+.max-entry-screen { min-height: 100vh; background: radial-gradient(circle at 82% 16%, rgba(197,145,42,.08), transparent 27%), #09192a; color: #f5f3ee; }
+.max-entry-header { min-height: 98px; padding: 23px clamp(24px, 5vw, 72px); display: flex; justify-content: space-between; align-items: center; gap: 24px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.max-wordmark { display: grid; gap: 4px; }
+.max-wordmark strong { font-family: Georgia, serif; font-size: clamp(19px, 2.3vw, 27px); letter-spacing: -.02em; }
+.max-wordmark strong span { color: #c5912a; }
+.max-wordmark small { color: rgba(245,243,238,.43); font-family: "IBM Plex Mono", monospace; font-size: 7px; letter-spacing: .2em; text-transform: uppercase; }
+.max-entry-security { display: inline-flex; align-items: center; gap: 9px; color: rgba(245,243,238,.58); font-size: 11px; }
+.max-entry-security i { width: 7px; height: 7px; border-radius: 50%; background: #c5912a; box-shadow: 0 0 0 4px rgba(197,145,42,.1); }
+.max-entry-main { width: min(1120px, calc(100% - 44px)); margin: 0 auto; padding: clamp(58px, 9vh, 105px) 0 70px; }
+.max-entry-copy { max-width: 800px; }
+.max-entry-eyebrow { display: block; margin-bottom: 24px; color: #c5912a; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+.max-entry-copy h1 { max-width: 730px; margin: 0; color: #f5f3ee; font-size: clamp(43px, 6.7vw, 78px); font-weight: 600; line-height: .99; letter-spacing: -.045em; }
+.max-entry-copy p { max-width: 720px; margin: 28px 0 0; color: rgba(245,243,238,.7); font-size: clamp(16px, 1.7vw, 20px); line-height: 1.6; }
+.max-entry-grid { margin-top: 48px; display: grid; grid-template-columns: 1.08fr .92fr; gap: 1px; background: rgba(255,255,255,.11); border: 1px solid rgba(255,255,255,.11); }
+.max-entry-grid article { padding: clamp(24px, 3vw, 36px); background: #0d2034; }
+.max-entry-grid article > span { color: #c5912a; font-family: "IBM Plex Mono", monospace; font-size: 9px; letter-spacing: .13em; text-transform: uppercase; }
+.max-entry-grid ul { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+.max-entry-grid li { position: relative; padding-left: 24px; color: rgba(245,243,238,.84); line-height: 1.5; }
+.max-entry-grid li::before { content: ""; position: absolute; left: 1px; top: .55em; width: 7px; height: 7px; border: 1px solid #c5912a; transform: rotate(45deg); }
+.max-signal-panel p { margin: 25px 0 0; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.08); color: rgba(245,243,238,.4); font-size: 10px; line-height: 1.5; }
+.max-open-panel { background: #0a1c2e !important; }
+.max-open-panel li { color: rgba(245,243,238,.58); }
+.max-entry-actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.max-entry-actions button, .max-entry-actions a { padding: 13px 17px; border: 1px solid #c5912a; background: #c5912a; color: #09192a; text-decoration: none; font-size: 13px; font-weight: 600; }
+.max-entry-actions button:disabled { opacity: .45; cursor: not-allowed; }
+.max-entry-actions a { background: transparent; color: #f5f3ee; border-color: rgba(245,243,238,.28); }
+.max-entry-actions a:hover, .max-entry-actions a:focus-visible { border-color: #c5912a; color: #d9ae57; }
+.max-entry-actions p { flex-basis: 100%; margin: 2px 0 0; color: rgba(245,243,238,.38); font-size: 10px; }
 
 .poc-topbar { min-height: 68px; display: grid; grid-template-columns: minmax(220px, 1fr) auto minmax(150px, 1fr); align-items: center; gap: 24px; padding: 14px 28px; border-bottom: 1px solid var(--poc-dark-line); background: rgba(13, 13, 26, .96); }
 .poc-brand { display: inline-flex; align-items: center; gap: 13px; color: var(--poc-paper); text-decoration: none; font-weight: 600; }
@@ -252,6 +294,13 @@ button { cursor: pointer; }
   .ai-conversation-composer { min-height: 104px; border-radius: 19px; }
   .ai-search-experience { padding: 17px; }
   .max-recommendation { grid-template-columns: 1fr; padding: 20px; }
+  .max-entry-header { min-height: 82px; padding: 18px 20px; }
+  .max-entry-security { font-size: 9px; }
+  .max-entry-main { width: min(100% - 30px, 1120px); padding-top: 50px; }
+  .max-entry-copy h1 { font-size: 43px; }
+  .max-entry-grid { grid-template-columns: 1fr; margin-top: 36px; }
+  .max-entry-actions { align-items: stretch; }
+  .max-entry-actions button, .max-entry-actions a { width: 100%; text-align: center; }
   .poc-topbar { min-height: 58px; padding: 10px 14px; }
   .poc-brand { font-size: 13px; }
   .poc-layout { display: block; }
