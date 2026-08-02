@@ -200,6 +200,33 @@
       ? ready ? 'De eerste ordening is klaar. Open nu met /intake het dossier.' : 'Typ de openingszin in het gesprek; de eerste reactie wordt begrensd gegenereerd.'
       : 'Alleen /zwaarweer opent binnen deze sessie de fictieve continuïteitsroute.';
 
+    if (!started) {
+      return `<section class="ai-chat-home" aria-labelledby="ai-start-title">
+        <div class="ai-chat-center">
+          <div class="ai-chat-greeting">
+            <span class="ai-home-mark" aria-hidden="true">
+              <svg viewBox="0 0 32 32" role="img"><path d="M16 3v7M16 22v7M3 16h7M22 16h7M6.8 6.8l5 5M20.2 20.2l5 5M25.2 6.8l-5 5M11.8 20.2l-5 5"/></svg>
+            </span>
+            <h1 id="ai-start-title">Wat kan ik voor je doen Danny?</h1>
+          </div>
+          <form class="ai-composer" id="ai-start-form" autocomplete="off">
+            <label class="sr-only" for="ai-start-input">Bericht aan AI</label>
+            <textarea id="ai-start-input" rows="3" maxlength="700" placeholder="Waar wil je mee beginnen?"></textarea>
+            <div class="ai-composer-tools">
+              <div class="ai-composer-left">
+                <button class="ai-tool-button" type="button" aria-label="Bijlage toevoegen" disabled>+</button>
+                <span class="ai-mode">Chat</span>
+              </div>
+              <button class="ai-send-button" type="submit" aria-label="Verstuur bericht">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></svg>
+              </button>
+            </div>
+          </form>
+          <p class="ai-chat-note">AI kan fouten maken. Controleer belangrijke informatie.</p>
+        </div>
+      </section>`;
+    }
+
     return `<section class="screen neutral-shell">
       ${pageHead(
         started ? 'Er wordt geluisterd' : 'Nog geen route gekozen',
@@ -387,6 +414,9 @@
 
   const render = () => {
     document.querySelector('#poc-shell-title')?.remove();
+    const isAiStart = state.current === 'chat' && !state.caseStarted;
+    app.classList.toggle('ai-chat-start', isAiStart);
+    document.title = isAiStart ? 'AI Chat' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -490,6 +520,29 @@
 
   function bindScreenActions() {
     document.querySelectorAll('[data-command]').forEach((button) => button.addEventListener('click', () => handleCommand(button.dataset.command)));
+
+    const aiStartForm = document.querySelector('#ai-start-form');
+    const aiStartInput = document.querySelector('#ai-start-input');
+    aiStartInput?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        aiStartForm?.requestSubmit();
+      }
+    });
+    aiStartForm?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const message = aiStartInput.value.trim().slice(0, 700);
+      if (!message) return;
+      if (message.toLowerCase() === '/zwaarweer') {
+        handleCommand(message);
+        return;
+      }
+      state.caseStarted = true;
+      state.messages = [];
+      record('case_route_started', 'natuurlijke-ai-ingang');
+      saveSession();
+      requestFirstReflection(message, event.submitter);
+    });
 
     document.querySelector('#neutral-chat-form')?.addEventListener('submit', (event) => {
       event.preventDefault();

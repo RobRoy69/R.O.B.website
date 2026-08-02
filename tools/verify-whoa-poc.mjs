@@ -44,6 +44,7 @@ if (demo) {
 
 const html = read('ervaring/index.html');
 const js = read('ervaring/ervaring.js');
+const css = read('ervaring/ervaring.css');
 const home = read('index.html');
 const fn = read('netlify/functions/poc-intake.js');
 const toml = read('netlify.toml');
@@ -60,6 +61,15 @@ if (!home.includes("sessionStorage.setItem('robMaxPoc.v2'")) errors.push('homepa
 const interceptAt = home.indexOf("if (val === '/chat')");
 const normalFetchAt = home.indexOf("fetch('/.netlify/functions/chat'", interceptAt);
 if (interceptAt < 0 || normalFetchAt < interceptAt) errors.push('/chat wordt niet vóór de gewone chatfunctie onderschept');
+if (!js.includes('Wat kan ik voor je doen Danny?') || !js.includes('id="ai-start-form"')) {
+  errors.push('scherm 1 is niet de afgesproken persoonlijke AI-chatlanding');
+}
+if (!js.includes("record('case_route_started', 'natuurlijke-ai-ingang')")) {
+  errors.push('natuurlijke invoer op scherm 1 start de klantreis niet');
+}
+if (!css.includes('.ai-chat-start > .afsluiter { display: none; }') || !css.includes('.ai-chat-start .poc-topbar')) {
+  errors.push('scherm 1 verbergt presentator- en R.O.B./Max-chrome niet volledig');
+}
 
 for (const command of ['/zwaarweer', '/intake', '/delen', '/expert', '/whoa', '/leiding', '/bewijs', '/bouw']) {
   if (!js.includes(`command === '${command}'`)) errors.push(`commandoroute mist ${command}`);
