@@ -22,7 +22,55 @@
     { id: 'whoa', label: 'Command Room', detail: 'WHOA voorbereiden' },
     { id: 'leiding', label: 'Regie', detail: 'bestuurbaar maken' },
     { id: 'bewijs', label: 'Agora', detail: 'herleiden' },
-    { id: 'bouw', label: 'Bouw', detail: 'eigen maken' }
+    { id: 'bouw', label: 'Bouw', detail: 'eigen maken' },
+    { id: 'afronding', label: 'Afronding', detail: 'terugkijken' }
+  ];
+
+
+  /* Het eindscherm bouwt zijn terugblik uit het echte logboek. Deze tabel geeft een
+     gebeurtenis een leesbare regel en hangt haar aan een van Agora's werkwoorden
+     (ordenen, toetsen, vrijgeven, routeren, leren) uit het mastervoorstel. */
+  const EVENT_LABELS = {
+    case_route_started: ['De ondernemer vertelde het in eigen woorden', 'ordenen'],
+    chat_demo_completed: ['De neutrale AI kwam tot de grens van wat hij kon', 'toetsen'],
+    max_entry_opened: ['Max Finance & Legal werd bereikt', 'routeren'],
+    max_intake_answer: ['Een antwoord werd door de ondernemer zelf bevestigd', 'ordenen'],
+    max_intake_submitted: ['De eerste intake werd verstuurd', 'vrijgeven'],
+    management_projection_auto_opened: ['Interne opvolging werd geopend', 'routeren'],
+    management_projection_requested: ['Interne opvolging werd geopend', 'routeren'],
+    management_signal_opened: ['Het signaal werd gelezen', 'ordenen'],
+    management_signal_assigned: ['Een mens wees het toe aan een expert', 'routeren'],
+    frank_notification_opened: ['De expert opende het signaal', 'routeren'],
+    frank_review_accepted: ['De expert nam de ordening in behandeling', 'toetsen'],
+    frank_correction_confirmed: ['De expert corrigeerde een AI-afleiding', 'toetsen'],
+    frank_personal_contact_prepared: ['Persoonlijk contact werd voorbereid', 'routeren'],
+    frank_personal_contact_held: ['Het gesprek werd aantoonbaar gehouden', 'toetsen'],
+    frank_full_intake_invited: ['De uitnodiging voor de vervolgintake ging uit', 'routeren'],
+    danny_invitation_opened: ['De ondernemer opende de uitnodiging zelf', 'vrijgeven'],
+    danny_full_intake_accepted: ['De ondernemer stemde in met de vervolgintake', 'vrijgeven'],
+    vervolgintake_code_rejected: ['Een onjuiste code werd geweigerd', 'toetsen'],
+    vervolgintake_code_accepted: ['De eenmalige autorisatiecode opende de poort', 'vrijgeven'],
+    vervolgintake_question_asked: ['De ondernemer vroeg iets tussendoor', 'ordenen'],
+    vervolgintake_document_delivered: ['Een stuk werd aangeleverd met bron en moment', 'ordenen'],
+    vervolgintake_accountant_consent_given: ['Toestemming voor de accountant, met naam en omvang', 'vrijgeven'],
+    vervolgintake_dossier_ready: ['Het dossier stond klaar voor de expert', 'routeren'],
+    vervolgintake_expert_validated: ['De expert valideerde de aanlevering zelf', 'toetsen'],
+    frank_gaps_named: ['Het systeem benoemde wat ontbrak', 'toetsen'],
+    frank_status_report_made: ['De stand werd opgemaakt, zonder oordeel', 'ordenen'],
+    frank_accountant_link_prepared: ['De poort voor de accountant werd klaargezet', 'routeren'],
+    frank_proposal_drafted: ['Een voorstel werd opgemaakt op wat er lag', 'ordenen'],
+    accountant_portal_opened: ['De accountant kwam binnen op grond van toestemming', 'vrijgeven'],
+    accountant_interest_disclosed: ['De accountant verklaarde zijn eigen belang', 'toetsen'],
+    accountant_document_supplied: ['De accountant leverde een stuk aan', 'ordenen'],
+    accountant_supplement_submitted: ['De aanvulling werd vastgelegd, met voorbehoud', 'toetsen']
+  };
+
+  const AGORA_VERBS = [
+    ['ordenen', 'Ordenen', 'Uitspraken, stukken en antwoorden kregen een plek, een bron en een status.'],
+    ['toetsen', 'Toetsen', 'Herkomst en status werden gecontroleerd, en een mens kon een AI-afleiding corrigeren.'],
+    ['vrijgeven', 'Vrijgeven', 'Niets bewoog zonder dat de eigenaar van de informatie het zelf vrijgaf.'],
+    ['routeren', 'Routeren', 'Kennis ging naar de plek waar iemand er iets mee kon, en niet verder.'],
+    ['leren', 'Leren', 'Niet in deze demonstratie te zien. Leren gebeurt over dossiers heen, niet binnen één doorloop.']
   ];
 
   const app = document.querySelector('#poc-app');
@@ -187,7 +235,7 @@
     state.role = ({
       chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', vervolgintake: 'ondernemer', 'frank-werkruimte': 'expert', accountantpoort: 'accountant', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
-      leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
+      leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever', afronding: 'terugblik'
     })[id];
     record('projection_opened', id);
     saveSession();
@@ -1214,6 +1262,61 @@
     </section>`;
   };
 
+  const renderAfronding = () => {
+    commandInput.placeholder = 'Einde van de demonstratie';
+    commandHelp.textContent = 'Deze terugblik is opgebouwd uit het logboek van deze doorloop.';
+    const logged = (state.events || []).filter((event) => EVENT_LABELS[event.action]);
+    const byVerb = (verb) => logged.filter((event) => EVENT_LABELS[event.action][1] === verb);
+    const clock = (value) => {
+      const moment = new Date(value);
+      return Number.isNaN(moment.getTime()) ? '—' : moment.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+    };
+    return `<section class="slot" aria-labelledby="slot-title">
+      <main class="slot-body">
+        <p class="slot-eyebrow">Einde van de demonstratie</p>
+        <h1 id="slot-title">Dank, Danny.</h1>
+        <p class="slot-lead">Je hebt net in de stoel van de ondernemer gezeten. Dat was de bedoeling: jij weet als weinig anderen wat er in die stoel gebeurt, en nu heb je gevoeld hoe het is om er niets van te hoeven begrijpen.</p>
+
+        <section class="slot-block" aria-label="Wat deze doorloop heeft vastgelegd">
+          <h2>Wat deze doorloop heeft vastgelegd</h2>
+          <p class="slot-note">Onderstaande regels komen uit het logboek van jouw doorloop, niet uit een geschreven verhaal. Wat je niet hebt gedaan, staat er dus ook niet.</p>
+          ${logged.length
+            ? `<ol class="slot-log">${logged.map((event) => `<li><span class="slot-log-time">${escapeHtml(clock(event.at))}</span><span class="slot-log-text">${escapeHtml(EVENT_LABELS[event.action][0])}</span><span class="slot-log-verb">${escapeHtml(EVENT_LABELS[event.action][1])}</span></li>`).join('')}</ol>
+               <p class="slot-count">${logged.length} vastgelegde stappen · casusversie ${escapeHtml(pack.meta.version)}</p>`
+            : '<p class="slot-empty">Er is in deze sessie nog niets vastgelegd.</p>'}
+        </section>
+
+        <section class="slot-block" aria-label="Wat Agora hierin deed">
+          <h2>Wat Agora hierin deed</h2>
+          <p class="slot-note">Agora doet vijf dingen. Vier ervan heb je net zien werken; per werkwoord staat hoe vaak het in jouw doorloop voorkwam.</p>
+          <dl class="slot-verbs">${AGORA_VERBS.map(([id, label, text]) => {
+            const count = id === 'leren' ? null : byVerb(id).length;
+            return `<div class="${count === 0 ? 'is-unused' : ''}${id === 'leren' ? ' is-absent' : ''}">
+              <dt>${escapeHtml(label)}${count === null ? '' : ` <span>${count}×</span>`}</dt>
+              <dd>${escapeHtml(text)}</dd>
+            </div>`;
+          }).join('')}</dl>
+          <p class="slot-boundary"><strong>En wat Agora niet deed:</strong> geen enkel besluit. De route is niet gekozen, de waarde is niet vergeleken en er is niets afgesproken. Dat bleef waar het hoort — bij de expert.</p>
+        </section>
+
+        <section class="slot-block" aria-label="Twee dingen die je zelf hebt gemerkt">
+          <h2>Twee dingen die je zelf hebt gemerkt</h2>
+          <ul class="slot-felt">
+            <li><strong>Niemand vroeg je iets twee keer.</strong> Wat je bij Max had gezegd, stond er nog toen Frank je sprak, en het stond er nog in de vervolgintake.</li>
+            <li><strong>Bij elk cijfer kon je aanwijzen waar het vandaan kwam.</strong> Ook bij de cijfers waar dat ongemakkelijk was — de accountant met een openstaande vordering, de betaalruimte die een afleiding is en geen meting.</li>
+          </ul>
+        </section>
+
+        <section class="slot-block slot-outro" aria-label="Buiten de rol">
+          <h2>Buiten de rol</h2>
+          <p>Kompas Metaaltechniek bestaat niet, Gerard Dulk bestaat niet, en de bedragen zijn verzonnen. Wat wel bestaat is de mechaniek die je net hebt gebruikt: één plek waar een uitspraak zijn bron, zijn status en zijn moment bij zich houdt, en poorten die pas opengaan als iemand ze zelf opent.</p>
+          <p>Wat dat voor Max betekent, staat in het mastervoorstel. Wat het voor jouw eigen dossiers zou betekenen, weet jij beter dan ik.</p>
+          <p class="slot-sign">Rob de Rooij · R.O.B. Concepting<br><span>Agora — samenwerkingsverband met Frank van Meenen</span></p>
+        </section>
+      </main>
+    </section>`;
+  };
+
   const RA_SUPPLIABLE = ['Kolommenbalans', 'Dertienweeks liquiditeitsbeeld', 'Volledige crediteurenlijst'];
 
   const raStamp = (value) => {
@@ -1443,7 +1546,8 @@
     whoa: renderWhoA,
     leiding: renderLeadership,
     bewijs: renderProof,
-    bouw: renderBuild
+    bouw: renderBuild,
+    afronding: renderAfronding
   };
 
   const render = () => {
@@ -1468,12 +1572,14 @@
     app.classList.toggle('frank-werk-mode', isFrankWerk);
     const isRaPoort = state.current === 'accountantpoort';
     app.classList.toggle('ra-poort-mode', isRaPoort);
+    const isSlot = state.current === 'afronding';
+    app.classList.toggle('slot-mode', isSlot);
     if (isRaPoort && !state.raOpened) {
       state.raOpened = true;
       record('accountant_portal_opened', 'consent-based-access');
       saveSession();
     }
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : isFrankWerk ? 'Max-OS — expertwerkruimte' : isRaPoort ? 'Max Finance & Legal — aanvullende cijfers' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : isFrankWerk ? 'Max-OS — expertwerkruimte' : isRaPoort ? 'Max Finance & Legal — aanvullende cijfers' : isSlot ? 'Einde van de demonstratie' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -1669,6 +1775,11 @@
     if (command === '/delen') {
       if (state.current !== 'ondernemer' || state.revealCount < pack.case.revealLayers.length) return fail('Open eerst alle casuslagen.');
       unlockAndGo('toestemming');
+      return;
+    }
+    if (command === '/afronding') {
+      if (!state.raSubmittedAt) return fail('De afronding opent zodra de accountant heeft aangevuld.');
+      unlockAndGo('afronding');
       return;
     }
     if (command === '/werkruimte') {

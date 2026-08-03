@@ -221,6 +221,21 @@ if (/\bwhoa\b/i.test(raScreen) || /hoofdpijn|moeizaam|slepend|uitzichtloos/i.tes
 if (!css.includes('.ra-poort') || !css.includes('#1F4E79')) {
   errors.push('de accountantpoort mist de sobere professionele schermregie');
 }
+if (!js.includes("{ id: 'afronding', label: 'Afronding'") || !js.includes('const renderAfronding') || !js.includes('const EVENT_LABELS') || !js.includes('const AGORA_VERBS')) {
+  errors.push('het eindscherm ontbreekt');
+}
+const slotStart = js.indexOf('const renderAfronding');
+const slotEnd = js.indexOf('const RA_SUPPLIABLE');
+const slotScreen = slotStart < 0 || slotEnd < slotStart ? '' : js.slice(slotStart, slotEnd);
+/* De terugblik moet uit het logboek komen, niet uit een geschreven lijst, en het
+   eindscherm mag geen besluit claimen dat nergens is genomen. */
+if (!slotScreen.includes('state.events') || !slotScreen.includes('EVENT_LABELS[event.action]')
+  || !slotScreen.includes('geen enkel besluit') || !slotScreen.includes('Rob de Rooij')) {
+  errors.push('de terugblik komt niet uit het logboek, of het eindscherm mist zijn grens of zijn maker');
+}
+if (!js.includes("['leren', 'Leren', 'Niet in deze demonstratie te zien")) {
+  errors.push('het eindscherm doet alsof Agora leert binnen één doorloop');
+}
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }
