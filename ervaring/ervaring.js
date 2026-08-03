@@ -10,6 +10,7 @@
     { id: 'max-intake', label: 'Eerste intake', detail: 'rust en houvast' },
     { id: 'max-management', label: 'Management', detail: 'signaleren en toewijzen' },
     { id: 'frank-signal', label: 'Frank', detail: 'veilig ontvangen' },
+    { id: 'frank-review', label: 'Expertbeoordeling', detail: 'menselijk toetsen' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
@@ -35,6 +36,7 @@
   let pack;
   let state;
   let chatDemoRunning = false;
+  let managementTransitionTimer = null;
 
   const escapeHtml = (value = '') => String(value)
     .replaceAll('&', '&amp;')
@@ -88,6 +90,8 @@
     managementAiMessages: [],
     frankNotificationOpened: false,
     frankReviewAccepted: false,
+    frankCorrectionConfirmed: false,
+    frankContactPrepared: false,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -151,7 +155,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -173,6 +177,16 @@
     saveSession();
     render();
     scrollExperienceToTop();
+  };
+
+  const scheduleManagementProjection = () => {
+    if (managementTransitionTimer) window.clearTimeout(managementTransitionTimer);
+    managementTransitionTimer = window.setTimeout(() => {
+      managementTransitionTimer = null;
+      if (state.current !== 'max-intake' || !state.maxIntakeSubmitted) return;
+      record('management_projection_auto_opened', 'post-intake-transition');
+      unlockAndGo('max-management');
+    }, 1800);
   };
 
   const fieldIdsVisible = () => {
@@ -268,6 +282,15 @@
     {
       role: 'assistant',
       content: 'Je hebt dus wel om hulp gevraagd, maar nog niemand gevonden die het geheel met je kan overzien en de volgende stap organiseert. Het bedrijf draait nog, terwijl de schulden alle betaalruimte wegnemen en de waarschuwingen de druk verder verhogen. Ik kan niet beoordelen welke oplossing juridisch en financieel haalbaar is. Daarvoor moeten de cijfers, schulden, risico’s en alternatieven samen worden onderzocht.'
+    },
+    {
+      role: 'assistant',
+      content: 'Zal ik passende expertise zoeken die dit financieel en juridisch in samenhang kan bekijken?'
+    },
+    {
+      role: 'user',
+      content: 'Ja graag. Kijk wie mij hiermee kan helpen.',
+      event: 'search-permission'
     },
     {
       role: 'search',
@@ -515,7 +538,7 @@
         <section class="max-intake-ai" aria-label="Kalmerende AI-intake">
           <div class="max-ai-log" role="log" aria-live="polite">
             ${renderMaxIntakeTranscript()}
-            ${state.maxIntakeSubmitted ? `<div class="max-ai-line receipt"><span>Max AI</span><p>Je eerste intake is ontvangen. Je hoeft nu niets meer te doen. Max beoordeelt alleen of menselijke opvolging zinvol is.</p><button type="button" id="open-max-management">Demonstratie: bekijk de interne opvolging <span aria-hidden="true">→</span></button></div>` : ''}
+            ${state.maxIntakeSubmitted ? `<div class="max-ai-line receipt"><span>Max AI</span><p>Je eerste intake is ontvangen. Interne opvolging wordt geopend zodat Max kan bepalen wie dit menselijk beoordeelt.</p><button type="button" id="open-max-management">Open interne opvolging direct <span aria-hidden="true">→</span></button></div>` : ''}
           </div>
           ${!state.maxIntakeSubmitted && currentQuestion ? `<div class="max-ai-question">
             <span>Max AI vraagt</span><h2>${escapeHtml(currentQuestion.prompt)}</h2>
@@ -707,6 +730,69 @@
     </section>`;
   };
 
+  const renderFrankReview = () => {
+    const answers = state.maxIntakeAnswers || {};
+    const corrected = state.frankCorrectionConfirmed;
+    const contactPrepared = state.frankContactPrepared;
+    const urgent = answers.urgent ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[1], answers.urgent) : 'Nog niet bevestigd';
+    const operation = answers.operatie ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[2], answers.operatie) : 'Nog niet bevestigd';
+    const help = answers.hulp ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[3], answers.hulp) : 'Nog niet bevestigd';
+    return `<section class="frank-review-workspace" aria-labelledby="frank-review-title">
+      <header class="frank-review-header">
+        <div><strong>MAX<span>OS</span></strong><small>Expertwerkruimte</small></div>
+        <div><span>Beoordelaar</span><strong>Frank</strong><i aria-hidden="true">F</i></div>
+      </header>
+      <div class="frank-review-layout">
+        <aside class="frank-case-rail" aria-label="Casus en herkomst">
+          <span>Nieuwe casus · ${escapeHtml(managementSignalTime())}</span>
+          <h2>Danny</h2>
+          <p>Betaaldruk terwijl de onderneming nog klanten bedient.</p>
+          <dl>
+            <div><dt>Prioriteit</dt><dd>Vandaag beoordelen</dd></div>
+            <div><dt>Hulpvraag</dt><dd>${escapeHtml(help)}</dd></div>
+            <div><dt>Contact</dt><dd>${escapeHtml(contactSummary() || 'Niet vrijgegeven')}</dd></div>
+          </dl>
+          <button type="button" id="show-frank-review-lineage">Bekijk Agora-herkomst</button>
+          <p class="frank-review-boundary">Geen routebesluit · geen overeenkomst · geen documenttoegang.</p>
+        </aside>
+        <main class="frank-review-main">
+          <span>Menselijke beoordeling</span>
+          <h1 id="frank-review-title">Eerst vaststellen wat we werkelijk weten.</h1>
+          <p>AI heeft de intake geordend. Frank bepaalt welke signalen bruikbaar zijn, wat moet worden gecorrigeerd en welke informatie eerst nodig is.</p>
+          <div class="frank-review-groups">
+            <article class="confirmed">
+              <span>Door Danny bevestigd</span>
+              <h2>Feiten uit de eerste intake</h2>
+              <ul><li>${escapeHtml(urgent)}</li><li>${escapeHtml(operation)}</li><li>De accountant levert cijfers, maar trekt het hersteltraject niet.</li></ul>
+            </article>
+            <article class="inference">
+              <span>AI-afleiding · te toetsen</span>
+              <h2>${corrected ? 'Door Frank genuanceerd' : 'Mogelijk continuïteitspotentieel'}</h2>
+              <p>${corrected ? 'Dat de operatie draait is een relevant signaal, maar nog geen bewijs van levensvatbaarheid.' : 'De bestaande klanten en omzet kunnen wijzen op een bruikbare kern. Alleen een expert kan dit na cijfers en context beoordelen.'}</p>
+              ${corrected ? '<small>Menselijke correctie vastgelegd in Agora.</small>' : '<button type="button" id="correct-frank-inference">Nuanceer deze AI-afleiding</button>'}
+            </article>
+            <article class="missing">
+              <span>Nog aan te leveren</span>
+              <h2>Benodigd vóór inhoudelijke routekeuze</h2>
+              <ul><li>Actuele cijfers en liquiditeitsbeeld</li><li>Volledig schuldenoverzicht</li><li>Crediteuren, zekerheden en acute termijnen</li></ul>
+            </article>
+          </div>
+          <section class="frank-contact-decision" aria-label="Menselijke vervolgstap">
+            <span>Eerstvolgende menselijke stap</span>
+            ${contactPrepared ? `<div role="status"><h2>Persoonlijk contact is voorbereid.</h2><p>Frank neemt via de vrijgegeven contactmogelijkheid rechtstreeks contact op. Overeenkomst, volledige toestemming en documenttoegang worden pas in dat gesprek besproken.</p></div>` : `<div><h2>Eerst Danny spreken, daarna pas een volledig traject openen.</h2><p>Dit contactmoment dient om verwachtingen, kosten, toestemming en de serieuze intake uit te leggen.</p><button type="button" id="prepare-personal-contact" ${corrected ? '' : 'disabled'}>Eerst persoonlijk contact plannen <span aria-hidden="true">→</span></button><small>${corrected ? 'Nog geen bericht of afspraak wordt werkelijk verzonden.' : 'Nuanceer eerst de AI-afleiding.'}</small></div>`}
+          </section>
+        </main>
+        <aside class="frank-review-ai" aria-label="Expert AI">
+          <span>Expert AI</span>
+          <h2>Voorbereid, niet vastgesteld.</h2>
+          <p>Ik heb bevestigde informatie, afleidingen en ontbrekende gegevens gescheiden. Ik mag geen haalbaarheid, juridische route of overeenkomst vaststellen.</p>
+          <ol><li class="done">Intake geordend</li><li class="${corrected ? 'done' : 'current'}">Menselijke nuance</li><li class="${contactPrepared ? 'done' : corrected ? 'current' : ''}">Persoonlijk contact</li><li>Volledige toestemming en intake</li></ol>
+        </aside>
+      </div>
+      <dialog class="lineage-dialog" id="frank-review-lineage"><button type="button" id="close-frank-review-lineage" aria-label="Sluit Agora-herkomst">×</button><span>Agora · expertlog</span><h2>Voorstel en oordeel blijven gescheiden</h2><ul><li>Danny bevestigde de zichtbare intakegegevens.</li><li>Management wees Frank toe als beoordelaar.</li><li>AI markeerde continuïteit uitsluitend als te onderzoeken afleiding.</li><li>Franks nuance en vervolgbeslissing worden afzonderlijk vastgelegd.</li></ul></dialog>
+    </section>`;
+  };
+
   const renderEntrepreneur = () => {
     const visibleLayers = pack.case.revealLayers.slice(0, state.revealCount);
     const ids = visibleLayers.flatMap((layer) => layer.fields);
@@ -862,6 +948,7 @@
     'max-intake': renderMaxIntake,
     'max-management': renderMaxManagement,
     'frank-signal': renderFrankSignal,
+    'frank-review': renderFrankReview,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
     accountant: renderAccountant,
@@ -884,7 +971,9 @@
     app.classList.toggle('max-management-mode', isMaxManagement);
     const isFrankSignal = state.current === 'frank-signal';
     app.classList.toggle('frank-signal-mode', isFrankSignal);
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isFrankReview = state.current === 'frank-review';
+    app.classList.toggle('frank-review-mode', isFrankReview);
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -991,6 +1080,9 @@
           input.value = '';
         }
         await appendChatMessage(message);
+        if (message.event === 'search-permission') {
+          record('search_permission_confirmed', 'danny-simulated-consent');
+        }
         state.chatDemoStep = index + 1;
         saveSession();
       }
@@ -1152,9 +1244,12 @@
       record('max_intake_submitted', 'management-review-pending');
       saveSession();
       render();
+      scheduleManagementProjection();
     });
     document.querySelector('#open-max-management')?.addEventListener('click', () => {
       if (!state.maxIntakeSubmitted) return;
+      if (managementTransitionTimer) window.clearTimeout(managementTransitionTimer);
+      managementTransitionTimer = null;
       record('management_projection_requested', 'presenter-transition');
       unlockAndGo('max-management');
     });
@@ -1204,8 +1299,7 @@
       if (!state.frankNotificationOpened || state.frankReviewAccepted) return;
       state.frankReviewAccepted = true;
       record('frank_review_accepted', 'human-assessment-pending');
-      saveSession();
-      render();
+      unlockAndGo('frank-review');
     });
     document.querySelector('#decline-frank-review')?.addEventListener('click', () => {
       record('frank_review_declined', 'reassign-required');
@@ -1217,6 +1311,23 @@
     document.querySelector('#show-frank-lineage')?.addEventListener('click', () => frankLineageDialog?.showModal());
     document.querySelector('#show-frank-lineage-mobile')?.addEventListener('click', () => frankLineageDialog?.showModal());
     document.querySelector('#close-frank-lineage')?.addEventListener('click', () => frankLineageDialog?.close());
+    document.querySelector('#correct-frank-inference')?.addEventListener('click', () => {
+      if (!state.frankReviewAccepted || state.frankCorrectionConfirmed) return;
+      state.frankCorrectionConfirmed = true;
+      record('frank_ai_inference_corrected', 'human-correction');
+      saveSession();
+      render();
+    });
+    document.querySelector('#prepare-personal-contact')?.addEventListener('click', () => {
+      if (!state.frankCorrectionConfirmed || state.frankContactPrepared) return;
+      state.frankContactPrepared = true;
+      record('frank_personal_contact_prepared', 'agreement-pending');
+      saveSession();
+      render();
+    });
+    const frankReviewLineageDialog = document.querySelector('#frank-review-lineage');
+    document.querySelector('#show-frank-review-lineage')?.addEventListener('click', () => frankReviewLineageDialog?.showModal());
+    document.querySelector('#close-frank-review-lineage')?.addEventListener('click', () => frankReviewLineageDialog?.close());
     document.querySelector('#open-management-ai')?.addEventListener('click', () => {
       state.managementAiOpen = !state.managementAiOpen;
       saveSession();

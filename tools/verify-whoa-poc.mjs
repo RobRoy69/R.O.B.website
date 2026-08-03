@@ -76,6 +76,12 @@ if (!js.includes('https://www.maxfinancelegal.nl/')) {
 if (!js.includes("role: 'search'") || !js.includes('Passende expertise zoeken') || !js.includes('Passende specialist gevonden')) {
   errors.push('scherm 2 mist de zichtbare AI-zoekfase vóór de aanbeveling');
 }
+const searchPermissionQuestion = js.indexOf('Zal ik passende expertise zoeken');
+const searchPermissionAnswer = js.indexOf('Ja graag. Kijk wie mij hiermee kan helpen.');
+const visibleSearchStep = js.indexOf("role: 'search'");
+if (searchPermissionQuestion < 0 || searchPermissionAnswer < searchPermissionQuestion || visibleSearchStep < searchPermissionAnswer || !js.includes("record('search_permission_confirmed', 'danny-simulated-consent')")) {
+  errors.push('de AI-zoekactie begint niet aantoonbaar na Danny’s toestemming');
+}
 if (!js.includes('zegt dat hij dit traject niet kan trekken') || !js.includes('Sindsdien raak ik helemaal in paniek')) {
   errors.push('de chat verbeeldt de begrensde accountantshulp en oplopende paniek niet');
 }
@@ -115,11 +121,17 @@ if (!js.includes("${opened ? 'gelezen' : 'nieuw'}") || !js.includes("${assigned 
 if (!js.includes("id: 'contact'") || !js.includes('contact-consent') || !js.includes('contactPhone') || !js.includes('contactEmail')) {
   errors.push('de eerste intake verzamelt geen expliciet vrijgegeven contactmogelijkheid');
 }
+if (!js.includes("record('management_projection_auto_opened', 'post-intake-transition')") || !js.includes("state.current === 'max-intake'") || !js.includes('Interne opvolging wordt geopend')) {
+  errors.push('na contacttoestemming opent de interne managementopvolging niet automatisch');
+}
 if (!js.includes('management-transfer-screen') || !js.includes('Agora maakt overdrachtslog') || !js.includes('Open Franks mobiele melding')) {
   errors.push('de geleide Agora-overdracht naar Frank ontbreekt');
 }
 if (!js.includes('const renderManagementFromTop') || !js.includes('scrollExperienceToTop();')) {
   errors.push('het zelfstandige overdrachtscherm start niet gegarandeerd bovenaan');
+}
+if (!js.includes("{ id: 'frank-review', label: 'Expertbeoordeling'") || !js.includes('Door Danny bevestigd') || !js.includes('AI-afleiding · te toetsen') || !js.includes('Nog aan te leveren') || !js.includes("record('frank_ai_inference_corrected', 'human-correction')") || !js.includes("record('frank_personal_contact_prepared', 'agreement-pending')") || !css.includes('.frank-review-workspace')) {
+  errors.push('Franks volledige expertwerkruimte mist menselijke correctie, Agora-grenzen of persoonlijk contact');
 }
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');

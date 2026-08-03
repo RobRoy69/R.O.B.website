@@ -426,6 +426,78 @@ button { cursor: pointer; }
 .frank-lineage-dialog strong { color: #eef2f2; }
 .assignment-receipt button { min-height: 44px; margin-top: 12px; padding: 8px 0; border: 0; background: transparent; color: #d6aa50; font: inherit; font-size: 13px; font-weight: 600; }
 
+/* Scherm 7: Franks volledige, mensgestuurde expertbeoordeling. */
+.poc-app.frank-review-mode { display: block; min-height: 100vh; background: #071421; }
+.frank-review-mode .poc-topbar,
+.frank-review-mode .poc-rail,
+.frank-review-mode .evidence-rail,
+.frank-review-mode > .afsluiter { display: none; }
+.frank-review-mode .poc-layout { display: block; min-height: 100vh; }
+.frank-review-mode .poc-main { min-height: 100vh; overflow: auto; background: #071421; }
+.frank-review-workspace { min-height: 100vh; color: #eef2f2; background: #071421; }
+.frank-review-header { min-height: 70px; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(238,242,242,.1); }
+.frank-review-header > div { display: flex; align-items: center; gap: 11px; }
+.frank-review-header strong { font-size: 17px; letter-spacing: .08em; }
+.frank-review-header strong span { color: #c5912a; }
+.frank-review-header small, .frank-review-header > div:last-child > span { color: rgba(238,242,242,.52); font: 9px/1.3 "IBM Plex Mono", monospace; letter-spacing: .09em; text-transform: uppercase; }
+.frank-review-header i { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid rgba(238,242,242,.2); border-radius: 50%; color: #d6aa50; font-style: normal; }
+.frank-review-layout { min-height: calc(100vh - 70px); display: grid; grid-template-columns: 260px minmax(0,1fr) 300px; }
+.frank-case-rail, .frank-review-ai { padding: 34px 26px; background: #0b1d2e; }
+.frank-case-rail { border-right: 1px solid rgba(238,242,242,.1); }
+.frank-case-rail > span, .frank-review-main > span, .frank-review-ai > span, .frank-contact-decision > span { color: #d6aa50; font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.frank-case-rail h2 { margin: 13px 0 8px; font-size: 30px; font-weight: 500; }
+.frank-case-rail > p { margin: 0; color: rgba(238,242,242,.68); font-size: 14px; line-height: 1.55; }
+.frank-case-rail dl { margin: 30px 0; }
+.frank-case-rail dl div { padding: 14px 0; border-top: 1px solid rgba(238,242,242,.1); }
+.frank-case-rail dt { color: rgba(238,242,242,.48); font: 9px/1.3 "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+.frank-case-rail dd { margin: 7px 0 0; overflow-wrap: anywhere; font-size: 13px; line-height: 1.5; }
+.frank-case-rail button { min-height: 42px; padding: 8px 0; border: 0; border-bottom: 1px solid rgba(15,168,203,.48); background: transparent; color: #75c7da; font-size: 12px; text-align: left; }
+.frank-review-boundary { margin-top: 25px !important; padding-left: 12px; border-left: 2px solid #0fa8cb; color: rgba(238,242,242,.5) !important; font-size: 11px !important; }
+.frank-review-main { min-width: 0; padding: clamp(38px,5vw,68px); background: #f1efe9; color: #071421; }
+.frank-review-main > h1 { max-width: 740px; margin: 14px 0 18px; font-size: clamp(39px,4.8vw,65px); line-height: 1; letter-spacing: -.045em; font-weight: 500; }
+.frank-review-main > p { max-width: 760px; margin: 0; color: rgba(7,20,33,.68); font-size: 16px; line-height: 1.65; }
+.frank-review-groups { margin-top: 35px; display: grid; gap: 12px; }
+.frank-review-groups article { padding: 20px 22px; border-left: 3px solid #0d91ad; background: #e5e2da; }
+.frank-review-groups article.inference { border-color: #c5912a; }
+.frank-review-groups article.missing { border-color: #c65438; }
+.frank-review-groups article > span { color: rgba(7,20,33,.55); font: 9px/1.3 "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+.frank-review-groups h2 { margin: 8px 0 9px; font-size: 21px; font-weight: 500; }
+.frank-review-groups p, .frank-review-groups ul { margin: 0; color: rgba(7,20,33,.7); font-size: 13px; line-height: 1.6; }
+.frank-review-groups ul { padding-left: 18px; }
+.frank-review-groups small { display: block; margin-top: 11px; color: #6f5117; font-size: 11px; }
+.frank-review-groups button { min-height: 42px; margin-top: 15px; padding: 9px 13px; border: 1px solid #071421; background: #071421; color: #f1efe9; font-weight: 600; }
+.frank-contact-decision { margin-top: 22px; padding: 23px; border: 1px solid rgba(7,20,33,.16); background: #faf8f3; }
+.frank-contact-decision > span { color: #6f5117; }
+.frank-contact-decision h2 { margin: 9px 0; font-size: 24px; font-weight: 500; }
+.frank-contact-decision p { margin: 0; color: rgba(7,20,33,.68); font-size: 14px; line-height: 1.6; }
+.frank-contact-decision button { min-height: 48px; margin-top: 17px; padding: 11px 15px; border: 1px solid #071421; background: #071421; color: #f1efe9; font-weight: 600; }
+.frank-contact-decision button:disabled { opacity: .4; cursor: not-allowed; }
+.frank-contact-decision small { display: block; margin-top: 10px; color: rgba(7,20,33,.55); font-size: 11px; }
+.frank-review-ai { border-left: 1px solid rgba(238,242,242,.1); }
+.frank-review-ai h2 { margin: 14px 0 12px; font-size: 27px; line-height: 1.12; font-weight: 500; }
+.frank-review-ai p { margin: 0; color: rgba(238,242,242,.65); font-size: 13px; line-height: 1.65; }
+.frank-review-ai ol { margin: 31px 0 0; padding: 0; list-style: none; counter-reset: expertstep; }
+.frank-review-ai li { position: relative; padding: 2px 0 22px 36px; color: rgba(238,242,242,.4); font-size: 12px; counter-increment: expertstep; }
+.frank-review-ai li::before { content: counter(expertstep, decimal-leading-zero); position: absolute; left: 0; top: 0; color: inherit; font: 9px/1.4 "IBM Plex Mono", monospace; }
+.frank-review-ai li.done { color: #75c7da; }
+.frank-review-ai li.current { color: #d6aa50; }
+
+@media (max-width: 1050px) {
+  .frank-review-layout { grid-template-columns: 220px minmax(0,1fr); }
+  .frank-review-ai { grid-column: 1 / -1; border-top: 1px solid rgba(238,242,242,.1); border-left: 0; }
+  .frank-review-ai ol { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+}
+
+@media (max-width: 720px) {
+  .frank-review-header { padding: 12px 15px; }
+  .frank-review-header small, .frank-review-header > div:last-child > span { display: none; }
+  .frank-review-layout { display: block; }
+  .frank-case-rail, .frank-review-main, .frank-review-ai { padding: 28px 18px; }
+  .frank-case-rail { border-right: 0; border-bottom: 1px solid rgba(238,242,242,.1); }
+  .frank-review-main > h1 { font-size: 39px; }
+  .frank-review-ai ol { display: block; }
+}
+
 .poc-topbar { min-height: 68px; display: grid; grid-template-columns: minmax(220px, 1fr) auto minmax(150px, 1fr); align-items: center; gap: 24px; padding: 14px 28px; border-bottom: 1px solid var(--poc-dark-line); background: rgba(13, 13, 26, .96); }
 .poc-brand { display: inline-flex; align-items: center; gap: 13px; color: var(--poc-paper); text-decoration: none; font-weight: 600; }
 .poc-brand .rob-lockup { display: block; width: 132px; height: auto; object-fit: contain; }
