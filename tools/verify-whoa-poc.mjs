@@ -171,10 +171,22 @@ const dossierReady = js.indexOf("record('vervolgintake_dossier_ready'");
 if (consentGiven < 0 || dossierReady < consentGiven || !js.includes('poortCurrentStep() || state.poortAccountantConsent')) {
   errors.push('de toestemming voor de accountant is geen afzonderlijke poort naar de volgende stap');
 }
-if (!js.includes("record('vervolgintake_expert_validated'") || !js.includes('poortValidationTimer')
-  || !js.includes('!state.poortAccountantConsent || state.poortValidatedAt')
+if (!js.includes("record('vervolgintake_expert_validated'") || js.includes('poortValidationTimer')
+  || !js.includes("#frank-validate")
   || !poortScreen.includes('done && !validated') || !poortScreen.includes('state.poortValidatedAt')) {
-  errors.push('Franks validatie valt samen met de aanlevering in plaats van aantoonbaar erna');
+  errors.push('Franks validatie is geen zichtbare handeling van hem, of valt samen met de aanlevering');
+}
+if (!js.includes("{ id: 'frank-werkruimte', label: 'Expertwerkruimte'") || !js.includes('const renderFrankWerkruimte') || !js.includes("record('frank_accountant_link_prepared'")) {
+  errors.push('Franks werkruimte voor het aangeleverde dossier ontbreekt');
+}
+const werkStart = js.indexOf('const renderFrankWerkruimte');
+const werkEnd = js.indexOf('const RA_SUPPLIABLE');
+const werkScreen = werkStart < 0 || werkEnd < werkStart ? '' : js.slice(werkStart, werkEnd);
+if (!werkScreen.includes('frank-propose') || !werkScreen.includes('disabled') || !/\bnog niet aangevuld|accountant heeft nog/i.test(werkScreen)) {
+  errors.push('het voorstel kan worden opgemaakt voordat de accountant heeft aangevuld');
+}
+if (/\bwhoa\b/i.test(werkScreen) || !js.includes('accountantNameFrom')) {
+  errors.push('de werkruimte overschrijdt haar grens, of de accountant heeft geen herleidbare herkomst');
 }
 if (!css.includes('.max-poort-documents li.validated') || !poortScreen.includes('Gevalideerd door') || !poortScreen.includes('EXPERT_NAME') || !poortScreen.includes('poortValidationStamp')) {
   errors.push('de validatie mist groene bevestiging, expertnaam of tijdstempel');

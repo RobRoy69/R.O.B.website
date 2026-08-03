@@ -15,6 +15,7 @@
     { id: 'vervolgintake', label: 'Vervolgintake', detail: 'geleid aanleveren' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
+    { id: 'frank-werkruimte', label: 'Expertwerkruimte', detail: 'dossier behandelen' },
     { id: 'accountantpoort', label: 'Accountantpoort', detail: 'gericht bevragen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
     { id: 'expert', label: 'Expertpoort', detail: 'menselijk besluit' },
@@ -40,7 +41,6 @@
   let state;
   let chatDemoRunning = false;
   let managementTransitionTimer = null;
-  let poortValidationTimer = null;
 
   /* Franks identiteit staat op één plek. Canon: 20voor12/CLAUDE.md sectie 3.
      Voluit in identiteitsblokken en stempels, voornaam in gesprekstekst. */
@@ -115,6 +115,9 @@
     poortAccountantConsent: false,
     poortConsentAt: null,
     poortValidatedAt: null,
+    frankLog: [],
+    frankLinkPreparedAt: null,
+    frankActions: [],
     raOpened: false,
     raDisclosed: false,
     raDelivered: [],
@@ -182,7 +185,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', vervolgintake: 'ondernemer', accountantpoort: 'accountant', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', vervolgintake: 'ondernemer', 'frank-werkruimte': 'expert', accountantpoort: 'accountant', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -881,18 +884,12 @@
     return `${value.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })} · ${value.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}`;
   };
 
-  const schedulePoortValidation = () => {
-    if (poortValidationTimer) return;
-    poortValidationTimer = window.setTimeout(() => {
-      poortValidationTimer = null;
-      if (state.current !== 'vervolgintake' || !state.poortAccountantConsent || state.poortValidatedAt) return;
-      state.poortValidatedAt = new Date().toISOString();
-      poortLogLine('ai', `${EXPERT_FIRST} heeft de aanlevering doorgenomen en alle drie de stukken gevalideerd. Wat hij heeft gezien en wanneer, staat vast.`);
-      record('vervolgintake_expert_validated', 'human-validation-after-delivery');
-      saveSession();
-      render();
-    }, 4200);
-  };
+  const accountantNameFrom = () => ({
+    name: pack.case.accountant.identity.name,
+    office: pack.case.accountant.identity.office,
+    source: 'Opgegeven door de ondernemer bij het geven van de toestemming',
+    at: state.poortConsentAt
+  });
 
   const POORT_STEPS = [
     {
@@ -974,8 +971,8 @@
             </article>` : ''}
             ${unlocked && !step && !consentGiven ? `<article class="max-poort-step consent" aria-label="Openstaande toestemming">
               <span>Laatste stap · toestemming</span>
-              <h2>Mag Frank je accountant om aanvullende cijfers vragen?</h2>
-              <p class="max-poort-order">Je accountant levert de cijfers, maar trekt het hersteltraject niet. Met deze toestemming kan Frank hem gericht bevragen zonder dat jij ertussen hoeft te zitten.</p>
+              <h2>Mag Frank ${escapeHtml(pack.case.accountant.identity.name)} om aanvullende cijfers vragen?</h2>
+              <p class="max-poort-order">Dat is je accountant bij ${escapeHtml(pack.case.accountant.identity.office)}. Hij levert de cijfers, maar trekt het hersteltraject niet. Met deze toestemming kan Frank hem gericht bevragen zonder dat jij ertussen hoeft te zitten.</p>
               <button type="button" id="poort-accountant-consent">Ja, Frank mag mijn accountant benaderen <span aria-hidden="true">→</span></button>
               <small>Alleen voor aanvullende cijfers bij deze aanlevering. Je kunt dit weer intrekken.</small>
             </article>` : ''}
@@ -1082,6 +1079,83 @@
     ['blockade', 'Is de blokkade voldoende onderzocht?', ['Ja, als werkhypothese', 'Nee', 'Onvoldoende informatie']],
     ['route', 'Welke voorbereidingsroute is passend genoeg om te openen?', ['WHOA-kandidaat', 'Regulier akkoord', 'Afbouw of faillissement']]
   ];
+
+  const frankLogLine = (role, text) => {
+    state.frankLog = [...(state.frankLog || []), { role, text }].slice(-40);
+  };
+
+  const FRANK_ACTIONS = [
+    { id: 'validate', label: 'Valideren', button: 'frank-validate' },
+    { id: 'report', label: 'Rapportage', button: 'frank-report' },
+    { id: 'gaps', label: 'Wat mis ik nog', button: 'frank-gaps' },
+    { id: 'propose', label: 'Voorstel', button: 'frank-propose' }
+  ];
+
+  const renderFrankWerkruimte = () => {
+    commandInput.placeholder = 'Deze werkruimte werkt met de knoppen';
+    commandHelp.textContent = 'Frank bepaalt zelf wat hij opmaakt. De AI ordent; het besluit blijft bij hem.';
+    const ra = pack.case.accountant;
+    const named = accountantNameFrom();
+    const validated = Boolean(state.poortValidatedAt);
+    const linkSent = Boolean(state.frankLinkPreparedAt);
+    const supplemented = Boolean(state.raSubmittedAt);
+    const delivered = state.poortDelivered || [];
+    return `<section class="frank-werk" aria-labelledby="frank-werk-title">
+      <header class="frank-werk-header">
+        <div class="max-wordmark" aria-label="Max Finance &amp; Legal"><strong>Max Finance <span>&amp;</span> Legal</strong><small>Expertwerkruimte</small></div>
+        <span class="frank-werk-status"><i aria-hidden="true"></i>${supplemented ? 'Dossier aangevuld' : validated ? 'Aanlevering gevalideerd' : 'Aanlevering ontvangen'}</span>
+      </header>
+      <div class="frank-werk-body">
+        <section class="frank-werk-chat" aria-label="Werkgesprek">
+          <div class="frank-werk-log" role="log" aria-live="polite">
+            <article class="frank-werk-open">
+              <span>Dossier</span>
+              <h1 id="frank-werk-title">${escapeHtml(pack.case.company)}</h1>
+              <p>De ondernemer heeft aangeleverd. Je kunt valideren, de stand opmaken, benoemen wat ontbreekt, en de accountant gericht bevragen. Niets hiervan is een besluit.</p>
+            </article>
+            ${(state.frankLog || []).map((line) => `<article class="frank-werk-line ${line.role === 'frank' ? 'frank' : 'ai'}"><span>${line.role === 'frank' ? escapeHtml(EXPERT_FIRST) : 'Max AI'}</span><p>${escapeHtml(line.text)}</p></article>`).join('')}
+          </div>
+          <div class="frank-werk-actions">
+            <span class="frank-werk-actions-label">Beschikbare bewerkingen</span>
+            <div class="frank-werk-buttons">
+              <button type="button" id="frank-validate" ${validated ? 'disabled' : ''}>${validated ? 'Gevalideerd' : 'Valideren'}</button>
+              <button type="button" id="frank-report">Rapportage</button>
+              <button type="button" id="frank-gaps">Wat mis ik nog</button>
+              <button type="button" id="frank-propose" ${supplemented ? '' : 'disabled'}>Voorstel</button>
+            </div>
+            <p class="frank-werk-gate">${supplemented
+              ? 'Alle bewerkingen staan open; de accountant heeft aangevuld.'
+              : 'Het voorstel blijft dicht: de accountant heeft nog niet aangevuld, en zonder zijn cijfers rust een voorstel op niets.'}</p>
+          </div>
+        </section>
+        <aside class="frank-werk-side" aria-label="Aanlevering en betrokkenen">
+          <section class="frank-werk-panel">
+            <span>Aanlevering van de ondernemer</span>
+            <ul class="frank-werk-ticks">${POORT_STEPS.map((item) => {
+              const done = delivered.includes(item.id);
+              return `<li class="${done ? (validated ? 'done validated' : 'done') : ''}"><i aria-hidden="true">${done ? '✓' : '·'}</i><span>${escapeHtml(item.document)}</span><small>${done ? escapeHtml(item.file) : 'Nog niet aangeleverd'}</small>${done && validated ? '<b>Gevalideerd</b>' : ''}</li>`;
+            }).join('')}</ul>
+            ${validated ? `<p class="frank-werk-stamp">Gevalideerd op ${escapeHtml(raStamp(state.poortValidatedAt))} door ${escapeHtml(EXPERT_NAME)}.</p>` : '<p class="frank-werk-stamp is-open">Nog niets gevalideerd. Zolang dat zo is, staat er in het dossier niets vast.</p>'}
+          </section>
+          <section class="frank-werk-panel">
+            <span>Accountant van de onderneming</span>
+            <strong>${escapeHtml(named.name)}</strong>
+            <p class="frank-werk-office">${escapeHtml(named.office)}</p>
+            <p class="frank-werk-source">${escapeHtml(named.source)}${named.at ? ` op ${escapeHtml(raStamp(named.at))}` : ''}.</p>
+            ${linkSent
+              ? `<p class="frank-werk-link" role="status"><span>Link klaargezet</span>${escapeHtml(raStamp(state.frankLinkPreparedAt))} · code ${escapeHtml(POORT_CODE)}<br>In deze demonstratie is niets verzonden.</p>`
+              : `<button type="button" id="frank-send-link">Link accountantportal klaarzetten <span aria-hidden="true">→</span></button>
+                 <small>Zet de beveiligde poort voor hem klaar. Er wordt niets werkelijk verstuurd.</small>`}
+          </section>
+          ${supplemented ? `<section class="frank-werk-panel">
+            <span>Aanvulling van de accountant</span>
+            <ul class="frank-werk-supplied">${(state.raDelivered || []).map((name) => `<li>${escapeHtml(name)}</li>`).join('')}</ul>
+            <p class="frank-werk-interest">${escapeHtml(ra.position.disclosure)}</p>
+          </section>` : ''}
+        </aside>
+      </div>
+    </section>`;
+  };
 
   const RA_SUPPLIABLE = ['Kolommenbalans', 'Dertienweeks liquiditeitsbeeld', 'Volledige crediteurenlijst'];
 
@@ -1305,6 +1379,7 @@
     vervolgintake: renderVervolgintakePoort,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
+    'frank-werkruimte': renderFrankWerkruimte,
     accountantpoort: renderAccountantPoort,
     accountant: renderAccountant,
     expert: renderExpert,
@@ -1332,6 +1407,8 @@
     app.classList.toggle('danny-invitation-mode', isDannyInvitation);
     const isPoort = state.current === 'vervolgintake';
     app.classList.toggle('max-poort-mode', isPoort);
+    const isFrankWerk = state.current === 'frank-werkruimte';
+    app.classList.toggle('frank-werk-mode', isFrankWerk);
     const isRaPoort = state.current === 'accountantpoort';
     app.classList.toggle('ra-poort-mode', isRaPoort);
     if (isRaPoort && !state.raOpened) {
@@ -1339,7 +1416,7 @@
       record('accountant_portal_opened', 'consent-based-access');
       saveSession();
     }
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : isRaPoort ? 'Max Finance & Legal — aanvullende cijfers' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : isFrankWerk ? 'Max-OS — expertwerkruimte' : isRaPoort ? 'Max Finance & Legal — aanvullende cijfers' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -1537,8 +1614,13 @@
       unlockAndGo('toestemming');
       return;
     }
+    if (command === '/werkruimte') {
+      if (!state.poortAccountantConsent) return fail('De werkruimte opent zodra de ondernemer de accountant heeft vrijgegeven.');
+      unlockAndGo('frank-werkruimte');
+      return;
+    }
     if (command === '/accountant') {
-      if (!state.poortAccountantConsent) return fail('De ondernemer heeft de accountant nog niet vrijgegeven.');
+      if (!state.frankLinkPreparedAt) return fail('De accountant heeft nog geen toegang; Frank moet de poort eerst klaarzetten.');
       unlockAndGo('accountantpoort');
       return;
     }
@@ -1774,6 +1856,52 @@
     document.querySelector('#poort-input')?.addEventListener('input', (event) => {
       event.target.classList.remove('is-prefilled');
     });
+    document.querySelector('#frank-validate')?.addEventListener('click', () => {
+      if (state.poortValidatedAt) return;
+      if ((state.poortDelivered || []).length < POORT_STEPS.length) return;
+      state.poortValidatedAt = new Date().toISOString();
+      frankLogLine('frank', 'Ik heb de drie stukken doorgenomen.');
+      frankLogLine('ai', `Vastgelegd: gevalideerd door ${EXPERT_NAME} op ${raStamp(state.poortValidatedAt)}. De ondernemer ziet dit terug in zijn eigen scherm.`);
+      poortLogLine('ai', `${EXPERT_FIRST} heeft de aanlevering doorgenomen en alle drie de stukken gevalideerd. Wat hij heeft gezien en wanneer, staat vast.`);
+      record('vervolgintake_expert_validated', 'expert-action-in-workspace');
+      saveSession();
+      render();
+    });
+    document.querySelector('#frank-report')?.addEventListener('click', () => {
+      const validated = state.poortValidatedAt ? 'gevalideerd' : 'nog niet gevalideerd';
+      const supplement = state.raSubmittedAt ? 'De accountant heeft aangevuld, onder vermelding van zijn eigen vordering.' : 'De accountant heeft nog niet aangevuld.';
+      frankLogLine('frank', 'Maak de stand op.');
+      frankLogLine('ai', `Drie stukken van de ondernemer, ${validated}. ${supplement} De betaalruimte is een systeemafleiding en blijft onzeker. Dit is een stand, geen oordeel.`);
+      record('frank_status_report_made', 'status-not-conclusion');
+      saveSession();
+      render();
+    });
+    document.querySelector('#frank-gaps')?.addEventListener('click', () => {
+      frankLogLine('frank', 'Wat mis ik nog?');
+      frankLogLine('ai', `${pack.case.fields.ontbrekend.value} — dat is wat er niet is. Zolang de waarderingsonderbouwing ontbreekt, kan geen enkele vergelijking van waarden worden gemaakt. Dat vraagt een mens met dat vak.`);
+      record('frank_gaps_named', 'missing-made-explicit');
+      saveSession();
+      render();
+    });
+    document.querySelector('#frank-propose')?.addEventListener('click', () => {
+      if (!state.raSubmittedAt) return;
+      frankLogLine('frank', 'Maak een voorstel op.');
+      frankLogLine('ai', 'Opgemaakt op wat er ligt: de drie stukken van de ondernemer, de aanvulling van de accountant, en zijn verklaarde belang erbij. Wat het niet doet: een waardevergelijking maken en een route kiezen. Daarvoor ontbreekt de onderbouwing, en die keuze is niet van een systeem.');
+      record('frank_proposal_drafted', 'rests-on-supplied-only');
+      saveSession();
+      render();
+    });
+    document.querySelector('#frank-send-link')?.addEventListener('click', () => {
+      if (state.frankLinkPreparedAt) return;
+      if (!state.poortAccountantConsent) return;
+      state.frankLinkPreparedAt = new Date().toISOString();
+      if (!state.unlocked.includes('accountantpoort')) state.unlocked.push('accountantpoort');
+      frankLogLine('frank', `Zet de poort klaar voor ${accountantNameFrom().name}.`);
+      frankLogLine('ai', 'Klaargezet met eenmalige code. Hij ziet alleen wat de ondernemer heeft vrijgegeven. In deze demonstratie wordt niets verzonden.');
+      record('frank_accountant_link_prepared', 'consent-scoped-access');
+      saveSession();
+      render();
+    });
     document.querySelector('#ra-disclose')?.addEventListener('click', () => {
       if (state.raDisclosed) return;
       state.raDisclosed = true;
@@ -1802,7 +1930,6 @@
     });
     const poortLog = document.querySelector('.max-poort-log');
     if (poortLog && state.poortUnlocked) poortLog.scrollTop = poortLog.scrollHeight;
-    if (state.current === 'vervolgintake' && state.poortAccountantConsent && !state.poortValidatedAt) schedulePoortValidation();
     document.querySelector('#poort-upload')?.addEventListener('click', () => {
       if (!state.poortUnlocked) return;
       const step = poortCurrentStep();
@@ -1821,9 +1948,9 @@
       if (!state.poortUnlocked || poortCurrentStep() || state.poortAccountantConsent) return;
       state.poortAccountantConsent = true;
       state.poortConsentAt = new Date().toISOString();
-      if (!state.unlocked.includes('accountantpoort')) state.unlocked.push('accountantpoort');
-      poortLogLine('danny', 'Ja, Frank mag mijn accountant benaderen.');
-      poortLogLine('ai', 'Vastgelegd. Je accountant wordt gericht om aanvullende cijfers gevraagd, en je ziet terug wat er is opgevraagd.');
+      if (!state.unlocked.includes('frank-werkruimte')) state.unlocked.push('frank-werkruimte');
+      poortLogLine('danny', `Ja, Frank mag ${pack.case.accountant.identity.name} benaderen.`);
+      poortLogLine('ai', 'Vastgelegd, met wie het betreft en waarvoor. Frank bepaalt zelf wanneer hij hem bevraagt; jij ziet terug wat er is opgevraagd.');
       record('vervolgintake_accountant_consent_given', 'accountant-gate-opened');
       record('vervolgintake_dossier_ready', 'awaiting-accountant');
       saveSession();
