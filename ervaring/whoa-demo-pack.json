@@ -1,15 +1,15 @@
 {
   "meta": {
     "id": "POC-WHOA-001",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "fictional": true,
     "publicSafe": true,
     "checkedAt": "2026-08-03",
     "notice": "Alle casusgegevens en bedragen zijn synthetisch. De demonstratie is geen juridisch advies en voorspelt geen uitkomst."
   },
   "case": {
-    "company": "Kompas Horeca Groep B.V.",
-    "sector": "Horeca",
+    "company": "Kompas Metaaltechniek B.V.",
+    "sector": "Metaalbewerking",
     "employees": 18,
     "situation": "De onderneming draait operationeel door, maar historische schulden en aflopende betaalruimte bedreigen de continuïteit.",
     "opening": "Ik weet het echt niet meer. Het bedrijf draait, maar ik krijg de schulden niet meer ingehaald.",
@@ -269,6 +269,78 @@
             "Afwijkingen bewaken",
             "Besluiten en actualiteit bijhouden"
           ]
+        }
+      ]
+    },
+    "liquidity": {
+      "label": "Beschikbare betaalruimte",
+      "unit": "× €1.000 — synthetisch",
+      "note": "De eerste zes weken zijn afgeleid uit aangeleverde stukken. Wat daarna komt is een prognose en blijft onzeker; ook het moment waarop de ruimte opraakt is dus onzeker.",
+      "weeks": [
+        {
+          "label": "w-5",
+          "value": 88,
+          "status": "bron-bevestigd"
+        },
+        {
+          "label": "w-4",
+          "value": 74,
+          "status": "bron-bevestigd"
+        },
+        {
+          "label": "w-3",
+          "value": 61,
+          "status": "bron-bevestigd"
+        },
+        {
+          "label": "w-2",
+          "value": 44,
+          "status": "bron-bevestigd"
+        },
+        {
+          "label": "w-1",
+          "value": 31,
+          "status": "bron-bevestigd"
+        },
+        {
+          "label": "nu",
+          "value": 24,
+          "status": "bron-bevestigd"
+        },
+        {
+          "label": "w+1",
+          "value": 17,
+          "status": "onzeker"
+        },
+        {
+          "label": "w+2",
+          "value": 9,
+          "status": "onzeker"
+        },
+        {
+          "label": "w+3",
+          "value": -2,
+          "status": "onzeker"
+        },
+        {
+          "label": "w+4",
+          "value": -11,
+          "status": "onzeker"
+        },
+        {
+          "label": "w+5",
+          "value": -19,
+          "status": "onzeker"
+        },
+        {
+          "label": "w+6",
+          "value": -28,
+          "status": "onzeker"
+        },
+        {
+          "label": "w+7",
+          "value": -35,
+          "status": "onzeker"
         }
       ]
     }

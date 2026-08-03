@@ -111,7 +111,7 @@ Je stelt geen diagnose. Je kiest of noemt geen juridische, insolventie- of herst
 Schrijf warm en sober in gewone Nederlandse taal. Geen markdown, emoji of uitroepteken.
 Retourneer uitsluitend geldige JSON met deze vorm:
 {"reflection":"één korte reflectie","questions":["vraag 1","vraag 2"],"signals":["kandidaatsignaal"]}`,
-      prompt: `Fictieve sector: horeca. Fase: eerste signalering. Uitspraak ondernemer: ${message}`,
+      prompt: `Fictieve sector: metaalbewerking. Fase: eerste signalering. Uitspraak ondernemer: ${message}`,
       maxOutputTokens: 240,
       temperature: 0.2,
       abortSignal: AbortSignal.timeout(8500)

@@ -185,8 +185,20 @@ const werkScreen = werkStart < 0 || werkEnd < werkStart ? '' : js.slice(werkStar
 if (!werkScreen.includes('frank-propose') || !werkScreen.includes('disabled') || !/\bnog niet aangevuld|accountant heeft nog/i.test(werkScreen)) {
   errors.push('het voorstel kan worden opgemaakt voordat de accountant heeft aangevuld');
 }
-if (/\bwhoa\b/i.test(werkScreen) || !js.includes('accountantNameFrom')) {
-  errors.push('de werkruimte overschrijdt haar grens, of de accountant heeft geen herleidbare herkomst');
+if (!js.includes('accountantNameFrom')) {
+  errors.push('de accountant heeft geen herleidbare herkomst');
+}
+/* WHOA mag in Franks werkruimte vallen, maar alleen ná de aanvulling van de accountant,
+   alleen als toetsing en niet als besluit, en alleen met herkomst per regel. */
+const toetsAt = werkScreen.indexOf('WHOA');
+const supplementGate = werkScreen.indexOf('supplemented ?');
+if (toetsAt >= 0 && (supplementGate < 0 || toetsAt < supplementGate
+  || !werkScreen.includes('geen routebesluit') || !werkScreen.includes('frank-werk-agora')
+  || !werkScreen.includes('Onder voorbehoud'))) {
+  errors.push('de werkruimte noemt de route zonder aanvulling, zonder voorbehoud of zonder herkomst per regel');
+}
+if (!werkScreen.includes('renderLiquidityChart') || !js.includes('Bekijk als tabel') || !js.includes('stroke-dasharray')) {
+  errors.push('de financiële impressie mist haar tabelvariant of haar onderscheid tussen afgeleid en prognose');
 }
 if (!css.includes('.max-poort-documents li.validated') || !poortScreen.includes('Gevalideerd door') || !poortScreen.includes('EXPERT_NAME') || !poortScreen.includes('poortValidationStamp')) {
   errors.push('de validatie mist groene bevestiging, expertnaam of tijdstempel');
@@ -253,7 +265,7 @@ const fallbackResponse = await pocIntake(new Request('https://rob-concepting.com
   body: JSON.stringify({
     sessionId: 'poc-test-session-1234',
     message: 'Het bedrijf draait nog, maar de oude schulden halen ons in.',
-    caseContext: { fictional: true, sector: 'horeca', stage: 'signalering' }
+    caseContext: { fictional: true, sector: 'metaalbewerking', stage: 'signalering' }
   })
 }), { ip: 'verify-poc-fallback' });
 if (previousKey) process.env.ANTHROPIC_API_KEY = previousKey;

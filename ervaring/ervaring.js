@@ -1084,6 +1084,46 @@
     state.frankLog = [...(state.frankLog || []), { role, text }].slice(-40);
   };
 
+  /* Eén reeks, één kleur. Het verschil tussen afgeleid en prognose zit in de streep en
+     in het label, niet in een tweede tint — anders lezen twee zekerheidsstaten als twee
+     grootheden. Tabel eronder, zodat geen waarde alleen in de grafiek bestaat. */
+  const renderLiquidityChart = () => {
+    const data = pack.case.liquidity;
+    const weeks = data.weeks;
+    const left = 36; const right = 294; const top = 14; const bottom = 118;
+    const min = -40; const max = 95;
+    const x = (i) => left + (i / (weeks.length - 1)) * (right - left);
+    const y = (v) => bottom - ((v - min) / (max - min)) * (bottom - top);
+    const firstForecast = weeks.findIndex((w) => w.status === 'onzeker');
+    const solid = weeks.slice(0, firstForecast).map((w, i) => `${x(i)},${y(w.value)}`).join(' ');
+    const dashed = weeks.slice(firstForecast - 1).map((w, i) => `${x(i + firstForecast - 1)},${y(w.value)}`).join(' ');
+    const crossing = weeks.findIndex((w) => w.value < 0);
+    const nowIndex = firstForecast - 1;
+    const ticks = [80, 40, 0, -40];
+    return `<figure class="frank-chart">
+      <figcaption>${escapeHtml(data.label)} <span>${escapeHtml(data.unit)}</span></figcaption>
+      <svg viewBox="0 0 300 150" role="img" aria-label="Verloop van de beschikbare betaalruimte over dertien weken. De eerste zes weken zijn afgeleid uit aangeleverde stukken; daarna volgt een onzekere prognose die door nul zakt." preserveAspectRatio="xMidYMid meet">
+        ${ticks.map((t) => `<line x1="${left}" y1="${y(t)}" x2="${right}" y2="${y(t)}" stroke="${t === 0 ? 'rgba(245,243,238,.28)' : 'rgba(245,243,238,.08)'}" stroke-width="1"></line>
+          <text x="${left - 6}" y="${y(t) + 3}" text-anchor="end" font-size="9" fill="rgba(245,243,238,.62)">${t}</text>`).join('')}
+        <line x1="${x(nowIndex)}" y1="${top}" x2="${x(nowIndex)}" y2="${bottom}" stroke="rgba(245,243,238,.2)" stroke-width="1"></line>
+        <polyline points="${solid}" fill="none" stroke="#0fa8cb" stroke-width="2" stroke-linejoin="round"></polyline>
+        <polyline points="${dashed}" fill="none" stroke="#0fa8cb" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round"></polyline>
+        ${weeks.map((w, i) => `<circle cx="${x(i)}" cy="${y(w.value)}" r="${i === nowIndex || i === crossing ? 4 : 2.5}" fill="${i >= firstForecast ? '#09192a' : '#0fa8cb'}" stroke="#0fa8cb" stroke-width="1.5"></circle>
+          <circle cx="${x(i)}" cy="${y(w.value)}" r="12" fill="transparent"><title>${escapeHtml(w.label)}: ${w.value} (${escapeHtml(w.status)})</title></circle>`).join('')}
+        <text x="${x(nowIndex) - 7}" y="${y(weeks[nowIndex].value) - 9}" text-anchor="end" font-size="9" fill="rgba(245,243,238,.86)">nu ${weeks[nowIndex].value}</text>
+        <text x="${x(crossing) - 7}" y="${y(weeks[crossing].value) + 15}" text-anchor="end" font-size="9" fill="rgba(245,243,238,.86)">ruimte op</text>
+        <text x="${left}" y="136" font-size="9" fill="rgba(245,243,238,.62)">afgeleid</text>
+        <text x="${right}" y="136" text-anchor="end" font-size="9" fill="rgba(245,243,238,.62)">prognose · onzeker</text>
+      </svg>
+      <p class="frank-chart-note">${escapeHtml(data.note)}</p>
+      <details class="frank-chart-table">
+        <summary>Bekijk als tabel</summary>
+        <table><thead><tr><th scope="col">Week</th><th scope="col">Ruimte</th><th scope="col">Status</th></tr></thead>
+        <tbody>${weeks.map((w) => `<tr><th scope="row">${escapeHtml(w.label)}</th><td>${w.value}</td><td>${escapeHtml(w.status)}</td></tr>`).join('')}</tbody></table>
+      </details>
+    </figure>`;
+  };
+
   const FRANK_ACTIONS = [
     { id: 'validate', label: 'Valideren', button: 'frank-validate' },
     { id: 'report', label: 'Rapportage', button: 'frank-report' },
@@ -1150,7 +1190,24 @@
           ${supplemented ? `<section class="frank-werk-panel">
             <span>Aanvulling van de accountant</span>
             <ul class="frank-werk-supplied">${(state.raDelivered || []).map((name) => `<li>${escapeHtml(name)}</li>`).join('')}</ul>
+            <dl class="frank-werk-figures">${ra.figures.map((row) => `<div><dt>${escapeHtml(row.label)}</dt><dd>${escapeHtml(row.value)}</dd></div>`).join('')}</dl>
             <p class="frank-werk-interest">${escapeHtml(ra.position.disclosure)}</p>
+          </section>
+          <section class="frank-werk-panel">
+            <span>Financiële impressie</span>
+            ${renderLiquidityChart()}
+          </section>
+          <section class="frank-werk-panel frank-werk-toets">
+            <span>Toetsing op de route</span>
+            <strong>Toetsbaar als WHOA-voorbereiding</strong>
+            <p class="frank-werk-toets-caveat">Onder voorbehoud van waardering, klassenindeling en juridische toetsing. Dit is een toetsing, geen routebesluit — dat legt ${escapeHtml(EXPERT_FIRST)} apart vast.</p>
+            <ul class="frank-werk-agora">
+              <li><i aria-hidden="true">◎</i><span>Rust op drie stukken van de ondernemer</span><small>Gevalideerd door ${escapeHtml(EXPERT_NAME)} op ${escapeHtml(raStamp(state.poortValidatedAt))}</small></li>
+              <li><i aria-hidden="true">◎</i><span>Rust op de aanvulling van de accountant</span><small>Aangeleverd op ${escapeHtml(raStamp(state.raSubmittedAt))}, met zijn eigen vordering erbij verklaard</small></li>
+              <li><i aria-hidden="true">◎</i><span>Vrijwillig voorstel is niet gedragen</span><small>Bron: ${escapeHtml(pack.case.fields.blokkade.source)} · status ${escapeHtml(pack.case.fields.blokkade.status)}</small></li>
+              <li class="is-missing"><i aria-hidden="true">◎</i><span>Waardevergelijking kan niet worden gemaakt</span><small>${escapeHtml(pack.case.fields.ontbrekend.value)} — status ${escapeHtml(pack.case.fields.ontbrekend.status)}</small></li>
+            </ul>
+            <p class="frank-werk-agora-note">Agora houdt per regel vast waar hij op rust en wanneer dat is vastgesteld. Wat ontbreekt blijft als ontbrekend staan; het verdwijnt niet uit het beeld omdat de conclusie er beter van wordt.</p>
           </section>` : ''}
         </aside>
       </div>
@@ -1878,7 +1935,7 @@
     });
     document.querySelector('#frank-gaps')?.addEventListener('click', () => {
       frankLogLine('frank', 'Wat mis ik nog?');
-      frankLogLine('ai', `${pack.case.fields.ontbrekend.value} — dat is wat er niet is. Zolang de waarderingsonderbouwing ontbreekt, kan geen enkele vergelijking van waarden worden gemaakt. Dat vraagt een mens met dat vak.`);
+      frankLogLine('ai', `${pack.case.fields.ontbrekend.value} — dat is wat er niet is. Zolang de waarderingsonderbouwing ontbreekt, kan geen enkele vergelijking van waarden worden gemaakt.`);
       record('frank_gaps_named', 'missing-made-explicit');
       saveSession();
       render();
