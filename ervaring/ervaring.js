@@ -11,6 +11,7 @@
     { id: 'max-management', label: 'Management', detail: 'signaleren en toewijzen' },
     { id: 'frank-signal', label: 'Frank', detail: 'veilig ontvangen' },
     { id: 'frank-review', label: 'Expertbeoordeling', detail: 'menselijk toetsen' },
+    { id: 'danny-uitnodiging', label: 'Uitnodiging', detail: 'beveiligd openen' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
@@ -92,6 +93,10 @@
     frankReviewAccepted: false,
     frankCorrectionConfirmed: false,
     frankContactPrepared: false,
+    frankContactHeld: false,
+    frankIntakeInvited: false,
+    dannyInvitationOpened: false,
+    dannyIntakeAccepted: false,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -155,7 +160,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -734,12 +739,14 @@
     const answers = state.maxIntakeAnswers || {};
     const corrected = state.frankCorrectionConfirmed;
     const contactPrepared = state.frankContactPrepared;
+    const contactHeld = state.frankContactHeld;
+    const intakeInvited = state.frankIntakeInvited;
     const urgent = answers.urgent ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[1], answers.urgent) : 'Nog niet bevestigd';
     const operation = answers.operatie ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[2], answers.operatie) : 'Nog niet bevestigd';
     const help = answers.hulp ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[3], answers.hulp) : 'Nog niet bevestigd';
     return `<section class="frank-review-workspace" aria-labelledby="frank-review-title">
       <header class="frank-review-header">
-        <div><strong>MAX<span>OS</span></strong><small>Expertwerkruimte</small></div>
+        <div><strong>MAX<span>OS</span></strong><small>Beveiligde expertwerkruimte</small></div>
         <div><span>Beoordelaar</span><strong>Frank</strong><i aria-hidden="true">F</i></div>
       </header>
       <div class="frank-review-layout">
@@ -779,17 +786,68 @@
           </div>
           <section class="frank-contact-decision" aria-label="Menselijke vervolgstap">
             <span>Eerstvolgende menselijke stap</span>
-            ${contactPrepared ? `<div role="status"><h2>Persoonlijk contact is voorbereid.</h2><p>Frank neemt via de vrijgegeven contactmogelijkheid rechtstreeks contact op. Overeenkomst, volledige toestemming en documenttoegang worden pas in dat gesprek besproken.</p></div>` : `<div><h2>Eerst Danny spreken, daarna pas een volledig traject openen.</h2><p>Dit contactmoment dient om verwachtingen, kosten, toestemming en de serieuze intake uit te leggen.</p><button type="button" id="prepare-personal-contact" ${corrected ? '' : 'disabled'}>Eerst persoonlijk contact plannen <span aria-hidden="true">→</span></button><small>${corrected ? 'Nog geen bericht of afspraak wordt werkelijk verzonden.' : 'Nuanceer eerst de AI-afleiding.'}</small></div>`}
+            ${intakeInvited ? `<div role="status"><h2>De uitnodiging staat bij Danny.</h2><p>Hij opent hem zelf achter een beveiligde link. Documenten en toestemmingen worden daar gevraagd, niet hier vastgelegd.</p><button type="button" id="open-danny-invitation">Bekijk Danny’s uitnodiging <span aria-hidden="true">→</span></button></div>`
+              : contactHeld ? `<div><h2>Het gesprek is gevoerd.</h2><ul><li>Verwachtingen over wat een hersteltraject van Danny vraagt.</li><li>Kosten en werkwijze.</li><li>Welke stukken hij daarvoor moet aanleveren.</li></ul><p>Er is nog geen overeenkomst. Danny beslist zelf of hij de serieuze intake start.</p><button type="button" id="send-intake-invitation">Verstuur uitnodiging voor de serieuze intake <span aria-hidden="true">→</span></button><small>De uitnodiging opent Danny’s eigen scherm in deze demonstratie. Er gaat niets werkelijk de deur uit.</small></div>`
+              : contactPrepared ? `<div><h2>Persoonlijk contact is voorbereid.</h2><p>Frank neemt via de vrijgegeven contactmogelijkheid rechtstreeks contact op. Overeenkomst, volledige toestemming en documenttoegang worden pas in dat gesprek besproken.</p><button type="button" id="confirm-contact-held">Gesprek gevoerd, verwachtingen en kosten besproken</button><small>Zonder dit gesprek volgt geen uitnodiging.</small></div>`
+              : `<div><h2>Eerst Danny spreken, daarna pas een volledig traject openen.</h2><p>Dit contactmoment dient om verwachtingen, kosten, toestemming en de serieuze intake uit te leggen.</p><button type="button" id="prepare-personal-contact" ${corrected ? '' : 'disabled'}>Eerst persoonlijk contact plannen <span aria-hidden="true">→</span></button><small>${corrected ? 'Nog geen bericht of afspraak wordt werkelijk verzonden.' : 'Nuanceer eerst de AI-afleiding.'}</small></div>`}
           </section>
         </main>
         <aside class="frank-review-ai" aria-label="Expert AI">
           <span>Expert AI</span>
           <h2>Voorbereid, niet vastgesteld.</h2>
           <p>Ik heb bevestigde informatie, afleidingen en ontbrekende gegevens gescheiden. Ik mag geen haalbaarheid, juridische route of overeenkomst vaststellen.</p>
-          <ol><li class="done">Intake geordend</li><li class="${corrected ? 'done' : 'current'}">Menselijke nuance</li><li class="${contactPrepared ? 'done' : corrected ? 'current' : ''}">Persoonlijk contact</li><li>Volledige toestemming en intake</li></ol>
+          <ol><li class="done">Intake geordend</li><li class="${corrected ? 'done' : 'current'}">Menselijke nuance</li><li class="${contactHeld ? 'done' : corrected ? 'current' : ''}">Persoonlijk contact</li><li class="${intakeInvited ? 'done' : contactHeld ? 'current' : ''}">Volledige toestemming en intake</li></ol>
         </aside>
       </div>
       <dialog class="lineage-dialog" id="frank-review-lineage"><button type="button" id="close-frank-review-lineage" aria-label="Sluit Agora-herkomst">×</button><span>Agora · expertlog</span><h2>Voorstel en oordeel blijven gescheiden</h2><ul><li>Danny bevestigde de zichtbare intakegegevens.</li><li>Management wees Frank toe als beoordelaar.</li><li>AI markeerde continuïteit uitsluitend als te onderzoeken afleiding.</li><li>Franks nuance en vervolgbeslissing worden afzonderlijk vastgelegd.</li></ul></dialog>
+    </section>`;
+  };
+
+  const renderDannyInvitation = () => {
+    const opened = state.dannyInvitationOpened;
+    const accepted = state.dannyIntakeAccepted;
+    return `<section class="danny-invitation" aria-labelledby="danny-invitation-title">
+      <header class="danny-invitation-header">
+        <div><strong>MAX</strong><small>Finance &amp; Legal</small></div>
+        <div><span>Voor</span><strong>Danny</strong></div>
+      </header>
+      ${opened ? `<div class="danny-invitation-open">
+        <span>Uitnodiging · geopend ${escapeHtml(managementSignalTime())}</span>
+        <h1 id="danny-invitation-title">Wat de serieuze intake van u vraagt.</h1>
+        <p>Frank heeft u gesproken. Hieronder staat wat er nodig is en waarvoor u straks toestemming geeft. U beslist zelf of u begint.</p>
+        <article class="danny-invitation-agreed">
+          <span>Afgesproken in het gesprek</span>
+          <ul><li>Wat een hersteltraject van u vraagt aan tijd en medewerking.</li><li>Wat het kost en hoe Frank werkt.</li><li>Dat u zonder verplichting kunt stoppen zolang er niets is afgesproken.</li></ul>
+        </article>
+        <div class="danny-invitation-groups">
+          <article class="documents">
+            <span>Straks nodig</span>
+            <h2>Gevraagde documenten</h2>
+            <ul><li>Actuele cijfers en liquiditeitsbeeld</li><li>Volledig schuldenoverzicht</li><li>Crediteuren, zekerheden en acute termijnen</li></ul>
+            <small>Nog niets aangeleverd. Aanleveren gebeurt pas in de intake zelf.</small>
+          </article>
+          <article class="consents">
+            <span>Straks te geven</span>
+            <h2>Gevraagde toestemmingen</h2>
+            <ul><li>Max mag deze stukken gebruiken om uw situatie te beoordelen.</li><li>Frank mag uw accountant om aanvullende cijfers vragen.</li><li>Max legt vast welke stappen zijn gezet en waarop ze rusten.</li></ul>
+            <small>U geeft ze per onderdeel, en u kunt ze weer intrekken.</small>
+          </article>
+        </div>
+        ${accepted ? `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Vastgelegd</span><div role="status"><h2>De serieuze intake staat voor u klaar.</h2><p>Frank ziet dat u wilt beginnen. Er is nog geen overeenkomst, nog geen toegang tot uw stukken en nog geen keuze over een vervolgroute.</p></div></section>`
+          : `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Uw beslissing</span><h2>Begint u aan de serieuze intake?</h2><p>Er is nog geen overeenkomst en er wordt nog niets van u opgevraagd. Instemmen betekent alleen dat de intake voor u wordt klaargezet.</p><button type="button" id="accept-danny-intake">Ja, zet de intake voor mij klaar <span aria-hidden="true">→</span></button><small>Er wordt in deze demonstratie niets verzonden of opgeslagen.</small></section>`}
+        <p class="danny-invitation-boundary">Max legt vast wat is gevraagd en wat u antwoordt. Beoordelen en beslissen blijft mensenwerk.</p>
+      </div>` : `<div class="danny-invitation-lock">
+        <span>Beveiligde uitnodiging · ${escapeHtml(managementSignalTime())}</span>
+        <h1 id="danny-invitation-title">Frank heeft u een uitnodiging gestuurd.</h1>
+        <p>U hebt elkaar net gesproken. In deze uitnodiging staat wat de serieuze intake van u vraagt.</p>
+        <article class="danny-invitation-sender">
+          <span>Afzender</span>
+          <strong>Frank · bedrijfsherstel</strong>
+          <small>Max Finance &amp; Legal</small>
+        </article>
+        <button type="button" id="open-danny-invitation-link">Open de beveiligde uitnodiging</button>
+        <p class="danny-invitation-boundary">De inhoud blijft afgeschermd totdat u hem zelf opent.</p>
+      </div>`}
     </section>`;
   };
 
@@ -949,6 +1007,7 @@
     'max-management': renderMaxManagement,
     'frank-signal': renderFrankSignal,
     'frank-review': renderFrankReview,
+    'danny-uitnodiging': renderDannyInvitation,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
     accountant: renderAccountant,
@@ -973,7 +1032,9 @@
     app.classList.toggle('frank-signal-mode', isFrankSignal);
     const isFrankReview = state.current === 'frank-review';
     app.classList.toggle('frank-review-mode', isFrankReview);
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isDannyInvitation = state.current === 'danny-uitnodiging';
+    app.classList.toggle('danny-invitation-mode', isDannyInvitation);
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -1322,6 +1383,38 @@
       if (!state.frankCorrectionConfirmed || state.frankContactPrepared) return;
       state.frankContactPrepared = true;
       record('frank_personal_contact_prepared', 'agreement-pending');
+      saveSession();
+      render();
+    });
+    document.querySelector('#confirm-contact-held')?.addEventListener('click', () => {
+      if (!state.frankContactPrepared || state.frankContactHeld) return;
+      state.frankContactHeld = true;
+      record('frank_personal_contact_held', 'expectations-and-costs-discussed');
+      saveSession();
+      render();
+    });
+    document.querySelector('#send-intake-invitation')?.addEventListener('click', () => {
+      if (!state.frankContactHeld || state.frankIntakeInvited) return;
+      state.frankIntakeInvited = true;
+      record('frank_full_intake_invited', 'no-agreement-yet');
+      saveSession();
+      unlockAndGo('danny-uitnodiging');
+    });
+    document.querySelector('#open-danny-invitation')?.addEventListener('click', () => {
+      if (!state.frankIntakeInvited) return;
+      unlockAndGo('danny-uitnodiging');
+    });
+    document.querySelector('#open-danny-invitation-link')?.addEventListener('click', () => {
+      if (state.dannyInvitationOpened) return;
+      state.dannyInvitationOpened = true;
+      record('danny_invitation_opened', 'secure-link-opened-by-owner');
+      saveSession();
+      render();
+    });
+    document.querySelector('#accept-danny-intake')?.addEventListener('click', () => {
+      if (!state.dannyInvitationOpened || state.dannyIntakeAccepted) return;
+      state.dannyIntakeAccepted = true;
+      record('danny_full_intake_accepted', 'intake-prepared-only');
       saveSession();
       render();
     });

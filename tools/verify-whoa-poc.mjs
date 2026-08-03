@@ -133,6 +133,24 @@ if (!js.includes('const renderManagementFromTop') || !js.includes('scrollExperie
 if (!js.includes("{ id: 'frank-review', label: 'Expertbeoordeling'") || !js.includes('Door Danny bevestigd') || !js.includes('AI-afleiding · te toetsen') || !js.includes('Nog aan te leveren') || !js.includes("record('frank_ai_inference_corrected', 'human-correction')") || !js.includes("record('frank_personal_contact_prepared', 'agreement-pending')") || !css.includes('.frank-review-workspace')) {
   errors.push('Franks volledige expertwerkruimte mist menselijke correctie, Agora-grenzen of persoonlijk contact');
 }
+const contactPrepared = js.indexOf("record('frank_personal_contact_prepared'");
+const contactHeld = js.indexOf("record('frank_personal_contact_held'");
+const intakeInvited = js.indexOf("record('frank_full_intake_invited'");
+if (contactHeld < contactPrepared || intakeInvited < contactHeld || !js.includes('Beveiligde expertwerkruimte')) {
+  errors.push('Frank kan de serieuze intake uitnodigen zonder het gesprek aantoonbaar te hebben afgerond');
+}
+if (!js.includes("{ id: 'danny-uitnodiging', label: 'Uitnodiging'") || !js.includes("record('danny_invitation_opened'") || !js.includes("record('danny_full_intake_accepted'") || !js.includes('const renderDannyInvitation')) {
+  errors.push('Danny’s beveiligde uitnodiging voor de serieuze intake ontbreekt');
+}
+const invitationStart = js.indexOf('const renderDannyInvitation');
+const invitationEnd = js.indexOf('const renderEntrepreneur');
+const invitationScreen = invitationStart < 0 || invitationEnd < invitationStart ? '' : js.slice(invitationStart, invitationEnd);
+if (!invitationScreen.includes('Gevraagde documenten') || !invitationScreen.includes('Gevraagde toestemmingen') || !invitationScreen.includes('schuldenoverzicht') || !/geen overeenkomst/i.test(invitationScreen) || /\bwhoa\b/i.test(invitationScreen)) {
+  errors.push('de uitnodiging scheidt documenten en toestemmingen niet, of overschrijdt haar grens');
+}
+if (!css.includes('.danny-invitation')) {
+  errors.push('de uitnodiging mist eigen schermregie in de stylelaag');
+}
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }
