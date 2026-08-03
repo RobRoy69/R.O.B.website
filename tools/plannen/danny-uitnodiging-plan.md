@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Bouw Franks menselijke gespreksafronding en Danny's beveiligde uitnodiging voor de serieuze intake als één aantoonbare vervolgstap op de expertbeoordeling.
+**Goal:** Bouw Franks menselijke gespreksafronding en Danny's beveiligde uitnodiging voor de vervolgintake als één aantoonbare vervolgstap op de expertbeoordeling.
 
 **Architecture:** De bestaande deterministische sessie en renderfuncties in `ervaring/ervaring.js` blijven leidend. Nieuwe toestanden zijn lokaal en append-only gelogd; `tools/verify-whoa-poc.mjs` bewaakt de gedragscontracten en de browserflow valideert de schermregie.
 

@@ -1,4 +1,4 @@
-# Danny's uitnodiging voor de serieuze intake — ontwerp
+# Danny's uitnodiging voor de vervolgintake — ontwerp
 
 ## Doel
 
@@ -13,7 +13,7 @@ nog niet is.
 1. Frank heeft persoonlijk contact voorbereid (bestaande stap, ongewijzigd).
 2. Frank bevestigt zelf dat het gesprek is gevoerd en dat verwachtingen en kosten zijn
    besproken. Zonder die bevestiging is er geen uitnodiging.
-3. Pas daarna kan Frank de uitnodiging voor de serieuze intake versturen. De uitnodiging
+3. Pas daarna kan Frank de uitnodiging voor de vervolgintake versturen. De uitnodiging
    opent Danny's perspectief; er wordt niets werkelijk verzonden.
 4. Danny ziet eerst uitsluitend de beveiligde link met de afzender en de reden. De inhoud
    blijft afgeschermd tot hij hem zelf opent — dezelfde grens als Franks vergrendelscherm.
@@ -22,7 +22,7 @@ nog niet is.
    - welke documenten straks gevraagd worden — actuele cijfers en liquiditeit, volledig
      schuldenoverzicht, crediteuren met zekerheden en termijnen;
    - welke toestemmingen straks gevraagd worden, en waarvoor die wél en niet gelden.
-6. Danny stemt expliciet in met het starten van de serieuze intake.
+6. Danny stemt expliciet in met het starten van de vervolgintake.
 7. De uitkomst is uitsluitend dat de intake klaarstaat. Geen overeenkomst, geen
    documenttoegang, geen routebesluit, geen juridisch oordeel.
 

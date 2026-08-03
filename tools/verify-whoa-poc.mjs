@@ -137,10 +137,10 @@ const contactPrepared = js.indexOf("record('frank_personal_contact_prepared'");
 const contactHeld = js.indexOf("record('frank_personal_contact_held'");
 const intakeInvited = js.indexOf("record('frank_full_intake_invited'");
 if (contactHeld < contactPrepared || intakeInvited < contactHeld || !js.includes('Beveiligde expertwerkruimte')) {
-  errors.push('Frank kan de serieuze intake uitnodigen zonder het gesprek aantoonbaar te hebben afgerond');
+  errors.push('Frank kan de vervolgintake uitnodigen zonder het gesprek aantoonbaar te hebben afgerond');
 }
 if (!js.includes("{ id: 'danny-uitnodiging', label: 'Uitnodiging'") || !js.includes("record('danny_invitation_opened'") || !js.includes("record('danny_full_intake_accepted'") || !js.includes('const renderDannyInvitation')) {
-  errors.push('Danny’s beveiligde uitnodiging voor de serieuze intake ontbreekt');
+  errors.push('Danny’s beveiligde uitnodiging voor de vervolgintake ontbreekt');
 }
 const invitationStart = js.indexOf('const renderDannyInvitation');
 const invitationEnd = js.indexOf('const renderEntrepreneur');

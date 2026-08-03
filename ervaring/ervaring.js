@@ -787,9 +787,9 @@
           <section class="frank-contact-decision" aria-label="Menselijke vervolgstap">
             <span>Eerstvolgende menselijke stap</span>
             ${intakeInvited ? `<div role="status"><h2>De uitnodiging staat bij Danny.</h2><p>Hij opent hem zelf achter een beveiligde link. Documenten en toestemmingen worden daar gevraagd, niet hier vastgelegd.</p><button type="button" id="open-danny-invitation">Bekijk Danny’s uitnodiging <span aria-hidden="true">→</span></button></div>`
-              : contactHeld ? `<div><h2>Het gesprek is gevoerd.</h2><ul><li>Verwachtingen over wat een hersteltraject van Danny vraagt.</li><li>Kosten en werkwijze.</li><li>Welke stukken hij daarvoor moet aanleveren.</li></ul><p>Er is nog geen overeenkomst. Danny beslist zelf of hij de serieuze intake start.</p><button type="button" id="send-intake-invitation">Verstuur uitnodiging voor de serieuze intake <span aria-hidden="true">→</span></button><small>De uitnodiging opent Danny’s eigen scherm in deze demonstratie. Er gaat niets werkelijk de deur uit.</small></div>`
+              : contactHeld ? `<div><h2>Het gesprek is gevoerd.</h2><ul><li>Verwachtingen over wat een hersteltraject van Danny vraagt.</li><li>Kosten en werkwijze.</li><li>Welke stukken hij daarvoor moet aanleveren.</li></ul><p>Er is nog geen overeenkomst. Danny beslist zelf of hij de vervolgintake start.</p><button type="button" id="send-intake-invitation">Verstuur uitnodiging voor de vervolgintake <span aria-hidden="true">→</span></button><small>De uitnodiging opent Danny’s eigen scherm in deze demonstratie. Er gaat niets werkelijk de deur uit.</small></div>`
               : contactPrepared ? `<div><h2>Persoonlijk contact is voorbereid.</h2><p>Frank neemt via de vrijgegeven contactmogelijkheid rechtstreeks contact op. Overeenkomst, volledige toestemming en documenttoegang worden pas in dat gesprek besproken.</p><button type="button" id="confirm-contact-held">Gesprek gevoerd, verwachtingen en kosten besproken</button><small>Zonder dit gesprek volgt geen uitnodiging.</small></div>`
-              : `<div><h2>Eerst Danny spreken, daarna pas een volledig traject openen.</h2><p>Dit contactmoment dient om verwachtingen, kosten, toestemming en de serieuze intake uit te leggen.</p><button type="button" id="prepare-personal-contact" ${corrected ? '' : 'disabled'}>Eerst persoonlijk contact plannen <span aria-hidden="true">→</span></button><small>${corrected ? 'Nog geen bericht of afspraak wordt werkelijk verzonden.' : 'Nuanceer eerst de AI-afleiding.'}</small></div>`}
+              : `<div><h2>Eerst Danny spreken, daarna pas een volledig traject openen.</h2><p>Dit contactmoment dient om verwachtingen, kosten, toestemming en de vervolgintake uit te leggen.</p><button type="button" id="prepare-personal-contact" ${corrected ? '' : 'disabled'}>Eerst persoonlijk contact plannen <span aria-hidden="true">→</span></button><small>${corrected ? 'Nog geen bericht of afspraak wordt werkelijk verzonden.' : 'Nuanceer eerst de AI-afleiding.'}</small></div>`}
           </section>
         </main>
         <aside class="frank-review-ai" aria-label="Expert AI">
@@ -813,7 +813,7 @@
       </header>
       ${opened ? `<div class="danny-invitation-open">
         <span>Uitnodiging · geopend ${escapeHtml(managementSignalTime())}</span>
-        <h1 id="danny-invitation-title">Wat de serieuze intake van u vraagt.</h1>
+        <h1 id="danny-invitation-title">Wat de vervolgintake van u vraagt.</h1>
         <p>Frank heeft u gesproken. Hieronder staat wat er nodig is en waarvoor u straks toestemming geeft. U beslist zelf of u begint.</p>
         <article class="danny-invitation-agreed">
           <span>Afgesproken in het gesprek</span>
@@ -833,13 +833,13 @@
             <small>U geeft ze per onderdeel, en u kunt ze weer intrekken.</small>
           </article>
         </div>
-        ${accepted ? `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Vastgelegd</span><div role="status"><h2>De serieuze intake staat voor u klaar.</h2><p>Frank ziet dat u wilt beginnen. Er is nog geen overeenkomst, nog geen toegang tot uw stukken en nog geen keuze over een vervolgroute.</p></div></section>`
-          : `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Uw beslissing</span><h2>Begint u aan de serieuze intake?</h2><p>Er is nog geen overeenkomst en er wordt nog niets van u opgevraagd. Instemmen betekent alleen dat de intake voor u wordt klaargezet.</p><button type="button" id="accept-danny-intake">Ja, zet de intake voor mij klaar <span aria-hidden="true">→</span></button><small>Er wordt in deze demonstratie niets verzonden of opgeslagen.</small></section>`}
+        ${accepted ? `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Vastgelegd</span><div role="status"><h2>De vervolgintake staat voor u klaar.</h2><p>Frank ziet dat u wilt beginnen. Er is nog geen overeenkomst, nog geen toegang tot uw stukken en nog geen keuze over een vervolgroute.</p></div></section>`
+          : `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Uw beslissing</span><h2>Begint u aan de vervolgintake?</h2><p>Er is nog geen overeenkomst en er wordt nog niets van u opgevraagd. Instemmen betekent alleen dat de intake voor u wordt klaargezet.</p><button type="button" id="accept-danny-intake">Ja, zet de intake voor mij klaar <span aria-hidden="true">→</span></button><small>Er wordt in deze demonstratie niets verzonden of opgeslagen.</small></section>`}
         <p class="danny-invitation-boundary">Max legt vast wat is gevraagd en wat u antwoordt. Beoordelen en beslissen blijft mensenwerk.</p>
       </div>` : `<div class="danny-invitation-lock">
         <span>Beveiligde uitnodiging · ${escapeHtml(managementSignalTime())}</span>
         <h1 id="danny-invitation-title">Frank heeft u een uitnodiging gestuurd.</h1>
-        <p>U hebt elkaar net gesproken. In deze uitnodiging staat wat de serieuze intake van u vraagt.</p>
+        <p>U hebt elkaar net gesproken. In deze uitnodiging staat wat de vervolgintake van u vraagt.</p>
         <article class="danny-invitation-sender">
           <span>Afzender</span>
           <strong>Frank · bedrijfsherstel</strong>
