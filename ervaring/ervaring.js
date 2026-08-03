@@ -1245,6 +1245,10 @@
             <p class="frank-werk-gate">${supplemented
               ? 'Alle bewerkingen staan open; de accountant heeft aangevuld.'
               : 'Het voorstel blijft dicht: de accountant heeft nog niet aangevuld, en zonder zijn cijfers rust een voorstel op niets.'}</p>
+            ${supplemented ? `<div class="frank-werk-next">
+              <button type="button" data-command="/afronding">Afronding van de demonstratie <span aria-hidden="true">→</span></button>
+              <small>Sluit de demonstratie af met een terugblik op wat er is vastgelegd.</small>
+            </div>` : ''}
           </div>
         </section>
         <aside class="frank-werk-side" aria-label="Aanlevering en betrokkenen">
@@ -1476,9 +1480,7 @@
               </div>`
             : ''}
         </section>` : ''}
-        ${demoBar(submitted
-          ? [{ command: '/werkruimte', label: '← Expertwerkruimte' }, { command: '/afronding', label: 'Afronding →' }]
-          : [{ command: '/werkruimte', label: '← Expertwerkruimte' }])}
+        ${demoBar([{ command: '/werkruimte', label: '← Expertwerkruimte' }])}
       </main>
     </section>`;
   };

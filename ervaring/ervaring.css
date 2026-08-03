@@ -584,6 +584,10 @@ button { cursor: pointer; }
 .frank-werk-buttons button:hover:not([disabled]), .frank-werk-buttons button:focus-visible { background: #e0b65d; border-color: #e0b65d; }
 .frank-werk-buttons button[disabled] { border-color: rgba(245,243,238,.26); background: transparent; color: rgba(245,243,238,.62); cursor: not-allowed; }
 .frank-werk-gate { margin: 11px 0 0; color: rgba(245,243,238,.66); font-size: 11.5px; line-height: 1.55; }
+.frank-werk-next { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(245,243,238,.1); }
+.frank-werk-next button { min-height: 46px; padding: 11px 17px; border: 1px solid #0fa8cb; background: transparent; color: #52c4dd; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.frank-werk-next button:hover, .frank-werk-next button:focus-visible { background: #0fa8cb; color: #09192a; }
+.frank-werk-next small { display: block; margin-top: 9px; color: rgba(245,243,238,.66); font-size: 11px; line-height: 1.5; }
 .frank-werk-side { min-width: 0; overflow: auto; padding: clamp(24px,4vw,40px) 24px; display: grid; align-content: start; gap: 16px; border-left: 1px solid rgba(245,243,238,.09); background: #0b1d30; }
 .frank-werk-panel { padding: 17px; border: 1px solid rgba(245,243,238,.1); background: #0e2339; }
 .frank-werk-panel > span { color: #c5912a; font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
@@ -1135,6 +1139,7 @@ button { cursor: pointer; }
   .frank-werk-buttons button, .frank-werk-panel button,
   .frank-werk-entry input, .frank-werk-entry button { font-size: 16px; }
   .frank-werk-entry label { font-size: 11px; }
-  .frank-werk-entry p { font-size: 12.5px; }
+  .frank-werk-entry p, .frank-werk-next small { font-size: 12.5px; }
+  .frank-werk-next button { font-size: 14.5px; }
   .ra-supply-btn { font-size: 14.5px !important; }
 }
