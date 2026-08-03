@@ -39,6 +39,7 @@
   let state;
   let chatDemoRunning = false;
   let managementTransitionTimer = null;
+  let poortValidationTimer = null;
 
   const escapeHtml = (value = '') => String(value)
     .replaceAll('&', '&amp;')
@@ -103,6 +104,7 @@
     poortLog: [],
     poortCodeError: '',
     poortAccountantConsent: false,
+    poortValidatedAt: null,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -858,6 +860,27 @@
   };
 
   const POORT_CODE = 'MAX-7F2K';
+  const EXPERT_NAME = 'Frank';
+  const EXPERT_DOMAIN = 'bedrijfsherstel';
+
+  const poortValidationStamp = () => {
+    const value = state.poortValidatedAt ? new Date(state.poortValidatedAt) : null;
+    if (!value || Number.isNaN(value.getTime())) return '';
+    return `${value.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })} · ${value.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}`;
+  };
+
+  const schedulePoortValidation = () => {
+    if (poortValidationTimer) return;
+    poortValidationTimer = window.setTimeout(() => {
+      poortValidationTimer = null;
+      if (state.current !== 'vervolgintake' || !state.poortAccountantConsent || state.poortValidatedAt) return;
+      state.poortValidatedAt = new Date().toISOString();
+      poortLogLine('ai', `${EXPERT_NAME} heeft de aanlevering doorgenomen en alle drie de stukken gevalideerd. Wat hij heeft gezien en wanneer, staat vast.`);
+      record('vervolgintake_expert_validated', 'human-validation-after-delivery');
+      saveSession();
+      render();
+    }, 4200);
+  };
 
   const POORT_STEPS = [
     {
@@ -911,10 +934,11 @@
     const step = poortCurrentStep();
     const consentGiven = state.poortAccountantConsent;
     const done = !step && consentGiven;
+    const validated = Boolean(state.poortValidatedAt);
     return `<section class="max-poort" aria-labelledby="max-poort-title">
       <header class="max-poort-header">
         <div class="max-wordmark" aria-label="Max Finance &amp; Legal, Bedrijfsherstel"><strong>Max Finance <span>&amp;</span> Legal</strong><small>Vervolgintake</small></div>
-        <span class="max-poort-status"><i aria-hidden="true"></i>${unlocked ? (done ? 'Dossier aangeleverd' : `Stap ${Math.min(delivered.length + 1, POORT_STEPS.length + 1)} van ${POORT_STEPS.length + 1}`) : 'Poort gesloten'}</span>
+        <span class="max-poort-status"><i aria-hidden="true"></i>${unlocked ? (validated ? `Gevalideerd door ${escapeHtml(EXPERT_NAME)}` : done ? 'Dossier aangeleverd' : `Stap ${Math.min(delivered.length + 1, POORT_STEPS.length + 1)} van ${POORT_STEPS.length + 1}`) : 'Poort gesloten'}</span>
       </header>
       <div class="max-poort-body${unlocked ? ' is-open' : ''}">
         <section class="max-poort-stream" aria-label="Geleide aanlevering">
@@ -943,10 +967,16 @@
               <button type="button" id="poort-accountant-consent">Ja, Frank mag mijn accountant benaderen <span aria-hidden="true">→</span></button>
               <small>Alleen voor aanvullende cijfers bij deze aanlevering. Je kunt dit weer intrekken.</small>
             </article>` : ''}
-            ${done ? `<article class="max-poort-done" role="status">
-              <span>Vastgelegd</span>
-              <h2>Het dossier staat klaar voor Frank.</h2>
-              <p>Agora heeft vastgelegd wat je hebt aangeleverd, wanneer, en waarop het rust. De volgende stap ligt bij je accountant, die de cijfers aanvult. Er is nog geen overeenkomst, geen oordeel en geen keuze over een vervolgroute.</p>
+            ${done && !validated ? `<article class="max-poort-done" role="status">
+              <span>Aangeleverd</span>
+              <h2>Het dossier staat klaar voor ${escapeHtml(EXPERT_NAME)}.</h2>
+              <p>Alles wat je hebt aangeleverd staat vast met moment en herkomst. ${escapeHtml(EXPERT_NAME)} kijkt het na; zolang dat niet is gebeurd, is er niets gevalideerd.</p>
+              <p class="max-poort-waiting" aria-live="polite"><i aria-hidden="true"></i>In beoordeling bij ${escapeHtml(EXPERT_NAME)}</p>
+            </article>` : ''}
+            ${validated ? `<article class="max-poort-done is-validated" role="status">
+              <span>Gevalideerd</span>
+              <h2>${escapeHtml(EXPERT_NAME)} heeft alles gevalideerd wat je hebt aangeleverd.</h2>
+              <p>Wat hij heeft gezien en op welk moment, staat vast. De volgende stap ligt bij je accountant, die de cijfers aanvult. Er is nog geen overeenkomst, geen oordeel en geen keuze over een vervolgroute.</p>
             </article>` : ''}
           </div>
           <form class="max-poort-entry" id="poort-form" autocomplete="off">
@@ -966,8 +996,14 @@
           <ul>${POORT_STEPS.map((item, index) => {
             const isDone = delivered.includes(item.id);
             const isCurrent = !isDone && step && step.id === item.id;
-            return `<li class="${isDone ? 'done' : isCurrent ? 'current' : ''}"><i aria-hidden="true">${isDone ? '✓' : index + 1}</i><span>${escapeHtml(item.document)}</span><small>${isDone ? escapeHtml(item.file) : isCurrent ? 'Nu aan de orde' : 'Volgt'}</small></li>`;
+            const isValidated = isDone && validated;
+            return `<li class="${isValidated ? 'done validated' : isDone ? 'done' : isCurrent ? 'current' : ''}"><i aria-hidden="true">${isDone ? '✓' : index + 1}</i><span>${escapeHtml(item.document)}</span><small>${isDone ? escapeHtml(item.file) : isCurrent ? 'Nu aan de orde' : 'Volgt'}</small>${isValidated ? '<b><i aria-hidden="true">✓</i>Gevalideerd</b>' : ''}</li>`;
           }).join('')}</ul>
+          ${validated ? `<div class="max-poort-validation" role="status">
+            <span>Gevalideerd door</span>
+            <strong>${escapeHtml(EXPERT_NAME)} · ${escapeHtml(EXPERT_DOMAIN)}</strong>
+            <small>${escapeHtml(poortValidationStamp())}</small>
+          </div>` : ''}
           <div class="max-poort-consent-state ${consentGiven ? 'done' : ''}">
             <span>Toestemming accountant</span>
             <strong>${consentGiven ? 'Gegeven' : 'Nog open'}</strong>
@@ -1586,6 +1622,7 @@
     });
     const poortLog = document.querySelector('.max-poort-log');
     if (poortLog && state.poortUnlocked) poortLog.scrollTop = poortLog.scrollHeight;
+    if (state.current === 'vervolgintake' && state.poortAccountantConsent && !state.poortValidatedAt) schedulePoortValidation();
     document.querySelector('#poort-upload')?.addEventListener('click', () => {
       if (!state.poortUnlocked) return;
       const step = poortCurrentStep();

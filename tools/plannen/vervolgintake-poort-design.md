@@ -35,17 +35,36 @@ namespace `.max-poort`, eigen schermregie.
   begint niet opnieuw.
 - Alle antwoorden zijn vast en deterministisch. Geen AI-aanroep.
 
-### Slot
+### Slot in twee toestanden
 
-Als de drie stukken er zijn: het dossier staat klaar voor Frank. Agora heeft vastgelegd wat is
-aangeleverd en waarop het rust. Geen overeenkomst, geen oordeel, geen route.
+Het slot valt uiteen in twee toestanden, en dat is geen detail. "Aangeleverd" en "gevalideerd"
+zijn verschillende beweringen, en ze mogen niet op hetzelfde moment vallen — anders claimt de
+demonstratie dat de expert keek op de seconde dat de ondernemer aanleverde.
+
+1. **Aangeleverd.** Blauwe vinkjes met bestandsnaam. Het dossier staat klaar voor de expert, en
+   er staat expliciet dat er nog niets is gevalideerd zolang hij niet heeft gekeken. Een
+   pulserende regel laat zien dat het in beoordeling is.
+2. **Gevalideerd.** Na een korte tel arriveert de validatie van de expert: groene vinkjes met
+   "Gevalideerd" onder de blauwe, en daaronder één blok met datum, tijdstempel en de naam en het
+   vakgebied van de expert. Pas dan staat er dat hij alles heeft gevalideerd.
+
+Het tijdstempel doet het bewijswerk: het laat zien dat er tijd tussen aanleveren en valideren
+zat. In de demonstratie is die tijd samengeperst; in werkelijkheid duurt het uren.
+
+Daarna nog steeds: geen overeenkomst, geen oordeel, geen routebesluit. De volgende stap ligt bij
+de accountant.
+
+De naam van de expert komt uit `EXPERT_NAME` en `EXPERT_DOMAIN`, zodat hij in deze poort niet
+kan gaan driften. De oudere schermen noemen hem nog letterlijk; dat opruimen is apart werk.
 
 ## Sessiestaat en gebeurtenissen
 
 - `poortUnlocked`;
 - `poortDelivered` (lijst met afgeronde stappen);
 - `poortLog` (de ontvouwde regels, append-only);
-- `poortCodeError`.
+- `poortCodeError`;
+- `poortAccountantConsent`;
+- `poortValidatedAt` (moment van de expertvalidatie, leeg tot hij er is).
 
 Nieuwe gebeurtenissen:
 
@@ -53,7 +72,9 @@ Nieuwe gebeurtenissen:
 - `vervolgintake_code_rejected`;
 - `vervolgintake_document_delivered`;
 - `vervolgintake_question_asked`;
-- `vervolgintake_dossier_ready`.
+- `vervolgintake_accountant_consent_given`;
+- `vervolgintake_dossier_ready`;
+- `vervolgintake_expert_validated`.
 
 ## Grenzen
 

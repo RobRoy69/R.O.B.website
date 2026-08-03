@@ -171,6 +171,14 @@ const dossierReady = js.indexOf("record('vervolgintake_dossier_ready'");
 if (consentGiven < 0 || dossierReady < consentGiven || !js.includes('poortCurrentStep() || state.poortAccountantConsent')) {
   errors.push('de toestemming voor de accountant is geen afzonderlijke poort naar de volgende stap');
 }
+if (!js.includes("record('vervolgintake_expert_validated'") || !js.includes('poortValidationTimer')
+  || !js.includes('!state.poortAccountantConsent || state.poortValidatedAt')
+  || !poortScreen.includes('done && !validated') || !poortScreen.includes('state.poortValidatedAt')) {
+  errors.push('Franks validatie valt samen met de aanlevering in plaats van aantoonbaar erna');
+}
+if (!css.includes('.max-poort-documents li.validated') || !poortScreen.includes('Gevalideerd door') || !poortScreen.includes('EXPERT_NAME') || !poortScreen.includes('poortValidationStamp')) {
+  errors.push('de validatie mist groene bevestiging, expertnaam of tijdstempel');
+}
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }
