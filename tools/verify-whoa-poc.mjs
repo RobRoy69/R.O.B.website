@@ -221,6 +221,9 @@ if (/\bwhoa\b/i.test(raScreen) || /hoofdpijn|moeizaam|slepend|uitzichtloos/i.tes
 if (!css.includes('.ra-poort') || !css.includes('#1F4E79')) {
   errors.push('de accountantpoort mist de sobere professionele schermregie');
 }
+if (/caseVersion:\s*'[\d.]+'/.test(home)) {
+  errors.push('de homepage stempelt een casusversie die zij niet kan kennen');
+}
 if (!js.includes("{ id: 'afronding', label: 'Afronding'") || !js.includes('const renderAfronding') || !js.includes('const EVENT_LABELS') || !js.includes('const AGORA_VERBS')) {
   errors.push('het eindscherm ontbreekt');
 }

@@ -2631,7 +2631,9 @@ async function sendMsg() {
       correctionConfirmed: false,
       routeDecision: null,
       whoaPhase: 'voorbereiding-akkoord',
-      events: [{ at: new Date().toISOString(), perspective: 'rob', action: 'hidden_route_started', detail: '/chat', caseVersion: '2.1.0', demo: true }]
+      // Geen caseVersion: de homepage heeft de fixture nog niet gelezen en kan hem dus
+      // niet kennen. De ervaringsapp stempelt vanaf de volgende gebeurtenis de echte versie.
+      events: [{ at: new Date().toISOString(), perspective: 'rob', action: 'hidden_route_started', detail: '/chat', demo: true }]
     };
     try { sessionStorage.setItem('robMaxPoc.v2', JSON.stringify(session)); }
     catch {
