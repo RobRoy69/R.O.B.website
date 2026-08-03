@@ -9,6 +9,7 @@
     { id: 'max', label: 'Max', detail: 'veilig landen' },
     { id: 'max-intake', label: 'Eerste intake', detail: 'rust en houvast' },
     { id: 'max-management', label: 'Management', detail: 'signaleren en toewijzen' },
+    { id: 'frank-signal', label: 'Frank', detail: 'veilig ontvangen' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
@@ -79,6 +80,8 @@
     managementSignalAssigned: false,
     managementAiOpen: false,
     managementAiMessages: [],
+    frankNotificationOpened: false,
+    frankReviewAccepted: false,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -137,7 +140,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -496,6 +499,11 @@
     return value.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const managementSignalDate = () => {
+    const value = state.managementSignalCreatedAt ? new Date(state.managementSignalCreatedAt) : new Date();
+    return value.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long' });
+  };
+
   const managementAiAnswer = (prompt = '') => {
     const normalized = prompt.toLowerCase();
     if (normalized.includes('ontbreekt')) return 'Voor een menselijke beoordeling ontbreken nog actuele cijfers, een schuldenoverzicht en controle op de directe tijdsdruk.';
@@ -572,7 +580,7 @@
                 <div><span>Voorgestelde expertise</span><strong>Frank · bedrijfsherstel</strong><small>AI-voorstel, nog niet toegewezen</small></div>
                 <button type="button" id="assign-management-signal" ${assigned ? 'disabled' : ''}>${assigned ? 'Toegewezen aan Frank' : 'Zet door naar Frank'} <span aria-hidden="true">→</span></button>
               </footer>
-              ${assigned ? `<div class="assignment-receipt" role="status"><span>Toewijzing vastgelegd</span><p>Frank ontvangt in deze demonstratie een signaal. Er is nog geen overeenkomst, documenttoegang of accountantstoestemming.</p></div>` : ''}
+              ${assigned ? `<div class="assignment-receipt" role="status"><span>Toewijzing vastgelegd</span><p>Frank ontvangt in deze demonstratie een privacyveilige melding. Er is nog geen overeenkomst, documenttoegang of accountantstoestemming.</p><button type="button" id="open-frank-signal">Demonstratie: bekijk Franks melding <span aria-hidden="true">→</span></button></div>` : ''}
             </section>` : `<section class="signal-zero"><span aria-hidden="true">◇</span><h2>Open het nieuwe signaal</h2><p>Bekijk wat AI heeft herkend, wat Danny heeft bevestigd en wat nog door een mens moet worden beoordeeld.</p></section>`}
           </div>
         </main>
@@ -580,6 +588,50 @@
       <button type="button" class="management-ai-launch" id="open-management-ai" aria-expanded="${Boolean(state.managementAiOpen)}"><span aria-hidden="true">✦</span><span><small>Beschikbaar in dit scherm</small><strong>Vraag Management AI</strong></span></button>
       ${renderManagementAi()}
       <dialog class="lineage-dialog management-lineage-dialog" id="management-lineage"><button type="button" id="close-management-lineage" aria-label="Sluit Agora-uitleg">×</button><span>Agora · signaallogica</span><h2>Urgentie is geen levensvatbaarheid</h2><ul><li><strong>Tijdskritiek · hoog</strong> rust op Danny’s bevestigde druk van vandaag.</li><li><strong>Potentie · onderzoeken</strong> rust op zijn verklaring dat klanten en omzet nog bestaan.</li><li>AI koppelt deze signalen, maar mag geen haalbaarheid of route vaststellen.</li><li>De toewijzing aan Frank wordt als afzonderlijk menselijk besluit vastgelegd.</li></ul></dialog>
+    </section>`;
+  };
+
+  const renderFrankSignal = () => {
+    const opened = state.frankNotificationOpened;
+    const accepted = state.frankReviewAccepted;
+    return `<section class="frank-signal-screen" aria-labelledby="frank-signal-title">
+      <div class="frank-signal-stage">
+        <aside class="frank-handoff-context">
+          <span>Overdracht · menselijke poort</span>
+          <h1 id="frank-signal-title">De juiste expert krijgt alleen wat hij nu nodig heeft.</h1>
+          <p>De melding toont urgentie, geen dossierinhoud. Pas na veilig openen ziet Frank de bevestigde signalen en het managementbesluit.</p>
+          <ol><li class="done">Management heeft toegewezen</li><li class="${opened ? 'done' : 'current'}">Frank opent beveiligd</li><li class="${accepted ? 'done' : opened ? 'current' : ''}">Frank neemt beoordeling aan</li></ol>
+          <button type="button" class="frank-agora-button" id="show-frank-lineage">Bekijk de overdracht in Agora</button>
+        </aside>
+        <div class="frank-phone ${opened ? 'is-open' : ''}">
+          ${opened ? `<div class="frank-expert-app">
+            <header><div class="frank-expert-brand"><strong>MAX<span>OS</span></strong><small>Expert</small></div><div class="frank-expert-user"><span>Frank</span><i aria-hidden="true">F</i></div></header>
+            <main>
+              <span class="frank-eyebrow">Nieuwe beoordeling · ${escapeHtml(managementSignalTime())}</span>
+              <h2>Een eerste intake vraagt jouw expertise.</h2>
+              <p class="frank-intro">Management vraagt je om de situatie opnieuw en zelfstandig te beoordelen.</p>
+              <div class="frank-signal-facts">
+                <article class="urgent"><span>Prioriteit</span><strong>Vandaag beoordelen</strong><small>Tijdskritiek signaal</small></article>
+                <article><span>Voorgesteld domein</span><strong>Bedrijfsherstel</strong><small>Managementtoewijzing</small></article>
+                <article class="boundary"><span>Beslisgrens</span><strong>Nog geen expertoordeel</strong><small>Route en haalbaarheid zijn open</small></article>
+              </div>
+              <button type="button" class="frank-source-link" id="show-frank-lineage-mobile">Waarom ontvang ik dit signaal?</button>
+              ${accepted ? `<div class="frank-accepted" role="status"><span>Beoordeling aangenomen</span><h3>Het signaal staat in Franks werkvoorraad.</h3><p>De volgende stap is het volledige expertscherm met controlepunten en ontbrekende informatie.</p></div>` : `<div class="frank-review-actions"><button type="button" class="primary" id="accept-frank-review">Neem beoordeling aan</button><button type="button" id="decline-frank-review">Nu niet beschikbaar</button></div>`}
+            </main>
+          </div>` : `<div class="frank-lock-screen">
+            <header><span>${escapeHtml(managementSignalTime())}</span><span aria-label="Beveiligde verbinding">●●●</span></header>
+            <div class="frank-lock-time"><strong>${escapeHtml(managementSignalTime())}</strong><span>${escapeHtml(managementSignalDate())}</span></div>
+            <article class="frank-notification">
+              <header><strong>MAX OS</strong><span>nu</span></header>
+              <h2>Nieuwe intake vraagt beoordeling</h2>
+              <p>Tijdskritiek signaal. De inhoud blijft afgeschermd totdat je de beveiligde werkruimte opent.</p>
+              <button type="button" id="open-frank-notification">Open beveiligde melding</button>
+            </article>
+            <p class="frank-lock-boundary">Geen naam, dossiergegeven of mogelijke route zichtbaar op het vergrendelscherm.</p>
+          </div>`}
+        </div>
+      </div>
+      <dialog class="lineage-dialog frank-lineage-dialog" id="frank-lineage"><button type="button" id="close-frank-lineage" aria-label="Sluit Agora-overdracht">×</button><span>Agora · overdrachtslog</span><h2>Frank ontvangt een besluit, geen conclusie</h2><ul><li>Danny heeft de eerste intake zelf verzonden.</li><li>Management heeft Frank als beoordelaar toegewezen.</li><li>Urgentie en onderzoekspotentieel blijven afzonderlijke signalen.</li><li>Frank stelt haalbaarheid en route pas na eigen controle vast.</li></ul></dialog>
     </section>`;
   };
 
@@ -737,6 +789,7 @@
     max: renderMaxLanding,
     'max-intake': renderMaxIntake,
     'max-management': renderMaxManagement,
+    'frank-signal': renderFrankSignal,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
     accountant: renderAccountant,
@@ -757,7 +810,9 @@
     app.classList.toggle('max-intake-mode', isMaxIntake);
     const isMaxManagement = state.current === 'max-management';
     app.classList.toggle('max-management-mode', isMaxManagement);
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isFrankSignal = state.current === 'frank-signal';
+    app.classList.toggle('frank-signal-mode', isFrankSignal);
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -1029,6 +1084,34 @@
       saveSession();
       render();
     });
+    document.querySelector('#open-frank-signal')?.addEventListener('click', () => {
+      if (!state.managementSignalAssigned) return;
+      record('frank_signal_projection_opened', 'privacy-safe-notification');
+      unlockAndGo('frank-signal');
+    });
+    document.querySelector('#open-frank-notification')?.addEventListener('click', () => {
+      state.frankNotificationOpened = true;
+      record('frank_signal_opened', 'secure-expert-context');
+      saveSession();
+      render();
+    });
+    document.querySelector('#accept-frank-review')?.addEventListener('click', () => {
+      if (!state.frankNotificationOpened || state.frankReviewAccepted) return;
+      state.frankReviewAccepted = true;
+      record('frank_review_accepted', 'human-assessment-pending');
+      saveSession();
+      render();
+    });
+    document.querySelector('#decline-frank-review')?.addEventListener('click', () => {
+      record('frank_review_declined', 'reassign-required');
+      state.frankNotificationOpened = false;
+      saveSession();
+      go('max-management');
+    });
+    const frankLineageDialog = document.querySelector('#frank-lineage');
+    document.querySelector('#show-frank-lineage')?.addEventListener('click', () => frankLineageDialog?.showModal());
+    document.querySelector('#show-frank-lineage-mobile')?.addEventListener('click', () => frankLineageDialog?.showModal());
+    document.querySelector('#close-frank-lineage')?.addEventListener('click', () => frankLineageDialog?.close());
     document.querySelector('#open-management-ai')?.addEventListener('click', () => {
       state.managementAiOpen = !state.managementAiOpen;
       saveSession();

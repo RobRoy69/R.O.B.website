@@ -97,6 +97,12 @@ if (!js.includes('Urgentie is geen levensvatbaarheid') || !js.includes("record('
 if (!js.includes('Vraag Management AI') || !js.includes('Wat ontbreekt nog?') || !js.includes('Ik neem geen expertbesluit')) {
   errors.push('de contextbewuste Management AI-ingang of haar beslisgrens ontbreekt');
 }
+if (!js.includes("{ id: 'frank-signal', label: 'Frank'") || !js.includes('Open beveiligde melding') || !js.includes('Nog geen expertoordeel')) {
+  errors.push('de privacyveilige melding en expertgrens voor Frank ontbreken');
+}
+if (!js.includes("record('frank_review_accepted', 'human-assessment-pending')") || !js.includes('Frank ontvangt een besluit, geen conclusie')) {
+  errors.push('Franks menselijke aanname of de Agora-overdrachtsgrens ontbreekt');
+}
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }

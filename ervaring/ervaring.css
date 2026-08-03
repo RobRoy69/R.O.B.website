@@ -309,6 +309,76 @@ button { cursor: pointer; }
 .management-ai-form button { border: 0; border-left: 1px solid rgba(255,255,255,.14); background: transparent; color: #d6aa50; font-size: 20px; }
 .management-ai-form:focus-within { border-color: #c5912a; }
 
+/* Scherm 6: privacyveilige mobiele overdracht naar Frank. */
+.poc-app.frank-signal-mode { display: block; min-height: 100vh; background: #08131e; }
+.frank-signal-mode .poc-topbar,
+.frank-signal-mode .poc-rail,
+.frank-signal-mode .evidence-rail,
+.frank-signal-mode > .afsluiter { display: none; }
+.frank-signal-mode .poc-layout { display: block; min-height: 100vh; }
+.frank-signal-mode .poc-main { min-height: 100vh; overflow: auto; background: #08131e; color: #eef2f2; }
+.frank-signal-screen { min-height: 100vh; display: grid; place-items: center; padding: 42px; background: #08131e; }
+.frank-signal-stage { width: min(1040px, 100%); display: grid; grid-template-columns: minmax(320px, 1fr) minmax(360px, 430px); gap: clamp(45px, 8vw, 100px); align-items: center; }
+.frank-handoff-context > span { color: #d6aa50; font: 11px/1.4 "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+.frank-handoff-context h1 { max-width: 610px; margin: 16px 0 20px; font-size: clamp(38px, 4.6vw, 62px); line-height: 1.02; letter-spacing: -.045em; font-weight: 500; }
+.frank-handoff-context > p { max-width: 560px; margin: 0; color: rgba(238,242,242,.74); font-size: 17px; line-height: 1.65; }
+.frank-handoff-context ol { margin: 35px 0 29px; padding: 0; list-style: none; counter-reset: handoff; }
+.frank-handoff-context li { position: relative; min-height: 40px; padding: 2px 0 19px 42px; color: rgba(238,242,242,.48); font-size: 14px; counter-increment: handoff; }
+.frank-handoff-context li::before { content: counter(handoff, decimal-leading-zero); position: absolute; left: 0; top: -4px; color: rgba(238,242,242,.35); font: 11px/30px "IBM Plex Mono", monospace; }
+.frank-handoff-context li::after { content: ''; position: absolute; left: 14px; top: 26px; bottom: 0; width: 1px; background: rgba(255,255,255,.12); }
+.frank-handoff-context li:last-child::after { display: none; }
+.frank-handoff-context li.done, .frank-handoff-context li.current { color: #eef2f2; }
+.frank-handoff-context li.done::before { color: #35b7d4; }
+.frank-handoff-context li.current::before { color: #d6aa50; }
+.frank-agora-button { min-height: 44px; padding: 10px 0; border: 0; border-bottom: 1px solid rgba(197,145,42,.5); background: transparent; color: rgba(238,242,242,.74); font-size: 13px; }
+.frank-agora-button:hover, .frank-agora-button:focus-visible { color: #d6aa50; }
+.frank-phone { position: relative; min-height: min(790px, calc(100vh - 70px)); overflow: hidden; border: 1px solid rgba(255,255,255,.18); border-radius: 28px; background: #111921; box-shadow: 0 35px 90px rgba(0,0,0,.42); }
+.frank-phone::before { content: ''; position: absolute; z-index: 4; top: 10px; left: 50%; width: 82px; height: 22px; transform: translateX(-50%); border-radius: 14px; background: #05090e; }
+.frank-lock-screen { min-height: inherit; padding: 25px 20px 32px; display: flex; flex-direction: column; background: #111921; }
+.frank-lock-screen > header { display: flex; justify-content: space-between; color: rgba(238,242,242,.7); font-size: 11px; }
+.frank-lock-time { margin: 66px 0 52px; text-align: center; }
+.frank-lock-time strong, .frank-lock-time span { display: block; }
+.frank-lock-time strong { font-size: 68px; line-height: 1; font-weight: 400; letter-spacing: -.04em; }
+.frank-lock-time span { margin-top: 10px; color: rgba(238,242,242,.68); font-size: 14px; }
+.frank-notification { padding: 19px; border: 1px solid rgba(255,255,255,.14); border-left: 2px solid #c5912a; background: #172430; }
+.frank-notification > header { display: flex; justify-content: space-between; color: rgba(238,242,242,.58); font-size: 11px; }
+.frank-notification > header strong { color: #d6aa50; letter-spacing: .08em; }
+.frank-notification h2 { margin: 15px 0 9px; font-size: 21px; line-height: 1.25; font-weight: 500; }
+.frank-notification p { margin: 0; color: rgba(238,242,242,.72); font-size: 14px; line-height: 1.55; }
+.frank-notification button { width: 100%; min-height: 48px; margin-top: 18px; border: 1px solid #c5912a; background: #c5912a; color: #071421; font-weight: 600; }
+.frank-lock-boundary { margin: auto 10px 0; color: rgba(238,242,242,.5); font-size: 11px; line-height: 1.55; text-align: center; }
+.frank-expert-app { min-height: inherit; background: #f1efe9; color: #071421; animation: frank-open .38s ease both; }
+@keyframes frank-open { from { opacity: 0; transform: translateY(8px); } }
+.frank-expert-app > header { min-height: 76px; padding: 25px 22px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(7,20,33,.12); }
+.frank-expert-brand { display: flex; align-items: baseline; gap: 9px; }
+.frank-expert-brand strong { font-size: 17px; letter-spacing: .07em; }
+.frank-expert-brand strong span { color: #a47316; }
+.frank-expert-brand small { color: rgba(7,20,33,.55); font: 9px/1.3 "IBM Plex Mono", monospace; text-transform: uppercase; }
+.frank-expert-user { display: flex; align-items: center; gap: 9px; font-size: 13px; }
+.frank-expert-user i { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid rgba(7,20,33,.2); border-radius: 50%; color: #a47316; font-style: normal; }
+.frank-expert-app main { padding: 30px 22px 36px; }
+.frank-eyebrow { color: #8a6113; font: 10px/1.4 "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+.frank-expert-app h2 { margin: 13px 0 12px; font-size: 34px; line-height: 1.05; letter-spacing: -.035em; font-weight: 500; }
+.frank-intro { margin: 0; color: rgba(7,20,33,.68); font-size: 15px; line-height: 1.6; }
+.frank-signal-facts { margin-top: 27px; display: grid; gap: 9px; }
+.frank-signal-facts article { padding: 15px 16px; border-left: 2px solid #a47316; background: #e5e2da; }
+.frank-signal-facts article.urgent { border-color: #c65438; }
+.frank-signal-facts article.boundary { border-color: #0d91ad; }
+.frank-signal-facts span, .frank-signal-facts strong, .frank-signal-facts small { display: block; }
+.frank-signal-facts span { color: rgba(7,20,33,.55); font: 9px/1.3 "IBM Plex Mono", monospace; text-transform: uppercase; }
+.frank-signal-facts strong { margin-top: 6px; font-size: 16px; font-weight: 600; }
+.frank-signal-facts small { margin-top: 4px; color: rgba(7,20,33,.58); font-size: 11px; }
+.frank-source-link { min-height: 44px; margin-top: 12px; padding: 8px 0; border: 0; background: transparent; color: #6f5117; font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
+.frank-review-actions { margin-top: 25px; display: grid; gap: 9px; }
+.frank-review-actions button { min-height: 48px; border: 1px solid rgba(7,20,33,.24); background: transparent; color: #071421; font-weight: 600; }
+.frank-review-actions button.primary { border-color: #071421; background: #071421; color: #f1efe9; }
+.frank-accepted { margin-top: 25px; padding: 18px; border-left: 2px solid #a47316; background: #e5e2da; }
+.frank-accepted > span { color: #6f5117; font: 9px/1.3 "IBM Plex Mono", monospace; text-transform: uppercase; }
+.frank-accepted h3 { margin: 8px 0; font-size: 18px; }
+.frank-accepted p { margin: 0; color: rgba(7,20,33,.68); font-size: 13px; line-height: 1.55; }
+.frank-lineage-dialog strong { color: #eef2f2; }
+.assignment-receipt button { min-height: 44px; margin-top: 12px; padding: 8px 0; border: 0; background: transparent; color: #d6aa50; font: inherit; font-size: 13px; font-weight: 600; }
+
 .poc-topbar { min-height: 68px; display: grid; grid-template-columns: minmax(220px, 1fr) auto minmax(150px, 1fr); align-items: center; gap: 24px; padding: 14px 28px; border-bottom: 1px solid var(--poc-dark-line); background: rgba(13, 13, 26, .96); }
 .poc-brand { display: inline-flex; align-items: center; gap: 13px; color: var(--poc-paper); text-decoration: none; font-weight: 600; }
 .poc-brand .rob-lockup { display: block; width: 132px; height: auto; object-fit: contain; }
@@ -497,6 +567,14 @@ button { cursor: pointer; }
   .management-actions button { width: 100%; }
   .management-ai-launch { right: 12px; bottom: 12px; min-width: 0; width: calc(100% - 24px); min-height: 60px; }
   .management-ai-panel { right: 12px; bottom: 82px; width: calc(100% - 24px); max-height: calc(100vh - 105px); padding: 19px 16px; }
+  .frank-signal-screen { display: block; padding: 0; }
+  .frank-signal-stage { display: block; width: 100%; }
+  .frank-handoff-context { display: none; }
+  .frank-phone { width: 100%; min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+  .frank-lock-screen, .frank-expert-app { min-height: 100vh; }
+  .frank-lock-time { margin-top: 82px; }
+  .frank-notification { margin-top: 8px; }
+  .frank-expert-app h2 { font-size: 32px; }
   .poc-topbar { min-height: 58px; padding: 10px 14px; }
   .poc-brand { font-size: 13px; }
   .poc-layout { display: block; }
