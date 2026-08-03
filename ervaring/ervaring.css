@@ -1143,3 +1143,47 @@ button { cursor: pointer; }
   .frank-werk-next button { font-size: 14.5px; }
   .ra-supply-btn { font-size: 14.5px !important; }
 }
+
+/* ===== Contrastcorrectie op de oudere schermen =====
+   Gemeten op 320px tijdens de doorloop van 2026-08-03: de neutrale chat, de eerste
+   intake en de expertbeoordeling haalden 4,5:1 niet — laagste waarde 1,88:1 voor een
+   gouden eyebrow op een licht vlak. Deze laag tilt alleen de kleurwaarden; groottes,
+   posities en gedrag blijven zoals ze waren. */
+.ai-conversation-log .chat-who,
+.ai-chat-note { color: rgba(240,239,234,.66); }
+.max-intake-progress { color: rgba(245,243,238,.62); }
+.max-overview-list span, .max-overview-list small { color: rgba(245,243,238,.62); }
+.max-overview-list article.unknown strong { color: rgba(245,243,238,.62); }
+.max-ai-line span { color: rgba(245,243,238,.62); }
+.max-ai-question > p, .max-intake-ready > p { color: rgba(245,243,238,.62); }
+.max-signal-panel p, .max-entry-actions p { color: rgba(245,243,238,.62); }
+.max-wordmark small { color: rgba(245,243,238,.62); }
+.frank-case-rail dt, .frank-review-ai li,
+.frank-phone-context small, .frank-handoff-context li { color: rgba(238,242,242,.62); }
+/* Goud leest niet op het lichte vlak van de beoordeling; donkerder goud houdt de
+   betekenis "een mens heeft hier iets gedaan" en haalt 5,4:1. */
+.frank-review-main > span { color: #7d5a0d; }
+.frank-review-groups article > span,
+.frank-contact-decision small,
+.frank-expert-brand small, .frank-signal-facts span { color: rgba(7,20,33,.72); }
+
+@media (max-width: 560px) {
+  /* Dezelfde leesbaarheidsbodem als de nieuwere schermen. */
+  .max-intake-progress, .max-overview-list span, .max-overview-list small,
+  .max-ai-line span, .max-ai-question > p, .max-intake-ready > p,
+  .max-signal-panel p, .max-entry-actions p,
+  .frank-case-rail dt, .frank-review-main > span, .frank-review-ai > span,
+  .frank-contact-decision > span, .frank-review-groups article > span,
+  .frank-expert-brand small, .frank-signal-facts span, .frank-phone-context small,
+  .max-recommendation-label, .poc-demobar > span,
+  .max-wordmark small, .max-ai-question > span, .max-intake-ready > span,
+  .lineage-dialog > span, .management-titlebar > div > span,
+  .frank-review-header small, .frank-review-header > div:last-child > span,
+  .frank-case-rail > span,
+  .management-brand small, .management-user span, .management-transfer-main > span,
+  .management-transfer-boundary span { font-size: 11px; }
+  .frank-review-ai li, .frank-contact-decision small, .ai-chat-note,
+  .ai-conversation-log .chat-who { font-size: 12.5px; }
+  /* Onder 16px zoomt iOS in bij focus, midden in de intake. */
+  #contact-phone, #contact-email, .max-contact-fields input { font-size: 16px; }
+}
