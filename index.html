@@ -1529,6 +1529,20 @@
       letter-spacing: 0.1em; margin-bottom: 8px;
     }
     .chat-typing.visible { display: flex; }
+    .poc-launch {
+      position: fixed; inset: 0; z-index: 20000; display: grid; place-items: center;
+      background: #0e1525; color: #f4f1ec; opacity: 0; pointer-events: none;
+      transition: opacity .35s ease;
+    }
+    .poc-launch.active { opacity: 1; pointer-events: all; }
+    .poc-launch-inner { width: min(620px, calc(100vw - 44px)); }
+    .poc-launch-label {
+      font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .16em;
+      text-transform: uppercase; color: #0fa8cb; margin-bottom: 18px;
+    }
+    .poc-launch-text { font-size: clamp(30px, 5vw, 58px); line-height: 1.02; letter-spacing: -.035em; }
+    .poc-launch-line { width: 0; height: 1px; margin-top: 27px; background: #e8391e; transition: width .45s ease .12s; }
+    .poc-launch.active .poc-launch-line { width: 100%; }
     .typing-dot {
       width: 4px; height: 4px; border-radius: 50%;
       background: var(--cyan); opacity: 0.6;
@@ -2580,6 +2594,62 @@ async function sendMsg() {
   if (chatBtn.disabled || testfaseClosed) return;
   const val = chatIn.value.trim().slice(0, MAX_INPUT_CHARS);
   if (!val) return;
+
+  // Verborgen POC-ingang. Alleen exact /chat wordt lokaal onderschept; geen bericht,
+  // notificatie of archiefregel verlaat de browser. Alle gewone chat blijft hieronder
+  // ongewijzigd via de bestaande Function lopen.
+  if (val === '/chat') {
+    addMsg(val, 'user');
+    const session = {
+      version: 2,
+      active: true,
+      sessionId: crypto.randomUUID ? crypto.randomUUID() : `poc-${Date.now()}`,
+      startedAt: new Date().toISOString(),
+      current: 'chat',
+      unlocked: ['chat'],
+      role: 'bezoeker',
+      caseStarted: false,
+      openingSent: false,
+      intakeReady: false,
+      chatDemoComplete: false,
+      chatDemoStep: 0,
+      maxIntakeStep: 0,
+      maxIntakeAnswers: {},
+      maxIntakeSubmitted: false,
+      managementSignalCreatedAt: null,
+      managementSignalOpened: false,
+      managementSignalAssigned: false,
+      managementAiOpen: false,
+      managementAiMessages: [],
+      frankNotificationOpened: false,
+      frankReviewAccepted: false,
+      aiMode: null,
+      messages: [{ role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }],
+      revealCount: 0,
+      consent: false,
+      accountantReviewed: false,
+      correctionConfirmed: false,
+      routeDecision: null,
+      whoaPhase: 'voorbereiding-akkoord',
+      events: [{ at: new Date().toISOString(), perspective: 'rob', action: 'hidden_route_started', detail: '/chat', caseVersion: '2.1.0', demo: true }]
+    };
+    try { sessionStorage.setItem('robMaxPoc.v2', JSON.stringify(session)); }
+    catch {
+      addMsg('Deze browser blokkeert de lokale demonstratiesessie. De gewone chat blijft beschikbaar.', 'assistant');
+      return;
+    }
+    chatIn.value = '';
+    chatIn.disabled = true;
+    chatBtn.disabled = true;
+    const launch = document.createElement('div');
+    launch.className = 'poc-launch';
+    launch.setAttribute('role', 'status');
+    launch.innerHTML = '<div class="poc-launch-inner"><div class="poc-launch-label">Verborgen commandoroute</div><div class="poc-launch-text">De vraag verandert de omgeving.</div><div class="poc-launch-line"></div></div>';
+    document.body.appendChild(launch);
+    requestAnimationFrame(() => launch.classList.add('active'));
+    window.setTimeout(() => window.location.assign('/ervaring/chat/'), 720);
+    return;
+  }
 
   addMsg(val, 'user');
   msgHistory.push({ role: 'user', content: val });

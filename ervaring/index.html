@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="description" content="Fictieve, besloten demonstratie van een gecontroleerd continuïteits- en WHOA-voorbereidingstraject.">
+  <title>R.O.B. → Max-OS — gecontroleerde demonstratie</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/media/merk.css">
+  <link rel="stylesheet" href="/ervaring/ervaring.css?v=20260803-22">
+</head>
+<body>
+  <a class="skip-link" href="#poc-main">Naar de inhoud</a>
+  <div id="poc-app" class="poc-app" aria-live="polite">
+    <header class="poc-topbar">
+      <a class="poc-brand" href="/" aria-label="Terug naar R.O.B. Concepting">
+        <img class="rob-lockup" src="/media/logo/logo-rob-lengte-wit-transparant.png" width="601" height="118" alt="R.O.B. Concepting">
+        <span>→ Max-OS</span>
+      </a>
+      <div class="poc-context">
+        <span id="poc-mode">Verborgen route</span>
+        <span id="poc-case">Nog geen dossier</span>
+        <span class="demo-label">Fictieve demonstratie</span>
+      </div>
+      <button class="quiet-button" id="poc-reset" type="button">Stop en wis</button>
+    </header>
+
+    <div class="poc-layout">
+      <aside class="poc-rail" aria-label="Trajectperspectieven">
+        <ol id="poc-route" class="route-list"></ol>
+        <div class="rail-boundary">
+          <span>Grens</span>
+          <p>AI ordent. Mensen beoordelen en besluiten.</p>
+        </div>
+      </aside>
+
+      <main id="poc-main" class="poc-main" tabindex="-1">
+        <h1 id="poc-shell-title" class="sr-only">R.O.B. naar Max-OS — gecontroleerde demonstratie</h1>
+        <div id="poc-screen"></div>
+      </main>
+
+      <aside class="evidence-rail" aria-label="Herkomst en status">
+        <div class="evidence-head">
+          <span>Gezagslaag</span>
+          <strong id="evidence-count">0 velden</strong>
+        </div>
+        <div id="evidence-list" class="evidence-list"></div>
+      </aside>
+    </div>
+
+    <div class="afsluiter">
+      <form id="command-form" class="command-bar poc-command-footer" autocomplete="off">
+        <label for="command-input">Verborgen commandoroute</label>
+        <div class="command-row">
+          <span aria-hidden="true">›</span>
+          <input id="command-input" type="text" maxlength="700" spellcheck="false" placeholder="Typ /zwaarweer" aria-describedby="command-help">
+          <button type="submit">Voer uit</button>
+        </div>
+        <p id="command-help">De beschikbare stap verschijnt wanneer de vorige poort is afgerond.</p>
+      </form>
+    </div>
+  </div>
+
+  <noscript>Deze gecontroleerde demonstratie heeft JavaScript nodig. Ga terug naar rob-concepting.com.</noscript>
+  <script src="/ervaring/ervaring.js?v=20260803-22" defer></script>
+</body>
+</html>

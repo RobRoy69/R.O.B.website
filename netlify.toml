@@ -48,6 +48,13 @@
   to = "/.netlify/functions/scan-result"
   status = 200
 
+# Alle rolprojecties gebruiken dezelfde ervaringsapp. De app controleert de actieve
+# browsersessie en stuurt directe, niet-vrijgegeven toegang terug naar het R.O.B.-contactpunt.
+[[redirects]]
+  from = "/ervaring/*"
+  to = "/ervaring/index.html"
+  status = 200
+
 # Korte campagnelink; de volledige naam blijft de canonical.
 [[redirects]]
   from = "/scan/"
@@ -116,6 +123,12 @@
   for = "/werk/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/ervaring/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Cache-Control = "no-store"
 
 [[headers]]
   for = "/og-image.png"

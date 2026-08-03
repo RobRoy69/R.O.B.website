@@ -45,6 +45,10 @@ const PUBLIEK = [
   { soort: 'map', pad: 'kennisgezagsscan' },
   { soort: 'map', pad: 'kennisproef' },
 
+  // Verborgen, noindex demonstratieroute. De map bevat uitsluitend de openbare fictieve
+  // fixture en clientcode; geen productie-intakes of private 20voor12-canon.
+  { soort: 'map', pad: 'ervaring' },
+
   // Het beheerscherm. Publiek bereikbaar maar niet indexeerbaar: al het gezag zit in de
   // functie erachter, niet in deze pagina. Zonder sessie toont hij een wachtwoordveld en
   // verder niets — er staat geen sleutel en geen registerinhoud in.
