@@ -143,13 +143,33 @@ if (!js.includes("{ id: 'danny-uitnodiging', label: 'Uitnodiging'") || !js.inclu
   errors.push('Danny’s beveiligde uitnodiging voor de vervolgintake ontbreekt');
 }
 const invitationStart = js.indexOf('const renderDannyInvitation');
-const invitationEnd = js.indexOf('const renderEntrepreneur');
+const invitationEnd = js.indexOf('const POORT_CODE');
 const invitationScreen = invitationStart < 0 || invitationEnd < invitationStart ? '' : js.slice(invitationStart, invitationEnd);
 if (!invitationScreen.includes('Gevraagde documenten') || !invitationScreen.includes('Gevraagde toestemmingen') || !invitationScreen.includes('schuldenoverzicht') || !/geen overeenkomst/i.test(invitationScreen) || /\bwhoa\b/i.test(invitationScreen)) {
   errors.push('de uitnodiging scheidt documenten en toestemmingen niet, of overschrijdt haar grens');
 }
 if (!css.includes('.danny-invitation')) {
   errors.push('de uitnodiging mist eigen schermregie in de stylelaag');
+}
+if (!js.includes("{ id: 'vervolgintake', label: 'Vervolgintake'") || !js.includes("record('vervolgintake_code_accepted'") || !js.includes("record('vervolgintake_dossier_ready'") || !js.includes('const renderVervolgintakePoort')) {
+  errors.push('de dynamische Max-poort voor de vervolgintake ontbreekt');
+}
+const poortStart = js.indexOf('const renderVervolgintakePoort');
+const poortEnd = js.indexOf('const renderEntrepreneur');
+const poortScreen = poortStart < 0 || poortEnd < poortStart ? '' : js.slice(poortStart, poortEnd);
+if (!poortScreen.includes('max-poort-entry') || !poortScreen.includes('POORT_CODE') || !poortScreen.includes('is-prefilled') || !/ontvangst/i.test(poortScreen)) {
+  errors.push('de gesloten poort mist ontvangst, eerste instructie of de vervaagde code in de ingang');
+}
+if (!js.includes("record('vervolgintake_code_rejected'") || !js.includes("if (!state.poortUnlocked)") || !js.includes("record('vervolgintake_question_asked'") || !js.includes('const poortAnswerFor')) {
+  errors.push('de poort ontvouwt zonder geldige code, of een tussenvraag verschuift de voortgang');
+}
+if (!css.includes('.max-poort') || !css.includes('.max-poort-documents') || /\bwhoa\b/i.test(poortScreen)) {
+  errors.push('de poort mist eigen schermregie, of overschrijdt haar grens');
+}
+const consentGiven = js.indexOf("record('vervolgintake_accountant_consent_given'");
+const dossierReady = js.indexOf("record('vervolgintake_dossier_ready'");
+if (consentGiven < 0 || dossierReady < consentGiven || !js.includes('poortCurrentStep() || state.poortAccountantConsent')) {
+  errors.push('de toestemming voor de accountant is geen afzonderlijke poort naar de volgende stap');
 }
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');

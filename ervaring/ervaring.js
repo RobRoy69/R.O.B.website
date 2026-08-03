@@ -12,6 +12,7 @@
     { id: 'frank-signal', label: 'Frank', detail: 'veilig ontvangen' },
     { id: 'frank-review', label: 'Expertbeoordeling', detail: 'menselijk toetsen' },
     { id: 'danny-uitnodiging', label: 'Uitnodiging', detail: 'beveiligd openen' },
+    { id: 'vervolgintake', label: 'Vervolgintake', detail: 'geleid aanleveren' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
@@ -97,6 +98,11 @@
     frankIntakeInvited: false,
     dannyInvitationOpened: false,
     dannyIntakeAccepted: false,
+    poortUnlocked: false,
+    poortDelivered: [],
+    poortLog: [],
+    poortCodeError: '',
+    poortAccountantConsent: false,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -160,7 +166,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', vervolgintake: 'ondernemer', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -833,7 +839,7 @@
             <small>U geeft ze per onderdeel, en u kunt ze weer intrekken.</small>
           </article>
         </div>
-        ${accepted ? `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Vastgelegd</span><div role="status"><h2>De vervolgintake staat voor u klaar.</h2><p>Frank ziet dat u wilt beginnen. Er is nog geen overeenkomst, nog geen toegang tot uw stukken en nog geen keuze over een vervolgroute.</p></div></section>`
+        ${accepted ? `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Vastgelegd</span><div role="status"><h2>De vervolgintake staat voor u klaar.</h2><p>Frank ziet dat u wilt beginnen. Er is nog geen overeenkomst, nog geen toegang tot uw stukken en nog geen keuze over een vervolgroute.</p></div><button type="button" id="open-vervolgintake">Open de vervolgintake <span aria-hidden="true">→</span></button><small>U hebt daarvoor de autorisatiecode nodig die bij deze uitnodiging hoort. Hij staat voor u klaar.</small></section>`
           : `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Uw beslissing</span><h2>Begint u aan de vervolgintake?</h2><p>Er is nog geen overeenkomst en er wordt nog niets van u opgevraagd. Instemmen betekent alleen dat de intake voor u wordt klaargezet.</p><button type="button" id="accept-danny-intake">Ja, zet de intake voor mij klaar <span aria-hidden="true">→</span></button><small>Er wordt in deze demonstratie niets verzonden of opgeslagen.</small></section>`}
         <p class="danny-invitation-boundary">Max legt vast wat is gevraagd en wat u antwoordt. Beoordelen en beslissen blijft mensenwerk.</p>
       </div>` : `<div class="danny-invitation-lock">
@@ -848,6 +854,128 @@
         <button type="button" id="open-danny-invitation-link">Open de beveiligde uitnodiging</button>
         <p class="danny-invitation-boundary">De inhoud blijft afgeschermd totdat u hem zelf opent.</p>
       </div>`}
+    </section>`;
+  };
+
+  const POORT_CODE = 'MAX-7F2K';
+
+  const POORT_STEPS = [
+    {
+      id: 'cijfers',
+      document: 'Actuele cijfers en liquiditeitsbeeld',
+      order: 'Dit eerst, want zonder actueel beeld heeft de rest geen ijkpunt.',
+      ask: 'Begin met de meest recente cijfers en uw liquiditeitsbeeld.',
+      file: 'liquiditeit-juli.xlsx',
+      help: 'De laatste cijfers die uw boekhouding kan uitdraaien, plus wat er de komende weken in en uit gaat. Actueel is hier belangrijker dan compleet.'
+    },
+    {
+      id: 'schulden',
+      document: 'Volledig schuldenoverzicht',
+      order: 'Nu er een actueel beeld is, is er iets om de schulden tegen af te zetten.',
+      ask: 'Lever daarna het volledige schuldenoverzicht aan.',
+      file: 'schuldenoverzicht.pdf',
+      help: 'Alles waar een schuld tegenover staat, ook de kleine en ook die met een lopende regeling. Volledig is hier belangrijker dan netjes.'
+    },
+    {
+      id: 'crediteuren',
+      document: 'Crediteuren, zekerheden en acute termijnen',
+      order: 'Deze als laatste, want ze hangen aan de schulden uit de vorige stap.',
+      ask: 'Tot slot de crediteuren, de gestelde zekerheden en de termijnen die het eerst aflopen.',
+      file: 'crediteuren-termijnen.pdf',
+      help: 'Wie wacht op geld, wat daarvoor als zekerheid is gegeven, en welke datum het eerst valt. Die laatste bepaalt de orde van werken.'
+    }
+  ];
+
+  const poortCurrentStep = () => POORT_STEPS.find((step) => !(state.poortDelivered || []).includes(step.id));
+
+  const poortAnswerFor = (question = '') => {
+    const step = poortCurrentStep();
+    if (!step) {
+      return state.poortAccountantConsent
+        ? 'Het dossier staat klaar voor Frank. Verder dan dit gaat deze aanlevering niet.'
+        : 'De stukken zijn binnen. Er staat nog één keuze open: mag Frank uw accountant om aanvullende cijfers vragen?';
+    }
+    if (/\b(niet|snap|begrijp|hoezo|waarom|onduidelijk|help|hoe)\b/i.test(question) || question.includes('?')) {
+      return `${step.help} Ik wacht hier, u hoeft niet vooruit te lopen.`;
+    }
+    return `Ik houd het bij deze stap: ${step.ask.toLowerCase()} Zeg het als iets niet duidelijk is.`;
+  };
+
+  const poortLogLine = (role, text) => {
+    state.poortLog = [...(state.poortLog || []), { role, text }].slice(-40);
+  };
+
+  const renderVervolgintakePoort = () => {
+    const unlocked = state.poortUnlocked;
+    const delivered = state.poortDelivered || [];
+    const step = poortCurrentStep();
+    const consentGiven = state.poortAccountantConsent;
+    const done = !step && consentGiven;
+    return `<section class="max-poort" aria-labelledby="max-poort-title">
+      <header class="max-poort-header">
+        <div class="max-wordmark" aria-label="Max Finance &amp; Legal, Bedrijfsherstel"><strong>Max Finance <span>&amp;</span> Legal</strong><small>Vervolgintake</small></div>
+        <span class="max-poort-status"><i aria-hidden="true"></i>${unlocked ? (done ? 'Dossier aangeleverd' : `Stap ${Math.min(delivered.length + 1, POORT_STEPS.length + 1)} van ${POORT_STEPS.length + 1}`) : 'Poort gesloten'}</span>
+      </header>
+      <div class="max-poort-body${unlocked ? ' is-open' : ''}">
+        <section class="max-poort-stream" aria-label="Geleide aanlevering">
+          <div class="max-poort-log" role="log" aria-live="polite">
+            <article class="max-poort-welcome">
+              <span>Ontvangst</span>
+              <h1 id="max-poort-title">Welkom, Danny. Ik loop dit met u af.</h1>
+              <p>U hoeft niet te bedenken wat er nodig is of in welke orde. Ik vraag één ding per keer, en ik leg uit waarom het op dat moment aan de orde is.</p>
+            </article>
+            <article class="max-poort-line ai">
+              <span>Max AI</span>
+              <p>Eerste stap: voer de autorisatiecode in die u samen met de uitnodiging hebt gekregen.${unlocked ? '' : ' Hij staat al voor u klaar in het veld hieronder.'}</p>
+            </article>
+            ${(state.poortLog || []).map((line) => `<article class="max-poort-line ${line.role === 'danny' ? 'danny' : 'ai'}"><span>${line.role === 'danny' ? 'Danny' : 'Max AI'}</span><p>${escapeHtml(line.text)}</p></article>`).join('')}
+            ${unlocked && step ? `<article class="max-poort-step" aria-label="Huidige stap">
+              <span>Stap ${delivered.length + 1} · ${escapeHtml(step.document)}</span>
+              <h2>${escapeHtml(step.ask)}</h2>
+              <p class="max-poort-order">${escapeHtml(step.order)}</p>
+              <button type="button" id="poort-upload">Kies bestand <span aria-hidden="true">↑</span></button>
+              <small>Gesimuleerde aanlevering. Er wordt geen bestand gelezen, verzonden of opgeslagen.</small>
+            </article>` : ''}
+            ${unlocked && !step && !consentGiven ? `<article class="max-poort-step consent" aria-label="Openstaande toestemming">
+              <span>Laatste stap · toestemming</span>
+              <h2>Mag Frank uw accountant om aanvullende cijfers vragen?</h2>
+              <p class="max-poort-order">Uw accountant levert de cijfers, maar trekt het hersteltraject niet. Met deze toestemming kan Frank hem gericht bevragen zonder dat u er tussen hoeft te zitten.</p>
+              <button type="button" id="poort-accountant-consent">Ja, Frank mag mijn accountant benaderen <span aria-hidden="true">→</span></button>
+              <small>Alleen voor aanvullende cijfers bij deze aanlevering. U kunt dit weer intrekken.</small>
+            </article>` : ''}
+            ${done ? `<article class="max-poort-done" role="status">
+              <span>Vastgelegd</span>
+              <h2>Het dossier staat klaar voor Frank.</h2>
+              <p>Agora heeft vastgelegd wat u hebt aangeleverd, wanneer, en waarop het rust. De volgende stap ligt bij uw accountant, die de cijfers aanvult. Er is nog geen overeenkomst, geen oordeel en geen keuze over een vervolgroute.</p>
+            </article>` : ''}
+          </div>
+          <form class="max-poort-entry" id="poort-form" autocomplete="off">
+            <label for="poort-input">${unlocked ? 'Iets aangeven of vragen' : 'Autorisatiecode'}</label>
+            <div class="max-poort-entry-row">
+              <input id="poort-input" type="text" maxlength="120" spellcheck="false"
+                ${unlocked ? 'placeholder="Bijvoorbeeld: ik begrijp dit ff niet"' : `value="${escapeHtml(POORT_CODE)}" class="is-prefilled"`}
+                aria-describedby="poort-hint">
+              <button type="submit">${unlocked ? 'Stuur' : 'Open de poort'}</button>
+            </div>
+            <p id="poort-hint" class="${state.poortCodeError ? 'is-error' : ''}" ${state.poortCodeError ? 'role="alert"' : ''}>${escapeHtml(state.poortCodeError || (unlocked ? 'U kunt hier altijd iets tussendoor zeggen. De reeks blijft staan waar hij staat.' : 'De code staat vervaagd klaar. Eenmalig invoeren opent de geleide aanlevering.'))}</p>
+          </form>
+        </section>
+        ${unlocked ? `<aside class="max-poort-documents" aria-label="Aangeleverde stukken">
+          <span>Aanlevering</span>
+          <h2>${delivered.length} van ${POORT_STEPS.length}</h2>
+          <ul>${POORT_STEPS.map((item, index) => {
+            const isDone = delivered.includes(item.id);
+            const isCurrent = !isDone && step && step.id === item.id;
+            return `<li class="${isDone ? 'done' : isCurrent ? 'current' : ''}"><i aria-hidden="true">${isDone ? '✓' : index + 1}</i><span>${escapeHtml(item.document)}</span><small>${isDone ? escapeHtml(item.file) : isCurrent ? 'Nu aan de orde' : 'Volgt'}</small></li>`;
+          }).join('')}</ul>
+          <div class="max-poort-consent-state ${consentGiven ? 'done' : ''}">
+            <span>Toestemming accountant</span>
+            <strong>${consentGiven ? 'Gegeven' : 'Nog open'}</strong>
+            <small>${consentGiven ? 'Frank mag gericht aanvullende cijfers opvragen.' : 'Komt na de drie stukken aan de orde.'}</small>
+          </div>
+          <p class="max-poort-agora">Agora legt per stap vast wat is aangeleverd en waarop het rust. AI ordent, mensen beoordelen.</p>
+        </aside>` : ''}
+      </div>
     </section>`;
   };
 
@@ -1008,6 +1136,7 @@
     'frank-signal': renderFrankSignal,
     'frank-review': renderFrankReview,
     'danny-uitnodiging': renderDannyInvitation,
+    vervolgintake: renderVervolgintakePoort,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
     accountant: renderAccountant,
@@ -1034,7 +1163,9 @@
     app.classList.toggle('frank-review-mode', isFrankReview);
     const isDannyInvitation = state.current === 'danny-uitnodiging';
     app.classList.toggle('danny-invitation-mode', isDannyInvitation);
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isPoort = state.current === 'vervolgintake';
+    app.classList.toggle('max-poort-mode', isPoort);
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -1415,6 +1546,67 @@
       if (!state.dannyInvitationOpened || state.dannyIntakeAccepted) return;
       state.dannyIntakeAccepted = true;
       record('danny_full_intake_accepted', 'intake-prepared-only');
+      saveSession();
+      render();
+    });
+    document.querySelector('#open-vervolgintake')?.addEventListener('click', () => {
+      if (!state.dannyIntakeAccepted) return;
+      unlockAndGo('vervolgintake');
+    });
+    document.querySelector('#poort-form')?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const field = document.querySelector('#poort-input');
+      const value = String(field?.value || '').trim();
+      if (!value) return;
+      if (!state.poortUnlocked) {
+        if (value.toUpperCase() !== POORT_CODE) {
+          state.poortCodeError = 'Die code herken ik niet. Neem hem over zoals hij in de uitnodiging staat, dan gaan we verder.';
+          record('vervolgintake_code_rejected', 'retry-allowed');
+          saveSession();
+          render();
+          return;
+        }
+        state.poortUnlocked = true;
+        state.poortCodeError = '';
+        poortLogLine('danny', value.toUpperCase());
+        poortLogLine('ai', 'Dank u. De poort is open en u hoeft de code niet opnieuw in te voeren. Ik vraag de stukken in de orde waarin ze elkaar ondersteunen.');
+        record('vervolgintake_code_accepted', 'single-use-authorisation');
+        saveSession();
+        render();
+        return;
+      }
+      poortLogLine('danny', value.slice(0, 120));
+      poortLogLine('ai', poortAnswerFor(value));
+      record('vervolgintake_question_asked', 'progress-unchanged');
+      saveSession();
+      render();
+    });
+    document.querySelector('#poort-input')?.addEventListener('input', (event) => {
+      event.target.classList.remove('is-prefilled');
+    });
+    const poortLog = document.querySelector('.max-poort-log');
+    if (poortLog && state.poortUnlocked) poortLog.scrollTop = poortLog.scrollHeight;
+    document.querySelector('#poort-upload')?.addEventListener('click', () => {
+      if (!state.poortUnlocked) return;
+      const step = poortCurrentStep();
+      if (!step) return;
+      state.poortDelivered = [...(state.poortDelivered || []), step.id];
+      poortLogLine('danny', `${step.file} aangeleverd`);
+      const next = poortCurrentStep();
+      poortLogLine('ai', next
+        ? 'Ontvangen en vastgelegd. Ik zet de volgende stap klaar.'
+        : 'Ontvangen. De drie stukken zijn binnen; daarmee is het beeld compleet genoeg om er een expert naar te laten kijken.');
+      record('vervolgintake_document_delivered', step.id);
+      saveSession();
+      render();
+    });
+    document.querySelector('#poort-accountant-consent')?.addEventListener('click', () => {
+      if (!state.poortUnlocked || poortCurrentStep() || state.poortAccountantConsent) return;
+      state.poortAccountantConsent = true;
+      poortLogLine('danny', 'Ja, Frank mag mijn accountant benaderen.');
+      poortLogLine('ai', 'Vastgelegd. Uw accountant wordt gericht om aanvullende cijfers gevraagd, en u ziet terug wat er is opgevraagd.');
+      record('vervolgintake_accountant_consent_given', 'accountant-gate-opened');
+      record('vervolgintake_dossier_ready', 'awaiting-accountant');
       saveSession();
       render();
     });

@@ -119,7 +119,7 @@ button { cursor: pointer; }
 .max-wordmark { display: grid; gap: 4px; }
 .max-wordmark strong { font-family: Georgia, serif; font-size: clamp(19px, 2.3vw, 27px); letter-spacing: -.02em; }
 .max-wordmark strong span { color: #c5912a; }
-.max-wordmark small { color: rgba(245,243,238,.43); font-family: "IBM Plex Mono", monospace; font-size: 7px; letter-spacing: .2em; text-transform: uppercase; }
+.max-wordmark small { color: rgba(245,243,238,.62); font-family: "IBM Plex Mono", monospace; font-size: 7px; letter-spacing: .2em; text-transform: uppercase; }
 .max-entry-security { display: inline-flex; align-items: center; gap: 9px; color: rgba(245,243,238,.58); font-size: 11px; }
 .max-entry-security i { width: 7px; height: 7px; border-radius: 50%; background: #c5912a; box-shadow: 0 0 0 4px rgba(197,145,42,.1); }
 .max-entry-main { width: min(1120px, calc(100% - 44px)); margin: 0 auto; padding: clamp(58px, 9vh, 105px) 0 70px; }
@@ -496,6 +496,75 @@ button { cursor: pointer; }
   .frank-case-rail { border-right: 0; border-bottom: 1px solid rgba(238,242,242,.1); }
   .frank-review-main > h1 { font-size: 39px; }
   .frank-review-ai ol { display: block; }
+}
+
+.poc-app.max-poort-mode { display: block; min-height: 100vh; background: #09192a; }
+.max-poort-mode .poc-topbar,
+.max-poort-mode .poc-rail,
+.max-poort-mode .evidence-rail,
+.max-poort-mode > .afsluiter { display: none; }
+.max-poort-mode .poc-layout { display: block; min-height: 100vh; }
+.max-poort-mode .poc-main { min-height: 100vh; overflow: hidden; background: #09192a; color: #f5f3ee; }
+.max-poort { display: flex; flex-direction: column; height: 100vh; background: #09192a; color: #f5f3ee; }
+.max-poort-header { flex: none; min-height: 76px; padding: 14px clamp(18px,4vw,44px); display: flex; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid rgba(245,243,238,.09); }
+.max-poort-status { display: inline-flex; align-items: center; gap: 9px; color: rgba(245,243,238,.7); font: 10px/1.3 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.max-poort-status i { width: 7px; height: 7px; border-radius: 50%; background: #c5912a; box-shadow: 0 0 0 4px rgba(197,145,42,.12); }
+.max-poort-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0,1fr); }
+.max-poort-body.is-open { grid-template-columns: minmax(0,1fr) 328px; }
+.max-poort-stream { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.max-poort-log { flex: 1; min-height: 0; overflow: auto; padding: clamp(26px,4vw,52px) clamp(18px,4vw,44px) 22px; display: grid; align-content: start; gap: 14px; max-width: 760px; }
+.max-poort-welcome > span, .max-poort-line > span, .max-poort-step > span, .max-poort-done > span { color: #c5912a; font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.max-poort-welcome h1 { margin: 14px 0 12px; font-size: clamp(28px,3.6vw,42px); line-height: 1.06; letter-spacing: -.035em; font-weight: 500; }
+.max-poort-welcome > p { margin: 0 0 8px; color: rgba(245,243,238,.68); font-size: 15px; line-height: 1.65; }
+.max-poort-line { padding: 14px 18px; border-left: 2px solid rgba(15,168,203,.5); background: #0b1d30; }
+.max-poort-line.danny { border-left-color: #c5912a; background: #0e2339; }
+.max-poort-line > span { color: rgba(245,243,238,.62); }
+.max-poort-line.danny > span { color: #c5912a; }
+.max-poort-line p { margin: 6px 0 0; color: rgba(245,243,238,.82); font-size: 14px; line-height: 1.6; }
+.max-poort-step { margin-top: 6px; padding: 22px; border: 1px solid rgba(197,145,42,.4); background: #0b1d30; }
+.max-poort-step h2 { margin: 10px 0 8px; font-size: 22px; font-weight: 500; line-height: 1.25; }
+.max-poort-order { margin: 0; color: rgba(245,243,238,.68); font-size: 13px; line-height: 1.6; }
+.max-poort-step button { min-height: 48px; margin-top: 17px; padding: 12px 17px; border: 1px solid #c5912a; background: #c5912a; color: #09192a; font-weight: 600; }
+.max-poort-step button:hover, .max-poort-step button:focus-visible { background: #e0b65d; border-color: #e0b65d; }
+.max-poort-step small { display: block; margin-top: 11px; color: rgba(245,243,238,.62); font-size: 11px; line-height: 1.5; }
+.max-poort-done { margin-top: 6px; padding: 22px; border-left: 3px solid #0fa8cb; background: #0e2339; }
+.max-poort-done h2 { margin: 10px 0 8px; font-size: 22px; font-weight: 500; }
+.max-poort-done p { margin: 0; color: rgba(245,243,238,.72); font-size: 14px; line-height: 1.65; }
+.max-poort-entry { flex: none; padding: 18px clamp(18px,4vw,44px) 22px; border-top: 1px solid rgba(245,243,238,.1); background: #0b1d30; }
+.max-poort-entry label { display: block; color: rgba(245,243,238,.62); font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.max-poort-entry-row { margin-top: 9px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; }
+.max-poort-entry input { min-height: 48px; padding: 12px 14px; border: 1px solid rgba(245,243,238,.24); background: #09192a; color: #f5f3ee; font-size: 15px; }
+.max-poort-entry input.is-prefilled { color: rgba(245,243,238,.6); letter-spacing: .14em; }
+.max-poort-entry input:focus-visible { border-color: #c5912a; }
+.max-poort-entry button { min-height: 48px; padding: 12px 19px; border: 1px solid #c5912a; background: #c5912a; color: #09192a; font-weight: 600; }
+.max-poort-entry button:hover, .max-poort-entry button:focus-visible { background: #e0b65d; border-color: #e0b65d; }
+.max-poort-entry p { margin: 10px 0 0; color: rgba(245,243,238,.62); font-size: 11px; line-height: 1.55; }
+.max-poort-entry p.is-error { color: #f0a08c; }
+.max-poort-documents { min-width: 0; padding: clamp(26px,4vw,44px) 24px; overflow: auto; border-left: 1px solid rgba(245,243,238,.09); background: #0b1d30; }
+.max-poort-documents > span { color: #c5912a; font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.max-poort-documents > h2 { margin: 11px 0 20px; font-size: 27px; font-weight: 500; }
+.max-poort-documents ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; background: rgba(245,243,238,.08); }
+.max-poort-documents li { display: grid; grid-template-columns: 26px minmax(0,1fr); gap: 3px 11px; padding: 14px 15px; background: #0e2339; color: rgba(245,243,238,.62); }
+.max-poort-documents li i { grid-row: span 2; display: grid; place-items: center; width: 26px; height: 26px; border: 1px solid rgba(245,243,238,.24); border-radius: 50%; font: 11px/1 "IBM Plex Mono", monospace; font-style: normal; }
+.max-poort-documents li span { color: rgba(245,243,238,.86); font-size: 13px; line-height: 1.4; }
+.max-poort-documents li small { font-size: 11px; overflow-wrap: anywhere; }
+.max-poort-documents li.current i { border-color: #c5912a; color: #d9ae57; }
+.max-poort-documents li.done i { border-color: #0fa8cb; background: rgba(15,168,203,.16); color: #75c7da; }
+.max-poort-documents li.done small { color: #75c7da; }
+.max-poort-consent-state { margin-top: 12px; padding: 16px 15px; border-left: 2px solid #c5912a; background: #0e2339; }
+.max-poort-consent-state.done { border-left-color: #0fa8cb; }
+.max-poort-consent-state span { color: rgba(245,243,238,.62); font: 9px/1.3 "IBM Plex Mono", monospace; letter-spacing: .09em; text-transform: uppercase; }
+.max-poort-consent-state strong { display: block; margin: 6px 0 5px; font-size: 15px; font-weight: 500; }
+.max-poort-consent-state small { color: rgba(245,243,238,.66); font-size: 11px; line-height: 1.5; }
+.max-poort-agora { margin: 20px 0 0; padding-left: 12px; border-left: 2px solid #0fa8cb; color: rgba(245,243,238,.62); font-size: 11px; line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .max-poort { height: auto; min-height: 100vh; }
+  .max-poort-mode .poc-main { overflow: auto; }
+  .max-poort-body.is-open { grid-template-columns: minmax(0,1fr); }
+  .max-poort-documents { order: -1; border-left: 0; border-bottom: 1px solid rgba(245,243,238,.09); }
+  .max-poort-log { overflow: visible; max-width: none; }
+  .max-poort-welcome h1 { font-size: 28px; }
 }
 
 .poc-app.danny-invitation-mode { display: block; min-height: 100vh; background: #09192a; }
