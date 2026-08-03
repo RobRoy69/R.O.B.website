@@ -82,7 +82,7 @@ if (!js.includes('zegt dat hij dit traject niet kan trekken') || !js.includes('S
 if (!js.includes("{ id: 'max', label: 'Max'") || !js.includes('U hoeft dit niet alleen uit te zoeken.') || !js.includes('Nog niets gedeeld')) {
   errors.push('de gecontroleerde Max-ingang ontbreekt of maakt de overdrachtsgrens niet zichtbaar');
 }
-if (!js.includes("{ id: 'max-intake', label: 'Eerste intake'") || !js.includes('MAX_INTAKE_QUESTIONS') || !js.includes('Verstuur eerste intake naar Max')) {
+if (!js.includes("{ id: 'max-intake', label: 'Eerste intake'") || !js.includes('MAX_INTAKE_QUESTIONS') || !js.includes('Bevestig contact en verstuur intake')) {
   errors.push('de gesprekgestuurde eerste Max-intake ontbreekt of heeft geen expliciete verzending');
 }
 if (!js.includes('Agora · herkomstlaag') || !js.includes('Door Danny bevestigd') || !js.includes('Door AI herkend')) {
@@ -105,6 +105,21 @@ if (!js.includes("record('frank_review_accepted', 'human-assessment-pending')") 
 }
 if (!js.includes('Mobiele melding op Franks telefoon') || !js.includes('frank-phone-side-controls') || !js.includes('frank-phone-home') || !css.includes('.frank-phone-context, .frank-phone-side-controls, .frank-phone-home { display: none; }')) {
   errors.push('Franks paneel is op desktop niet duidelijk als mobiele telefoon herkenbaar');
+}
+if (!js.includes('managementSignalExpanded: false') || !js.includes("management-signal ${opened ? 'read' : 'unread'} ${expanded ? 'selected' : ''}") || !js.includes('state.managementSignalExpanded = false') || !css.includes('@keyframes management-signal-attention')) {
+  errors.push('het nieuwe managementsignaal vraagt niet zichtbaar aandacht tot opening');
+}
+if (!js.includes("${opened ? 'gelezen' : 'nieuw'}") || !js.includes("${assigned ? 'Door directie toegewezen' : 'AI-voorstel, nog niet toegewezen'}")) {
+  errors.push('de managementlabels volgen de gelezen- en toewijzingsstatus niet');
+}
+if (!js.includes("id: 'contact'") || !js.includes('contact-consent') || !js.includes('contactPhone') || !js.includes('contactEmail')) {
+  errors.push('de eerste intake verzamelt geen expliciet vrijgegeven contactmogelijkheid');
+}
+if (!js.includes('management-transfer-screen') || !js.includes('Agora maakt overdrachtslog') || !js.includes('Open Franks mobiele melding')) {
+  errors.push('de geleide Agora-overdracht naar Frank ontbreekt');
+}
+if (!js.includes('const renderManagementFromTop') || !js.includes('scrollExperienceToTop();')) {
+  errors.push('het zelfstandige overdrachtscherm start niet gegarandeerd bovenaan');
 }
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');

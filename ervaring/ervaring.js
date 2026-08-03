@@ -75,9 +75,15 @@
     maxIntakeStep: 0,
     maxIntakeAnswers: {},
     maxIntakeSubmitted: false,
+    contactPhone: '',
+    contactEmail: '',
+    contactConsent: false,
+    contactError: '',
     managementSignalCreatedAt: null,
     managementSignalOpened: false,
+    managementSignalExpanded: false,
     managementSignalAssigned: false,
+    managementTransferOpen: false,
     managementAiOpen: false,
     managementAiMessages: [],
     frankNotificationOpened: false,
@@ -136,6 +142,11 @@
 
   const routeIndex = (id) => ROUTE.findIndex((item) => item.id === id);
 
+  const scrollExperienceToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.querySelector('#poc-main')?.scrollTo?.({ top: 0, left: 0, behavior: 'instant' });
+  };
+
   const go = (id, { replace = false } = {}) => {
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
@@ -148,8 +159,7 @@
     saveSession();
     setPath(id, replace);
     render();
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    document.querySelector('#poc-main')?.scrollTo?.({ top: 0, left: 0, behavior: 'instant' });
+    scrollExperienceToTop();
     document.querySelector('#poc-main')?.focus({ preventScroll: true });
     return true;
   };
@@ -157,6 +167,12 @@
   const unlockAndGo = (id) => {
     unlock(id);
     return go(id);
+  };
+
+  const renderManagementFromTop = () => {
+    saveSession();
+    render();
+    scrollExperienceToTop();
   };
 
   const fieldIdsVisible = () => {
@@ -432,10 +448,29 @@
         ['onbekend', 'Ik weet het nog niet']
       ],
       response: () => 'Dat is voldoende voor een eerste beoordeling. Je hoeft nu nog geen documenten aan te leveren.'
+    },
+    {
+      id: 'contact',
+      prompt: 'Hoe mag Max contact met je opnemen over deze eerste intake?',
+      options: [
+        ['telefoon', 'Per telefoon'],
+        ['email', 'Per e-mail'],
+        ['beide', 'Per telefoon en e-mail']
+      ],
+      response: () => 'Duidelijk. Je vult alleen de gekozen contactmogelijkheid in en geeft daarvoor apart toestemming.'
     }
   ];
 
   const maxIntakeAnswerLabel = (question, value) => question.options.find(([id]) => id === value)?.[1] || value;
+
+  const contactNeedsPhone = (preference = '') => preference === 'telefoon' || preference === 'beide';
+  const contactNeedsEmail = (preference = '') => preference === 'email' || preference === 'beide';
+  const contactSummary = () => {
+    const parts = [];
+    if (state.contactPhone) parts.push(state.contactPhone);
+    if (state.contactEmail) parts.push(state.contactEmail);
+    return parts.join(' · ');
+  };
 
   const renderMaxIntakeTranscript = () => {
     const answers = state.maxIntakeAnswers || {};
@@ -461,7 +496,8 @@
       ['Eerdere chatsignalen', summaryUsed ? 'Door Danny vrijgegeven' : summarySkipped ? 'Niet overgenomen' : 'AI-herkend · nog bevestigen', summaryUsed ? 'confirmed' : summarySkipped ? 'withheld' : 'candidate'],
       ['Druk van vandaag', answers.urgent ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[1], answers.urgent) : 'Nog onbekend', answers.urgent ? 'confirmed' : 'unknown'],
       ['Wat nog functioneert', answers.operatie ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[2], answers.operatie) : 'Nog onbekend', answers.operatie ? 'confirmed' : 'unknown'],
-      ['Gewenste hulp', answers.hulp ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[3], answers.hulp) : 'Nog onbekend', answers.hulp ? 'confirmed' : 'unknown']
+      ['Gewenste hulp', answers.hulp ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[3], answers.hulp) : 'Nog onbekend', answers.hulp ? 'confirmed' : 'unknown'],
+      ['Contactvoorkeur', answers.contact ? (contactSummary() || maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[4], answers.contact)) : 'Nog onbekend', answers.contact ? 'confirmed' : 'unknown']
     ];
     return `<section class="max-intake-screen" aria-labelledby="max-intake-title">
       <header class="max-entry-header">
@@ -486,7 +522,16 @@
             <div class="max-intake-options">${currentQuestion.options.map(([value, label]) => `<button type="button" data-intake-answer="${escapeHtml(value)}">${escapeHtml(label)}</button>`).join('')}</div>
             <p>Je kunt altijd stoppen. Er wordt nog niets naar een expert gestuurd.</p>
           </div>` : ''}
-          ${!state.maxIntakeSubmitted && !currentQuestion ? `<div class="max-intake-ready"><span>Eerste overzicht gereed</span><h2>Dit is genoeg voor een eerste menselijke beoordeling.</h2><p>Er worden nog geen documenten, accountantsgegevens of juridische conclusies toegevoegd.</p><button type="button" id="submit-max-intake">Verstuur eerste intake naar Max <span aria-hidden="true">→</span></button></div>` : ''}
+          ${!state.maxIntakeSubmitted && !currentQuestion ? `<form class="max-intake-ready max-contact-form" id="max-contact-form" novalidate>
+            <span>Contact en toestemming</span><h2>Hoe kan Max je veilig bereiken?</h2><p>Vul alleen in wat je zojuist hebt gekozen. Deze fictieve demonstratie verstuurt niets extern.</p>
+            <div class="max-contact-fields">
+              ${contactNeedsPhone(answers.contact) ? `<label for="contact-phone">Telefoonnummer</label><input id="contact-phone" name="phone" type="tel" autocomplete="tel" value="${escapeHtml(state.contactPhone)}" placeholder="Bijvoorbeeld 06 12 34 56 78">` : ''}
+              ${contactNeedsEmail(answers.contact) ? `<label for="contact-email">E-mailadres</label><input id="contact-email" name="email" type="email" autocomplete="email" value="${escapeHtml(state.contactEmail)}" placeholder="Bijvoorbeeld danny@voorbeeld.nl">` : ''}
+            </div>
+            <label class="max-contact-consent" for="contact-consent"><input id="contact-consent" type="checkbox" ${state.contactConsent ? 'checked' : ''}><span>Max mag deze contactgegevens uitsluitend gebruiken voor opvolging van deze eerste intake.</span></label>
+            ${state.contactError ? `<p class="max-contact-error" role="alert">${escapeHtml(state.contactError)}</p>` : ''}
+            <button type="submit" id="submit-max-intake">Bevestig contact en verstuur intake <span aria-hidden="true">→</span></button>
+          </form>` : ''}
         </section>
       </main>
       <dialog class="lineage-dialog" id="intake-lineage"><button type="button" id="close-intake-lineage" aria-label="Sluit herkomst">×</button><span>Agora · herkomstlaag</span><h2>Waarom dit overzicht aantoonbaar blijft</h2><ul><li>Een antwoord wordt pas bevestigd nadat Danny zelf kiest.</li><li>AI-herkenning blijft afzonderlijk gemarkeerd.</li><li>Iedere wijziging bewaart actor, moment en vorige status.</li><li>Deze eerste intake bevat nog geen expertbesluit.</li></ul></dialog>
@@ -535,12 +580,34 @@
     </aside>`;
   };
 
+  const renderManagementTransfer = () => `<section class="management-transfer-screen" aria-labelledby="management-transfer-title">
+    <header class="management-header">
+      <div class="management-brand"><strong>MAX<span>OS</span></strong><small>Gecontroleerde overdracht</small></div>
+      <div class="management-user"><span>Besluit door</span><strong>Directie</strong><i aria-hidden="true">DR</i></div>
+    </header>
+    <main class="management-transfer-main">
+      <span>Menselijke toewijzing · ${escapeHtml(managementSignalTime())}</span>
+      <h1 id="management-transfer-title">Frank ontvangt een taak, geen conclusie.</h1>
+      <p>Max-OS voert het managementbesluit uit. Agora bewaart wie wat heeft toegewezen, waarop dat rust en waar het menselijke oordeel nog moet beginnen.</p>
+      <div class="management-transfer-steps" role="status" aria-label="Toewijzing aan Frank vastgelegd">
+        <article><i aria-hidden="true">1</i><div><strong>Managementbesluit geregistreerd</strong><small>Actor, tijdstip en gekozen expertise zijn vastgelegd.</small></div></article>
+        <article><i aria-hidden="true">2</i><div><strong>Agora maakt overdrachtslog</strong><small>Herkomst, doel en beslisgrens blijven afzonderlijk zichtbaar.</small></div></article>
+        <article><i aria-hidden="true">3</i><div><strong>Privacyveilige melding gereed</strong><small>Frank ziet op zijn vergrendelscherm nog geen naam of dossierinhoud.</small></div></article>
+      </div>
+      <div class="management-transfer-boundary"><span>Overdrachtsgrens</span><p>Geen expertoordeel · geen routebesluit · geen documenttoegang · geen accountantstoestemming.</p></div>
+      <div class="management-transfer-actions"><button type="button" class="primary" id="open-frank-signal">Open Franks mobiele melding <span aria-hidden="true">→</span></button><button type="button" id="close-management-transfer">Terug naar management</button></div>
+    </main>
+  </section>`;
+
   const renderMaxManagement = () => {
+    if (state.managementTransferOpen) return renderManagementTransfer();
     const answers = state.maxIntakeAnswers || {};
     const urgent = answers.urgent ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[1], answers.urgent) : 'Nog niet bevestigd';
     const operation = answers.operatie ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[2], answers.operatie) : 'Nog niet bevestigd';
     const help = answers.hulp ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[3], answers.hulp) : 'Nog niet bevestigd';
+    const contact = contactSummary() || 'Geen contactmogelijkheid bevestigd';
     const opened = state.managementSignalOpened;
+    const expanded = state.managementSignalExpanded;
     const assigned = state.managementSignalAssigned;
     return `<section class="management-screen" aria-labelledby="management-title">
       <header class="management-header">
@@ -554,10 +621,10 @@
           <button type="button" aria-label="Experts" disabled><span aria-hidden="true">◎</span></button>
         </nav>
         <main class="management-main">
-          <header class="management-titlebar"><div><span>Vandaag · ${escapeHtml(managementSignalTime())}</span><h1 id="management-title">Signalen die aandacht vragen</h1><p>AI ordent. Management bepaalt of en door wie een intake wordt opgevolgd.</p></div><div class="management-count"><strong>1</strong><span>nieuw</span></div></header>
-          <div class="management-grid ${opened ? 'is-open' : ''}">
+          <header class="management-titlebar"><div><span>Vandaag · ${escapeHtml(managementSignalTime())}</span><h1 id="management-title">Signalen die aandacht vragen</h1><p>AI ordent. Management bepaalt of en door wie een intake wordt opgevolgd.</p></div><div class="management-count"><strong>1</strong><span>${opened ? 'gelezen' : 'nieuw'}</span></div></header>
+          <div class="management-grid ${expanded ? 'is-open' : ''}">
             <section class="signal-inbox" aria-label="Nieuwe signalen">
-              <button type="button" class="management-signal ${opened ? 'selected' : ''}" id="open-management-signal" aria-expanded="${opened}">
+              <button type="button" class="management-signal ${opened ? 'read' : 'unread'} ${expanded ? 'selected' : ''}" id="open-management-signal" aria-expanded="${expanded}">
                 <span class="signal-pulse" aria-hidden="true"></span>
                 <span class="signal-copy"><small>Eerste intake · Danny</small><strong>Betaaldruk terwijl de operatie nog draait</strong><span>Ontvangen ${escapeHtml(managementSignalTime())}</span></span>
                 <span class="signal-tags"><i class="urgent">Tijdskritiek · hoog</i><i class="potential">Potentie · onderzoeken</i></span>
@@ -565,7 +632,7 @@
               </button>
               <p class="signal-boundary">De kleur geeft prioriteit en onderzoeksrichting aan. Niet de uitkomst.</p>
             </section>
-            ${opened ? `<section class="signal-detail" aria-label="Geopend intakesignaal">
+            ${expanded ? `<section class="signal-detail" aria-label="Geopend intakesignaal">
               <header><div><span>AI-intakesamenvatting</span><h2>Danny vraagt om regie voordat de situatie verder escaleert.</h2></div><button type="button" id="close-management-signal" aria-label="Sluit signaal">×</button></header>
               <div class="signal-assessment">
                 <article class="urgent"><span>Tijdskritiek</span><strong>Hoog</strong><p>${escapeHtml(urgent)}</p><small>Door Danny bevestigd</small></article>
@@ -573,14 +640,14 @@
               </div>
               <div class="signal-columns">
                 <article><span>Hulpvraag</span><p>${escapeHtml(help)}</p><small>Door Danny bevestigd</small></article>
+                <article><span>Contact opnemen</span><p>${escapeHtml(contact)}</p><small>Door Danny vrijgegeven voor intake-opvolging</small></article>
                 <article><span>Nog nodig</span><p>Actuele cijfers, schuldenoverzicht en menselijke beoordeling.</p><small>Ontbreekt</small></article>
               </div>
               <button type="button" class="management-lineage" id="show-management-lineage"><span aria-hidden="true">◎</span> Waarom geeft Agora dit signaal zo weer?</button>
               <footer class="management-actions">
-                <div><span>Voorgestelde expertise</span><strong>Frank · bedrijfsherstel</strong><small>AI-voorstel, nog niet toegewezen</small></div>
-                <button type="button" id="assign-management-signal" ${assigned ? 'disabled' : ''}>${assigned ? 'Toegewezen aan Frank' : 'Zet door naar Frank'} <span aria-hidden="true">→</span></button>
+                <div><span>Voorgestelde expertise</span><strong>Frank · bedrijfsherstel</strong><small>${assigned ? 'Door directie toegewezen' : 'AI-voorstel, nog niet toegewezen'}</small></div>
+                ${assigned ? `<button type="button" id="show-management-transfer">Bekijk overdracht <span aria-hidden="true">→</span></button>` : `<button type="button" id="assign-management-signal">Zet door naar Frank <span aria-hidden="true">→</span></button>`}
               </footer>
-              ${assigned ? `<div class="assignment-receipt" role="status"><span>Toewijzing vastgelegd</span><p>Frank ontvangt in deze demonstratie een privacyveilige melding. Er is nog geen overeenkomst, documenttoegang of accountantstoestemming.</p><button type="button" id="open-frank-signal">Demonstratie: bekijk Franks melding <span aria-hidden="true">→</span></button></div>` : ''}
             </section>` : `<section class="signal-zero"><span aria-hidden="true">◇</span><h2>Open het nieuwe signaal</h2><p>Bekijk wat AI heeft herkend, wat Danny heeft bevestigd en wat nog door een mens moet worden beoordeeld.</p></section>`}
           </div>
         </main>
@@ -1058,10 +1125,30 @@
       saveSession();
       setTimeout(render, 280);
     }));
-    document.querySelector('#submit-max-intake')?.addEventListener('click', () => {
+    document.querySelector('#max-contact-form')?.addEventListener('submit', (event) => {
+      event.preventDefault();
       if ((state.maxIntakeStep || 0) < MAX_INTAKE_QUESTIONS.length) return;
+      const preference = state.maxIntakeAnswers?.contact || '';
+      const phone = document.querySelector('#contact-phone')?.value.trim() || '';
+      const email = document.querySelector('#contact-email')?.value.trim() || '';
+      const consent = Boolean(document.querySelector('#contact-consent')?.checked);
+      state.contactPhone = phone;
+      state.contactEmail = email;
+      state.contactConsent = consent;
+      const phoneValid = !contactNeedsPhone(preference) || phone.replace(/\D/g, '').length >= 7;
+      const emailValid = !contactNeedsEmail(preference) || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!phoneValid) state.contactError = 'Vul een geldig telefoonnummer in.';
+      else if (!emailValid) state.contactError = 'Vul een geldig e-mailadres in.';
+      else if (!consent) state.contactError = 'Geef eerst toestemming om deze contactgegevens voor opvolging te gebruiken.';
+      else state.contactError = '';
+      if (state.contactError) {
+        saveSession();
+        render();
+        return;
+      }
       state.maxIntakeSubmitted = true;
       state.managementSignalCreatedAt = new Date().toISOString();
+      record('contact_details_confirmed', preference);
       record('max_intake_submitted', 'management-review-pending');
       saveSession();
       render();
@@ -1073,24 +1160,37 @@
     });
     document.querySelector('#open-management-signal')?.addEventListener('click', () => {
       state.managementSignalOpened = true;
+      state.managementSignalExpanded = true;
       record('management_signal_opened', 'first-intake');
       saveSession();
       render();
     });
     document.querySelector('#close-management-signal')?.addEventListener('click', () => {
-      state.managementSignalOpened = false;
+      state.managementSignalExpanded = false;
       saveSession();
       render();
     });
     document.querySelector('#assign-management-signal')?.addEventListener('click', () => {
       if (!state.managementSignalOpened || state.managementSignalAssigned) return;
       state.managementSignalAssigned = true;
+      state.managementTransferOpen = true;
       record('management_signal_assigned', 'frank-bedrijfsherstel');
-      saveSession();
-      render();
+      record('management_transfer_opened', 'agora-handoff');
+      renderManagementFromTop();
+    });
+    document.querySelector('#show-management-transfer')?.addEventListener('click', () => {
+      if (!state.managementSignalAssigned) return;
+      state.managementTransferOpen = true;
+      record('management_transfer_reopened', 'agora-handoff');
+      renderManagementFromTop();
+    });
+    document.querySelector('#close-management-transfer')?.addEventListener('click', () => {
+      state.managementTransferOpen = false;
+      renderManagementFromTop();
     });
     document.querySelector('#open-frank-signal')?.addEventListener('click', () => {
       if (!state.managementSignalAssigned) return;
+      state.managementTransferOpen = false;
       record('frank_signal_projection_opened', 'privacy-safe-notification');
       unlockAndGo('frank-signal');
     });
