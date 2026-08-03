@@ -94,9 +94,10 @@
      Voluit in identiteitsblokken en stempels, voornaam in gesprekstekst. */
   const EXPERT_NAME = 'Frank van Meenen';
   const EXPERT_FIRST = 'Frank';
-  const EXPERT_ROLE = 'Business Management & Insolventie Expert';
-  const EXPERT_DOMAIN = 'continuïteit en herstructurering';
-  const EXPERT_SPECIALISME = 'continuïteit · herstructurering · bijzonder beheer';
+  const EXPERT_ROLE = 'Herstructureringsspecialist';
+  const EXPERT_DOMAIN = 'herstructurering';
+  const EXPERT_SPECIALISME = 'Post-academische opleiding: Herstructureringsdeskundige';
+  const EXPERT_BIO = 'Gespecialiseerd in herstructurering van bedrijven in financieel zwaar weer. Frank analyseert snel wat er speelt, begeleidt onderhandelingen met schuldeisers en stuurt op een werkbare uitkomst — voor bedrijven die willen doorgaan én voor trajecten waarbij gecontroleerde afwikkeling de beste weg is.';
 
   const escapeHtml = (value = '') => String(value)
     .replaceAll('&', '&amp;')
@@ -1152,16 +1153,16 @@
       <figcaption>${escapeHtml(data.label)} <span>${escapeHtml(data.unit)}</span></figcaption>
       <svg viewBox="0 0 300 150" role="img" aria-label="Verloop van de beschikbare betaalruimte over dertien weken. De eerste zes weken zijn afgeleid uit aangeleverde stukken; daarna volgt een onzekere prognose die door nul zakt." preserveAspectRatio="xMidYMid meet">
         ${ticks.map((t) => `<line x1="${left}" y1="${y(t)}" x2="${right}" y2="${y(t)}" stroke="${t === 0 ? 'rgba(245,243,238,.28)' : 'rgba(245,243,238,.08)'}" stroke-width="1"></line>
-          <text x="${left - 6}" y="${y(t) + 3}" text-anchor="end" font-size="9" fill="rgba(245,243,238,.62)">${t}</text>`).join('')}
+          <text x="${left - 6}" y="${y(t) + 3}" text-anchor="end" font-size="11" fill="rgba(245,243,238,.62)">${t}</text>`).join('')}
         <line x1="${x(nowIndex)}" y1="${top}" x2="${x(nowIndex)}" y2="${bottom}" stroke="rgba(245,243,238,.2)" stroke-width="1"></line>
         <polyline points="${solid}" fill="none" stroke="#0fa8cb" stroke-width="2" stroke-linejoin="round"></polyline>
         <polyline points="${dashed}" fill="none" stroke="#0fa8cb" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round"></polyline>
         ${weeks.map((w, i) => `<circle cx="${x(i)}" cy="${y(w.value)}" r="${i === nowIndex || i === crossing ? 4 : 2.5}" fill="${i >= firstForecast ? '#09192a' : '#0fa8cb'}" stroke="#0fa8cb" stroke-width="1.5"></circle>
           <circle cx="${x(i)}" cy="${y(w.value)}" r="12" fill="transparent"><title>${escapeHtml(w.label)}: ${w.value} (${escapeHtml(w.status)})</title></circle>`).join('')}
-        <text x="${x(nowIndex) - 7}" y="${y(weeks[nowIndex].value) - 9}" text-anchor="end" font-size="9" fill="rgba(245,243,238,.86)">nu ${weeks[nowIndex].value}</text>
-        <text x="${x(crossing) - 7}" y="${y(weeks[crossing].value) + 15}" text-anchor="end" font-size="9" fill="rgba(245,243,238,.86)">ruimte op</text>
-        <text x="${left}" y="136" font-size="9" fill="rgba(245,243,238,.62)">afgeleid</text>
-        <text x="${right}" y="136" text-anchor="end" font-size="9" fill="rgba(245,243,238,.62)">prognose · onzeker</text>
+        <text x="${x(nowIndex) - 7}" y="${y(weeks[nowIndex].value) - 9}" text-anchor="end" font-size="11" fill="rgba(245,243,238,.86)">nu ${weeks[nowIndex].value}</text>
+        <text x="${x(crossing) - 7}" y="${y(weeks[crossing].value) + 15}" text-anchor="end" font-size="11" fill="rgba(245,243,238,.86)">ruimte op</text>
+        <text x="${left}" y="136" font-size="11" fill="rgba(245,243,238,.62)">afgeleid</text>
+        <text x="${right}" y="136" text-anchor="end" font-size="11" fill="rgba(245,243,238,.62)">prognose · onzeker</text>
       </svg>
       <p class="frank-chart-note">${escapeHtml(data.note)}</p>
       <details class="frank-chart-table">
@@ -1309,7 +1310,7 @@
 
         <section class="slot-block slot-outro" aria-label="Buiten de rol">
           <h2>Buiten de rol</h2>
-          <p>Kompas Metaaltechniek bestaat niet, Gerard Dulk bestaat niet, en de bedragen zijn verzonnen. Wat wel bestaat is de mechaniek die je net hebt gebruikt: één plek waar een uitspraak zijn bron, zijn status en zijn moment bij zich houdt, en poorten die pas opengaan als iemand ze zelf opent.</p>
+          <p>Kompas Metaaltechniek bestaat niet, Gerard Dulk bestaat niet, en de bedragen zijn verzonnen. Wat er wel al werkt is de processor, oftewel de mechaniek die je net hebt gebruikt: één plek waar een uitspraak zijn bron, zijn status en zijn moment bij zich houdt, en poorten die pas opengaan als iemand ze zelf opent.</p>
           <p>Wat dat voor Max betekent, staat in het mastervoorstel. Wat het voor jouw eigen dossiers zou betekenen, weet jij beter dan ik.</p>
           <p class="slot-sign">Rob de Rooij · R.O.B. Concepting<br><span>Agora — samenwerkingsverband met Frank van Meenen</span></p>
         </section>
@@ -1350,8 +1351,9 @@
             <div class="ra-poort-id">
               <strong>${escapeHtml(EXPERT_NAME)}</strong>
               <span>${escapeHtml(EXPERT_ROLE)}</span>
-              <em>Specialisme: ${escapeHtml(EXPERT_SPECIALISME)}</em>
+              <em>${escapeHtml(EXPERT_SPECIALISME)}</em>
             </div>
+            <p class="ra-poort-bio">${escapeHtml(EXPERT_BIO)}</p>
             <dl class="ra-poort-meta">
               <div><dt>Wat dit niet is</dt><dd>Geen opdracht aan u en geen beoordeling van uw eerdere werk. Geen verzoek om een verklaring of een oordeel over de continuïteitsveronderstelling.</dd></div>
               <div><dt>Datapositie</dt><dd>U ziet uitsluitend wat uw cliënt zelf heeft vrijgegeven. Wat hij niet vrijgaf, blijft ook voor u gesloten.</dd></div>

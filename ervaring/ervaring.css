@@ -498,6 +498,7 @@ button { cursor: pointer; }
   .frank-review-ai ol { display: block; }
 }
 
+
 /* Afronding — de demo stapt hier uit de rol, dus R.O.B.'s eigen schaal in plaats
    van Max' goud. Presentatieoppervlak: groot genoeg om over te praten. */
 .poc-app.slot-mode { display: block; min-height: 100vh; background: #0e1525; }
@@ -660,6 +661,7 @@ button { cursor: pointer; }
 .ra-poort-id strong { display: block; color: #1F4E79; font-size: 17px; }
 .ra-poort-id span { display: block; margin-top: 3px; color: #1F4E79; font-size: 13px; font-weight: 700; }
 .ra-poort-id em { display: block; margin-top: 6px; color: #4A4A4A; font-size: 12px; font-style: italic; }
+.ra-poort-bio { margin: 14px 0 0; color: #1A1A1A; font-size: 13.5px; line-height: 1.6; }
 .ra-poort-meta { margin: 16px 0 0; }
 .ra-poort-meta > div, .ra-poort-you-list > div, .ra-poort-position > div, .ra-poort-figures > div { padding: 11px 0; border-bottom: 1px solid #E8ECF0; }
 .ra-poort-meta > div:last-child, .ra-poort-you-list > div:last-child, .ra-poort-position > div:last-child, .ra-poort-figures > div:last-child { border-bottom: 0; padding-bottom: 0; }
@@ -1069,4 +1071,47 @@ button { cursor: pointer; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
+
+/* ===== Leesbaarheidsbodem op kleine schermen =====
+   Op 320–560px zijn mono-labels van 9px en kleine tekst van 11px niet meer te lezen,
+   ook al halen ze het contrast. Deze laag tilt alleen de ondergrens; desktop blijft
+   zoals hij is. Invoervelden gaan naar 16px, want daaronder zoomt iOS bij focus in. */
+@media (max-width: 560px) {
+  /* labels en eyebrows in mono: 7–10px → 11px */
+  .max-wordmark small { font-size: 10px; letter-spacing: .13em; }
+  .max-poort-status, .frank-werk-status,
+  .max-poort-welcome > span, .max-poort-line > span, .max-poort-step > span, .max-poort-done > span,
+  .max-poort-entry label, .max-poort-documents > span, .max-poort-documents li b,
+  .max-poort-consent-state span, .max-poort-validation span,
+  .frank-werk-open > span, .frank-werk-line > span, .frank-werk-actions-label,
+  .frank-werk-panel > span, .frank-werk-ticks li b, .frank-werk-link span,
+  .frank-werk-figures dt, .frank-chart-table thead th, .frank-chart figcaption span,
+  .ra-poort dt, .ra-poort-table thead th, .ra-poort-done > span, .ra-poort-disclosed span,
+  .slot-eyebrow, .slot-log-verb, .slot-verbs dt span { font-size: 11px; }
+
+  /* kleine tekst en metadata: 10.5–11.5px → 12.5px */
+  .max-poort-step small, .max-poort-entry p, .max-poort-documents li i,
+  .max-poort-documents li small, .max-poort-consent-state small, .max-poort-agora,
+  .max-poort-validation small, .max-poort-waiting,
+  .frank-werk-gate, .frank-werk-source, .frank-werk-ticks li i, .frank-werk-ticks li small,
+  .frank-werk-stamp, .frank-werk-panel small, .frank-werk-link, .frank-werk-interest,
+  .frank-chart-note, .frank-chart-table summary, .frank-werk-toets-caveat,
+  .frank-werk-agora li i, .frank-werk-agora li small, .frank-werk-agora-note,
+  .ra-poort-eyebrow, .ra-poort-you-note, .ra-poort-released small, .ra-poort-disclosure small,
+  .ra-poort-submit small, .ra-status, .ra-supplied, .ra-unavailable,
+  .slot-log-time, .slot-count, .slot-sign span { font-size: 12.5px; }
+
+  /* lopende tekst en gegevenswaarden: 12–13.5px → 14.5px */
+  .max-poort-documents li span, .frank-werk-ticks li span, .frank-werk-supplied,
+  .frank-werk-figures dd, .frank-werk-agora li span, .frank-chart figcaption,
+  .frank-chart-table table, .ra-poort-topbar span, .ra-poort-id em, .ra-poort dd,
+  .ra-poort-released span, .ra-poort-table, .ra-poort-disclosed,
+  .ra-poort-disclosure-ask, .ra-poort-withheld, .ra-poort-cannot,
+  .ra-poort-done p, .ra-poort-submit p, .ra-supply-btn { font-size: 14.5px; }
+
+  /* knoppen en invoer: nooit onder 16px, anders zoomt iOS in bij focus */
+  .max-poort-entry input, .max-poort-entry button, .ra-poort input, .ra-poort button,
+  .frank-werk-buttons button, .frank-werk-panel button { font-size: 16px; }
+  .ra-supply-btn { font-size: 14.5px !important; }
 }
