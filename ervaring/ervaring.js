@@ -603,7 +603,10 @@
           <ol><li class="done">Management heeft toegewezen</li><li class="${opened ? 'done' : 'current'}">Frank opent beveiligd</li><li class="${accepted ? 'done' : opened ? 'current' : ''}">Frank neemt beoordeling aan</li></ol>
           <button type="button" class="frank-agora-button" id="show-frank-lineage">Bekijk de overdracht in Agora</button>
         </aside>
-        <div class="frank-phone ${opened ? 'is-open' : ''}">
+        <div class="frank-phone-frame">
+          <div class="frank-phone-context"><span>Mobiele melding op Franks telefoon</span><small>Beveiligde expertomgeving</small></div>
+          <span class="frank-phone-side-controls" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div class="frank-phone ${opened ? 'is-open' : ''}">
           ${opened ? `<div class="frank-expert-app">
             <header><div class="frank-expert-brand"><strong>MAX<span>OS</span></strong><small>Expert</small></div><div class="frank-expert-user"><span>Frank</span><i aria-hidden="true">F</i></div></header>
             <main>
@@ -629,6 +632,8 @@
             </article>
             <p class="frank-lock-boundary">Geen naam, dossiergegeven of mogelijke route zichtbaar op het vergrendelscherm.</p>
           </div>`}
+          <span class="frank-phone-home" aria-hidden="true"></span>
+          </div>
         </div>
       </div>
       <dialog class="lineage-dialog frank-lineage-dialog" id="frank-lineage"><button type="button" id="close-frank-lineage" aria-label="Sluit Agora-overdracht">×</button><span>Agora · overdrachtslog</span><h2>Frank ontvangt een besluit, geen conclusie</h2><ul><li>Danny heeft de eerste intake zelf verzonden.</li><li>Management heeft Frank als beoordelaar toegewezen.</li><li>Urgentie en onderzoekspotentieel blijven afzonderlijke signalen.</li><li>Frank stelt haalbaarheid en route pas na eigen controle vast.</li></ul></dialog>

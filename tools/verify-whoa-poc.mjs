@@ -103,6 +103,9 @@ if (!js.includes("{ id: 'frank-signal', label: 'Frank'") || !js.includes('Open b
 if (!js.includes("record('frank_review_accepted', 'human-assessment-pending')") || !js.includes('Frank ontvangt een besluit, geen conclusie')) {
   errors.push('Franks menselijke aanname of de Agora-overdrachtsgrens ontbreekt');
 }
+if (!js.includes('Mobiele melding op Franks telefoon') || !js.includes('frank-phone-side-controls') || !js.includes('frank-phone-home') || !css.includes('.frank-phone-context, .frank-phone-side-controls, .frank-phone-home { display: none; }')) {
+  errors.push('Franks paneel is op desktop niet duidelijk als mobiele telefoon herkenbaar');
+}
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }
