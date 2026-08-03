@@ -1754,6 +1754,17 @@
         render();
         return;
       }
+      if (value.startsWith('/')) {
+        const from = state.current;
+        handleCommand(value);
+        if (state.current === from) {
+          poortLogLine('danny', value.slice(0, 120));
+          poortLogLine('ai', 'Dat commando werkt hier niet, of de voorwaarde ervoor is nog niet vervuld. De aanlevering blijft staan waar hij staat.');
+          saveSession();
+          render();
+        }
+        return;
+      }
       poortLogLine('danny', value.slice(0, 120));
       poortLogLine('ai', poortAnswerFor(value));
       record('vervolgintake_question_asked', 'progress-unchanged');
