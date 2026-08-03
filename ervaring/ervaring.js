@@ -864,9 +864,9 @@
       id: 'cijfers',
       document: 'Actuele cijfers en liquiditeitsbeeld',
       order: 'Dit eerst, want zonder actueel beeld heeft de rest geen ijkpunt.',
-      ask: 'Begin met de meest recente cijfers en uw liquiditeitsbeeld.',
+      ask: 'Begin met de meest recente cijfers en je liquiditeitsbeeld.',
       file: 'liquiditeit-juli.xlsx',
-      help: 'De laatste cijfers die uw boekhouding kan uitdraaien, plus wat er de komende weken in en uit gaat. Actueel is hier belangrijker dan compleet.'
+      help: 'De laatste cijfers die je boekhouding kan uitdraaien, plus wat er de komende weken in en uit gaat. Actueel is hier belangrijker dan compleet.'
     },
     {
       id: 'schulden',
@@ -893,10 +893,10 @@
     if (!step) {
       return state.poortAccountantConsent
         ? 'Het dossier staat klaar voor Frank. Verder dan dit gaat deze aanlevering niet.'
-        : 'De stukken zijn binnen. Er staat nog één keuze open: mag Frank uw accountant om aanvullende cijfers vragen?';
+        : 'De stukken zijn binnen. Er staat nog één keuze open: mag Frank je accountant om aanvullende cijfers vragen?';
     }
     if (/\b(niet|snap|begrijp|hoezo|waarom|onduidelijk|help|hoe)\b/i.test(question) || question.includes('?')) {
-      return `${step.help} Ik wacht hier, u hoeft niet vooruit te lopen.`;
+      return `${step.help} Ik wacht hier, je hoeft niet vooruit te lopen.`;
     }
     return `Ik houd het bij deze stap: ${step.ask.toLowerCase()} Zeg het als iets niet duidelijk is.`;
   };
@@ -921,12 +921,12 @@
           <div class="max-poort-log" role="log" aria-live="polite">
             <article class="max-poort-welcome">
               <span>Ontvangst</span>
-              <h1 id="max-poort-title">Welkom, Danny. Ik loop dit met u af.</h1>
-              <p>U hoeft niet te bedenken wat er nodig is of in welke orde. Ik vraag één ding per keer, en ik leg uit waarom het op dat moment aan de orde is.</p>
+              <h1 id="max-poort-title">Welkom bij de vervolgintake, Danny.</h1>
+              <p>Je bent nu al een eind gekomen. Om het vervolgtraject correct en zonder veel tijdverlies in te zetten, neem ik alles stap voor stap met je door.</p>
             </article>
             <article class="max-poort-line ai">
               <span>Max AI</span>
-              <p>Eerste stap: voer de autorisatiecode in die u samen met de uitnodiging hebt gekregen.${unlocked ? '' : ' Hij staat al voor u klaar in het veld hieronder.'}</p>
+              <p>Eerste stap: voer de autorisatiecode in die je samen met de uitnodiging hebt gekregen.${unlocked ? '' : ' Hij staat al voor je klaar in het veld hieronder.'}</p>
             </article>
             ${(state.poortLog || []).map((line) => `<article class="max-poort-line ${line.role === 'danny' ? 'danny' : 'ai'}"><span>${line.role === 'danny' ? 'Danny' : 'Max AI'}</span><p>${escapeHtml(line.text)}</p></article>`).join('')}
             ${unlocked && step ? `<article class="max-poort-step" aria-label="Huidige stap">
@@ -938,15 +938,15 @@
             </article>` : ''}
             ${unlocked && !step && !consentGiven ? `<article class="max-poort-step consent" aria-label="Openstaande toestemming">
               <span>Laatste stap · toestemming</span>
-              <h2>Mag Frank uw accountant om aanvullende cijfers vragen?</h2>
-              <p class="max-poort-order">Uw accountant levert de cijfers, maar trekt het hersteltraject niet. Met deze toestemming kan Frank hem gericht bevragen zonder dat u er tussen hoeft te zitten.</p>
+              <h2>Mag Frank je accountant om aanvullende cijfers vragen?</h2>
+              <p class="max-poort-order">Je accountant levert de cijfers, maar trekt het hersteltraject niet. Met deze toestemming kan Frank hem gericht bevragen zonder dat jij ertussen hoeft te zitten.</p>
               <button type="button" id="poort-accountant-consent">Ja, Frank mag mijn accountant benaderen <span aria-hidden="true">→</span></button>
-              <small>Alleen voor aanvullende cijfers bij deze aanlevering. U kunt dit weer intrekken.</small>
+              <small>Alleen voor aanvullende cijfers bij deze aanlevering. Je kunt dit weer intrekken.</small>
             </article>` : ''}
             ${done ? `<article class="max-poort-done" role="status">
               <span>Vastgelegd</span>
               <h2>Het dossier staat klaar voor Frank.</h2>
-              <p>Agora heeft vastgelegd wat u hebt aangeleverd, wanneer, en waarop het rust. De volgende stap ligt bij uw accountant, die de cijfers aanvult. Er is nog geen overeenkomst, geen oordeel en geen keuze over een vervolgroute.</p>
+              <p>Agora heeft vastgelegd wat je hebt aangeleverd, wanneer, en waarop het rust. De volgende stap ligt bij je accountant, die de cijfers aanvult. Er is nog geen overeenkomst, geen oordeel en geen keuze over een vervolgroute.</p>
             </article>` : ''}
           </div>
           <form class="max-poort-entry" id="poort-form" autocomplete="off">
@@ -957,7 +957,7 @@
                 aria-describedby="poort-hint">
               <button type="submit">${unlocked ? 'Stuur' : 'Open de poort'}</button>
             </div>
-            <p id="poort-hint" class="${state.poortCodeError ? 'is-error' : ''}" ${state.poortCodeError ? 'role="alert"' : ''}>${escapeHtml(state.poortCodeError || (unlocked ? 'U kunt hier altijd iets tussendoor zeggen. De reeks blijft staan waar hij staat.' : 'De code staat vervaagd klaar. Eenmalig invoeren opent de geleide aanlevering.'))}</p>
+            <p id="poort-hint" class="${state.poortCodeError ? 'is-error' : ''}" ${state.poortCodeError ? 'role="alert"' : ''}>${escapeHtml(state.poortCodeError || (unlocked ? 'Je kunt hier altijd iets tussendoor zeggen. De reeks blijft staan waar hij staat.' : 'De code staat vervaagd klaar. Eenmalig invoeren opent de geleide aanlevering.'))}</p>
           </form>
         </section>
         ${unlocked ? `<aside class="max-poort-documents" aria-label="Aangeleverde stukken">
@@ -1569,7 +1569,7 @@
         state.poortUnlocked = true;
         state.poortCodeError = '';
         poortLogLine('danny', value.toUpperCase());
-        poortLogLine('ai', 'Dank u. De poort is open en u hoeft de code niet opnieuw in te voeren. Ik vraag de stukken in de orde waarin ze elkaar ondersteunen.');
+        poortLogLine('ai', 'Dank je. De poort is open en je hoeft de code niet opnieuw in te voeren. Ik vraag de stukken in de orde waarin ze elkaar ondersteunen.');
         record('vervolgintake_code_accepted', 'single-use-authorisation');
         saveSession();
         render();
@@ -1604,7 +1604,7 @@
       if (!state.poortUnlocked || poortCurrentStep() || state.poortAccountantConsent) return;
       state.poortAccountantConsent = true;
       poortLogLine('danny', 'Ja, Frank mag mijn accountant benaderen.');
-      poortLogLine('ai', 'Vastgelegd. Uw accountant wordt gericht om aanvullende cijfers gevraagd, en u ziet terug wat er is opgevraagd.');
+      poortLogLine('ai', 'Vastgelegd. Je accountant wordt gericht om aanvullende cijfers gevraagd, en je ziet terug wat er is opgevraagd.');
       record('vervolgintake_accountant_consent_given', 'accountant-gate-opened');
       record('vervolgintake_dossier_ready', 'awaiting-accountant');
       saveSession();
