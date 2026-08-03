@@ -167,6 +167,7 @@
     frankLog: [],
     frankLinkPreparedAt: null,
     frankActions: [],
+    frankError: '',
     raOpened: false,
     raDisclosed: false,
     raDelivered: [],
@@ -1173,6 +1174,26 @@
     </figure>`;
   };
 
+  const frankAnswerFor = (question = '') => {
+    if (/ontbreek|mis|nodig|waarder/i.test(question)) {
+      return `${pack.case.fields.ontbrekend.value} — status ${pack.case.fields.ontbrekend.status}. Zolang de waarderingsonderbouwing er niet is, kan geen vergelijking van waarden worden gemaakt.`;
+    }
+    if (/accountant|dulk|belang|vordering/i.test(question)) {
+      return state.raSubmittedAt
+        ? `${pack.case.accountant.identity.name} heeft aangevuld en zijn eigen positie erbij verklaard: ${pack.case.accountant.position.ownClaim.toLowerCase()}. Dat staat bij zijn cijfers.`
+        : `${pack.case.accountant.identity.name} van ${pack.case.accountant.identity.office} is vrijgegeven door de ondernemer, maar heeft nog niet aangevuld.`;
+    }
+    if (/valid|gecontroleerd|status|stand/i.test(question)) {
+      return state.poortValidatedAt
+        ? `De drie stukken zijn door jou gevalideerd op ${raStamp(state.poortValidatedAt)}. De betaalruimte blijft een afleiding en dus onzeker.`
+        : 'Er is nog niets gevalideerd. Zolang dat zo is, staat er in dit dossier niets vast.';
+    }
+    if (/route|whoa|besluit|kies/i.test(question)) {
+      return 'Ik orden wat er ligt en benoem wat ontbreekt. De route kiezen is niet aan mij.';
+    }
+    return 'Ik houd het bij wat er ligt. Vraag me wat ontbreekt, wat de stand is, of wat de accountant heeft aangeleverd.';
+  };
+
   const FRANK_ACTIONS = [
     { id: 'validate', label: 'Valideren', button: 'frank-validate' },
     { id: 'report', label: 'Rapportage', button: 'frank-report' },
@@ -1204,6 +1225,15 @@
             </article>
             ${(state.frankLog || []).map((line) => `<article class="frank-werk-line ${line.role === 'frank' ? 'frank' : 'ai'}"><span>${line.role === 'frank' ? escapeHtml(EXPERT_FIRST) : 'Max AI'}</span><p>${escapeHtml(line.text)}</p></article>`).join('')}
           </div>
+          <form class="frank-werk-entry" id="frank-form" autocomplete="off">
+            <label for="frank-input">Iets vragen, of een commando</label>
+            <div class="frank-werk-entry-row">
+              <input id="frank-input" type="text" maxlength="140" spellcheck="false"
+                placeholder="Bijvoorbeeld: wat ontbreekt er nog? — of /accountant" aria-describedby="frank-hint">
+              <button type="submit">Stuur</button>
+            </div>
+            <p id="frank-hint">${escapeHtml(state.frankError || 'Vragen worden geordend, niet beoordeeld. Commando’s met een schuine streep brengen je naar een ander scherm.')}</p>
+          </form>
           <div class="frank-werk-actions">
             <span class="frank-werk-actions-label">Beschikbare bewerkingen</span>
             <div class="frank-werk-buttons">
@@ -1263,6 +1293,15 @@
     </section>`;
   };
 
+  /* Schermen zonder eigen invoerveld moeten wel een uitweg hebben, anders loopt de
+     presentator vast. Deze balk zegt ook wat hij is: een demonstratiebediening. */
+  const demoBar = (steps) => `<div class="poc-demobar" role="navigation" aria-label="Demonstratiebediening">
+    <span>Gecontroleerde demonstratie</span>
+    <div>${steps.map((step) => step.reset
+      ? `<button type="button" id="demobar-reset">${escapeHtml(step.label)}</button>`
+      : `<button type="button" data-command="${escapeHtml(step.command)}">${escapeHtml(step.label)}</button>`).join('')}</div>
+  </div>`;
+
   const renderAfronding = () => {
     commandInput.placeholder = 'Einde van de demonstratie';
     commandHelp.textContent = 'Deze terugblik is opgebouwd uit het logboek van deze doorloop.';
@@ -1314,6 +1353,10 @@
           <p>Wat dat voor Max betekent, staat in het mastervoorstel. Wat het voor jouw eigen dossiers zou betekenen, weet jij beter dan ik.</p>
           <p class="slot-sign">Rob de Rooij · R.O.B. Concepting<br><span>Agora — samenwerkingsverband met Frank van Meenen</span></p>
         </section>
+        ${demoBar([
+          { command: '/werkruimte', label: '← Expertwerkruimte' },
+          { reset: true, label: 'Opnieuw beginnen' }
+        ])}
       </main>
     </section>`;
   };
@@ -1433,6 +1476,9 @@
               </div>`
             : ''}
         </section>` : ''}
+        ${demoBar(submitted
+          ? [{ command: '/werkruimte', label: '← Expertwerkruimte' }, { command: '/afronding', label: 'Afronding →' }]
+          : [{ command: '/werkruimte', label: '← Expertwerkruimte' }])}
       </main>
     </section>`;
   };
@@ -2026,6 +2072,33 @@
     document.querySelector('#poort-input')?.addEventListener('input', (event) => {
       event.target.classList.remove('is-prefilled');
     });
+    document.querySelector('#demobar-reset')?.addEventListener('click', () => {
+      resetButton?.click();
+    });
+    document.querySelector('#frank-form')?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const field = document.querySelector('#frank-input');
+      const value = String(field?.value || '').trim();
+      if (!value) return;
+      state.frankError = '';
+      if (value.startsWith('/')) {
+        const from = state.current;
+        handleCommand(value);
+        if (state.current === from) {
+          state.frankError = 'Dat commando werkt hier niet, of de voorwaarde ervoor is nog niet vervuld.';
+          saveSession();
+          render();
+        }
+        return;
+      }
+      frankLogLine('frank', value.slice(0, 140));
+      frankLogLine('ai', frankAnswerFor(value));
+      record('frank_question_asked', 'ordering-not-judging');
+      saveSession();
+      render();
+    });
+    const frankLog = document.querySelector('.frank-werk-log');
+    if (frankLog) frankLog.scrollTop = frankLog.scrollHeight;
     document.querySelector('#frank-validate')?.addEventListener('click', () => {
       if (state.poortValidatedAt) return;
       if ((state.poortDelivered || []).length < POORT_STEPS.length) return;

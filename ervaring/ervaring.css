@@ -528,7 +528,7 @@ button { cursor: pointer; }
 .slot-verbs > div.is-absent { background: #101728; }
 .slot-verbs dt { color: #e8e4dc; font-size: 15px; font-weight: 500; }
 .slot-verbs dt span { margin-left: 7px; color: #0fa8cb; font: 10px/1 "IBM Plex Mono", monospace; }
-.slot-verbs > div.is-unused dt span { color: rgba(232,228,220,.5); }
+.slot-verbs > div.is-unused dt span { color: rgba(232,228,220,.68); }
 .slot-verbs dd { margin: 6px 0 0; color: rgba(232,228,220,.74); font-size: 13.5px; line-height: 1.6; }
 .slot-verbs > div.is-absent dd { color: rgba(232,228,220,.62); }
 .slot-boundary { margin: 20px 0 0; padding: 15px 17px; border-left: 3px solid #e8391e; background: #131b2e; color: rgba(232,228,220,.86); font-size: 14px; line-height: 1.65; }
@@ -557,9 +557,10 @@ button { cursor: pointer; }
 .frank-werk-header { flex: none; min-height: 76px; padding: 14px clamp(18px,4vw,44px); display: flex; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid rgba(245,243,238,.09); }
 .frank-werk-status { display: inline-flex; align-items: center; gap: 9px; color: rgba(245,243,238,.7); font: 10px/1.3 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
 .frank-werk-status i { width: 7px; height: 7px; border-radius: 50%; background: #0fa8cb; box-shadow: 0 0 0 4px rgba(15,168,203,.14); }
-.frank-werk-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0,1fr) 348px; }
+.frank-werk-body { flex: 1; min-height: 0; width: 100%; max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: minmax(0,1fr) 348px; }
 .frank-werk-chat { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
-.frank-werk-log { flex: 1; min-height: 0; overflow: auto; padding: clamp(24px,4vw,44px) clamp(18px,4vw,44px) 20px; display: grid; align-content: start; gap: 13px; max-width: 740px; }
+.frank-werk-log { flex: 1; min-height: 0; overflow: auto; padding: clamp(24px,4vw,44px) clamp(18px,4vw,44px) 20px; display: grid; align-content: start; gap: 13px; }
+.frank-werk-open > p, .frank-werk-line p { max-width: 66ch; }
 .frank-werk-open > span, .frank-werk-line > span { color: #c5912a; font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
 .frank-werk-open h1 { margin: 12px 0 11px; font-size: clamp(25px,3.2vw,34px); line-height: 1.1; letter-spacing: -.03em; font-weight: 500; }
 .frank-werk-open > p { margin: 0; color: rgba(245,243,238,.68); font-size: 14.5px; line-height: 1.65; }
@@ -568,7 +569,15 @@ button { cursor: pointer; }
 .frank-werk-line.frank > span { color: #d9ae57; }
 .frank-werk-line > span { color: rgba(245,243,238,.62); }
 .frank-werk-line p { margin: 6px 0 0; color: rgba(245,243,238,.82); font-size: 14px; line-height: 1.6; }
-.frank-werk-actions { flex: none; padding: 16px clamp(18px,4vw,44px) 20px; border-top: 1px solid rgba(245,243,238,.1); background: #0b1d30; }
+.frank-werk-entry { flex: none; padding: 16px clamp(18px,4vw,44px) 4px; border-top: 1px solid rgba(245,243,238,.1); background: #0b1d30; }
+.frank-werk-entry label { display: block; color: rgba(245,243,238,.62); font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.frank-werk-entry-row { margin-top: 9px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; }
+.frank-werk-entry input { min-height: 46px; padding: 12px 14px; border: 1px solid rgba(245,243,238,.24); background: #09192a; color: #f5f3ee; font-size: 15px; }
+.frank-werk-entry input:focus-visible { border-color: #0fa8cb; }
+.frank-werk-entry button { min-height: 46px; padding: 12px 19px; border: 1px solid #0fa8cb; background: #0fa8cb; color: #09192a; font-weight: 600; }
+.frank-werk-entry button:hover, .frank-werk-entry button:focus-visible { background: #52c4dd; border-color: #52c4dd; }
+.frank-werk-entry p { margin: 9px 0 0; color: rgba(245,243,238,.66); font-size: 11px; line-height: 1.55; }
+.frank-werk-actions { flex: none; padding: 10px clamp(18px,4vw,44px) 20px; background: #0b1d30; }
 .frank-werk-actions-label { color: rgba(245,243,238,.62); font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
 .frank-werk-buttons { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 9px; }
 .frank-werk-buttons button { min-height: 46px; padding: 11px 17px; border: 1px solid #c5912a; background: #c5912a; color: #09192a; font-weight: 600; }
@@ -1073,6 +1082,17 @@ button { cursor: pointer; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
 }
 
+/* Demonstratiebediening voor schermen zonder eigen invoerveld. */
+.poc-demobar { margin-top: 40px; padding-top: 18px; border-top: 1px solid rgba(122,110,133,.34); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 18px; }
+.poc-demobar > span { color: rgba(232,228,220,.68); font: 9px/1.4 "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+.poc-demobar > div { display: flex; flex-wrap: wrap; gap: 9px; }
+.poc-demobar button { min-height: 42px; padding: 10px 15px; border: 1px solid rgba(122,110,133,.5); border-radius: 3px; background: transparent; color: inherit; font-family: inherit; font-size: 12.5px; cursor: pointer; }
+.poc-demobar button:hover, .poc-demobar button:focus-visible { border-color: #0fa8cb; color: #0fa8cb; }
+.ra-poort .poc-demobar { border-top-color: #D8DEE4; }
+.ra-poort .poc-demobar > span { color: #4A4A4A; }
+.ra-poort .poc-demobar button { border-color: #D8DEE4; color: #1F4E79; }
+.ra-poort .poc-demobar button:hover, .ra-poort .poc-demobar button:focus-visible { border-color: #1F4E79; color: #1F4E79; }
+
 /* ===== Leesbaarheidsbodem op kleine schermen =====
    Op 320–560px zijn mono-labels van 9px en kleine tekst van 11px niet meer te lezen,
    ook al halen ze het contrast. Deze laag tilt alleen de ondergrens; desktop blijft
@@ -1112,6 +1132,9 @@ button { cursor: pointer; }
 
   /* knoppen en invoer: nooit onder 16px, anders zoomt iOS in bij focus */
   .max-poort-entry input, .max-poort-entry button, .ra-poort input, .ra-poort button,
-  .frank-werk-buttons button, .frank-werk-panel button { font-size: 16px; }
+  .frank-werk-buttons button, .frank-werk-panel button,
+  .frank-werk-entry input, .frank-werk-entry button { font-size: 16px; }
+  .frank-werk-entry label { font-size: 11px; }
+  .frank-werk-entry p { font-size: 12.5px; }
   .ra-supply-btn { font-size: 14.5px !important; }
 }
