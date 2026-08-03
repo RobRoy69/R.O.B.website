@@ -15,6 +15,7 @@
     { id: 'vervolgintake', label: 'Vervolgintake', detail: 'geleid aanleveren' },
     { id: 'ondernemer', label: 'Ondernemer', detail: 'dossier vormen' },
     { id: 'toestemming', label: 'Toestemming', detail: 'gericht delen' },
+    { id: 'accountantpoort', label: 'Accountantpoort', detail: 'gericht bevragen' },
     { id: 'accountant', label: 'Accountant', detail: 'onderbouwen' },
     { id: 'expert', label: 'Expertpoort', detail: 'menselijk besluit' },
     { id: 'whoa', label: 'Command Room', detail: 'WHOA voorbereiden' },
@@ -40,6 +41,14 @@
   let chatDemoRunning = false;
   let managementTransitionTimer = null;
   let poortValidationTimer = null;
+
+  /* Franks identiteit staat op één plek. Canon: 20voor12/CLAUDE.md sectie 3.
+     Voluit in identiteitsblokken en stempels, voornaam in gesprekstekst. */
+  const EXPERT_NAME = 'Frank van Meenen';
+  const EXPERT_FIRST = 'Frank';
+  const EXPERT_ROLE = 'Business Management & Insolventie Expert';
+  const EXPERT_DOMAIN = 'continuïteit en herstructurering';
+  const EXPERT_SPECIALISME = 'continuïteit · herstructurering · bijzonder beheer';
 
   const escapeHtml = (value = '') => String(value)
     .replaceAll('&', '&amp;')
@@ -104,7 +113,12 @@
     poortLog: [],
     poortCodeError: '',
     poortAccountantConsent: false,
+    poortConsentAt: null,
     poortValidatedAt: null,
+    raOpened: false,
+    raDisclosed: false,
+    raDelivered: [],
+    raSubmittedAt: null,
     aiMode: null,
     messages: [
       { role: 'assistant', content: 'Dit is een neutrale ingang. Er is nog geen dossier en er is nog geen route gekozen.' }
@@ -168,7 +182,7 @@
     if (!ROUTE.some((item) => item.id === id) || !state.unlocked.includes(id)) return false;
     state.current = id;
     state.role = ({
-      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', vervolgintake: 'ondernemer', ondernemer: 'ondernemer', toestemming: 'ondernemer',
+      chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', vervolgintake: 'ondernemer', accountantpoort: 'accountant', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
       leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever'
     })[id];
@@ -681,8 +695,8 @@
               </div>
               <button type="button" class="management-lineage" id="show-management-lineage"><span aria-hidden="true">◎</span> Waarom geeft Agora dit signaal zo weer?</button>
               <footer class="management-actions">
-                <div><span>Voorgestelde expertise</span><strong>Frank · bedrijfsherstel</strong><small>${assigned ? 'Door directie toegewezen' : 'AI-voorstel, nog niet toegewezen'}</small></div>
-                ${assigned ? `<button type="button" id="show-management-transfer">Bekijk overdracht <span aria-hidden="true">→</span></button>` : `<button type="button" id="assign-management-signal">Zet door naar Frank <span aria-hidden="true">→</span></button>`}
+                <div><span>Voorgestelde expertise</span><strong>${escapeHtml(EXPERT_NAME)} · ${escapeHtml(EXPERT_DOMAIN)}</strong><small>${assigned ? 'Door directie toegewezen' : 'AI-voorstel, nog niet toegewezen'}</small></div>
+                ${assigned ? `<button type="button" id="show-management-transfer">Bekijk overdracht <span aria-hidden="true">→</span></button>` : `<button type="button" id="assign-management-signal">Zet door naar ${escapeHtml(EXPERT_FIRST)} <span aria-hidden="true">→</span></button>`}
               </footer>
             </section>` : `<section class="signal-zero"><span aria-hidden="true">◇</span><h2>Open het nieuwe signaal</h2><p>Bekijk wat AI heeft herkend, wat Danny heeft bevestigd en wat nog door een mens moet worden beoordeeld.</p></section>`}
           </div>
@@ -846,11 +860,11 @@
         <p class="danny-invitation-boundary">Max legt vast wat is gevraagd en wat u antwoordt. Beoordelen en beslissen blijft mensenwerk.</p>
       </div>` : `<div class="danny-invitation-lock">
         <span>Beveiligde uitnodiging · ${escapeHtml(managementSignalTime())}</span>
-        <h1 id="danny-invitation-title">Frank heeft u een uitnodiging gestuurd.</h1>
+        <h1 id="danny-invitation-title">${escapeHtml(EXPERT_FIRST)} heeft u een uitnodiging gestuurd.</h1>
         <p>U hebt elkaar net gesproken. In deze uitnodiging staat wat de vervolgintake van u vraagt.</p>
         <article class="danny-invitation-sender">
           <span>Afzender</span>
-          <strong>Frank · bedrijfsherstel</strong>
+          <strong>${escapeHtml(EXPERT_NAME)} · ${escapeHtml(EXPERT_ROLE)}</strong>
           <small>Max Finance &amp; Legal</small>
         </article>
         <button type="button" id="open-danny-invitation-link">Open de beveiligde uitnodiging</button>
@@ -860,8 +874,6 @@
   };
 
   const POORT_CODE = 'MAX-7F2K';
-  const EXPERT_NAME = 'Frank';
-  const EXPERT_DOMAIN = 'bedrijfsherstel';
 
   const poortValidationStamp = () => {
     const value = state.poortValidatedAt ? new Date(state.poortValidatedAt) : null;
@@ -875,7 +887,7 @@
       poortValidationTimer = null;
       if (state.current !== 'vervolgintake' || !state.poortAccountantConsent || state.poortValidatedAt) return;
       state.poortValidatedAt = new Date().toISOString();
-      poortLogLine('ai', `${EXPERT_NAME} heeft de aanlevering doorgenomen en alle drie de stukken gevalideerd. Wat hij heeft gezien en wanneer, staat vast.`);
+      poortLogLine('ai', `${EXPERT_FIRST} heeft de aanlevering doorgenomen en alle drie de stukken gevalideerd. Wat hij heeft gezien en wanneer, staat vast.`);
       record('vervolgintake_expert_validated', 'human-validation-after-delivery');
       saveSession();
       render();
@@ -938,7 +950,7 @@
     return `<section class="max-poort" aria-labelledby="max-poort-title">
       <header class="max-poort-header">
         <div class="max-wordmark" aria-label="Max Finance &amp; Legal, Bedrijfsherstel"><strong>Max Finance <span>&amp;</span> Legal</strong><small>Vervolgintake</small></div>
-        <span class="max-poort-status"><i aria-hidden="true"></i>${unlocked ? (validated ? `Gevalideerd door ${escapeHtml(EXPERT_NAME)}` : done ? 'Dossier aangeleverd' : `Stap ${Math.min(delivered.length + 1, POORT_STEPS.length + 1)} van ${POORT_STEPS.length + 1}`) : 'Poort gesloten'}</span>
+        <span class="max-poort-status"><i aria-hidden="true"></i>${unlocked ? (validated ? `Gevalideerd door ${escapeHtml(EXPERT_FIRST)}` : done ? 'Dossier aangeleverd' : `Stap ${Math.min(delivered.length + 1, POORT_STEPS.length + 1)} van ${POORT_STEPS.length + 1}`) : 'Poort gesloten'}</span>
       </header>
       <div class="max-poort-body${unlocked ? ' is-open' : ''}">
         <section class="max-poort-stream" aria-label="Geleide aanlevering">
@@ -969,9 +981,9 @@
             </article>` : ''}
             ${done && !validated ? `<article class="max-poort-done" role="status">
               <span>Aangeleverd</span>
-              <h2>Het dossier staat klaar voor ${escapeHtml(EXPERT_NAME)}.</h2>
-              <p>Alles wat je hebt aangeleverd staat vast met moment en herkomst. ${escapeHtml(EXPERT_NAME)} kijkt het na; zolang dat niet is gebeurd, is er niets gevalideerd.</p>
-              <p class="max-poort-waiting" aria-live="polite"><i aria-hidden="true"></i>In beoordeling bij ${escapeHtml(EXPERT_NAME)}</p>
+              <h2>Het dossier staat klaar voor ${escapeHtml(EXPERT_FIRST)}.</h2>
+              <p>Alles wat je hebt aangeleverd staat vast met moment en herkomst. ${escapeHtml(EXPERT_FIRST)} kijkt het na; zolang dat niet is gebeurd, is er niets gevalideerd.</p>
+              <p class="max-poort-waiting" aria-live="polite"><i aria-hidden="true"></i>In beoordeling bij ${escapeHtml(EXPERT_FIRST)}</p>
             </article>` : ''}
             ${validated ? `<article class="max-poort-done is-validated" role="status">
               <span>Gevalideerd</span>
@@ -1070,6 +1082,124 @@
     ['blockade', 'Is de blokkade voldoende onderzocht?', ['Ja, als werkhypothese', 'Nee', 'Onvoldoende informatie']],
     ['route', 'Welke voorbereidingsroute is passend genoeg om te openen?', ['WHOA-kandidaat', 'Regulier akkoord', 'Afbouw of faillissement']]
   ];
+
+  const RA_SUPPLIABLE = ['Kolommenbalans', 'Dertienweeks liquiditeitsbeeld', 'Volledige crediteurenlijst'];
+
+  const raStamp = (value) => {
+    const moment = value ? new Date(value) : null;
+    if (!moment || Number.isNaN(moment.getTime())) return 'zojuist';
+    return `${moment.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })} · ${moment.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}`;
+  };
+
+  const renderAccountantPoort = () => {
+    commandInput.placeholder = 'Deze poort werkt zonder commando';
+    commandHelp.textContent = 'De accountant komt via zijn eigen beveiligde link binnen, niet via het scherm van de ondernemer.';
+    const ra = pack.case.accountant;
+    const id = ra.identity;
+    const position = ra.position;
+    const disclosed = state.raDisclosed;
+    const supplied = state.raDelivered || [];
+    const submitted = Boolean(state.raSubmittedAt);
+    const outstanding = RA_SUPPLIABLE.filter((name) => !supplied.includes(name));
+    return `<section class="ra-poort" aria-labelledby="ra-poort-title">
+      <header class="ra-poort-topbar">
+        <strong>Max Finance &amp; Legal</strong>
+        <span>Aanvullende cijfers bij een lopend dossier</span>
+      </header>
+      <main class="ra-poort-body">
+        <p class="ra-poort-eyebrow">Continuïteitsdossier · verzoek aan de accountant</p>
+        <h1 id="ra-poort-title">Wat er van u wordt gevraagd</h1>
+        <p class="ra-poort-lead">Uw cliënt heeft stukken aangeleverd en toestemming gegeven dat u om aanvullende cijfers wordt gevraagd. Hieronder staat waarop dat verzoek rust, wat u wel en niet te zien krijgt, en wat er van u wordt verwacht.</p>
+
+        <div class="ra-poort-grid">
+          <div class="ra-poort-col">
+            <div class="ra-poort-id">
+              <strong>${escapeHtml(EXPERT_NAME)}</strong>
+              <span>${escapeHtml(EXPERT_ROLE)}</span>
+              <em>Specialisme: ${escapeHtml(EXPERT_SPECIALISME)}</em>
+            </div>
+            <dl class="ra-poort-meta">
+              <div><dt>Wat dit niet is</dt><dd>Geen opdracht aan u en geen beoordeling van uw eerdere werk. Geen verzoek om een verklaring of een oordeel over de continuïteitsveronderstelling.</dd></div>
+              <div><dt>Datapositie</dt><dd>U ziet uitsluitend wat uw cliënt zelf heeft vrijgegeven. Wat hij niet vrijgaf, blijft ook voor u gesloten.</dd></div>
+              <div><dt>Tijdsbesteding</dt><dd>Wat u al bij de hand hebt. Er wordt niets nieuws van u gevraagd.</dd></div>
+              <div><dt>Waarop dit rust</dt><dd>Toestemming van uw cliënt, vastgelegd op ${escapeHtml(raStamp(state.poortConsentAt))}.</dd></div>
+            </dl>
+          </div>
+          <div class="ra-poort-col ra-poort-you">
+            <h2>Uw gegevens</h2>
+            <dl class="ra-poort-you-list">
+              <div><dt>Naam</dt><dd>${escapeHtml(id.name)}</dd></div>
+              <div><dt>Kantoor</dt><dd>${escapeHtml(id.office)}, ${escapeHtml(id.city)}</dd></div>
+              <div><dt>Functie</dt><dd>${escapeHtml(id.role)}</dd></div>
+              <div><dt>Relatie</dt><dd>${escapeHtml(id.relation)}</dd></div>
+            </dl>
+            <p class="ra-poort-you-note">Deze gegevens komen uit de uitnodiging. In deze demonstratie wordt niets verzonden of opgeslagen.</p>
+          </div>
+        </div>
+
+        <section class="ra-poort-basis" aria-label="Grondslag van het verzoek">
+          <h2>Wat uw cliënt heeft vrijgegeven</h2>
+          <ul class="ra-poort-released">${POORT_STEPS.map((item) => `<li><span>${escapeHtml(item.document)}</span><small>${escapeHtml(item.file)}</small></li>`).join('')}</ul>
+          <p class="ra-poort-withheld">Wat u niet krijgt: het gespreksverslag met uw cliënt, zijn eerdere chatgeschiedenis, en de interne beoordeling. Die vallen buiten wat hij heeft vrijgegeven.</p>
+        </section>
+
+        <section class="ra-poort-disclosure${disclosed ? ' is-done' : ''}" aria-label="Uw positie in dit dossier">
+          <h2>Uw positie in dit dossier</h2>
+          <dl class="ra-poort-position">
+            <div><dt>${escapeHtml(position.label)}</dt><dd>${escapeHtml(position.ownClaim)}. ${escapeHtml(position.oldest)}.</dd></div>
+            <div><dt>Eerder gesignaleerd</dt><dd>${escapeHtml(position.raisedBefore)}.</dd></div>
+          </dl>
+          ${disclosed
+            ? `<p class="ra-poort-disclosed" role="status"><span>Vastgelegd</span>${escapeHtml(position.disclosure)}</p>`
+            : `<p class="ra-poort-disclosure-ask">${escapeHtml(position.disclosure)}</p>
+               <button type="button" id="ra-disclose">Vastleggen en doorgaan naar de aanlevering</button>
+               <small>Zolang dit niet is vastgelegd, kunt u niets aanleveren.</small>`}
+        </section>
+
+        ${disclosed ? `<section class="ra-poort-supply" aria-label="Aanlevering">
+          <h2>Aanvullende stukken</h2>
+          <table class="ra-poort-table">
+            <thead><tr><th scope="col">Stuk</th><th scope="col">Status in het dossier</th><th scope="col">Aanlevering</th></tr></thead>
+            <tbody>${ra.documents.map((doc) => {
+              const done = supplied.includes(doc.name);
+              const canSupply = RA_SUPPLIABLE.includes(doc.name);
+              return `<tr class="${done ? 'is-supplied' : canSupply ? '' : 'is-unavailable'}">
+                <th scope="row">${escapeHtml(doc.name)}</th>
+                <td><span class="ra-status ra-status-${escapeHtml(doc.status.replace(/[^a-z-]/gi, ''))}">${escapeHtml(doc.status)}</span></td>
+                <td>${done
+                  ? `<span class="ra-supplied">Aangeleverd · ${escapeHtml(raStamp(state.raSubmittedAt || new Date().toISOString()))}</span>`
+                  : canSupply
+                    ? `<button type="button" class="ra-supply-btn" data-ra-supply="${escapeHtml(doc.name)}">Aanleveren</button>`
+                    : `<span class="ra-unavailable">Heb ik niet</span>`}</td>
+              </tr>`;
+            }).join('')}</tbody>
+          </table>
+          <p class="ra-poort-cannot">Een onderbouwing van reorganisatie- en liquidatiewaarde heb ik niet. Die vraagt een waardering die ik niet heb uitgevoerd en die buiten mijn opdracht valt.</p>
+
+          <h2>Wat ik direct bij de hand heb</h2>
+          <dl class="ra-poort-figures">${ra.figures.map((row) => `<div><dt>${escapeHtml(row.label)}</dt><dd>${escapeHtml(row.value)}</dd></div>`).join('')}</dl>
+
+          ${outstanding.length === 0 && !submitted
+            ? `<div class="ra-poort-submit">
+                <h2>Voorbehoud</h2>
+                <p>${escapeHtml(ra.observation)}</p>
+                <button type="button" id="ra-submit">Aanlevering afronden</button>
+                <small>Er wordt in deze demonstratie niets verzonden of opgeslagen.</small>
+              </div>`
+            : ''}
+          ${submitted
+            ? `<div class="ra-poort-done" role="status">
+                <span>Afgerond · ${escapeHtml(raStamp(state.raSubmittedAt))}</span>
+                <h2>Uw aanvulling staat vast.</h2>
+                <p>${escapeHtml(ra.observation)}</p>
+                <p>Wat u hebt aangeleverd is vastgelegd met bron en moment, samen met uw eigen positie. Het besluit over het vervolg ligt niet bij u en is nog niet genomen.</p>
+                <p class="ra-poort-feedback">U hebt aangegeven over de uitkomst geïnformeerd te willen worden. De grond daarvoor is uw eigen openstaande vordering, en die staat er zo bij.</p>
+              </div>`
+            : ''}
+        </section>` : ''}
+      </main>
+    </section>`;
+  };
 
   const renderExpert = () => {
     commandInput.placeholder = state.routeDecision ? 'Typ /whoa' : 'Rond het expertbesluit af';
@@ -1175,6 +1305,7 @@
     vervolgintake: renderVervolgintakePoort,
     ondernemer: renderEntrepreneur,
     toestemming: renderConsent,
+    accountantpoort: renderAccountantPoort,
     accountant: renderAccountant,
     expert: renderExpert,
     whoa: renderWhoA,
@@ -1201,7 +1332,14 @@
     app.classList.toggle('danny-invitation-mode', isDannyInvitation);
     const isPoort = state.current === 'vervolgintake';
     app.classList.toggle('max-poort-mode', isPoort);
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    const isRaPoort = state.current === 'accountantpoort';
+    app.classList.toggle('ra-poort-mode', isRaPoort);
+    if (isRaPoort && !state.raOpened) {
+      state.raOpened = true;
+      record('accountant_portal_opened', 'consent-based-access');
+      saveSession();
+    }
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : isRaPoort ? 'Max Finance & Legal — aanvullende cijfers' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
@@ -1399,6 +1537,11 @@
       unlockAndGo('toestemming');
       return;
     }
+    if (command === '/accountant') {
+      if (!state.poortAccountantConsent) return fail('De ondernemer heeft de accountant nog niet vrijgegeven.');
+      unlockAndGo('accountantpoort');
+      return;
+    }
     if (command === '/expert') {
       if (!state.consent || !state.accountantReviewed) return fail('Toestemming en accountantbeoordeling ontbreken.');
       unlockAndGo('expert');
@@ -1497,7 +1640,7 @@
       if (!state.managementSignalOpened || state.managementSignalAssigned) return;
       state.managementSignalAssigned = true;
       state.managementTransferOpen = true;
-      record('management_signal_assigned', 'frank-bedrijfsherstel');
+      record('management_signal_assigned', 'frank-van-meenen-continuiteit');
       record('management_transfer_opened', 'agora-handoff');
       renderManagementFromTop();
     });
@@ -1620,6 +1763,32 @@
     document.querySelector('#poort-input')?.addEventListener('input', (event) => {
       event.target.classList.remove('is-prefilled');
     });
+    document.querySelector('#ra-disclose')?.addEventListener('click', () => {
+      if (state.raDisclosed) return;
+      state.raDisclosed = true;
+      record('accountant_interest_disclosed', 'own-claim-declared');
+      saveSession();
+      render();
+    });
+    document.querySelectorAll('[data-ra-supply]').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (!state.raDisclosed) return;
+        const name = button.getAttribute('data-ra-supply');
+        if (!name || !RA_SUPPLIABLE.includes(name) || (state.raDelivered || []).includes(name)) return;
+        state.raDelivered = [...(state.raDelivered || []), name];
+        record('accountant_document_supplied', name);
+        saveSession();
+        render();
+      });
+    });
+    document.querySelector('#ra-submit')?.addEventListener('click', () => {
+      if (!state.raDisclosed || state.raSubmittedAt) return;
+      if (RA_SUPPLIABLE.some((name) => !(state.raDelivered || []).includes(name))) return;
+      state.raSubmittedAt = new Date().toISOString();
+      record('accountant_supplement_submitted', 'no-route-decision');
+      saveSession();
+      render();
+    });
     const poortLog = document.querySelector('.max-poort-log');
     if (poortLog && state.poortUnlocked) poortLog.scrollTop = poortLog.scrollHeight;
     if (state.current === 'vervolgintake' && state.poortAccountantConsent && !state.poortValidatedAt) schedulePoortValidation();
@@ -1640,6 +1809,8 @@
     document.querySelector('#poort-accountant-consent')?.addEventListener('click', () => {
       if (!state.poortUnlocked || poortCurrentStep() || state.poortAccountantConsent) return;
       state.poortAccountantConsent = true;
+      state.poortConsentAt = new Date().toISOString();
+      if (!state.unlocked.includes('accountantpoort')) state.unlocked.push('accountantpoort');
       poortLogLine('danny', 'Ja, Frank mag mijn accountant benaderen.');
       poortLogLine('ai', 'Vastgelegd. Je accountant wordt gericht om aanvullende cijfers gevraagd, en je ziet terug wat er is opgevraagd.');
       record('vervolgintake_accountant_consent_given', 'accountant-gate-opened');

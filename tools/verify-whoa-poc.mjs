@@ -97,7 +97,7 @@ if (!js.includes('Agora · herkomstlaag') || !js.includes('Door Danny bevestigd'
 if (!js.includes("{ id: 'max-management', label: 'Management'") || !js.includes('Tijdskritiek · hoog') || !js.includes('Potentie · onderzoeken')) {
   errors.push('het Max Management AI-scherm ontbreekt of vermengt urgentie en potentie');
 }
-if (!js.includes('Urgentie is geen levensvatbaarheid') || !js.includes("record('management_signal_assigned', 'frank-bedrijfsherstel')")) {
+if (!js.includes('Urgentie is geen levensvatbaarheid') || !js.includes("record('management_signal_assigned', 'frank-van-meenen-continuiteit')")) {
   errors.push('Agora-signaallogica of de menselijke toewijzing aan Frank ontbreekt');
 }
 if (!js.includes('Vraag Management AI') || !js.includes('Wat ontbreekt nog?') || !js.includes('Ik neem geen expertbesluit')) {
@@ -178,6 +178,24 @@ if (!js.includes("record('vervolgintake_expert_validated'") || !js.includes('poo
 }
 if (!css.includes('.max-poort-documents li.validated') || !poortScreen.includes('Gevalideerd door') || !poortScreen.includes('EXPERT_NAME') || !poortScreen.includes('poortValidationStamp')) {
   errors.push('de validatie mist groene bevestiging, expertnaam of tijdstempel');
+}
+if (!js.includes("{ id: 'accountantpoort', label: 'Accountantpoort'") || !js.includes("record('accountant_portal_opened'") || !js.includes("record('accountant_supplement_submitted'") || !js.includes('const renderAccountantPoort')) {
+  errors.push('de accountantpoort ontbreekt');
+}
+const raStart = js.indexOf('const renderAccountantPoort');
+const raEnd = js.indexOf('const renderExpert');
+const raScreen = raStart < 0 || raEnd < raStart ? '' : js.slice(raStart, raEnd);
+if (!js.includes("record('accountant_interest_disclosed'") || !js.includes('!state.raDisclosed') || !raScreen.includes('state.raDisclosed')) {
+  errors.push('de accountant kan aanleveren zonder zijn eigen belang te hebben verklaard');
+}
+if (!raScreen.includes('Wat dit niet is') || !raScreen.includes('ra-poort-withheld') || !raScreen.includes('Datapositie')) {
+  errors.push('de accountantpoort toont de grondslag of de grens van wat niet wordt gedeeld niet');
+}
+if (/\bwhoa\b/i.test(raScreen) || /hoofdpijn|moeizaam|slepend|uitzichtloos/i.test(raScreen)) {
+  errors.push('de accountantpoort benoemt de route of de zwaarte in plaats van ze uit context te laten blijken');
+}
+if (!css.includes('.ra-poort') || !css.includes('#1F4E79')) {
+  errors.push('de accountantpoort mist de sobere professionele schermregie');
 }
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
