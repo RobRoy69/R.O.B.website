@@ -239,6 +239,29 @@ if (!slotScreen.includes('state.events') || !slotScreen.includes('EVENT_LABELS[e
 if (!js.includes("['leren', 'Leren', 'Niet in deze demonstratie te zien")) {
   errors.push('het eindscherm doet alsof Agora leert binnen één doorloop');
 }
+
+if (!js.includes("{ id: 'agora-uitleg', label: 'Agora KIS'") || !js.includes("{ id: 'geo-uitleg', label: 'Dynamic Knowledge'")
+  || !js.includes('const renderAgoraUitleg') || !js.includes('const renderGeoUitleg')) {
+  errors.push('de twee uitlegschermen na de afronding ontbreken');
+}
+const uitlegStart = js.indexOf('const renderAgoraUitleg');
+const uitlegEnd = js.indexOf('const RA_SUPPLIABLE');
+const uitleg = uitlegStart < 0 || uitlegEnd < uitlegStart ? '' : js.slice(uitlegStart, uitlegEnd);
+/* De motorkap mag open, de mechaniek niet naar buiten: geen namen van bouwstenen,
+   geen schema's, geen leveranciers. En het systeem mag hier niet gaan beslissen. */
+if (/supabase|pgvector|postgres|edge function|embedding|vector|index.md|frontmatter|api[- ]?key/i.test(uitleg)) {
+  errors.push('de uitleg noemt onderdelen van de uitvoering in plaats van de functie');
+}
+if (!uitleg.includes('beslist niets') || !uitleg.includes('Wat hier niet staat')) {
+  errors.push('de uitleg mist haar grens of haar voorbehoud over wat niet wordt prijsgegeven');
+}
+if (!js.includes("data-goto=\"agora-uitleg\"") || !js.includes('slot-verder')) {
+  errors.push('het eindscherm leidt niet naar de uitleg');
+}
+if (!/GEO|vindbaar/i.test(js.slice(js.indexOf('const renderAfronding'), js.indexOf('const RA_SUPPLIABLE')))) {
+  errors.push('het eindscherm legt geen verband met vindbaarheid');
+}
+
 if (!js.includes('maxButton.onclick = openMaxLanding')) {
   errors.push('de dynamisch ingevoegde Max-aanbeveling opent de volgende stap niet');
 }

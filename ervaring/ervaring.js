@@ -23,7 +23,9 @@
     { id: 'leiding', label: 'Regie', detail: 'bestuurbaar maken' },
     { id: 'bewijs', label: 'Agora', detail: 'herleiden' },
     { id: 'bouw', label: 'Bouw', detail: 'eigen maken' },
-    { id: 'afronding', label: 'Afronding', detail: 'terugkijken' }
+    { id: 'afronding', label: 'Afronding', detail: 'terugkijken' },
+    { id: 'agora-uitleg', label: 'Agora KIS', detail: 'de motorkap open' },
+    { id: 'geo-uitleg', label: 'Dynamic Knowledge', detail: 'vindbaar blijven' }
   ];
 
 
@@ -237,7 +239,7 @@
     state.role = ({
       chat: 'bezoeker', max: 'ondernemer', 'max-intake': 'ondernemer', 'max-management': 'management', 'frank-signal': 'expert', 'frank-review': 'expert', 'danny-uitnodiging': 'ondernemer', vervolgintake: 'ondernemer', 'frank-werkruimte': 'expert', accountantpoort: 'accountant', ondernemer: 'ondernemer', toestemming: 'ondernemer',
       accountant: 'accountant', expert: 'expert', whoa: 'trajectteam',
-      leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever', afronding: 'terugblik'
+      leiding: 'leiding', bewijs: 'governance', bouw: 'opdrachtgever', afronding: 'terugblik', 'agora-uitleg': 'uitleg', 'geo-uitleg': 'uitleg'
     })[id];
     record('projection_opened', id);
     saveSession();
@@ -1380,10 +1382,142 @@
           <p>Wat dat voor Max betekent, staat in het mastervoorstel. Wat het voor jouw eigen dossiers zou betekenen, weet jij beter dan ik.</p>
           <p class="slot-sign">Rob de Rooij · R.O.B. Concepting<br><span>Agora — samenwerkingsverband met Frank van Meenen</span></p>
         </section>
+
+        <section class="slot-block slot-verder" aria-label="Verder lezen">
+          <h2>Eén ding is nog niet gezegd</h2>
+          <p>Alles wat je hier hebt aangeleverd kreeg een bron, een status en een moment. Dat is niet alleen netjes voor het dossier — het is de voorwaarde om straks door een AI-assistent geciteerd te worden in plaats van overgeslagen. <strong>Herleidbaarheid en vindbaarheid zijn hetzelfde werk.</strong> Wie zijn kennis niet kan aanwijzen, wordt niet genoemd.</p>
+          <div class="slot-verder-knoppen">
+            <button type="button" data-goto="agora-uitleg">Agora KIS — wat is het en wat betekent het voor Max? <span aria-hidden="true">→</span></button>
+            <button type="button" data-goto="geo-uitleg">Dynamic Knowledge — de SEO/GEO van de toekomst <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
         ${demoBar([
           { command: '/werkruimte', label: '← Expertwerkruimte' },
           { reset: true, label: 'Opnieuw beginnen' }
         ])}
+      </main>
+    </section>`;
+  };
+
+  /* Twee uitlegschermen na de afronding. De motorkap gaat open: wat het is en wat het
+     doet, in gewone taal. De uitvoering blijft eronder — geen bouwstenen, geen schema's,
+     geen leveranciers. Elk scherm eindigt met wat het bewust niet prijsgeeft. */
+  const renderAgoraUitleg = () => {
+    commandInput.placeholder = 'Uitleg';
+    commandHelp.textContent = 'De motorkap staat open. De uitvoering blijft eronder.';
+    return `<section class="uitleg" aria-labelledby="uitleg-agora-title">
+      <main class="uitleg-body">
+        <p class="uitleg-eyebrow">Agora KIS · de motorkap open</p>
+        <h1 id="uitleg-agora-title">Wat je net hebt gebruikt, en waarom het zo is gebouwd.</h1>
+        <p class="uitleg-lead">Agora is geen website en geen chatbot. Het is de laag tússen drie dingen: waar kennis vandaan komt, wie erover mag oordelen, en waar het gebruikt wordt. In het voorstel staat het als de processor onder Max-OS. Hieronder staat wat dat in de praktijk betekent.</p>
+
+        <section class="uitleg-blok" aria-label="Twee wegen">
+          <p class="uitleg-nr">01</p>
+          <h2>Er lopen twee wegen, en die raken elkaar nooit</h2>
+          <p>Over de ene weg komen vragen binnen en gaan antwoorden eruit — dat is de weg die je net hebt gelopen. Over de andere weg wordt de kennis zelf onderhouden: vastgesteld, herzien, van een datum voorzien. Wie een vraag stelt, kan de kennis niet veranderen. Wie de kennis onderhoudt, beantwoordt geen vragen.</p>
+          <p class="uitleg-waarom"><strong>Waarom dat uitmaakt:</strong> een systeem waarin die twee door elkaar lopen, gaat op een gegeven moment zijn eigen antwoorden bevestigen. Dan lijkt het zeker en is het niets.</p>
+        </section>
+
+        <section class="uitleg-blok" aria-label="Poorten">
+          <p class="uitleg-nr">02</p>
+          <h2>Iedereen komt binnen door zijn eigen poort</h2>
+          <p>Een ondernemer, zijn adviseur en een ander systeem leveren niet hetzelfde aan, en mogen niet hetzelfde zien. Daarom heeft elke ingang eigen regels. Je bent er net twee doorgegaan.</p>
+          <ul class="uitleg-poorten">
+            <li><span>De ondernemer</span><small>Vertelt het in eigen woorden, hoeft geen vaktaal te kennen. Dat was de vervolgintake.</small></li>
+            <li><span>Zijn adviseur</span><small>Mag alleen met toestemming, en moet zeggen waar de stukken vandaan komen. Dat was de accountantpoort.</small></li>
+            <li><span>Een ander systeem</span><small>Mag aanleveren, nooit meebeslissen. Een externe AI blijft bezoeker.</small></li>
+          </ul>
+        </section>
+
+        <section class="uitleg-blok" aria-label="Vaste orde">
+          <p class="uitleg-nr">03</p>
+          <h2>Elke vraag gaat door dezelfde vaste orde</h2>
+          <p>Altijd dezelfde stappen, altijd in dezelfde volgorde. Wordt er één overgeslagen, dan is het antwoord ongeldig — ook als het klopt. Drie van die stappen heb je zien werken:</p>
+          <ul class="uitleg-stappen">
+            <li><span>Wat wordt hier eigenlijk gevraagd?</span><small>Is het onduidelijk, dan vraagt het systeem terug in plaats van te gokken.</small></li>
+            <li><span>Wie vraagt het, en wat mag die zien?</span><small>Wat niet is vrijgegeven, blijft buiten. Ook voor de accountant.</small></li>
+            <li><span>Is alles wat verplicht is meegenomen?</span><small>Wat ontbreekt weegt even zwaar als wat er staat. Daarom bleef de waarderingsonderbouwing als ontbrekend staan.</small></li>
+          </ul>
+          <p class="uitleg-waarom"><strong>Wat hier niet staat:</strong> de volledige orde en de precieze criteria. Dat is de motor, niet de motorkap.</p>
+        </section>
+
+        <section class="uitleg-blok" aria-label="Wat het voor Max betekent">
+          <p class="uitleg-nr">04</p>
+          <h2>Wat dit voor Max oplevert</h2>
+          <dl class="uitleg-waarde">
+            <div><dt>Voor de expert</dt><dd>Je komt voorbereid aan tafel in plaats van uitvragend. Wat de klant al zei, staat er nog.</dd></div>
+            <div><dt>Voor de klant en de verwijzer</dt><dd>Eén keer vertellen. Rust, en zicht op wat er met zijn stukken gebeurt.</dd></div>
+            <div><dt>Voor de leiding</dt><dd>Zicht op wat is vrijgegeven, wat is beoordeeld en waar het op rust.</dd></div>
+            <div><dt>Voor Max als onderneming</dt><dd>Methodiek die niet in één hoofd zit. Minder afhankelijk van sleutelfiguren, en dus overdraagbaar.</dd></div>
+          </dl>
+        </section>
+
+        <p class="uitleg-grens"><strong>En de grens die overal geldt:</strong> Agora ordent, toetst, geeft vrij, routeert en leert — maar het <strong>beslist niets</strong>. Het oordeel blijft bij de expert. Dat is geen bescheidenheid, dat is de constructie.</p>
+
+        <div class="uitleg-verder">
+          <button type="button" data-goto="geo-uitleg">Wat dit met vindbaarheid te maken heeft <span aria-hidden="true">→</span></button>
+        </div>
+      </main>
+    </section>`;
+  };
+
+  const renderGeoUitleg = () => {
+    commandInput.placeholder = 'Uitleg';
+    commandHelp.textContent = 'Over wat er buiten de deur komt te staan, en wat nooit.';
+    return `<section class="uitleg" aria-labelledby="uitleg-geo-title">
+      <main class="uitleg-body">
+        <p class="uitleg-eyebrow">Dynamic Knowledge · de SEO/GEO van de toekomst</p>
+        <h1 id="uitleg-geo-title">Straks vraagt niemand het aan Google, maar aan een assistent.</h1>
+        <p class="uitleg-lead">Die assistent leest wat hij online vindt en vertelt het door. Staat jouw kennis er niet netjes, dan vertelt hij die van iemand anders — of hij verzint iets in jouw naam. Dit gaat over hoe je dat voorkomt zonder je hele keuken open te gooien.</p>
+
+        <section class="uitleg-blok" aria-label="Herkomst">
+          <p class="uitleg-nr">01</p>
+          <h2>Zonder herkomst word je niet geciteerd</h2>
+          <p>Een assistent die jouw kennis doorvertelt, wil erbij zetten waar hij het vond. Kun je dat niet aanwijzen, dan laat hij je weg. Daarom krijgt elk stuk bij binnenkomst een bron en een moment — niet later, want dan is het gokken.</p>
+          <p class="uitleg-waarom"><strong>Dat heb je net gedaan.</strong> Elk stuk dat je aanleverde kreeg een bron, een status en een tijdstip. Dat is niet administratie; dat is de voorwaarde om straks genoemd te worden.</p>
+        </section>
+
+        <section class="uitleg-blok" aria-label="Eén deur">
+          <p class="uitleg-nr">02</p>
+          <h2>Er is één deur naar buiten</h2>
+          <p>Alles wat de buitenwereld bereikt, gaat door één deur. Geen achterdeur, geen uitzondering voor even. Wat niet door die deur komt, bestaat voor een zoekmachine niet — en dat is precies de bedoeling.</p>
+          <div class="uitleg-deur">
+            <div class="uitleg-deur-in">
+              <span>Mag erdoor</span>
+              <p>Kennis die af is, met bron en eigenaar, en met een datum tot wanneer hij geldt. Alleen om te lezen.</p>
+            </div>
+            <div class="uitleg-deur-uit">
+              <span>Mag er nooit door</span>
+              <p>Alles van een klant, alles wat bij één zaak hoort, en alles wat nog niet af is. Dat is het echte risico: per ongeluk een dossier online.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="uitleg-blok" aria-label="De etalage">
+          <p class="uitleg-nr">03</p>
+          <h2>Wat er buiten de deur komt te staan</h2>
+          <p>Dat is de etalage. Die beslist niets — hij zorgt dat een machine je begrijpt.</p>
+          <ul class="uitleg-etalage">
+            <li><span>Labels die een machine leest</span><small>Bij elk stuk staat wát het is: een begrip, een regel, een voorbeeld. Als een prijskaartje dat een kassa kan lezen.</small></li>
+            <li><span>Antwoorden die af zijn</span><small>Korte stukken die een vraag helemaal afmaken. Geschreven om geciteerd te worden, niet om hoog te eindigen in een lijstje.</small></li>
+            <li><span>Eén vast adres per onderwerp</span><small>Zodat een machine steeds naar dezelfde plek wijst, en jij ziet wanneer er iets is veranderd.</small></li>
+          </ul>
+        </section>
+
+        <section class="uitleg-blok" aria-label="Meten">
+          <p class="uitleg-nr">04</p>
+          <h2>En dan kijk je of het werkt</h2>
+          <p>Zonder dit stuk is het een belofte zonder meetlat. Je wil weten wie je kennis doorvertelt, of ze je erbij noemen, en wat er misgaat.</p>
+          <ul class="uitleg-etalage">
+            <li><span>Wie citeert wat</span><small>Welk stuk wordt doorverteld, door welke machine, met of zonder jouw naam.</small></li>
+            <li><span>Wat het oplevert</span><small>Per stuk kennis, niet per pagina. Zo weet je welk antwoord echt werk doet.</small></li>
+            <li><span>Verkeerd doorverteld is een melding</span><small>Er gaat een signaal af. Het systeem past niets vanzelf aan; een mens besluit.</small></li>
+          </ul>
+          <p class="uitleg-waarom"><strong>Waarom stil bijwerken averechts werkt:</strong> een pagina waar de tekst verandert terwijl het adres hetzelfde blijft, leert een machine wantrouwen. Zichtbaar bijwerken levert vertrouwen op; onzichtbaar bijwerken kost het.</p>
+        </section>
+
+        <p class="uitleg-grens"><strong>In één zin:</strong> alleen afgeronde kennis gaat naar buiten, door één deur, met een datum en een bron erbij — en er wordt bijgehouden wie het doorvertelt. Het systeem <strong>beslist niets</strong> over wat er verandert.</p>
+        <p class="uitleg-slot"><strong>Wat hier niet staat:</strong> hoe de labels precies zijn opgebouwd, hoe de deur is dichtgezet en waar de kennis staat. Dat is de uitvoering, en die hoort bij de opdracht — niet bij de demonstratie.</p>
       </main>
     </section>`;
   };
@@ -1620,7 +1754,9 @@
     leiding: renderLeadership,
     bewijs: renderProof,
     bouw: renderBuild,
-    afronding: renderAfronding
+    afronding: renderAfronding,
+    'agora-uitleg': renderAgoraUitleg,
+    'geo-uitleg': renderGeoUitleg
   };
 
   const render = () => {
@@ -1647,12 +1783,14 @@
     app.classList.toggle('ra-poort-mode', isRaPoort);
     const isSlot = state.current === 'afronding';
     app.classList.toggle('slot-mode', isSlot);
+    const isUitleg = state.current === 'agora-uitleg' || state.current === 'geo-uitleg';
+    app.classList.toggle('uitleg-mode', isUitleg);
     if (isRaPoort && !state.raOpened) {
       state.raOpened = true;
       record('accountant_portal_opened', 'consent-based-access');
       saveSession();
     }
-    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : isFrankWerk ? 'Max-OS — expertwerkruimte' : isRaPoort ? 'Max Finance & Legal — aanvullende cijfers' : isSlot ? 'Einde van de demonstratie' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
+    document.title = isAiChat ? 'AI Chat' : isMaxEntry ? 'Max Finance & Legal — vertrouwelijke verkenning' : isMaxIntake ? 'Max Finance & Legal — eerste intake' : isMaxManagement ? 'Max-OS — Management AI' : isFrankSignal ? 'Max-OS — Frank ontvangt een signaal' : isFrankReview ? 'Max-OS — Expertbeoordeling' : isDannyInvitation ? 'Max Finance & Legal — uitnodiging voor de intake' : isPoort ? 'Max Finance & Legal — vervolgintake' : isFrankWerk ? 'Max-OS — expertwerkruimte' : isRaPoort ? 'Max Finance & Legal — aanvullende cijfers' : isSlot ? 'Einde van de demonstratie' : state.current === 'agora-uitleg' ? 'Agora KIS — wat het is en wat het doet' : state.current === 'geo-uitleg' ? 'Dynamic Knowledge — vindbaar blijven' : 'R.O.B. → Max-OS — gecontroleerde demonstratie';
     renderRoute();
     renderEvidence();
     setChrome();
