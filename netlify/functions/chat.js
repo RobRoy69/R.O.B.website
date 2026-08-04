@@ -9,35 +9,27 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { archiveChatSession } from './lib/archief.js';
 import { ROB_SYSTEM } from './lib/systeemprompt.js';
+import { buildCanonContext } from './lib/canon-context.js';
 
 
 // ── Canon-content-awareness (5D additieve laag, 2026-05-18) ──────────────────
-// Laadt R.O.B.-canon bundle (propositie · aanbod · project) zodat chat content-vragen
-// over SBH/B.R.A.I.N./20voor12/R.O.B. Werkbank etc. concreet kan beantwoorden.
-// Voice/modus/verboden blijven in ROB_SYSTEM hierboven (authoritative).
+// Laadt de R.O.B.-canon-bundle zodat chat content-vragen over SBH/B.R.A.I.N./20voor12/
+// R.O.B. Werkbank etc. concreet kan beantwoorden.
+// Voice/modus/verboden blijven in ROB_SYSTEM hierboven authoritative — voice-notes gaan sinds
+// 2026-08-04 wél mee, maar ondergeschikt; zie lib/canon-context.js.
 // Bron: R.O.B. Concepting/rob-canon/. Bundle gegenereerd door build-bundle.js.
 // Graceful fallback: bij load-fail blijft chat draaien op alleen ROB_SYSTEM.
 let CANON_CONTEXT = '';
 try {
   const bundlePath = fileURLToPath(new URL('./rob-canon-bundle.json', import.meta.url));
   const bundle = JSON.parse(readFileSync(bundlePath, 'utf-8'));
-  const sections = ['propositie', 'aanbod', 'project'];
-  const blocks = sections
-    .map(type => (bundle.notes_by_type[type] || [])
-      .map(n => `## ${n.title}\n${n.content}`).join('\n\n'))
-    .filter(Boolean)
-    .join('\n\n---\n\n');
-  if (blocks) {
-    CANON_CONTEXT = `\n\n---\n\nCANON-CONTEXT (R.O.B. Concepting canon — kennis raadplegen, niet letterlijk inkopiëren):\n\n${blocks}`;
-  }
-  // CRITICAL_FACTS werd wél in de bundel gezet en NOOIT gelezen — 1.450 tekens harde
-  // feitcorrecties die niets deden, terwijl dat bestand juist bestaat om feitfouten te
-  // voorkomen. Vandaag gaf de agent een fout antwoord over Agora; dit is het bestand dat
-  // dat had moeten vangen. Nu aangesloten, en bewust vóór de canon-context zodat een
-  // correctie zwaarder weegt dan de lopende tekst.
-  if (bundle.critical_facts) {
-    CANON_CONTEXT = `\n\n---\n\nHARDE FEITEN (gaan vóór op alles hieronder; bij twijfel volg deze):\n\n${bundle.critical_facts}${CANON_CONTEXT}`;
-  }
+  // Welke secties meegaan en hoe de kop luidt, staat in lib/canon-context.js — dezelfde
+  // functie die tools/build-promptfoo-prompt.mjs gebruikt. Die lijst stond hier eerder los,
+  // en liep bij de eerste wijziging meteen uit de pas met de tests. Zie dat bestand.
+  //
+  // CRITICAL_FACTS zit in dezelfde functie en komt bovenaan, zodat een feitcorrectie zwaarder
+  // weegt dan de lopende tekst. Dat werd eerder wél gebundeld en nooit gelezen.
+  CANON_CONTEXT = buildCanonContext(bundle);
 } catch (e) {
   console.error('[chat] rob-canon-bundle load failed, continuing zonder content-awareness:', e.message);
 }
