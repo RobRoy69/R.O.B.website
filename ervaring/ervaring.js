@@ -1517,7 +1517,6 @@
         </section>
 
         <p class="uitleg-grens"><strong>In één zin:</strong> alleen afgeronde kennis gaat naar buiten, door één deur, met een datum en een bron erbij — en er wordt bijgehouden wie het doorvertelt. Het systeem <strong>beslist niets</strong> over wat er verandert.</p>
-        <p class="uitleg-slot"><strong>Wat hier niet staat:</strong> hoe de labels precies zijn opgebouwd, hoe de deur is dichtgezet en waar de kennis staat. Dat is de uitvoering, en die hoort bij de opdracht — niet bij de demonstratie.</p>
       </main>
     </section>`;
   };

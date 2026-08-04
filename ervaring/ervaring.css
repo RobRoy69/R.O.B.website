@@ -1302,8 +1302,6 @@ button { cursor: pointer; }
 .uitleg-waarde dd { margin: 6px 0 0; color: rgba(232,228,220,.84); font-size: 14.5px; line-height: 1.6; }
 .uitleg-grens { margin: 38px 0 0; padding: 20px 22px; border-left: 3px solid #e8391e; background: #131b2e; color: rgba(232,228,220,.88); font-size: 15px; line-height: 1.7; }
 .uitleg-grens strong { color: #e8e4dc; }
-.uitleg-slot { margin: 14px 0 0; padding-left: 15px; border-left: 2px solid rgba(232,228,220,.3); color: rgba(232,228,220,.72); font-size: 13.5px; line-height: 1.65; }
-.uitleg-slot strong { color: #e8e4dc; }
 .uitleg-verder { margin-top: 34px; }
 .uitleg-verder button { min-height: 50px; padding: 13px 18px; border: 1px solid #0fa8cb; border-radius: 3px; background: transparent; color: #52c4dd; font-family: inherit; font-size: 14.5px; font-weight: 500; text-align: left; cursor: pointer; }
 .uitleg-verder button:hover, .uitleg-verder button:focus-visible { background: #0fa8cb; color: #0e1525; }
@@ -1314,5 +1312,5 @@ button { cursor: pointer; }
 @media (max-width: 560px) {
   .uitleg-eyebrow, .uitleg-nr, .uitleg-deur span, .uitleg-waarde dt { font-size: 11px; }
   .uitleg-poorten small, .uitleg-stappen small, .uitleg-etalage small,
-  .uitleg-deur p, .uitleg-slot { font-size: 14.5px; }
+  .uitleg-deur p { font-size: 14.5px; }
 }
