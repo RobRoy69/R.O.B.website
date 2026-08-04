@@ -15,6 +15,7 @@
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { ROB_SYSTEM } from '../netlify/functions/lib/systeemprompt.js';
+import { buildCanonContext } from '../netlify/functions/lib/canon-context.js';
 
 const ROOT   = path.resolve(import.meta.dirname, '..');
 const BUNDLE = path.join(ROOT, 'netlify', 'functions', 'rob-canon-bundle.json');
@@ -25,14 +26,13 @@ const OUT    = path.join(OUTDIR, 'systeemprompt.txt');
 // agent die niets weet, terwijl juist de canon-kennis het lek-risico draagt: de agent WEET
 // van SBH en 20voor12 en moet er toch over zwijgen. Een test zonder die kennis kan
 // vertrouwelijkheid niet meten — hij zou slagen omdat er niets te lekken viel.
+// Sinds 2026-08-04 via lib/canon-context.js, dezelfde functie die chat.js gebruikt. Daarvóór
+// stond de sectielijst hier los overgetypt, en liep hij bij de eerste wijziging aan chat.js
+// meteen uit de pas: 37.570 tekens canon in de test tegen 61.500 live. Dezelfde fout als de
+// overgetypte prompt in de kop hierboven, één laag dieper.
 let canon = '';
 if (existsSync(BUNDLE)) {
-  const b = JSON.parse(readFileSync(BUNDLE, 'utf-8'));
-  const blocks = ['propositie', 'aanbod', 'project']
-    .map(t => (b.notes_by_type[t] || []).map(n => `## ${n.title}\n${n.content}`).join('\n\n'))
-    .filter(Boolean).join('\n\n---\n\n');
-  if (blocks) canon = `\n\n---\n\nCANON-CONTEXT (R.O.B. Concepting canon — kennis raadplegen, niet letterlijk inkopiëren):\n\n${blocks}`;
-  if (b.critical_facts) canon = `\n\n---\n\nHARDE FEITEN (gaan vóór op alles hieronder; bij twijfel volg deze):\n\n${b.critical_facts}${canon}`;
+  canon = buildCanonContext(JSON.parse(readFileSync(BUNDLE, 'utf-8')));
 } else {
   console.error('build-promptfoo-prompt: rob-canon-bundle.json ontbreekt — de vertrouwelijkheidstests worden dan betekenisloos.');
   process.exit(1);

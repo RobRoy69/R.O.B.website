@@ -890,11 +890,11 @@
       </header>
       ${opened ? `<div class="danny-invitation-open">
         <span>Uitnodiging · geopend ${escapeHtml(managementSignalTime())}</span>
-        <h1 id="danny-invitation-title">Wat de vervolgintake van u vraagt.</h1>
-        <p>Frank heeft u gesproken. Hieronder staat wat er nodig is en waarvoor u straks toestemming geeft. U beslist zelf of u begint.</p>
+        <h1 id="danny-invitation-title">Wat de vervolgintake van je vraagt.</h1>
+        <p>Frank heeft je gesproken. Hieronder staat wat er nodig is en waarvoor je straks toestemming geeft. Je beslist zelf of je begint.</p>
         <article class="danny-invitation-agreed">
           <span>Afgesproken in het gesprek</span>
-          <ul><li>Wat een hersteltraject van u vraagt aan tijd en medewerking.</li><li>Wat het kost en hoe Frank werkt.</li><li>Dat u zonder verplichting kunt stoppen zolang er niets is afgesproken.</li></ul>
+          <ul><li>Wat een hersteltraject van je vraagt aan tijd en medewerking.</li><li>Wat het kost en hoe Frank werkt.</li><li>Dat je zonder verplichting kunt stoppen zolang er niets is afgesproken.</li></ul>
         </article>
         <div class="danny-invitation-groups">
           <article class="documents">
@@ -906,24 +906,24 @@
           <article class="consents">
             <span>Straks te geven</span>
             <h2>Gevraagde toestemmingen</h2>
-            <ul><li>Max mag deze stukken gebruiken om uw situatie te beoordelen.</li><li>Frank mag uw accountant om aanvullende cijfers vragen.</li><li>Max legt vast welke stappen zijn gezet en waarop ze rusten.</li></ul>
-            <small>U geeft ze per onderdeel, en u kunt ze weer intrekken.</small>
+            <ul><li>Max mag deze stukken gebruiken om je situatie te beoordelen.</li><li>Frank mag je accountant om aanvullende cijfers vragen.</li><li>Max legt vast welke stappen zijn gezet en waarop ze rusten.</li></ul>
+            <small>Je geeft ze per onderdeel, en je kunt ze weer intrekken.</small>
           </article>
         </div>
-        ${accepted ? `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Vastgelegd</span><div role="status"><h2>De vervolgintake staat voor u klaar.</h2><p>Frank ziet dat u wilt beginnen. Er is nog geen overeenkomst, nog geen toegang tot uw stukken en nog geen keuze over een vervolgroute.</p></div><button type="button" id="open-vervolgintake">Open de vervolgintake <span aria-hidden="true">→</span></button><small>U hebt daarvoor de autorisatiecode nodig die bij deze uitnodiging hoort. Hij staat voor u klaar.</small></section>`
-          : `<section class="danny-invitation-decision" aria-label="Uw beslissing"><span>Uw beslissing</span><h2>Begint u aan de vervolgintake?</h2><p>Er is nog geen overeenkomst en er wordt nog niets van u opgevraagd. Instemmen betekent alleen dat de intake voor u wordt klaargezet.</p><button type="button" id="accept-danny-intake">Ja, zet de intake voor mij klaar <span aria-hidden="true">→</span></button><small>Er wordt in deze demonstratie niets verzonden of opgeslagen.</small></section>`}
-        <p class="danny-invitation-boundary">Max legt vast wat is gevraagd en wat u antwoordt. Beoordelen en beslissen blijft mensenwerk.</p>
+        ${accepted ? `<section class="danny-invitation-decision" aria-label="Je beslissing"><span>Vastgelegd</span><div role="status"><h2>De vervolgintake staat voor je klaar.</h2><p>Frank ziet dat je wilt beginnen. Er is nog geen overeenkomst, nog geen toegang tot je stukken en nog geen keuze over een vervolgroute.</p></div><button type="button" id="open-vervolgintake">Open de vervolgintake <span aria-hidden="true">→</span></button><small>Je hebt daarvoor de autorisatiecode nodig die bij deze uitnodiging hoort. Hij staat voor je klaar.</small></section>`
+          : `<section class="danny-invitation-decision" aria-label="Je beslissing"><span>Je beslissing</span><h2>Begin je aan de vervolgintake?</h2><p>Er is nog geen overeenkomst en er wordt nog niets van je opgevraagd. Instemmen betekent alleen dat de intake voor je wordt klaargezet.</p><button type="button" id="accept-danny-intake">Ja, zet de intake voor mij klaar <span aria-hidden="true">→</span></button><small>Er wordt in deze demonstratie niets verzonden of opgeslagen.</small></section>`}
+        <p class="danny-invitation-boundary">Max legt vast wat is gevraagd en wat je antwoordt. Beoordelen en beslissen blijft mensenwerk.</p>
       </div>` : `<div class="danny-invitation-lock">
         <span>Beveiligde uitnodiging · ${escapeHtml(managementSignalTime())}</span>
-        <h1 id="danny-invitation-title">${escapeHtml(EXPERT_FIRST)} heeft u een uitnodiging gestuurd.</h1>
-        <p>U hebt elkaar net gesproken. In deze uitnodiging staat wat de vervolgintake van u vraagt.</p>
+        <h1 id="danny-invitation-title">${escapeHtml(EXPERT_FIRST)} heeft je een uitnodiging gestuurd.</h1>
+        <p>Je hebt elkaar net gesproken. In deze uitnodiging staat wat de vervolgintake van je vraagt.</p>
         <article class="danny-invitation-sender">
           <span>Afzender</span>
           <strong>${escapeHtml(EXPERT_NAME)} · ${escapeHtml(EXPERT_ROLE)}</strong>
           <small>Max Finance &amp; Legal</small>
         </article>
         <button type="button" id="open-danny-invitation-link">Open de beveiligde uitnodiging</button>
-        <p class="danny-invitation-boundary">De inhoud blijft afgeschermd totdat u hem zelf opent.</p>
+        <p class="danny-invitation-boundary">De inhoud blijft afgeschermd totdat je hem zelf opent.</p>
       </div>`}
     </section>`;
   };
