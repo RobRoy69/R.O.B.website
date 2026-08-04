@@ -1237,3 +1237,20 @@ button { cursor: pointer; }
    volle hoogte staat; hij mag niet meerekken en niet met de log om ruimte vechten. */
 .max-poort-stream > .poc-demobar.is-global,
 .frank-werk-chat > .poc-demobar.is-global { flex: none; }
+
+/* De aanlevertabel had op een telefoon een breedte van 460px in een kader van 350px,
+   waardoor de kolom met de aanleverknoppen buiten beeld viel achter een zijwaartse
+   scroll. Op smalle schermen wordt elke regel daarom een blok: stuk, status, knop
+   onder elkaar. Geen zijwaartse scroll meer, en de knop staat waar je hem ziet. */
+@media (max-width: 620px) {
+  .ra-poort-supply { overflow-x: visible; }
+  .ra-poort-table { min-width: 0; display: block; }
+  .ra-poort-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .ra-poort-table tbody, .ra-poort-table tr, .ra-poort-table tbody th, .ra-poort-table td { display: block; width: auto; }
+  .ra-poort-table tr { padding: 15px 0; border-bottom: 1px solid #E8ECF0; }
+  .ra-poort-table tr:last-child { border-bottom: 0; padding-bottom: 0; }
+  .ra-poort-table tbody th { padding: 0 0 8px; border-bottom: 0; font-size: 15px; }
+  .ra-poort-table td { padding: 0 0 9px; border-bottom: 0; }
+  .ra-poort-table td:last-child { padding-bottom: 0; }
+  .ra-supply-btn { width: 100%; min-height: 46px !important; }
+}
