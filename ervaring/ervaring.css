@@ -1232,3 +1232,8 @@ button { cursor: pointer; }
   .danny-invitation-agreed > span, .danny-invitation-groups article > span,
   .danny-invitation-decision > span { font-size: 11px; }
 }
+
+/* De bediening in de vervolgintake en de werkruimte zit binnen een flexkolom die op
+   volle hoogte staat; hij mag niet meerekken en niet met de log om ruimte vechten. */
+.max-poort-stream > .poc-demobar.is-global,
+.frank-werk-chat > .poc-demobar.is-global { flex: none; }
