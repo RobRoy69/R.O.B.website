@@ -1471,13 +1471,13 @@
       <main class="uitleg-body">
         <p class="uitleg-eyebrow">Dynamic Knowledge · de SEO/GEO van de toekomst</p>
         <h1 id="uitleg-geo-title">Straks vraagt niemand het aan Google, maar aan een assistent.</h1>
-        <p class="uitleg-lead">Die assistent leest wat hij online vindt en vertelt het door. Staat jouw kennis er niet netjes, dan vertelt hij die van iemand anders — of hij verzint iets in jouw naam. Dit gaat over hoe je dat voorkomt zonder je hele keuken open te gooien.</p>
+        <p class="uitleg-lead">Die assistent leest wat hij online vindt en vertelt het door. Staat jouw kennis er niet netjes, dan vertelt hij die van iemand anders — of hij verzint iets in jouw naam. <strong>Wat je hiervoor nodig hebt, heb je net gebouwd:</strong> elk stuk dat je aanleverde kreeg een bron, een status en een moment. Dit gaat over wat dat straks waard is.</p>
 
         <section class="uitleg-blok" aria-label="Herkomst">
           <p class="uitleg-nr">01</p>
           <h2>Zonder herkomst word je niet geciteerd</h2>
           <p>Een assistent die jouw kennis doorvertelt, wil erbij zetten waar hij het vond. Kun je dat niet aanwijzen, dan laat hij je weg. Daarom krijgt elk stuk bij binnenkomst een bron en een moment — niet later, want dan is het gokken.</p>
-          <p class="uitleg-waarom"><strong>Dat heb je net gedaan.</strong> Elk stuk dat je aanleverde kreeg een bron, een status en een tijdstip. Dat is niet administratie; dat is de voorwaarde om straks genoemd te worden.</p>
+          <p class="uitleg-waarom"><strong>En daarom achteraf niet meer lukt:</strong> wie pas bij publicatie gaat uitzoeken waar iets vandaan kwam, reconstrueert. Dat is geen bron, dat is een gok met een datum eraan.</p>
         </section>
 
         <section class="uitleg-blok" aria-label="Eén deur">
