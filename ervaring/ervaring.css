@@ -1254,3 +1254,65 @@ button { cursor: pointer; }
   .ra-poort-table td:last-child { padding-bottom: 0; }
   .ra-supply-btn { width: 100%; min-height: 46px !important; }
 }
+
+/* ===== Uitlegschermen — Agora KIS en Dynamic Knowledge =====
+   Volgen de afronding, dus R.O.B.'s eigen schaal: de demonstratie is hier uit de rol.
+   Leesbreedte boven alles; dit wordt gelezen, niet bediend. */
+.slot-verder { border-top-color: rgba(15,168,203,.4); }
+.slot-verder p { margin: 0; max-width: 62ch; color: rgba(232,228,220,.82); font-size: 14.5px; line-height: 1.7; }
+.slot-verder p strong { color: #e8e4dc; }
+.slot-verder-knoppen { margin-top: 20px; display: grid; gap: 10px; }
+.slot-verder-knoppen button { min-height: 50px; padding: 13px 17px; border: 1px solid #0fa8cb; border-radius: 3px; background: transparent; color: #52c4dd; font-family: inherit; font-size: 14.5px; font-weight: 500; text-align: left; cursor: pointer; }
+.slot-verder-knoppen button:hover, .slot-verder-knoppen button:focus-visible { background: #0fa8cb; color: #0e1525; }
+
+.poc-app.uitleg-mode { display: block; min-height: 100vh; background: #0e1525; }
+.uitleg-mode .poc-topbar,
+.uitleg-mode .poc-rail,
+.uitleg-mode .evidence-rail,
+.uitleg-mode > .afsluiter { display: none; }
+.uitleg-mode .poc-layout { display: block; min-height: 100vh; }
+.uitleg-mode .poc-main { min-height: 100vh; background: #0e1525; color: #e8e4dc; }
+.uitleg { background: #0e1525; color: #e8e4dc; }
+.uitleg-body { max-width: 760px; margin: 0 auto; padding: clamp(32px,6vw,64px) clamp(20px,5vw,36px) 76px; }
+.uitleg-eyebrow { margin: 0; color: #0fa8cb; font: 10px/1.4 "IBM Plex Mono", monospace; letter-spacing: .16em; text-transform: uppercase; }
+.uitleg h1 { margin: 16px 0 18px; font-size: clamp(29px,4.4vw,44px); line-height: 1.08; letter-spacing: -.032em; font-weight: 500; }
+.uitleg-lead { margin: 0 0 12px; max-width: 62ch; color: rgba(232,228,220,.84); font-size: clamp(16px,1.9vw,18px); line-height: 1.68; }
+.uitleg-blok { margin-top: 38px; padding-top: 26px; border-top: 1px solid rgba(232,228,220,.14); }
+.uitleg-nr { margin: 0 0 8px; color: #0fa8cb; font: 11px/1 "IBM Plex Mono", monospace; letter-spacing: .1em; }
+.uitleg-blok h2 { margin: 0 0 12px; max-width: 34ch; font-size: clamp(20px,2.5vw,25px); font-weight: 500; letter-spacing: -.022em; line-height: 1.22; }
+.uitleg-blok > p { margin: 0 0 14px; max-width: 62ch; color: rgba(232,228,220,.82); font-size: 15.5px; line-height: 1.7; }
+.uitleg-waarom { padding: 15px 17px; border-left: 3px solid #0fa8cb; background: #131b2e; color: rgba(232,228,220,.86) !important; font-size: 14.5px !important; }
+.uitleg-waarom strong { color: #e8e4dc; }
+.uitleg-poorten, .uitleg-stappen, .uitleg-etalage { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; background: rgba(232,228,220,.1); }
+.uitleg-poorten li, .uitleg-stappen li, .uitleg-etalage li { padding: 15px 17px; background: #131b2e; }
+.uitleg-poorten span, .uitleg-stappen span, .uitleg-etalage span { display: block; margin-bottom: 5px; color: #e8e4dc; font-size: 15px; font-weight: 500; }
+.uitleg-poorten small, .uitleg-stappen small, .uitleg-etalage small { color: rgba(232,228,220,.76); font-size: 13.5px; line-height: 1.6; }
+.uitleg-stappen li { counter-increment: uitlegstap; }
+.uitleg-deur { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; }
+.uitleg-deur > div { padding: 16px 18px; background: #131b2e; }
+.uitleg-deur-in { border-left: 3px solid #3f9e6b; }
+.uitleg-deur-uit { border-left: 3px solid #e8391e; }
+.uitleg-deur span { display: block; margin-bottom: 6px; font: 700 10px/1.3 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.uitleg-deur-in span { color: #6bd39a; }
+.uitleg-deur-uit span { color: #f0a08c; }
+.uitleg-deur p { margin: 0; color: rgba(232,228,220,.82); font-size: 13.5px; line-height: 1.6; }
+.uitleg-waarde { margin: 0; display: grid; gap: 1px; background: rgba(232,228,220,.1); }
+.uitleg-waarde > div { padding: 15px 17px; background: #131b2e; }
+.uitleg-waarde dt { color: #0fa8cb; font: 10px/1.3 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.uitleg-waarde dd { margin: 6px 0 0; color: rgba(232,228,220,.84); font-size: 14.5px; line-height: 1.6; }
+.uitleg-grens { margin: 38px 0 0; padding: 20px 22px; border-left: 3px solid #e8391e; background: #131b2e; color: rgba(232,228,220,.88); font-size: 15px; line-height: 1.7; }
+.uitleg-grens strong { color: #e8e4dc; }
+.uitleg-slot { margin: 14px 0 0; padding-left: 15px; border-left: 2px solid rgba(232,228,220,.3); color: rgba(232,228,220,.72); font-size: 13.5px; line-height: 1.65; }
+.uitleg-slot strong { color: #e8e4dc; }
+.uitleg-verder { margin-top: 34px; }
+.uitleg-verder button { min-height: 50px; padding: 13px 18px; border: 1px solid #0fa8cb; border-radius: 3px; background: transparent; color: #52c4dd; font-family: inherit; font-size: 14.5px; font-weight: 500; text-align: left; cursor: pointer; }
+.uitleg-verder button:hover, .uitleg-verder button:focus-visible { background: #0fa8cb; color: #0e1525; }
+
+@media (max-width: 620px) {
+  .uitleg-deur { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 560px) {
+  .uitleg-eyebrow, .uitleg-nr, .uitleg-deur span, .uitleg-waarde dt { font-size: 11px; }
+  .uitleg-poorten small, .uitleg-stappen small, .uitleg-etalage small,
+  .uitleg-deur p, .uitleg-slot { font-size: 14.5px; }
+}
