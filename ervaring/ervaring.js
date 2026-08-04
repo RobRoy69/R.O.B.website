@@ -1048,6 +1048,7 @@
             </div>
             <p id="poort-hint" class="${state.poortCodeError ? 'is-error' : ''}" ${state.poortCodeError ? 'role="alert"' : ''}>${escapeHtml(state.poortCodeError || (unlocked ? 'Je kunt hier altijd iets tussendoor zeggen. De reeks blijft staan waar hij staat.' : 'De code staat vervaagd klaar. Eenmalig invoeren opent de geleide aanlevering.'))}</p>
           </form>
+          ${demoNav()}
         </section>
         ${unlocked ? `<aside class="max-poort-documents" aria-label="Aangeleverde stukken">
           <span>Aanlevering</span>
@@ -1250,6 +1251,7 @@
               <small>Sluit de demonstratie af met een terugblik op wat er is vastgelegd.</small>
             </div>` : ''}
           </div>
+          ${demoNav()}
         </section>
         <aside class="frank-werk-side" aria-label="Aanlevering en betrokkenen">
           <section class="frank-werk-panel">
@@ -1306,8 +1308,10 @@
       : `<button type="button" data-command="${escapeHtml(step.command)}">${escapeHtml(step.label)}</button>`).join('')}</div>
   </div>`;
 
-  /* De vervolgintake en de expertwerkruimte nemen commando's aan in hun eigen chatveld;
-     de accountantpoort en de afronding hebben hun eigen balk. */
+  /* Deze schermen plaatsen de bediening zelf, op een plek die past in hun eigen indeling:
+     de accountantpoort en de afronding onderaan de pagina, de vervolgintake en de
+     werkruimte onder hun invoerveld. Een commando intypen is op een telefoon geen
+     zichtbare uitweg, dus ook die twee krijgen de balk. */
   const SCREENS_WITH_OWN_EXIT = ['vervolgintake', 'frank-werkruimte', 'accountantpoort', 'afronding'];
 
   const demoNav = () => {
