@@ -1092,6 +1092,12 @@ button { cursor: pointer; }
 .poc-demobar > div { display: flex; flex-wrap: wrap; gap: 9px; }
 .poc-demobar button { min-height: 42px; padding: 10px 15px; border: 1px solid rgba(122,110,133,.5); border-radius: 3px; background: transparent; color: inherit; font-family: inherit; font-size: 12.5px; cursor: pointer; }
 .poc-demobar button:hover, .poc-demobar button:focus-visible { border-color: #0fa8cb; color: #0fa8cb; }
+/* Globale variant: staat buiten het gesimuleerde scherm, dus met eigen ondergrond
+   zodat hij als bediening leest en niet als onderdeel van het product. */
+.poc-demobar.is-global { margin-top: 0; padding: 15px clamp(18px,4vw,44px); border-top: 1px solid rgba(245,243,238,.12); background: #0b1420; color: #e8e4dc; }
+.poc-demobar.is-global > span { color: rgba(232,228,220,.68); }
+.poc-demobar.is-global button { border-color: rgba(232,228,220,.34); color: #e8e4dc; }
+.poc-demobar.is-global button:hover, .poc-demobar.is-global button:focus-visible { border-color: #0fa8cb; color: #0fa8cb; }
 .ra-poort .poc-demobar { border-top-color: #D8DEE4; }
 .ra-poort .poc-demobar > span { color: #4A4A4A; }
 .ra-poort .poc-demobar button { border-color: #D8DEE4; color: #1F4E79; }
@@ -1181,9 +1187,48 @@ button { cursor: pointer; }
   .frank-review-header small, .frank-review-header > div:last-child > span,
   .frank-case-rail > span,
   .management-brand small, .management-user span, .management-transfer-main > span,
-  .management-transfer-boundary span { font-size: 11px; }
+  .management-transfer-boundary span, .management-user i { font-size: 11px; }
   .frank-review-ai li, .frank-contact-decision small, .ai-chat-note,
   .ai-conversation-log .chat-who { font-size: 12.5px; }
   /* Onder 16px zoomt iOS in bij focus, midden in de intake. */
   #contact-phone, #contact-email, .max-contact-fields input { font-size: 16px; }
+}
+
+/* Tweede ronde, uit de doorloop van 2026-08-03: de alfa .58 op de management- en
+   signaalschermen bleef net onder 4,5:1, .35 ver eronder, en het goud van de
+   woordmerken haalde op licht 3,62:1. */
+.management-brand small, .management-user span, .management-count span,
+.signal-detail > header span, .signal-assessment article > span, .signal-columns article > span,
+.management-actions div > span, .assignment-receipt > span,
+.signal-assessment small, .signal-columns small, .management-actions div small,
+.management-ai-launch small, .management-ai-message span,
+.management-transfer-steps small { color: rgba(238,242,242,.7); }
+.management-nav button { color: rgba(238,242,242,.62); }
+.frank-handoff-context li::before { color: rgba(238,242,242,.6); }
+.frank-expert-brand strong span, .frank-expert-user i { color: #7d5a0d; }
+/* Wit op de badge haalde 3,86:1; donkerder rood brengt hem op 5,2:1. */
+.management-nav button small { background: #b8482c; }
+
+@media (max-width: 560px) {
+  .management-nav button small { font-size: 10px; }
+  .danny-invitation-header small, .danny-invitation-header > div:last-child > span,
+  .danny-invitation-lock > span, .danny-invitation-open > span,
+  .danny-invitation-sender > span,
+  .max-entry-security, .signal-detail > header span, .signal-assessment article > span,
+  .signal-columns article > span, .management-actions div > span, .assignment-receipt > span,
+  .management-ai-launch small, .management-ai-message span,
+  .frank-expert-brand small { font-size: 11px; }
+}
+
+/* Derde ronde: de laatste .58 op licht en twee labels onder de bodem. */
+.frank-signal-facts small { color: rgba(7,20,33,.72); }
+@media (max-width: 560px) {
+  .frank-eyebrow, .frank-accepted > span { font-size: 11px; }
+}
+@media (max-width: 560px) {
+  .max-entry-grid article > span { font-size: 11px; }
+}
+@media (max-width: 560px) {
+  .danny-invitation-agreed > span, .danny-invitation-groups article > span,
+  .danny-invitation-decision > span { font-size: 11px; }
 }

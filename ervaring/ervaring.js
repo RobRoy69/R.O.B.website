@@ -1306,6 +1306,25 @@
       : `<button type="button" data-command="${escapeHtml(step.command)}">${escapeHtml(step.label)}</button>`).join('')}</div>
   </div>`;
 
+  /* De vervolgintake en de expertwerkruimte nemen commando's aan in hun eigen chatveld;
+     de accountantpoort en de afronding hebben hun eigen balk. */
+  const SCREENS_WITH_OWN_EXIT = ['vervolgintake', 'frank-werkruimte', 'accountantpoort', 'afronding'];
+
+  const demoNav = () => {
+    const order = ROUTE.filter((item) => state.unlocked.includes(item.id));
+    const here = order.findIndex((item) => item.id === state.current);
+    const previous = here > 0 ? order[here - 1] : null;
+    const next = here >= 0 && here < order.length - 1 ? order[here + 1] : null;
+    if (!previous && !next) return '';
+    return `<div class="poc-demobar is-global" role="navigation" aria-label="Demonstratiebediening">
+      <span>Gecontroleerde demonstratie</span>
+      <div>
+        ${previous ? `<button type="button" data-goto="${escapeHtml(previous.id)}">← ${escapeHtml(previous.label)}</button>` : ''}
+        ${next ? `<button type="button" data-goto="${escapeHtml(next.id)}">${escapeHtml(next.label)} →</button>` : ''}
+      </div>
+    </div>`;
+  };
+
   const renderAfronding = () => {
     commandInput.placeholder = 'Einde van de demonstratie';
     commandHelp.textContent = 'Deze terugblik is opgebouwd uit het logboek van deze doorloop.';
@@ -1634,6 +1653,11 @@
     renderEvidence();
     setChrome();
     screen.innerHTML = (renderers[state.current] || renderChat)();
+    /* Schermen met een eigen invoerveld of eigen balk regelen hun uitweg zelf; de rest
+       krijgt hier een bediening, zodat de presentator nergens vastloopt. */
+    if (!SCREENS_WITH_OWN_EXIT.includes(state.current)) {
+      screen.insertAdjacentHTML('beforeend', demoNav());
+    }
     bindScreenActions();
   };
 
@@ -2076,6 +2100,12 @@
     });
     document.querySelector('#demobar-reset')?.addEventListener('click', () => {
       resetButton?.click();
+    });
+    document.querySelectorAll('[data-goto]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.getAttribute('data-goto');
+        if (target) go(target);
+      });
     });
     document.querySelector('#frank-form')?.addEventListener('submit', (event) => {
       event.preventDefault();
