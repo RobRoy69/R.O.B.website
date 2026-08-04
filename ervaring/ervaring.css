@@ -1314,3 +1314,24 @@ button { cursor: pointer; }
   .uitleg-poorten small, .uitleg-stappen small, .uitleg-etalage small,
   .uitleg-deur p { font-size: 14.5px; }
 }
+
+/* De terugblik telde 37 regels; ingeklapt blijft het scherm scanbaar en staat de brug
+   naar vindbaarheid binnen bereik. Het aantal blijft altijd zichtbaar — dat is de claim,
+   de regels zijn het bewijs. */
+.slot-log-open { margin: 0; }
+.slot-log-open > summary { list-style: none; cursor: pointer; padding: 15px 17px; background: #131b2e; border-left: 3px solid #0fa8cb; }
+.slot-log-open > summary::-webkit-details-marker { display: none; }
+.slot-log-open > summary strong { display: block; color: #e8e4dc; font-size: 16px; font-weight: 500; }
+.slot-log-open > summary span { display: block; margin-top: 4px; color: rgba(232,228,220,.68); font: 11px/1.5 "IBM Plex Mono", monospace; }
+.slot-log-open > summary:hover strong, .slot-log-open > summary:focus-visible strong { color: #52c4dd; }
+.slot-log-open[open] > summary { margin-bottom: 12px; }
+.slot-log-open .slot-log { margin: 0; }
+
+.uitleg-verder { display: grid; gap: 10px; }
+.uitleg-verder button.is-voor { border-color: #0fa8cb; color: #52c4dd; }
+.uitleg-verder button:not(.is-voor) { border-color: rgba(232,228,220,.34); color: #e8e4dc; }
+.uitleg-verder button:not(.is-voor):hover, .uitleg-verder button:not(.is-voor):focus-visible { border-color: #0fa8cb; background: transparent; color: #0fa8cb; }
+
+@media (max-width: 560px) {
+  .slot-log-open > summary span { font-size: 12.5px; }
+}

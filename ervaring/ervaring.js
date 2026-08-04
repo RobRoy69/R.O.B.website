@@ -1314,7 +1314,7 @@
      de accountantpoort en de afronding onderaan de pagina, de vervolgintake en de
      werkruimte onder hun invoerveld. Een commando intypen is op een telefoon geen
      zichtbare uitweg, dus ook die twee krijgen de balk. */
-  const SCREENS_WITH_OWN_EXIT = ['vervolgintake', 'frank-werkruimte', 'accountantpoort', 'afronding'];
+  const SCREENS_WITH_OWN_EXIT = ['vervolgintake', 'frank-werkruimte', 'accountantpoort', 'afronding', 'agora-uitleg', 'geo-uitleg'];
 
   const demoNav = () => {
     const order = ROUTE.filter((item) => state.unlocked.includes(item.id));
@@ -1350,8 +1350,10 @@
           <h2>Wat deze doorloop heeft vastgelegd</h2>
           <p class="slot-note">Onderstaande regels komen uit het logboek van jouw doorloop, niet uit een geschreven verhaal. Wat je niet hebt gedaan, staat er dus ook niet.</p>
           ${logged.length
-            ? `<ol class="slot-log">${logged.map((event) => `<li><span class="slot-log-time">${escapeHtml(clock(event.at))}</span><span class="slot-log-text">${escapeHtml(EVENT_LABELS[event.action][0])}</span><span class="slot-log-verb">${escapeHtml(EVENT_LABELS[event.action][1])}</span></li>`).join('')}</ol>
-               <p class="slot-count">${logged.length} vastgelegde stappen · casusversie ${escapeHtml(pack.meta.version)}</p>`
+            ? `<details class="slot-log-open">
+                 <summary><strong>${logged.length} vastgelegde stappen</strong><span>casusversie ${escapeHtml(pack.meta.version)} · regel voor regel bekijken</span></summary>
+                 <ol class="slot-log">${logged.map((event) => `<li><span class="slot-log-time">${escapeHtml(clock(event.at))}</span><span class="slot-log-text">${escapeHtml(EVENT_LABELS[event.action][0])}</span><span class="slot-log-verb">${escapeHtml(EVENT_LABELS[event.action][1])}</span></li>`).join('')}</ol>
+               </details>`
             : '<p class="slot-empty">Er is in deze sessie nog niets vastgelegd.</p>'}
         </section>
 
@@ -1455,7 +1457,8 @@
         <p class="uitleg-grens"><strong>En de grens die overal geldt:</strong> Agora ordent, toetst, geeft vrij, routeert en leert — maar het <strong>beslist niets</strong>. Het oordeel blijft bij de expert. Dat is geen bescheidenheid, dat is de constructie.</p>
 
         <div class="uitleg-verder">
-          <button type="button" data-goto="geo-uitleg">Wat dit met vindbaarheid te maken heeft <span aria-hidden="true">→</span></button>
+          <button type="button" class="is-voor" data-goto="geo-uitleg">Wat dit met vindbaarheid te maken heeft <span aria-hidden="true">→</span></button>
+          <button type="button" data-goto="afronding"><span aria-hidden="true">←</span> Terug naar het eindscherm</button>
         </div>
       </main>
     </section>`;
@@ -1517,6 +1520,11 @@
         </section>
 
         <p class="uitleg-grens"><strong>In één zin:</strong> alleen afgeronde kennis gaat naar buiten, door één deur, met een datum en een bron erbij — en er wordt bijgehouden wie het doorvertelt. Het systeem <strong>beslist niets</strong> over wat er verandert.</p>
+
+        <div class="uitleg-verder">
+          <button type="button" class="is-voor" data-goto="afronding"><span aria-hidden="true">←</span> Terug naar het eindscherm</button>
+          <button type="button" data-goto="agora-uitleg"><span aria-hidden="true">←</span> Agora KIS</button>
+        </div>
       </main>
     </section>`;
   };
