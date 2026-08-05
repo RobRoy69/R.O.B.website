@@ -266,6 +266,20 @@ if (!uitleg.includes('beslist niets') || !uitleg.includes('Wat hier niet staat')
 if (!js.includes("data-goto=\"agora-uitleg\"") || !js.includes('slot-verder')) {
   errors.push('het eindscherm leidt niet naar de uitleg');
 }
+/* De drie masterpresentaties: elk bestand bestaat, is noindex gemarkeerd, en het eindscherm
+   linkt er begrijpelijk heen in een nieuw tabblad zodat de demosessie blijft staan. */
+for (const pres of ['agora-kis', 'dynamic-knowledge', 'max-site']) {
+  requireFile(`ervaring/presentaties/${pres}.html`);
+  if (existsSync(file(`ervaring/presentaties/${pres}.html`)) && !read(`ervaring/presentaties/${pres}.html`).includes('name="robots" content="noindex')) {
+    errors.push(`presentatie ${pres} mist noindex`);
+  }
+  if (!js.includes(`/ervaring/presentaties/${pres}.html`)) errors.push(`het eindscherm linkt niet naar de presentatie ${pres}`);
+}
+const presBlok = js.slice(js.indexOf('slot-verder'), js.indexOf('slot-verder') + 2600);
+if ((presBlok.match(/target="_blank" rel="noopener"/g) || []).length < 3) {
+  errors.push('de presentatielinks openen niet alle drie in een nieuw tabblad');
+}
+
 /* Een knop is nog geen route: go() weigert vergrendelde schermen, dus de uitleg moet ook
    ontgrendeld wórden. De vorige versie van dit contract toetste alleen dat de knop bestond —
    en de knoppen bleken dood op elke schone doorloop. */

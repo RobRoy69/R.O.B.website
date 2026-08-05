@@ -1335,3 +1335,18 @@ button { cursor: pointer; }
 @media (max-width: 560px) {
   .slot-log-open > summary span { font-size: 12.5px; }
 }
+
+/* ── Presentatielinks op het eindscherm (2026-08-05) ─────────────────────────
+   Drie kaarten naar de masterpresentaties; nieuw tabblad, de demo blijft staan.
+   Zelfde vormtaal als de slot-verder-knoppen, met titel en ondertitel. */
+.slot-verder p + p { margin-top: 10px; }
+.slot-verder-knoppen .slot-presentatie { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; align-items: center; column-gap: 14px; row-gap: 3px; min-height: 60px; padding: 14px 17px; border: 1px solid #0fa8cb; border-radius: 3px; background: transparent; text-decoration: none; }
+.slot-verder-knoppen .slot-presentatie strong { grid-column: 1; color: #52c4dd; font-size: 15.5px; font-weight: 600; }
+.slot-verder-knoppen .slot-presentatie span { grid-column: 1; color: rgba(232,228,220,.72); font-size: 13px; line-height: 1.5; }
+.slot-verder-knoppen .slot-presentatie i { grid-column: 2; grid-row: 1 / 3; color: #52c4dd; font-style: normal; font-size: 17px; }
+.slot-verder-knoppen .slot-presentatie:hover, .slot-verder-knoppen .slot-presentatie:focus-visible { background: #0fa8cb; }
+.slot-verder-knoppen .slot-presentatie:hover strong, .slot-verder-knoppen .slot-presentatie:hover span, .slot-verder-knoppen .slot-presentatie:hover i,
+.slot-verder-knoppen .slot-presentatie:focus-visible strong, .slot-verder-knoppen .slot-presentatie:focus-visible span, .slot-verder-knoppen .slot-presentatie:focus-visible i { color: #0e1525; }
+.slot-verder-kort { margin-top: 16px; color: rgba(232,228,220,.66); font-size: 13px; line-height: 1.7; }
+.slot-verder-kort button { padding: 2px 4px; border: 0; background: transparent; color: #52c4dd; font-family: inherit; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.slot-verder-kort button:hover, .slot-verder-kort button:focus-visible { color: #e8e4dc; }

@@ -55,6 +55,9 @@ else walk(PUBLIC);
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
   const relative = path.relative(PUBLIC, file).replaceAll('\\', '/');
+  // Klantmateriaal in de besloten demozone draagt het klantmerk, niet het R.O.B.-merk.
+  // Regel vastgelegd in CLAUDE.md (2026-08-05); de grens is exact deze ene map.
+  if (relative.startsWith('ervaring/presentaties/')) continue;
   const iconLinks = html.match(/<link\b[^>]*\brel=["'](?:shortcut\s+)?icon["'][^>]*>/gi) || [];
   if (iconLinks.length !== 1 || !html.includes(faviconTag)) {
     errors.push(`${relative}: gebruikt niet exact één gedeeld favicon`);
