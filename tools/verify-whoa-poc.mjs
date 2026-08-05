@@ -266,14 +266,27 @@ if (!uitleg.includes('beslist niets') || !uitleg.includes('Wat hier niet staat')
 if (!js.includes("data-goto=\"agora-uitleg\"") || !js.includes('slot-verder')) {
   errors.push('het eindscherm leidt niet naar de uitleg');
 }
-/* De drie masterpresentaties: elk bestand bestaat, is noindex gemarkeerd, en het eindscherm
-   linkt er begrijpelijk heen in een nieuw tabblad zodat de demosessie blijft staan. */
+/* De drie masterpresentaties, uitgepakt tot statische mappen zodat de slideshow binnen de
+   site-CSP draait (geen unpkg, geen blob-scripts — zie tools/unpack-presentaties.mjs).
+   Elk deck bestaat, draagt noindex, laadt React van eigen origin, en het eindscherm linkt
+   erheen in een nieuw tabblad zodat de demosessie blijft staan. */
 for (const pres of ['agora-kis', 'dynamic-knowledge', 'max-site']) {
-  requireFile(`ervaring/presentaties/${pres}.html`);
-  if (existsSync(file(`ervaring/presentaties/${pres}.html`)) && !read(`ervaring/presentaties/${pres}.html`).includes('name="robots" content="noindex')) {
-    errors.push(`presentatie ${pres} mist noindex`);
+  requireFile(`ervaring/presentaties/${pres}/index.html`);
+  requireFile(`ervaring/presentaties/${pres}/assets/react.production.min.js`);
+  if (existsSync(file(`ervaring/presentaties/${pres}/index.html`))) {
+    const deck = read(`ervaring/presentaties/${pres}/index.html`);
+    if (!deck.includes('name="robots" content="noindex')) errors.push(`presentatie ${pres} mist noindex`);
+    if (/https?:\/\/(?!www\.w3\.org)/.test(deck.replace(/xmlns[^"]*"[^"]*"/g, ''))) {
+      errors.push(`presentatie ${pres} verwijst naar een externe host — dat blokkeert de CSP of lekt een verzoek`);
+    }
   }
-  if (!js.includes(`/ervaring/presentaties/${pres}.html`)) errors.push(`het eindscherm linkt niet naar de presentatie ${pres}`);
+  if (!js.includes(`/ervaring/presentaties/${pres}/`)) errors.push(`het eindscherm linkt niet naar de presentatie ${pres}`);
+}
+for (const asset of ['a5cf735e.js']) {
+  const runtimePad = `ervaring/presentaties/agora-kis/assets/${asset}`;
+  if (existsSync(file(runtimePad)) && /unpkg\.com\/react/.test(read(runtimePad))) {
+    errors.push('de deck-runtime haalt React nog van unpkg — de CSP blokkeert dat');
+  }
 }
 const presBlok = js.slice(js.indexOf('slot-verder'), js.indexOf('slot-verder') + 2600);
 if ((presBlok.match(/target="_blank" rel="noopener"/g) || []).length < 3) {

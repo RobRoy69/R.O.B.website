@@ -1415,9 +1415,9 @@
           <p>Alles wat je hier hebt aangeleverd kreeg een bron, een status en een moment. Dat is niet alleen netjes voor het dossier — het is de voorwaarde om straks door een AI-assistent geciteerd te worden in plaats van overgeslagen. <strong>Herleidbaarheid en vindbaarheid zijn hetzelfde werk.</strong> Wie zijn kennis niet kan aanwijzen, wordt niet genoemd.</p>
           <p>Drie presentaties vertellen het hele verhaal. Ze openen in een nieuw tabblad; deze demonstratie blijft gewoon staan.</p>
           <div class="slot-verder-knoppen">
-            <a class="slot-presentatie" href="/ervaring/presentaties/agora-kis.html" target="_blank" rel="noopener"><strong>Agora KIS</strong><span>Kennis die zich kan verantwoorden — wat het is en wat het voor Max betekent</span><i aria-hidden="true">↗</i></a>
-            <a class="slot-presentatie" href="/ervaring/presentaties/dynamic-knowledge.html" target="_blank" rel="noopener"><strong>Dynamic Knowledge</strong><span>Vindbaar voor mens en machine — de SEO/GEO van de toekomst</span><i aria-hidden="true">↗</i></a>
-            <a class="slot-presentatie" href="/ervaring/presentaties/max-site.html" target="_blank" rel="noopener"><strong>De nieuwe Max-site</strong><span>Van wat er staat naar wat er werkt — het voorstel voor de website</span><i aria-hidden="true">↗</i></a>
+            <a class="slot-presentatie" href="/ervaring/presentaties/agora-kis/" target="_blank" rel="noopener"><strong>Agora KIS</strong><span>Kennis die zich kan verantwoorden — wat het is en wat het voor Max betekent</span><i aria-hidden="true">↗</i></a>
+            <a class="slot-presentatie" href="/ervaring/presentaties/dynamic-knowledge/" target="_blank" rel="noopener"><strong>Dynamic Knowledge</strong><span>Vindbaar voor mens en machine — de SEO/GEO van de toekomst</span><i aria-hidden="true">↗</i></a>
+            <a class="slot-presentatie" href="/ervaring/presentaties/max-site/" target="_blank" rel="noopener"><strong>De nieuwe Max-site</strong><span>Van wat er staat naar wat er werkt — het voorstel voor de website</span><i aria-hidden="true">↗</i></a>
           </div>
           <p class="slot-verder-kort">Liever eerst kort, binnen de demo? <button type="button" data-goto="agora-uitleg">Agora KIS in het kort</button> · <button type="button" data-goto="geo-uitleg">Dynamic Knowledge in het kort</button></p>
         </section>
