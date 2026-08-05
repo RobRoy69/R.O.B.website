@@ -35,6 +35,7 @@
   const EVENT_LABELS = {
     case_route_started: ['De ondernemer vertelde het in eigen woorden', 'ordenen'],
     chat_demo_completed: ['De neutrale AI kwam tot de grens van wat hij kon', 'toetsen'],
+    management_perspective_explained: ['De wissel naar de binnenkant van Max werd aangekondigd', 'routeren'],
     max_entry_opened: ['Max Finance & Legal werd bereikt', 'routeren'],
     max_intake_answer: ['Een antwoord werd door de ondernemer zelf bevestigd', 'ordenen'],
     max_intake_submitted: ['De eerste intake werd verstuurd', 'vrijgeven'],
@@ -137,6 +138,7 @@
     intakeReady: false,
     chatDemoComplete: false,
     chatDemoStep: 0,
+    managementIntroSeen: false,
     maxIntakeStep: 0,
     maxIntakeAnswers: {},
     maxIntakeSubmitted: false,
@@ -704,7 +706,30 @@
     </main>
   </section>`;
 
+  /* De perspectiefwissel. Tot hier zat Danny in de stoel van de ondernemer; wat volgt is de
+     binnenkant van Max, en die ziet een ondernemer nooit. Dat mag niet onaangekondigd
+     gebeuren — vandaar dit tussenscherm, in de vormtaal van het overdrachtsscherm. */
+  const renderManagementIntro = () => `<section class="management-transfer-screen" aria-labelledby="management-intro-title">
+    <header class="management-header">
+      <div class="management-brand"><strong>MAX<span>OS</span></strong><small>Achter de schermen</small></div>
+      <div class="management-user"><span>Je kijkt mee als</span><strong>Directie</strong><i aria-hidden="true">DR</i></div>
+    </header>
+    <main class="management-transfer-main">
+      <span>Perspectiefwissel</span>
+      <h1 id="management-intro-title">Je wisselt nu van stoel.</h1>
+      <p>Tot hier zat je in de stoel van de ondernemer. Wat je nu gaat zien, ziet die ondernemer nooit: de binnenkant van Max, waar zijn eerste intake zojuist is binnengekomen.</p>
+      <div class="management-transfer-steps" role="list" aria-label="Wat er nu gebeurt">
+        <article><i aria-hidden="true">1</i><div><strong>AI heeft het signaal geordend</strong><small>Urgentie en onderzoeksrichting staan klaar, met herkomst per gegeven.</small></div></article>
+        <article><i aria-hidden="true">2</i><div><strong>Een mens bepaalt de opvolging</strong><small>Management beslist of en door wie deze intake wordt opgepakt.</small></div></article>
+        <article><i aria-hidden="true">3</i><div><strong>De ondernemer merkt alleen het resultaat</strong><small>Eén rustige vervolgstap — niet de machinerie erachter.</small></div></article>
+      </div>
+      <div class="management-transfer-boundary"><span>Waarom je dit ziet</span><p>Dit is het deel dat vertrouwen moet verdienen: geen automatische route, maar een mens die beslist op geordende informatie.</p></div>
+      <div class="management-transfer-actions"><button type="button" class="primary" id="open-management-inside">Kijk mee als management <span aria-hidden="true">→</span></button></div>
+    </main>
+  </section>`;
+
   const renderMaxManagement = () => {
+    if (!state.managementIntroSeen) return renderManagementIntro();
     if (state.managementTransferOpen) return renderManagementTransfer();
     const answers = state.maxIntakeAnswers || {};
     const urgent = answers.urgent ? maxIntakeAnswerLabel(MAX_INTAKE_QUESTIONS[1], answers.urgent) : 'Nog niet bevestigd';
@@ -1344,7 +1369,7 @@
       <main class="slot-body">
         <p class="slot-eyebrow">Einde van de demonstratie</p>
         <h1 id="slot-title">Dank, Danny.</h1>
-        <p class="slot-lead">Je hebt net in de stoel van de ondernemer gezeten. Dat was de bedoeling: jij weet als weinig anderen wat er in die stoel gebeurt, en nu heb je gevoeld hoe het is om er niets van te hoeven begrijpen.</p>
+        <p class="slot-lead">Je hebt net in de stoel van de ondernemer gezeten. Dat was de bedoeling: jij weet als weinig anderen wat er in die stoel gebeurt. En je hebt nu ervaren wat het scheelt als de ondernemer niets van de techniek hoeft te begrijpen om toch veilig de volgende stap te zetten.</p>
 
         <section class="slot-block" aria-label="Wat deze doorloop heeft vastgelegd">
           <h2>Wat deze doorloop heeft vastgelegd</h2>
@@ -2097,6 +2122,13 @@
       record('management_projection_requested', 'presenter-transition');
       unlockAndGo('max-management');
     });
+    document.querySelector('#open-management-inside')?.addEventListener('click', () => {
+      state.managementIntroSeen = true;
+      record('management_perspective_explained', 'ondernemer-naar-management');
+      saveSession();
+      render();
+    });
+
     document.querySelector('#open-management-signal')?.addEventListener('click', () => {
       state.managementSignalOpened = true;
       state.managementSignalExpanded = true;
