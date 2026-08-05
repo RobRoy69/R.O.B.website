@@ -97,6 +97,14 @@ if (!js.includes('Agora · herkomstlaag') || !js.includes('Door Danny bevestigd'
 if (!js.includes("{ id: 'max-management', label: 'Management'") || !js.includes('Tijdskritiek · hoog') || !js.includes('Potentie · onderzoeken')) {
   errors.push('het Max Management AI-scherm ontbreekt of vermengt urgentie en potentie');
 }
+// De perspectiefwissel: tussen de intake van de ondernemer en de binnenkant van Max hoort
+// uitleg — Danny wisselt daar van stoel en dat mag niet onaangekondigd gebeuren.
+if (!js.includes('state.managementIntroSeen') || !js.includes('Perspectiefwissel') || !js.includes("record('management_perspective_explained'")) {
+  errors.push('de perspectiefwissel naar het managementscherm wordt niet uitgelegd');
+}
+if (js.includes('niets van te hoeven begrijpen')) {
+  errors.push('het eindscherm draagt nog de ongenuanceerde slotzin richting Danny');
+}
 if (!js.includes('Urgentie is geen levensvatbaarheid') || !js.includes("record('management_signal_assigned', 'frank-van-meenen-continuiteit')")) {
   errors.push('Agora-signaallogica of de menselijke toewijzing aan Frank ontbreekt');
 }
