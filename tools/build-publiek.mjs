@@ -46,10 +46,11 @@ const PUBLIEK = [
   { soort: 'map', pad: 'kennisproef' },
 
   // Verborgen, noindex demonstratieroute. De map bevat de openbare fictieve fixture en
-  // clientcode, plus onder presentaties/ de drie masterpresentaties (klantmateriaal, buiten
-  // de merkkeuring — regel in CLAUDE.md 2026-08-05); geen productie-intakes of private
-  // 20voor12-canon.
-  { soort: 'map', pad: 'ervaring' },
+  // clientcode, plus onder presentaties/ de drie uitgepakte masterpresentaties
+  // (klantmateriaal, buiten de merkkeuring — regel in CLAUDE.md 2026-08-05); geen
+  // productie-intakes of private 20voor12-canon. De aangeleverde bundels blijven als bron
+  // in presentaties/_bron/ en zijn geen publicatie.
+  { soort: 'map', pad: 'ervaring', filter: (naam) => naam !== '_bron' },
 
   // Het beheerscherm. Publiek bereikbaar maar niet indexeerbaar: al het gezag zit in de
   // functie erachter, niet in deze pagina. Zonder sessie toont hij een wachtwoordveld en
