@@ -35,6 +35,9 @@
   const EVENT_LABELS = {
     case_route_started: ['De ondernemer vertelde het in eigen woorden', 'ordenen'],
     chat_demo_completed: ['De neutrale AI kwam tot de grens van wat hij kon', 'toetsen'],
+    chat_regie_opened: ['De regie werd geopend: script, live en terugval kregen hun naam', 'vrijgeven'],
+    chat_live_probe_asked: ['De begrenzing werd met een eigen vraag op de proef gesteld', 'toetsen'],
+    chat_live_probe_answered: ['De AI antwoordde binnen zijn grenzen, zonder route of advies', 'toetsen'],
     max_entry_opened: ['Max Finance & Legal werd bereikt', 'routeren'],
     max_intake_answer: ['Een antwoord werd door de ondernemer zelf bevestigd', 'ordenen'],
     max_intake_submitted: ['De eerste intake werd verstuurd', 'vrijgeven'],
@@ -137,6 +140,10 @@
     intakeReady: false,
     chatDemoComplete: false,
     chatDemoStep: 0,
+    regieOpen: false,
+    regieSeen: false,
+    freeProbeUsed: false,
+    freeProbeBusy: false,
     maxIntakeStep: 0,
     maxIntakeAnswers: {},
     maxIntakeSubmitted: false,
@@ -328,11 +335,25 @@
       </ol>
     </article>`;
 
+  /* De herkomstregel onder een bericht, alleen zichtbaar met de regie open. De terugval
+     doet zich nooit voor als live — een bewering draagt haar status mee. */
+  const originLine = (message) => {
+    if (!state.regieOpen) return '';
+    const label = message.origin === 'live' ? 'Live · zojuist begrensd gegenereerd'
+      : message.origin === 'fallback' ? 'Terugval · vast antwoord, live was even niet bereikbaar'
+      : message.origin === 'eigen' ? 'Eigen bericht · zojuist getypt'
+      : 'Regie · vast script';
+    return `<span class="chat-origin ${message.origin === 'live' ? 'is-live' : ''}">${label}</span>`;
+  };
+
   const renderChatMessages = () => state.messages.map((message) => {
-    if (message.role === 'search') return searchExperience(message.query, true);
+    if (message.role === 'search') {
+      return searchExperience(message.query, true) + (state.regieOpen ? '<span class="chat-origin chat-origin-block">Regie · vast script</span>' : '');
+    }
     return `<div class="chat-line ${message.role === 'user' ? 'user' : ''}">
       <span class="chat-who">${message.role === 'user' ? 'Danny' : 'AI'}</span>
       <div class="chat-text">${escapeHtml(message.content)}</div>
+      ${originLine(message)}
     </div>`;
   }).join('');
 
@@ -439,9 +460,26 @@
       </section>`;
     }
 
+    /* De regie-toggle verschijnt pas als de scène klaar is — niet tijdens het script, wel bij
+       de aftiteling. De vrije beurt opent alleen met de regie open en is éénmalig. */
+    const regieAvailable = state.chatDemoComplete || state.intakeReady;
+    const canProbe = state.chatDemoComplete && state.regieOpen && !state.freeProbeUsed && !state.freeProbeBusy;
+    const composerLocked = state.chatDemoComplete ? !canProbe : false;
+    const composerPlaceholder = state.freeProbeBusy ? 'De AI ordent je bericht…'
+      : canProbe ? 'Stel zelf een vraag — het antwoord komt live'
+      : state.chatDemoComplete ? 'Dit gesprek is afgerond'
+      : 'Danny antwoordt…';
+
     return `<section class="ai-chat-conversation" aria-label="Gesprek over de onderneming">
       <div class="ai-conversation-shell">
-        <div class="ai-conversation-head"><span class="ai-status-dot" aria-hidden="true"></span><span>AI Chat</span></div>
+        <div class="ai-conversation-head"><span class="ai-status-dot" aria-hidden="true"></span><span>AI Chat</span>
+          ${regieAvailable ? `<button type="button" class="chat-regie-toggle" id="chat-regie-toggle" aria-expanded="${state.regieOpen ? 'true' : 'false'}">${state.regieOpen ? 'Sluit de regie' : 'Wat is hier echt?'}</button>` : ''}
+        </div>
+        ${state.regieOpen ? `<aside class="chat-regie-uitleg" aria-label="Regie en werkelijkheid">
+          <p>Dit gesprek volgt een vast script. Zo is elke doorloop gelijk, en controleerbaar.</p>
+          <p>De AI-rol is geen fantasie. Dezelfde begrensde AI draait ook echt: hij spiegelt en stelt vragen, maar kiest geen route, geeft geen advies en noemt geen uitkomst.</p>
+          ${state.freeProbeUsed ? '<p class="chat-regie-af">De begrenzing is in deze sessie live getest. Het resultaat staat hieronder in het gesprek.</p>' : state.chatDemoComplete ? '<p>Test dat zelf: stel hieronder één eigen vraag. Het antwoord komt live, binnen dezelfde grenzen.</p>' : ''}
+        </aside>` : ''}
         <div class="ai-conversation-log" id="neutral-chat-log" role="log" aria-live="off">
           ${renderChatMessages()}
           ${state.chatDemoComplete ? maxRecommendation() : ''}
@@ -449,10 +487,10 @@
         <p class="sr-only" id="chat-announcer" aria-live="polite"></p>
         <form class="ai-composer ai-conversation-composer" id="neutral-chat-form" autocomplete="off">
           <label class="sr-only" for="neutral-chat-input">Bericht aan AI</label>
-          <textarea id="neutral-chat-input" rows="2" maxlength="700" placeholder="${state.chatDemoComplete ? 'Dit gesprek is afgerond' : 'Danny antwoordt…'}" ${state.chatDemoComplete ? 'disabled' : ''}></textarea>
+          <textarea id="neutral-chat-input" rows="2" maxlength="700" placeholder="${composerPlaceholder}" ${composerLocked ? 'disabled' : ''}></textarea>
           <div class="ai-composer-tools">
-            <div class="ai-composer-left"><button class="ai-tool-button" type="button" aria-label="Bijlage toevoegen" disabled>+</button><span class="ai-mode">Chat</span></div>
-            <button class="ai-send-button" type="submit" aria-label="Verstuur bericht" disabled>
+            <div class="ai-composer-left"><button class="ai-tool-button" type="button" aria-label="Bijlage toevoegen" disabled>+</button><span class="ai-mode">${canProbe ? 'Live' : 'Chat'}</span></div>
+            <button class="ai-send-button" type="submit" aria-label="Verstuur bericht" ${canProbe || (!state.chatDemoComplete && !state.openingSent && !state.intakeReady) ? '' : 'disabled'}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></svg>
             </button>
           </div>
@@ -1944,9 +1982,21 @@
   const requestFirstReflection = async (message, button) => {
     button.disabled = true;
     button.textContent = 'Ordenen…';
-    state.messages.push({ role: 'user', content: message });
+    state.messages.push({ role: 'user', content: message, origin: 'eigen' });
     state.openingSent = true;
     render();
+    const result = await beperkteBeurt(message);
+    const questions = result.questions.slice(0, 2).join(' ');
+    state.messages.push({ role: 'assistant', content: `${result.reflection} ${questions}`.trim(), origin: result.mode === 'live' ? 'live' : 'fallback' });
+    state.intakeReady = true;
+    state.aiMode = result.mode === 'live' ? 'live' : 'fallback';
+    record('first_reflection_completed', state.aiMode);
+    saveSession();
+    render();
+  };
+
+  /* Eén begrensde beurt naar de serverfunctie, met de vaste terugval als vangnet. */
+  const beperkteBeurt = async (message) => {
     let result = safeFallback();
     try {
       const response = await fetch(API_URL, {
@@ -1963,13 +2013,27 @@
         if (candidate && typeof candidate.reflection === 'string' && Array.isArray(candidate.questions)) result = candidate;
       }
     } catch {}
-    const questions = result.questions.slice(0, 2).join(' ');
-    state.messages.push({ role: 'assistant', content: `${result.reflection} ${questions}`.trim() });
-    state.intakeReady = true;
-    state.aiMode = result.mode === 'live' ? 'live' : 'fallback';
-    record('first_reflection_completed', state.aiMode);
+    return result;
+  };
+
+  /* De vrije beurt uit de regie-laag: één eigen bericht, live beantwoord binnen dezelfde
+     grenzen. De beurt sluit vóór de netwerkcall — ook een mislukte poging is de poging. */
+  const runFreeProbe = async (message) => {
+    state.freeProbeUsed = true;
+    state.freeProbeBusy = true;
+    state.messages.push({ role: 'user', content: message, origin: 'eigen' });
+    record('chat_live_probe_asked', 'regie-toets');
     saveSession();
     render();
+    const result = await beperkteBeurt(message);
+    const questions = result.questions.slice(0, 2).join(' ');
+    state.freeProbeBusy = false;
+    state.messages.push({ role: 'assistant', content: `${result.reflection} ${questions}`.trim(), origin: result.mode === 'live' ? 'live' : 'fallback' });
+    record('chat_live_probe_answered', result.mode === 'live' ? 'live' : 'fallback');
+    saveSession();
+    render();
+    const lines = document.querySelectorAll('#neutral-chat-log .chat-line');
+    lines[lines.length - 1]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   const handleCommand = (raw) => {
@@ -2449,11 +2513,41 @@
       render();
     });
 
+    document.querySelector('#chat-regie-toggle')?.addEventListener('click', () => {
+      state.regieOpen = !state.regieOpen;
+      if (state.regieOpen && !state.regieSeen) {
+        state.regieSeen = true;
+        record('chat_regie_opened', 'wat-is-hier-echt');
+      }
+      saveSession();
+      render();
+    });
+
+    const neutralInput = document.querySelector('#neutral-chat-input');
+    neutralInput?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        document.querySelector('#neutral-chat-form')?.requestSubmit();
+      }
+    });
+
     document.querySelector('#neutral-chat-form')?.addEventListener('submit', (event) => {
       event.preventDefault();
       const input = document.querySelector('#neutral-chat-input');
       const message = input.value.trim().slice(0, 700);
-      if (!message || state.intakeReady || state.openingSent) return;
+      if (!message) return;
+      if (state.chatDemoComplete) {
+        if (!state.regieOpen || state.freeProbeUsed || state.freeProbeBusy) return;
+        if (message.length < 10) {
+          input.setAttribute('aria-invalid', 'true');
+          input.placeholder = 'Maak je vraag iets langer, dan valt er iets te ordenen';
+          setTimeout(() => input.removeAttribute('aria-invalid'), 1400);
+          return;
+        }
+        runFreeProbe(message);
+        return;
+      }
+      if (state.intakeReady || state.openingSent) return;
       requestFirstReflection(message, event.submitter);
     });
 

@@ -281,6 +281,36 @@ if (!js.includes("location.replace('/#rob')")) errors.push('directe route zonder
 if (!js.includes("if (!state.consent || !state.accountantReviewed)")) errors.push('expertpoort controleert toestemming en accountantbeoordeling niet');
 if (!js.includes("if (!state.routeDecision)")) errors.push('WHOA-werkruimte controleert het expertbesluit niet');
 
+// De regie-laag: de chat toont op verzoek wat script, live en terugval is, en biedt na het
+// script één vrije, live beantwoorde beurt. De toets is dat de laag eerlijk en eenmalig is.
+if (!js.includes('chat-regie-toggle') || !js.includes('Wat is hier echt?')) {
+  errors.push('het chatscherm mist de regie-toggle');
+}
+if (!js.includes("state.chatDemoComplete || state.intakeReady") || js.indexOf('chat-regie-toggle') < 0) {
+  errors.push('de regie-toggle is niet gebonden aan een afgerond gesprek');
+}
+for (const label of ['Regie · vast script', 'Live · zojuist begrensd gegenereerd', 'Terugval · vast antwoord']) {
+  if (!js.includes(label)) errors.push(`herkomstregel ontbreekt: ${label}`);
+}
+if (!js.includes('const runFreeProbe')) {
+  errors.push('de vrije live-beurt bestaat niet');
+} else {
+  const probe = js.slice(js.indexOf('const runFreeProbe'), js.indexOf('const runFreeProbe') + 1600);
+  if (probe.indexOf('state.freeProbeUsed = true') < 0 || probe.indexOf('state.freeProbeUsed = true') > probe.indexOf('await beperkteBeurt')) {
+    errors.push('de vrije beurt sluit zichzelf niet vóór de netwerkcall — falen zou hem herbruikbaar maken');
+  }
+  const beurt = js.slice(js.indexOf('const beperkteBeurt'), js.indexOf('const beperkteBeurt') + 1200);
+  if (!beurt.includes("stage: 'signalering'") || !beurt.includes('fictional: true') || !beurt.includes('safeFallback()')) {
+    errors.push('de begrensde beurt stuurt niet dezelfde demonstratiecontext mee of mist de terugval');
+  }
+  if (!/origin: result\.mode === 'live' \? 'live' : 'fallback'/.test(probe)) {
+    errors.push('het live-antwoord draagt zijn herkomststatus niet');
+  }
+}
+if (!css.includes('.chat-regie') || !css.includes('.chat-origin')) {
+  errors.push('de regie-laag heeft geen eigen stijl in ervaring.css');
+}
+
 const earlyStart = js.indexOf('const renderChat =');
 const earlyEnd = js.indexOf('const expertQuestions =');
 const earlyScreens = js.slice(earlyStart, earlyEnd);
