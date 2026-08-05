@@ -266,6 +266,15 @@ if (!uitleg.includes('beslist niets') || !uitleg.includes('Wat hier niet staat')
 if (!js.includes("data-goto=\"agora-uitleg\"") || !js.includes('slot-verder')) {
   errors.push('het eindscherm leidt niet naar de uitleg');
 }
+/* Een knop is nog geen route: go() weigert vergrendelde schermen, dus de uitleg moet ook
+   ontgrendeld wórden. De vorige versie van dit contract toetste alleen dat de knop bestond —
+   en de knoppen bleken dood op elke schone doorloop. */
+if (!js.includes('UITLEG_SCREENS') || !/UITLEG_SCREENS\.includes\(target\)[\s\S]{0,120}unlockAndGo\(target\)/.test(js)) {
+  errors.push('de uitlegschermen worden nergens ontgrendeld — de knoppen op het eindscherm zijn dan dood');
+}
+if (!/UITLEG_SCREENS\.includes\(target\)[\s\S]{0,80}state\.unlocked\.includes\('afronding'\)/.test(js)) {
+  errors.push('de uitleg-ontgrendeling is niet gebonden aan een bereikte afronding');
+}
 if (!/GEO|vindbaar/i.test(js.slice(js.indexOf('const renderAfronding'), js.indexOf('const RA_SUPPLIABLE')))) {
   errors.push('het eindscherm legt geen verband met vindbaarheid');
 }

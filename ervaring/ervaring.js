@@ -2282,10 +2282,19 @@
     document.querySelector('#demobar-reset')?.addEventListener('click', () => {
       resetButton?.click();
     });
+    /* De uitlegschermen horen bij de afronding en hebben geen eigen poort. Wie het eindscherm
+       heeft bereikt, mag ze openen — go() alleen zou ze weigeren, want niets anders
+       ontgrendelt ze. Elke andere bestemming houdt zijn eigen grendel. */
+    const UITLEG_SCREENS = ['agora-uitleg', 'geo-uitleg'];
     document.querySelectorAll('[data-goto]').forEach((button) => {
       button.addEventListener('click', () => {
         const target = button.getAttribute('data-goto');
-        if (target) go(target);
+        if (!target) return;
+        if (UITLEG_SCREENS.includes(target) && state.unlocked.includes('afronding')) {
+          unlockAndGo(target);
+          return;
+        }
+        go(target);
       });
     });
     document.querySelector('#frank-form')?.addEventListener('submit', (event) => {
