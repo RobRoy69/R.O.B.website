@@ -72,6 +72,22 @@ goedgekeurde bestanden in `media/logo/`; er komt geen nieuwe lokale kleurschaal 
 
 ---
 
+## Regel: klantmateriaal in de besloten demozone valt buiten de merkkeuring
+
+Vastgesteld 2026-08-05, bij het plaatsen van de drie masterpresentaties. Onder
+`ervaring/presentaties/` staat materiaal dat R.O.B. *voor een klant* heeft gemaakt en in de
+besloten, geïndexeerde-noch-gearchiveerde demozone toont: presentaties in de vormtaal van de
+klant of van het gepresenteerde systeem, niet in die van R.O.B. Daar horen geen R.O.B.-lockup,
+geen merklaag en geen afsluiter — dat zou het klantmerk overschrijven met het eigen merk,
+precies wat een concepting-bureau niet doet.
+
+De keuringen (`verify-merk` en `test-merk`) slaan die ene map daarom over, met verwijzing naar
+deze regel. De grens is de map, niet het bestandstype: al het overige onder `ervaring/` —
+de demonstratie zelf — blijft gewoon binnen de keuring. Wat hier landt is altijd noindex en
+bereikbaar via het eindscherm van de demonstratie, nooit via de site zelf.
+
+---
+
 ## Wat het onderzoek zegt (2026-07-31)
 
 Nagetrokken op de datum hierboven. De hardheid verschilt per bron en dat staat erbij — een

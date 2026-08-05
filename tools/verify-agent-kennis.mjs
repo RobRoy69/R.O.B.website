@@ -49,6 +49,9 @@ try {
       const r = rel ? `${rel}/${e.name}` : e.name;
       if (e.isDirectory()) { loop(path.join(dir, e.name), r); continue; }
       if (!e.name.endsWith('.html')) continue;
+      // Klantmateriaal in de besloten demozone hoort juist NIET in de agent-kennis
+      // (regel in CLAUDE.md, 2026-08-05) — dezelfde grens als in build-site-kennis.
+      if (r.startsWith('ervaring/presentaties/')) continue;
       const raw = '/' + r.replace(/(^|\/)index\.html$/, '$1');
       gepubliceerd.push(raw.startsWith('/whitepapers/') ? raw.replace(/\.html$/, '') : raw);
     }

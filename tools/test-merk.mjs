@@ -320,6 +320,9 @@ console.log('\n6. elke gepubliceerde pagina sluit donker af');
     for (const naam of readdirSync(map)) {
       const vol = path.join(map, naam);
       if (statSync(vol).isDirectory()) { loop(vol, `${pre}${naam}/`); continue; }
+      // Klantmateriaal in de besloten demozone valt buiten de merkkeuring — regel in
+      // CLAUDE.md (2026-08-05). Alleen deze ene map; de demonstratie zelf doet gewoon mee.
+      if (`${pre}${naam}`.startsWith('ervaring/presentaties/')) continue;
       if (naam.endsWith('.html')) paginas.push([`${pre}${naam}`, readFileSync(vol, 'utf8')]);
     }
   };

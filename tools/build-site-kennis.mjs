@@ -41,6 +41,10 @@ const loop = (dir, rel = '') => {
     const r = rel ? `${rel}/${e.name}` : e.name;
     if (e.isDirectory()) { loop(path.join(dir, e.name), r); continue; }
     if (!e.name.endsWith('.html')) continue;
+    // Klantmateriaal in de besloten demozone (regel in CLAUDE.md, 2026-08-05) hoort niet in
+    // de site-kennis van de publieke chat-agent: die zou de bestanden aan bezoekers kunnen
+    // noemen, en het HARD KADER verbiedt juist het delen van klantmateriaal.
+    if (r.startsWith('ervaring/presentaties/')) continue;
     const html = readFileSync(path.join(dir, e.name), 'utf-8');
     const titel = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
     const omschrijving = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
