@@ -56,15 +56,17 @@ if ((html.match(/<h1[\s>]/g) || []).length !== 1 || !js.includes("document.query
   errors.push('statische shell moet precies één h1 dragen die vóór de dynamische projectiekop wordt verwijderd');
 }
 if (/<iframe\b/i.test(html + js)) errors.push('iframe aangetroffen in de ervaringsapp');
-// De ingang is op verzoek van Rob (2026-08-05, na Danny's doorloop) hernoemd van /chat naar
-// /youreyesonly: minder raadbaar, en een knipoog naar de genodigde. /chat mag NIET meer
-// onderscheppen — wie dat typt, praat gewoon met de publieke agent.
-if (!home.includes("if (val === '/youreyesonly')")) errors.push('homepage onderschept niet uitsluitend exact /youreyesonly');
+// De ingang is op verzoek van Rob hernoemd van /chat (2026-08-05, na Danny's doorloop) naar
+// /youreyesonly en op 2026-08-08 naar #venividivinci: minder raadbaar, en een knipoog naar de
+// genodigde. Geen van beide oude ingangen mag NOG onderscheppen — wie /chat of /youreyesonly
+// typt, praat gewoon met de publieke agent.
+if (!home.includes("if (val === '#venividivinci')")) errors.push('homepage onderschept niet uitsluitend exact #venividivinci');
 if (home.includes("val === '/chat'")) errors.push('de oude /chat-ingang staat nog open');
+if (home.includes("val === '/youreyesonly'")) errors.push('de oude /youreyesonly-ingang staat nog open');
 if (!home.includes("sessionStorage.setItem('robMaxPoc.v2'")) errors.push('homepage maakt geen lokale POC-sessie');
-const interceptAt = home.indexOf("if (val === '/youreyesonly')");
+const interceptAt = home.indexOf("if (val === '#venividivinci')");
 const normalFetchAt = home.indexOf("fetch('/.netlify/functions/chat'", interceptAt);
-if (interceptAt < 0 || normalFetchAt < interceptAt) errors.push('/youreyesonly wordt niet vóór de gewone chatfunctie onderschept');
+if (interceptAt < 0 || normalFetchAt < interceptAt) errors.push('#venividivinci wordt niet vóór de gewone chatfunctie onderschept');
 if (!js.includes('Wat kan ik voor je doen Danny?') || !js.includes('id="ai-start-form"')) {
   errors.push('scherm 1 is niet de afgesproken persoonlijke AI-chatlanding');
 }
