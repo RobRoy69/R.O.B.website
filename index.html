@@ -2595,11 +2595,11 @@ async function sendMsg() {
   const val = chatIn.value.trim().slice(0, MAX_INPUT_CHARS);
   if (!val) return;
 
-  // Verborgen POC-ingang. Alleen exact /youreyesonly wordt lokaal onderschept; geen bericht,
+  // Verborgen POC-ingang. Alleen exact #venividivinci wordt lokaal onderschept; geen bericht,
   // notificatie of archiefregel verlaat de browser. Alle gewone chat blijft hieronder
-  // ongewijzigd via de bestaande Function lopen. Heette /chat; hernoemd op verzoek van Rob
-  // (2026-08-05): minder raadbaar, en een knipoog naar de genodigde.
-  if (val === '/youreyesonly') {
+  // ongewijzigd via de bestaande Function lopen. Heette /chat, daarna /youreyesonly; op verzoek
+  // van Rob (2026-08-08) hernoemd naar #venividivinci: minder raadbaar, en een knipoog naar de genodigde.
+  if (val === '#venividivinci') {
     addMsg(val, 'user');
     const session = {
       version: 2,
@@ -2634,7 +2634,7 @@ async function sendMsg() {
       whoaPhase: 'voorbereiding-akkoord',
       // Geen caseVersion: de homepage heeft de fixture nog niet gelezen en kan hem dus
       // niet kennen. De ervaringsapp stempelt vanaf de volgende gebeurtenis de echte versie.
-      events: [{ at: new Date().toISOString(), perspective: 'rob', action: 'hidden_route_started', detail: '/youreyesonly', demo: true }]
+      events: [{ at: new Date().toISOString(), perspective: 'rob', action: 'hidden_route_started', detail: '#venividivinci', demo: true }]
     };
     try { sessionStorage.setItem('robMaxPoc.v2', JSON.stringify(session)); }
     catch {
